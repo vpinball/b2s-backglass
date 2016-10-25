@@ -1,0 +1,1494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblSize.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="lblSize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="lblSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 446</value>
+  </data>
+  <data name="lblSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblSize.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="lblSize.Text" xml:space="preserve">
+    <value>Size:</value>
+  </data>
+  <data name="lblSize.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblSize.Name" xml:space="preserve">
+    <value>lblSize</value>
+  </data>
+  <data name="&gt;&gt;lblSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblSize.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblSize.ZOrder" xml:space="preserve">
+    <value>33</value>
+  </data>
+  <data name="lblLocation.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="lblLocation.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblLocation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 419</value>
+  </data>
+  <data name="lblLocation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <data name="lblLocation.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="lblLocation.Text" xml:space="preserve">
+    <value>Location:</value>
+  </data>
+  <data name="lblLocation.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblLocation.Name" xml:space="preserve">
+    <value>lblLocation</value>
+  </data>
+  <data name="&gt;&gt;lblLocation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblLocation.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblLocation.ZOrder" xml:space="preserve">
+    <value>34</value>
+  </data>
+  <data name="lblIlluminationText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblIlluminationText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 314</value>
+  </data>
+  <data name="lblIlluminationText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 13</value>
+  </data>
+  <data name="lblIlluminationText.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="lblIlluminationText.Text" xml:space="preserve">
+    <value>Illuminated text:</value>
+  </data>
+  <data name="lblIlluminationText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblIlluminationText.Name" xml:space="preserve">
+    <value>lblIlluminationText</value>
+  </data>
+  <data name="&gt;&gt;lblIlluminationText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblIlluminationText.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblIlluminationText.ZOrder" xml:space="preserve">
+    <value>32</value>
+  </data>
+  <data name="txtIlluminationText.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="txtIlluminationText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 311</value>
+  </data>
+  <data name="txtIlluminationText.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="txtIlluminationText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 60</value>
+  </data>
+  <data name="txtIlluminationText.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;txtIlluminationText.Name" xml:space="preserve">
+    <value>txtIlluminationText</value>
+  </data>
+  <data name="&gt;&gt;txtIlluminationText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtIlluminationText.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtIlluminationText.ZOrder" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="B2SLine1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left, Right</value>
+  </data>
+  <data name="B2SLine1.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="B2SLine1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 402</value>
+  </data>
+  <data name="B2SLine1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 10</value>
+  </data>
+  <data name="B2SLine1.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="&gt;&gt;B2SLine1.Name" xml:space="preserve">
+    <value>B2SLine1</value>
+  </data>
+  <data name="&gt;&gt;B2SLine1.Type" xml:space="preserve">
+    <value>B2SBackglassDesigner.B2SLine, B2SBackglassDesigner, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;B2SLine1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;B2SLine1.ZOrder" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="btnFonts.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left, Right</value>
+  </data>
+  <data name="btnFonts.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnFonts.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 377</value>
+  </data>
+  <data name="btnFonts.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 23</value>
+  </data>
+  <data name="btnFonts.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="btnFonts.Text" xml:space="preserve">
+    <value>Choose font</value>
+  </data>
+  <data name="&gt;&gt;btnFonts.Name" xml:space="preserve">
+    <value>btnFonts</value>
+  </data>
+  <data name="&gt;&gt;btnFonts.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnFonts.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnFonts.ZOrder" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="B2SLine2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="B2SLine2.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="B2SLine2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 110</value>
+  </data>
+  <data name="B2SLine2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 10</value>
+  </data>
+  <data name="B2SLine2.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="&gt;&gt;B2SLine2.Name" xml:space="preserve">
+    <value>B2SLine2</value>
+  </data>
+  <data name="&gt;&gt;B2SLine2.Type" xml:space="preserve">
+    <value>B2SBackglassDesigner.B2SLine, B2SBackglassDesigner, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;B2SLine2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;B2SLine2.ZOrder" xml:space="preserve">
+    <value>39</value>
+  </data>
+  <data name="lblName.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 36</value>
+  </data>
+  <data name="lblName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <data name="lblName.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="lblName.Text" xml:space="preserve">
+    <value>Lamp name:</value>
+  </data>
+  <data name="lblName.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblName.Name" xml:space="preserve">
+    <value>lblName</value>
+  </data>
+  <data name="&gt;&gt;lblName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblName.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblName.ZOrder" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="lblID.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblID.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 8</value>
+  </data>
+  <data name="lblID.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <data name="lblID.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="lblID.Text" xml:space="preserve">
+    <value>Lamp no:</value>
+  </data>
+  <data name="lblID.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblID.Name" xml:space="preserve">
+    <value>lblID</value>
+  </data>
+  <data name="&gt;&gt;lblID.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblID.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblID.ZOrder" xml:space="preserve">
+    <value>28</value>
+  </data>
+  <data name="txtName.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="txtName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 32</value>
+  </data>
+  <data name="txtName.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="txtName.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;txtName.Name" xml:space="preserve">
+    <value>txtName</value>
+  </data>
+  <data name="&gt;&gt;txtName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtName.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtName.ZOrder" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="txtID.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="txtID.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 5</value>
+  </data>
+  <data name="txtID.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtID.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="txtID.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;txtID.Name" xml:space="preserve">
+    <value>txtID</value>
+  </data>
+  <data name="&gt;&gt;txtID.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtID.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtID.ZOrder" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="lblInitState.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblInitState.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 62</value>
+  </data>
+  <data name="lblInitState.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 13</value>
+  </data>
+  <data name="lblInitState.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="lblInitState.Text" xml:space="preserve">
+    <value>Initial state:</value>
+  </data>
+  <data name="lblInitState.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblInitState.Name" xml:space="preserve">
+    <value>lblInitState</value>
+  </data>
+  <data name="&gt;&gt;lblInitState.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblInitState.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblInitState.ZOrder" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="cmbInitState.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cmbInitState.Items" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="cmbInitState.Items1" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="cmbInitState.Items2" xml:space="preserve">
+    <value>Always on</value>
+  </data>
+  <data name="cmbInitState.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 59</value>
+  </data>
+  <data name="cmbInitState.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="cmbInitState.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;cmbInitState.Name" xml:space="preserve">
+    <value>cmbInitState</value>
+  </data>
+  <data name="&gt;&gt;cmbInitState.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmbInitState.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cmbInitState.ZOrder" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="TrackBarIntensity.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="TrackBarIntensity.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 215</value>
+  </data>
+  <data name="TrackBarIntensity.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 45</value>
+  </data>
+  <data name="TrackBarIntensity.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;TrackBarIntensity.Name" xml:space="preserve">
+    <value>TrackBarIntensity</value>
+  </data>
+  <data name="&gt;&gt;TrackBarIntensity.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TrackBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TrackBarIntensity.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;TrackBarIntensity.ZOrder" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="lblIntensity.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblIntensity.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 219</value>
+  </data>
+  <data name="lblIntensity.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 13</value>
+  </data>
+  <data name="lblIntensity.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="lblIntensity.Text" xml:space="preserve">
+    <value>Intensity:</value>
+  </data>
+  <data name="lblIntensity.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblIntensity.Name" xml:space="preserve">
+    <value>lblIntensity</value>
+  </data>
+  <data name="&gt;&gt;lblIntensity.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblIntensity.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblIntensity.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="B2SLine3.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="B2SLine3.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="B2SLine3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 295</value>
+  </data>
+  <data name="B2SLine3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 10</value>
+  </data>
+  <data name="B2SLine3.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
+  </data>
+  <data name="&gt;&gt;B2SLine3.Name" xml:space="preserve">
+    <value>B2SLine3</value>
+  </data>
+  <data name="&gt;&gt;B2SLine3.Type" xml:space="preserve">
+    <value>B2SBackglassDesigner.B2SLine, B2SBackglassDesigner, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;B2SLine3.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;B2SLine3.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="txtRomID.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="txtRomID.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 123</value>
+  </data>
+  <data name="txtRomID.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtRomID.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="txtRomID.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;txtRomID.Name" xml:space="preserve">
+    <value>txtRomID</value>
+  </data>
+  <data name="&gt;&gt;txtRomID.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtRomID.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtRomID.ZOrder" xml:space="preserve">
+    <value>40</value>
+  </data>
+  <data name="lblRomID.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblRomID.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 127</value>
+  </data>
+  <data name="lblRomID.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <data name="lblRomID.TabIndex" type="System.Int32, mscorlib">
+    <value>31</value>
+  </data>
+  <data name="lblRomID.Text" xml:space="preserve">
+    <value>ROM ID:</value>
+  </data>
+  <data name="lblRomID.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblRomID.Name" xml:space="preserve">
+    <value>lblRomID</value>
+  </data>
+  <data name="&gt;&gt;lblRomID.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblRomID.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblRomID.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="cmbROMIDType.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cmbROMIDType.Items" xml:space="preserve">
+    <value>Lamp</value>
+  </data>
+  <data name="cmbROMIDType.Items1" xml:space="preserve">
+    <value>Solenoid</value>
+  </data>
+  <data name="cmbROMIDType.Items2" xml:space="preserve">
+    <value>GI String</value>
+  </data>
+  <data name="cmbROMIDType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 150</value>
+  </data>
+  <data name="cmbROMIDType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="cmbROMIDType.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;cmbROMIDType.Name" xml:space="preserve">
+    <value>cmbROMIDType</value>
+  </data>
+  <data name="&gt;&gt;cmbROMIDType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmbROMIDType.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cmbROMIDType.ZOrder" xml:space="preserve">
+    <value>42</value>
+  </data>
+  <data name="lblRomIDType.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblRomIDType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 153</value>
+  </data>
+  <data name="lblRomIDType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 13</value>
+  </data>
+  <data name="lblRomIDType.TabIndex" type="System.Int32, mscorlib">
+    <value>33</value>
+  </data>
+  <data name="lblRomIDType.Text" xml:space="preserve">
+    <value>ROM ID type:</value>
+  </data>
+  <data name="lblRomIDType.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblRomIDType.Name" xml:space="preserve">
+    <value>lblRomIDType</value>
+  </data>
+  <data name="&gt;&gt;lblRomIDType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblRomIDType.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblRomIDType.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="lblDodgeColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblDodgeColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 246</value>
+  </data>
+  <data name="lblDodgeColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 13</value>
+  </data>
+  <data name="lblDodgeColor.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="lblDodgeColor.Text" xml:space="preserve">
+    <value>Dodge color:</value>
+  </data>
+  <data name="lblDodgeColor.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblDodgeColor.Name" xml:space="preserve">
+    <value>lblDodgeColor</value>
+  </data>
+  <data name="&gt;&gt;lblDodgeColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDodgeColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblDodgeColor.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="cmbDodgeColor.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cmbDodgeColor.Items" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="cmbDodgeColor.Items1" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="cmbDodgeColor.Items2" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="cmbDodgeColor.Items3" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="cmbDodgeColor.Items4" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
+  <data name="cmbDodgeColor.Items5" xml:space="preserve">
+    <value>Magenta</value>
+  </data>
+  <data name="cmbDodgeColor.Items6" xml:space="preserve">
+    <value>Purple</value>
+  </data>
+  <data name="cmbDodgeColor.Items7" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="cmbDodgeColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 243</value>
+  </data>
+  <data name="cmbDodgeColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="cmbDodgeColor.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;cmbDodgeColor.Name" xml:space="preserve">
+    <value>cmbDodgeColor</value>
+  </data>
+  <data name="&gt;&gt;cmbDodgeColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmbDodgeColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cmbDodgeColor.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="txtB2SID.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="txtB2SID.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 150</value>
+  </data>
+  <data name="txtB2SID.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtB2SID.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="txtB2SID.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="txtB2SID.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;txtB2SID.Name" xml:space="preserve">
+    <value>txtB2SID</value>
+  </data>
+  <data name="&gt;&gt;txtB2SID.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtB2SID.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtB2SID.ZOrder" xml:space="preserve">
+    <value>43</value>
+  </data>
+  <data name="lblB2SID.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblB2SID.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 154</value>
+  </data>
+  <data name="lblB2SID.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <data name="lblB2SID.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
+  </data>
+  <data name="lblB2SID.Text" xml:space="preserve">
+    <value>B2S ID:</value>
+  </data>
+  <data name="lblB2SID.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="lblB2SID.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;lblB2SID.Name" xml:space="preserve">
+    <value>lblB2SID</value>
+  </data>
+  <data name="&gt;&gt;lblB2SID.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblB2SID.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblB2SID.ZOrder" xml:space="preserve">
+    <value>35</value>
+  </data>
+  <data name="chkRomInverted.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkRomInverted.Location" type="System.Drawing.Point, System.Drawing">
+    <value>103, 179</value>
+  </data>
+  <data name="chkRomInverted.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 17</value>
+  </data>
+  <data name="chkRomInverted.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="chkRomInverted.Text" xml:space="preserve">
+    <value>Inverted</value>
+  </data>
+  <data name="&gt;&gt;chkRomInverted.Name" xml:space="preserve">
+    <value>chkRomInverted</value>
+  </data>
+  <data name="&gt;&gt;chkRomInverted.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkRomInverted.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkRomInverted.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="txtSizeHeight.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left, Right</value>
+  </data>
+  <data name="txtSizeHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 443</value>
+  </data>
+  <data name="txtSizeHeight.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtSizeHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>42, 21</value>
+  </data>
+  <data name="txtSizeHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;txtSizeHeight.Name" xml:space="preserve">
+    <value>txtSizeHeight</value>
+  </data>
+  <data name="&gt;&gt;txtSizeHeight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtSizeHeight.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtSizeHeight.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="txtSizeWidth.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="txtSizeWidth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>89, 443</value>
+  </data>
+  <data name="txtSizeWidth.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtSizeWidth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>42, 21</value>
+  </data>
+  <data name="txtSizeWidth.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;txtSizeWidth.Name" xml:space="preserve">
+    <value>txtSizeWidth</value>
+  </data>
+  <data name="&gt;&gt;txtSizeWidth.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtSizeWidth.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtSizeWidth.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="txtLocationY.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left, Right</value>
+  </data>
+  <data name="txtLocationY.Location" type="System.Drawing.Point, System.Drawing">
+    <value>137, 416</value>
+  </data>
+  <data name="txtLocationY.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtLocationY.Size" type="System.Drawing.Size, System.Drawing">
+    <value>42, 21</value>
+  </data>
+  <data name="txtLocationY.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;txtLocationY.Name" xml:space="preserve">
+    <value>txtLocationY</value>
+  </data>
+  <data name="&gt;&gt;txtLocationY.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtLocationY.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtLocationY.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="txtLocationX.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="txtLocationX.Location" type="System.Drawing.Point, System.Drawing">
+    <value>89, 416</value>
+  </data>
+  <data name="txtLocationX.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtLocationX.Size" type="System.Drawing.Size, System.Drawing">
+    <value>42, 21</value>
+  </data>
+  <data name="txtLocationX.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;txtLocationX.Name" xml:space="preserve">
+    <value>txtLocationX</value>
+  </data>
+  <data name="&gt;&gt;txtLocationX.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtLocationX.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtLocationX.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="rbAlignLeft.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="rbAlignLeft.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
+    <value>Button</value>
+  </data>
+  <data name="rbAlignLeft.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="rbAlignLeft.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 347</value>
+  </data>
+  <data name="rbAlignLeft.Size" type="System.Drawing.Size, System.Drawing">
+    <value>26, 22</value>
+  </data>
+  <data name="rbAlignLeft.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;rbAlignLeft.Name" xml:space="preserve">
+    <value>rbAlignLeft</value>
+  </data>
+  <data name="&gt;&gt;rbAlignLeft.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbAlignLeft.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;rbAlignLeft.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="rbAlignCenter.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="rbAlignCenter.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
+    <value>Button</value>
+  </data>
+  <data name="rbAlignCenter.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="rbAlignCenter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>37, 347</value>
+  </data>
+  <data name="rbAlignCenter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>26, 22</value>
+  </data>
+  <data name="rbAlignCenter.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;rbAlignCenter.Name" xml:space="preserve">
+    <value>rbAlignCenter</value>
+  </data>
+  <data name="&gt;&gt;rbAlignCenter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbAlignCenter.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;rbAlignCenter.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="rbAlignRight.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="rbAlignRight.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
+    <value>Button</value>
+  </data>
+  <data name="rbAlignRight.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="rbAlignRight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>69, 347</value>
+  </data>
+  <data name="rbAlignRight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>26, 22</value>
+  </data>
+  <data name="rbAlignRight.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;rbAlignRight.Name" xml:space="preserve">
+    <value>rbAlignRight</value>
+  </data>
+  <data name="&gt;&gt;rbAlignRight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbAlignRight.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;rbAlignRight.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="B2SLine4.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left, Right</value>
+  </data>
+  <data name="B2SLine4.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="B2SLine4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 468</value>
+  </data>
+  <data name="B2SLine4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 10</value>
+  </data>
+  <data name="B2SLine4.TabIndex" type="System.Int32, mscorlib">
+    <value>37</value>
+  </data>
+  <data name="&gt;&gt;B2SLine4.Name" xml:space="preserve">
+    <value>B2SLine4</value>
+  </data>
+  <data name="&gt;&gt;B2SLine4.Type" xml:space="preserve">
+    <value>B2SBackglassDesigner.B2SLine, B2SBackglassDesigner, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;B2SLine4.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;B2SLine4.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="btnSnippitSettings.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left, Right</value>
+  </data>
+  <data name="btnSnippitSettings.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnSnippitSettings.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnSnippitSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 482</value>
+  </data>
+  <data name="btnSnippitSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 23</value>
+  </data>
+  <data name="btnSnippitSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="btnSnippitSettings.Text" xml:space="preserve">
+    <value>Snippit settings</value>
+  </data>
+  <data name="&gt;&gt;btnSnippitSettings.Name" xml:space="preserve">
+    <value>btnSnippitSettings</value>
+  </data>
+  <data name="&gt;&gt;btnSnippitSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnSnippitSettings.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnSnippitSettings.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="cmbB2SIDType.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cmbB2SIDType.Items" xml:space="preserve">
+    <value>Score1 Rollover</value>
+  </data>
+  <data name="cmbB2SIDType.Items1" xml:space="preserve">
+    <value>Score2 Rollover</value>
+  </data>
+  <data name="cmbB2SIDType.Items2" xml:space="preserve">
+    <value>Score3 Rollover</value>
+  </data>
+  <data name="cmbB2SIDType.Items3" xml:space="preserve">
+    <value>Score4 Rollover</value>
+  </data>
+  <data name="cmbB2SIDType.Items4" xml:space="preserve">
+    <value>Player Up</value>
+  </data>
+  <data name="cmbB2SIDType.Items5" xml:space="preserve">
+    <value>Can Play</value>
+  </data>
+  <data name="cmbB2SIDType.Items6" xml:space="preserve">
+    <value>Ball In Play</value>
+  </data>
+  <data name="cmbB2SIDType.Items7" xml:space="preserve">
+    <value>Tilt</value>
+  </data>
+  <data name="cmbB2SIDType.Items8" xml:space="preserve">
+    <value>Match</value>
+  </data>
+  <data name="cmbB2SIDType.Items9" xml:space="preserve">
+    <value>Game Over</value>
+  </data>
+  <data name="cmbB2SIDType.Items10" xml:space="preserve">
+    <value>Shoot Again </value>
+  </data>
+  <data name="cmbB2SIDType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 123</value>
+  </data>
+  <data name="cmbB2SIDType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="cmbB2SIDType.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="cmbB2SIDType.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;cmbB2SIDType.Name" xml:space="preserve">
+    <value>cmbB2SIDType</value>
+  </data>
+  <data name="&gt;&gt;cmbB2SIDType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmbB2SIDType.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cmbB2SIDType.ZOrder" xml:space="preserve">
+    <value>41</value>
+  </data>
+  <data name="lblB2SIDType.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblB2SIDType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 126</value>
+  </data>
+  <data name="lblB2SIDType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 13</value>
+  </data>
+  <data name="lblB2SIDType.TabIndex" type="System.Int32, mscorlib">
+    <value>39</value>
+  </data>
+  <data name="lblB2SIDType.Text" xml:space="preserve">
+    <value>B2S ID type:</value>
+  </data>
+  <data name="lblB2SIDType.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="lblB2SIDType.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;lblB2SIDType.Name" xml:space="preserve">
+    <value>lblB2SIDType</value>
+  </data>
+  <data name="&gt;&gt;lblB2SIDType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblB2SIDType.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblB2SIDType.ZOrder" xml:space="preserve">
+    <value>36</value>
+  </data>
+  <data name="txtB2SValue.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="txtB2SValue.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 177</value>
+  </data>
+  <data name="txtB2SValue.MaxLength" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="txtB2SValue.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="txtB2SValue.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="txtB2SValue.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;txtB2SValue.Name" xml:space="preserve">
+    <value>txtB2SValue</value>
+  </data>
+  <data name="&gt;&gt;txtB2SValue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtB2SValue.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtB2SValue.ZOrder" xml:space="preserve">
+    <value>37</value>
+  </data>
+  <data name="lblB2SValue.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblB2SValue.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 181</value>
+  </data>
+  <data name="lblB2SValue.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <data name="lblB2SValue.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="lblB2SValue.Text" xml:space="preserve">
+    <value>B2S value:</value>
+  </data>
+  <data name="lblB2SValue.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="lblB2SValue.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;lblB2SValue.Name" xml:space="preserve">
+    <value>lblB2SValue</value>
+  </data>
+  <data name="&gt;&gt;lblB2SValue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblB2SValue.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblB2SValue.ZOrder" xml:space="preserve">
+    <value>38</value>
+  </data>
+  <data name="B2SLine5.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="B2SLine5.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="B2SLine5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 202</value>
+  </data>
+  <data name="B2SLine5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 10</value>
+  </data>
+  <data name="B2SLine5.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="&gt;&gt;B2SLine5.Name" xml:space="preserve">
+    <value>B2SLine5</value>
+  </data>
+  <data name="&gt;&gt;B2SLine5.Type" xml:space="preserve">
+    <value>B2SBackglassDesigner.B2SLine, B2SBackglassDesigner, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;B2SLine5.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;B2SLine5.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btnLightColor.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="btnLightColor.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnLightColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>159, 215</value>
+  </data>
+  <data name="btnLightColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>20, 22</value>
+  </data>
+  <data name="btnLightColor.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;btnLightColor.Name" xml:space="preserve">
+    <value>btnLightColor</value>
+  </data>
+  <data name="&gt;&gt;btnLightColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnLightColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnLightColor.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="cmbDualMode.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cmbDualMode.Items" xml:space="preserve">
+    <value>Both</value>
+  </data>
+  <data name="cmbDualMode.Items1" xml:space="preserve">
+    <value>Authentic</value>
+  </data>
+  <data name="cmbDualMode.Items2" xml:space="preserve">
+    <value>Fantasy</value>
+  </data>
+  <data name="cmbDualMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 86</value>
+  </data>
+  <data name="cmbDualMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="cmbDualMode.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;cmbDualMode.Name" xml:space="preserve">
+    <value>cmbDualMode</value>
+  </data>
+  <data name="&gt;&gt;cmbDualMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmbDualMode.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cmbDualMode.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblDualMode.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblDualMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 89</value>
+  </data>
+  <data name="lblDualMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 13</value>
+  </data>
+  <data name="lblDualMode.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="lblDualMode.Text" xml:space="preserve">
+    <value>Dual mode:</value>
+  </data>
+  <data name="lblDualMode.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblDualMode.Name" xml:space="preserve">
+    <value>lblDualMode</value>
+  </data>
+  <data name="&gt;&gt;lblDualMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDualMode.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblDualMode.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="cmbIlluMode.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cmbIlluMode.Items" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="cmbIlluMode.Items1" xml:space="preserve">
+    <value>Flasher</value>
+  </data>
+  <data name="cmbIlluMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 270</value>
+  </data>
+  <data name="cmbIlluMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 21</value>
+  </data>
+  <data name="cmbIlluMode.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;cmbIlluMode.Name" xml:space="preserve">
+    <value>cmbIlluMode</value>
+  </data>
+  <data name="&gt;&gt;cmbIlluMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmbIlluMode.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cmbIlluMode.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblIlluMode.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblIlluMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 273</value>
+  </data>
+  <data name="lblIlluMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 13</value>
+  </data>
+  <data name="lblIlluMode.TabIndex" type="System.Int32, mscorlib">
+    <value>46</value>
+  </data>
+  <data name="lblIlluMode.Text" xml:space="preserve">
+    <value>Illumination type:</value>
+  </data>
+  <data name="lblIlluMode.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblIlluMode.Name" xml:space="preserve">
+    <value>lblIlluMode</value>
+  </data>
+  <data name="&gt;&gt;lblIlluMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblIlluMode.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblIlluMode.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>184, 511</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8.25pt</value>
+  </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>150, 525</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>Manual</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Illumination</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>formToolIllumination</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>B2SBackglassDesigner.formBase, B2SBackglassDesigner, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+</root>

@@ -1,0 +1,18 @@
+Imports System
+
+Public Class B2SImageFrame
+
+    Inherits B2SIlluFrame
+
+    Protected Overrides Sub OnPaint(e As System.Windows.Forms.PaintEventArgs)
+
+        MyBase.OnPaint(e)
+
+        ' preview image
+        If BackgroundImage IsNot Nothing Then
+            e.Graphics.DrawImage(BackgroundImage, e.ClipRectangle)
+        End If
+
+    End Sub
+
+End Class

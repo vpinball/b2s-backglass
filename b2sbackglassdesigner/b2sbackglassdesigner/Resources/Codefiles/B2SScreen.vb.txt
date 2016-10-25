@@ -1,0 +1,416 @@
+﻿Imports System
+
+Public Class B2SScreen
+
+    Private Const FileName As String = "ScreenRes.txt"
+
+    Public WithEvents formBackglass As Form = Nothing
+    Public WithEvents formDMD As Form = Nothing
+
+    Public Enum eDMDViewMode
+        NotDefined = 0
+        NoDMD = 1
+        ShowDMD = 2
+        ShowDMDOnlyAtDefaultLocation = 3
+        DoNotShowDMDAtDefaultLocation = 4
+    End Enum
+
+    Public Class B2SScreenEventArgs
+        Inherits EventArgs
+
+        Public RescaleX As Double = 0
+        Public RescaleY As Double = 0
+
+        Public Sub New(ByVal _rescaleX As Double, ByVal _rescaleY As Double)
+            Me.RescaleX = _rescaleX
+            Me.RescaleY = _rescaleY
+        End Sub
+    End Class
+    Public Event BackglassFormShowing(ByVal sender As Object, ByVal e As B2SScreenEventArgs)
+    Public Event BackglassFormShown(ByVal sender As Object, ByVal e As B2SScreenEventArgs)
+    Public Event DMDFormShowing(ByVal sender As Object, ByVal e As B2SScreenEventArgs)
+    Public Event DMDFormShown(ByVal sender As Object, ByVal e As B2SScreenEventArgs)
+
+    Public Property PlayfieldSize() As Size = New Size(0, 0)
+    Public Property BackglassMonitor() As String = String.Empty
+    Public Property BackglassSize() As Size = New Size(0, 0)
+    Public Property BackglassLocation() As Point = New Point(0, 0)
+    Public Property BackglassGrillHeight() As Integer = 0
+    Public Property DMDSize() As Size = New Size(0, 0)
+    Public Property DMDLocation() As Point = New Point(0, 0)
+    Public Property DMDFlipY() As Boolean = False
+    Public Property DMDAtDefaultLocation() As Boolean = True
+    Public Property DMDViewMode() As eDMDViewMode = eDMDViewMode.NotDefined
+
+    Public Property BackglassPicBoxes As Generic.Dictionary(Of String, PictureBox) = New Generic.Dictionary(Of String, PictureBox)
+    Public Property DMDPicBoxes As Generic.Dictionary(Of String, PictureBox) = New Generic.Dictionary(Of String, PictureBox)
+
+#Region "constructor and startup"
+
+    Public Sub New()
+
+        ' read settings file
+        ReadB2SSettingsFromFile()
+
+    End Sub
+
+    Public Sub Start(ByVal _formBackglass As Form)
+
+        ' here we go with one form for the backglass and no DMD and no grill
+        Me.Start(_formBackglass, Nothing, New Size(0, 0), eDMDViewMode.NoDMD, 0)
+
+    End Sub
+    Public Sub Start(ByVal _formBackglass As Form, ByVal _BackglassGrillHeight As Integer)
+
+        ' here we go with one form for the backglass and no DMD but with grill
+        Me.Start(_formBackglass, Nothing, New Size(0, 0), eDMDViewMode.NoDMD, _BackglassGrillHeight)
+
+    End Sub
+    Public Sub Start(ByVal _formBackglass As Form, ByVal _formDMD As Form, ByVal _DefaultDMDLocation As Point)
+
+        ' here we go with two forms for the backglass and DMD and default values for the DMD view mode and the grill height
+        Me.Start(_formBackglass, _formDMD, _DefaultDMDLocation, eDMDViewMode.ShowDMD, 200)
+
+    End Sub
+    Public Sub Start(ByVal _formBackglass As Form, ByVal _formDMD As Form, ByVal _DefaultDMDLocation As Point, ByVal _DMDViewMode As eDMDViewMode, ByVal _BackglassGrillHeight As Integer)
+
+        ' first of all pick up all controls of the backglass and the DMD screen
+        GetAllControls(_formBackglass, _formDMD)
+
+        ' here we go with one or two forms for the backglass and the DMD
+        Me.formBackglass = _formBackglass
+        Me.formDMD = _formDMD
+
+        ' get all backglass settings
+        GetB2SSettings(_DefaultDMDLocation, _DMDViewMode, _BackglassGrillHeight)
+
+        ' show all backglass stuff
+        Show()
+
+    End Sub
+
+#End Region
+
+#Region "get backglass settings and show backglass"
+
+    Private Sub ReadB2SSettingsFromFile()
+
+        If IO.File.Exists(FileName) Then
+
+            ' open settings file
+            FileOpen(1, FileName, OpenMode.Input)
+
+            ' get all settings
+            Dim line(50) As String
+            Dim i As Integer = 0
+            Do Until EOF(1)
+                line(i) = LineInput(1)
+                i += 1
+            Loop
+            line(i) = 0
+            line(i + 1) = 0
+            Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
+            Me.BackglassSize = New Size(CInt(line(2)), CInt(line(3)))
+            Me.BackglassMonitor = "\\.\DISPLAY" + line(4)
+            Me.BackglassLocation = New Point(CInt(line(5)), CInt(line(6)))
+            Me.DMDSize = New Size(CInt(line(7)), CInt(line(8)))
+            Me.DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
+            Me.DMDFlipY = (Trim(line(11)) = "1")
+
+            ' close file handle
+            FileClose(1)
+
+        Else
+
+            MessageBox.Show("There is no B2S screen resolution file '" & FileName & "' in the directory '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
+                            "Please create this file with the tool 'B2SScreenResIdentifier.exe' which is included in your B2S download.", _
+                            "B2S backglass error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End
+
+        End If
+    End Sub
+
+    Private Sub GetB2SSettings(ByVal _DefaultDMDLocation As Point, ByVal _DMDViewMode As eDMDViewMode, ByVal _BackglassGrillHeight As Integer)
+
+        Me.DMDViewMode = _DMDViewMode
+
+        ' do some DMD stuff
+        If Me.DMDLocation.X = 0 Then
+            Me.DMDAtDefaultLocation = True
+
+            ' use default values for DMD location
+            If _DefaultDMDLocation <> Nothing AndAlso _DMDViewMode <> eDMDViewMode.DoNotShowDMDAtDefaultLocation Then
+                Me.DMDLocation = _DefaultDMDLocation
+            End If
+        Else
+            Me.DMDAtDefaultLocation = False
+
+            ' maybe hide grill
+            If _BackglassGrillHeight > 0 AndAlso Me.formBackglass.BackgroundImage IsNot Nothing Then
+
+                ' shrink both images to remove the grill
+                Using image As Image = imageoff
+                    Using imageWithoutGrill As Bitmap = New Bitmap(Me.formBackglass.BackgroundImage.Width, Me.formBackglass.BackgroundImage.Height - _BackglassGrillHeight)
+                        Using gr As Graphics = Graphics.FromImage(imageWithoutGrill)
+                            gr.DrawImage(image, New Rectangle(0, 0, imageWithoutGrill.Width, imageWithoutGrill.Height + _BackglassGrillHeight))
+                        End Using
+                        imageoff = imageWithoutGrill.Clone
+                    End Using
+                End Using
+                Using image As Image = imageon
+                    Using imageWithoutGrill As Bitmap = New Bitmap(Me.formBackglass.BackgroundImage.Width, Me.formBackglass.BackgroundImage.Height - _BackglassGrillHeight)
+                        Using gr As Graphics = Graphics.FromImage(imageWithoutGrill)
+                            gr.DrawImage(image, New Rectangle(0, 0, imageWithoutGrill.Width, imageWithoutGrill.Height + _BackglassGrillHeight))
+                        End Using
+                        imageon = imageWithoutGrill.Clone
+                    End Using
+                End Using
+
+                ' set background image and new backglass form height (without grill)
+                Me.formBackglass.BackgroundImage = imageoff
+                Me.formBackglass.Size = Me.formBackglass.BackgroundImage.Size
+
+            End If
+
+            ' maybe rotate DMD image
+            If Me.DMDFlipY AndAlso formDMD IsNot Nothing AndAlso formDMD.BackgroundImage IsNot Nothing Then
+                formDMD.BackgroundImage.RotateFlip(RotateFlipType.RotateNoneFlipY)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub Show()
+
+        'On Error Resume Next
+
+        ' first of all get the info whether the DMD is to be shown or not
+        Dim isDMDToBeShown As Boolean = (formDMD IsNot Nothing AndAlso _
+            ((Me.DMDViewMode = eDMDViewMode.ShowDMD) OrElse _
+             (Me.DMDViewMode = eDMDViewMode.ShowDMDOnlyAtDefaultLocation AndAlso Me.DMDAtDefaultLocation) OrElse _
+             (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
+
+		' get the correct screen
+        On Error Resume Next
+        Dim screen As Screen = screen.AllScreens(0)
+        If Mid(screen.DeviceName, 1, 12) <> BackglassMonitor Then
+            screen = screen.AllScreens(1)
+            If Mid(screen.DeviceName, 1, 12) <> BackglassMonitor Then
+                screen = screen.AllScreens(2)
+            End If
+        End If
+        On Error GoTo 0
+
+        ' calculate backglass rescale factors
+        Dim rescaleBackglassX As Single = Me.formBackglass.Width / Me.BackglassSize.Width
+        Dim rescaleBackglassY As Single = Me.formBackglass.Height / Me.BackglassSize.Height
+        If Me.formBackglass.BackgroundImage IsNot Nothing Then
+            rescaleBackglassX = Me.formBackglass.BackgroundImage.Width / Me.BackglassSize.Width
+            rescaleBackglassY = Me.formBackglass.BackgroundImage.Height / Me.BackglassSize.Height
+        End If
+
+        ' maybe rescale the location and the size because this is the default and therefore it has to be done
+        Dim rescaleDMDX As Single = 1
+        Dim rescaleDMDY As Single = 1
+        If isDMDToBeShown Then
+            If Me.DMDAtDefaultLocation Then
+                Me.DMDSize = Me.formDMD.Size
+                If rescaleBackglassX <> 1 OrElse rescaleBackglassY <> 1 Then
+                    Me.DMDLocation = New Point(Int(Me.DMDLocation.X / rescaleBackglassX), Int(Me.DMDLocation.Y / rescaleBackglassY))
+                    Me.DMDSize = New Size(Int(Me.DMDSize.Width / rescaleBackglassX), Int(Me.DMDSize.Height / rescaleBackglassY))
+                End If
+            End If
+
+            ' calculate DMD rescale factors
+            rescaleDMDX = Me.formDMD.Width / Me.DMDSize.Width
+            rescaleDMDY = Me.formDMD.Height / Me.DMDSize.Height
+            If Me.formDMD.BackgroundImage IsNot Nothing Then
+                rescaleDMDX = Me.formDMD.BackgroundImage.Width / Me.DMDSize.Width
+                rescaleDMDY = Me.formDMD.BackgroundImage.Height / Me.DMDSize.Height
+            End If
+        End If
+
+        ' move and scale all picked objects
+        ScaleAllControls(rescaleBackglassX, rescaleBackglassY, rescaleDMDX, rescaleDMDY)
+        
+        ' raise before creation event for backglass form
+        RaiseEvent BackglassFormShowing(Me, New B2SScreenEventArgs(rescaleBackglassX, rescaleBackglassY))
+        ' show the backglass form
+        Me.formBackglass.StartPosition = FormStartPosition.Manual
+        Me.formBackglass.BackgroundImageLayout = ImageLayout.Stretch
+        Me.formBackglass.FormBorderStyle = FormBorderStyle.None
+        Me.formBackglass.ControlBox = False
+        Me.formBackglass.MaximizeBox = False
+        Me.formBackglass.MinimizeBox = False
+        Me.formBackglass.Location = screen.Bounds.Location + Me.BackglassLocation
+        Me.formBackglass.Size = Me.BackglassSize
+		Me.formBackglass.Text = "Form1"
+        Me.formBackglass.Show()
+        ' raise creation event for backglass form
+        RaiseEvent BackglassFormShown(Me, New B2SScreenEventArgs(rescaleBackglassX, rescaleBackglassY))
+
+        ' bring backglass screen to the front
+        Me.formBackglass.BringToFront()
+
+        ' maybe show DMD form
+        If isDMDToBeShown Then
+            ' raise before creation event for DMD form
+            RaiseEvent DMDFormShowing(Me, New B2SScreenEventArgs(rescaleDMDX, rescaleDMDY))
+            ' set DMD location relative to the backglass location
+            Me.formDMD.StartPosition = FormStartPosition.Manual
+            Me.formDMD.BackgroundImageLayout = ImageLayout.Stretch
+            Me.formDMD.FormBorderStyle = FormBorderStyle.None
+            Me.formDMD.ControlBox = False
+            Me.formDMD.MaximizeBox = False
+            Me.formDMD.MinimizeBox = False
+            Me.formDMD.Location = Me.formBackglass.Location + Me.DMDLocation
+            Me.formDMD.Size = Me.DMDSize
+            ' show the DMD form
+            Me.formDMD.Show()
+            Me.formDMD.BringToFront()
+            Me.formDMD.TopMost = True
+            ' raise creation event for DMD form
+            RaiseEvent DMDFormShown(Me, New B2SScreenEventArgs(rescaleDMDX, rescaleDMDY))
+        End If
+
+    End Sub
+
+    Private Sub GetAllControls(ByRef _formBackglass As Form, ByRef _formDMD As Form)
+
+        ' give main form background image to B2SData
+        'B2SData.BackgroundImage = _formBackglass.BackgroundImage
+
+        ' pick up all backglass picture boxes
+        GetControls(_formBackglass)
+
+        ' now pick up all DMD picture boxes
+        GetControls(_formDMD, True)
+
+    End Sub
+    Private Sub GetControls(ByRef _form As Form, Optional ByVal _IsDMD As Boolean = False)
+
+		' get all important controls
+        If _form IsNot Nothing Then
+            For Each cntrl As Control In _form.Controls
+                If TypeOf cntrl Is B2SBaseBox Then
+                    Dim name As String = cntrl.Name
+                    DirectCast(cntrl, B2SBaseBox).Type = If(_IsDMD, B2SBaseBox.eType.OnDMD, B2SBaseBox.eType.OnBackglass)
+                    Dim illuminations As Generic.SortedList(Of String, B2SPictureBox) = If(_IsDMD, B2SData.DMDIlluminations, B2SData.Illuminations)
+                    If TypeOf cntrl Is B2SReelBox Then
+                        If Not B2SData.Reels.ContainsKey(name) Then
+                            B2SData.Reels.Add(name, cntrl)
+                        End If
+                    ElseIf TypeOf cntrl Is B2SLEDBox Then
+                        If Not B2SData.LEDs.ContainsKey(name) Then
+                            B2SData.LEDs.Add(name, cntrl)
+                        End If
+                    ElseIf TypeOf cntrl Is B2SPictureBox Then
+                        If Not illuminations.ContainsKey(name) Then
+                            illuminations.Add(name, cntrl)
+                        End If
+                    End If
+                ElseIf TypeOf cntrl Is Dream7Display Then
+                    Dim name As String = cntrl.Name
+                    If Not B2SData.LEDDisplays.ContainsKey(name) Then
+                        B2SData.LEDDisplays.Add(name, cntrl)
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Sub ScaleAllControls(ByVal _rescaleX As Single, ByVal _rescaleY As Single, ByVal _rescaleDMDX As Single, ByVal _rescaleDMDY As Single)
+
+        ' get scale data for all picked objects and scale some of them
+        For Each cntrlinfo As KeyValuePair(Of String, B2SReelBox) In B2SData.Reels
+            ScaleControl(cntrlinfo.Value, _rescaleX, _rescaleY)
+        Next
+        For Each cntrlinfo As KeyValuePair(Of String, Dream7Display) In B2SData.LEDDisplays
+            ScaleControl(cntrlinfo.Value, _rescaleDMDX, _rescaleDMDY)
+        Next
+        For Each cntrlinfo As KeyValuePair(Of String, B2SLEDBox) In B2SData.LEDs
+            ScaleControl(cntrlinfo.Value, _rescaleX, _rescaleY)
+        Next
+        For Each cntrlinfo As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+            ScaleControl(cntrlinfo.Value, _rescaleX, _rescaleY)
+        Next
+        For Each cntrlinfo As KeyValuePair(Of String, B2SPictureBox) In B2SData.DMDIlluminations
+            ScaleControl(cntrlinfo.Value, _rescaleDMDX, _rescaleDMDY)
+        Next
+
+    End Sub
+    Private Sub ScaleControl(ByRef _cntrl As B2SBaseBox, ByRef _rescaleX As Single, ByRef _rescaleY As Single)
+
+		' calculate the exact location and size of all controls
+        _cntrl.RectangleF = New RectangleF(_cntrl.Left / _rescaleX, _cntrl.Top / _rescaleY, _cntrl.Width / _rescaleX, _cntrl.Height / _rescaleY)
+
+        ' scale not more than the LED and reel boxes
+        If TypeOf _cntrl Is B2SLEDBox OrElse TypeOf _cntrl Is B2SReelBox Then
+            _cntrl.Location = New Point(Point.Round(_cntrl.RectangleF.Location))
+            _cntrl.Size = New Size(Size.Round(_cntrl.RectangleF.Size))
+        End If
+
+    End Sub
+    Private Sub ScaleControl(ByRef _cntrl As Dream7Display, ByRef _rescaleX As Single, ByRef _rescaleY As Single)
+
+        ' calculate the exact location and size of all controls
+        Dim rectF As RectangleF = New RectangleF(_cntrl.Left / _rescaleX, _cntrl.Top / _rescaleY, _cntrl.Width / _rescaleX, _cntrl.Height / _rescaleY)
+
+        ' scale not more than the LED and reel boxes
+        _cntrl.Location = New Point(Point.Round(rectF.Location))
+        _cntrl.Size = New Size(Size.Round(rectF.Size))
+
+
+        ' set some stuff
+        _cntrl.OffColor = Color.FromArgb(13, 13, 13)
+        _cntrl.LightColor = Color.FromArgb(81, 83, 255)
+        _cntrl.GlassColor = Color.FromArgb(81, 83, 255)
+        _cntrl.GlassColorCenter = Color.FromArgb(51, 123, 255)
+        _cntrl.GlassAlpha = 120
+        _cntrl.GlassAlphaCenter = 230
+        _cntrl.Glow = 15
+        _cntrl.Thickness = 18
+
+
+    End Sub
+
+#End Region
+
+#Region "backglass image and painting stuff"
+
+    Private imageoff As Image = My.Resources.BackgroundOff
+    Private imageon As Image = My.Resources.BackgroundOn
+    Public ReadOnly Property BackgroundImageOff() As Image
+        Get
+            Return imageoff
+        End Get
+    End Property
+    Public ReadOnly Property BackgroundImageOn() As Image
+        Get
+            Return imageon
+        End Get
+    End Property
+
+    Private Sub formBackglass_Paint(sender As Object, e As System.Windows.Forms.PaintEventArgs) Handles formBackglass.Paint
+        If B2SData.Illuminations.Count > 0 Then
+            For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                If illu.Value.Visible Then
+                    e.Graphics.DrawImage(illu.Value.BackgroundImage, illu.Value.RectangleF)
+                End If
+            Next
+        End If
+    End Sub
+    Private Sub formDMD_Paint(sender As Object, e As System.Windows.Forms.PaintEventArgs) Handles formDMD.Paint
+        If B2SData.DMDIlluminations.Count > 0 Then
+            For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.DMDIlluminations
+                If illu.Value.Visible Then
+                    e.Graphics.DrawImage(illu.Value.BackgroundImage, illu.Value.RectangleF)
+                End If
+            Next
+        End If
+    End Sub
+	
+#End Region
+
+End Class

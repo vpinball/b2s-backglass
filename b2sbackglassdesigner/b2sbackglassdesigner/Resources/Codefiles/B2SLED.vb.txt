@@ -1,0 +1,211 @@
+﻿Imports System
+
+Public Class B2SLED
+
+    Private cLEDRefreshCounter As Integer = 300 ' is about every 10 seconds
+
+    Private cMaxValue As Integer = 65535
+
+    Public Enum eLEDType
+        Undefined = 0
+        LED7 = 1
+        LED8 = 2
+        LED9 = 3
+        LED10 = 4
+        LED14 = 5
+        LED16 = 6
+    End Enum
+
+    Private WithEvents B2SSystem As B2SSystem = Nothing
+    Private B2SScreen As B2SScreen = Nothing
+
+    Private TimerLEDData As Timer = Nothing
+    Private LEDCount As Integer = 0
+    Private UsingLEDDisplays As Boolean = True
+    
+#Region "constructor and startup"
+
+    Public Sub New(ByRef _B2SSystem As B2SSystem, ByRef _B2SScreen As B2SScreen)
+
+        ' store B2S instances
+        B2SSystem = _B2SSystem
+        B2SScreen = _B2SScreen
+
+        ' timer to pass data to backglass
+        TimerLEDData = New Timer
+        With TimerLEDData
+            AddHandler .Tick, AddressOf TimerLEDData_Tick
+            .Interval = 21
+            .Enabled = False
+        End With
+
+    End Sub
+
+    Public Sub Start()
+
+        ' store LED picture box references and set LED types
+        LEDCount = SetupLEDs()
+
+    End Sub
+
+#End Region
+
+#Region "public stuff"
+
+    Public Sub InitLEDs()
+
+        ' do this init only if there are some LEDs
+        If LEDCount > 0 Then
+            ' first of all stop LED timer
+            TimerLEDData.Stop()
+            ' init
+            InitializeAllSegmentsWithFirstDraw()
+            ' start LED timer
+            TimerLEDData.Start()
+        End If
+
+    End Sub
+
+#End Region
+
+#Region "init stuff"
+
+    Private Function SetupLEDs() As Integer
+
+        ' store LED picture box references
+        Dim max As Integer = 0
+
+        ' get all LED display or picture box references
+        If B2SData.LEDDisplays.Count > 0 Then
+            UsingLEDDisplays = True
+            For Each leddisplay As KeyValuePair(Of String, Dream7Display) In B2SData.LEDDisplays
+                SetupLEDDisplays(leddisplay.Value, max)
+            Next
+        ElseIf B2SData.LEDs.Count > 0 Then
+            UsingLEDDisplays = False
+            For Each led As KeyValuePair(Of String, B2SLEDBox) In B2SData.LEDs
+                SetupLEDs(led.Value, max)
+            Next
+        End If
+
+        ' return the number of LEDs
+        Return max
+
+    End Function
+    Private Sub SetupLEDDisplays(ByVal _leddisplay As Dream7Display, ByRef _max As Integer)
+        _max += _leddisplay.Digits
+        _leddisplay.Mirrored = B2SScreen.DMDFlipY
+    End Sub
+    Private Sub SetupLEDs(ByRef _led As B2SLEDBox, ByRef _max As Integer)
+        If _led.ID > _max Then _max = _led.ID
+        If _led.LEDType = eLEDType.Undefined Then _led.LEDType = eLEDType.LED7
+        If _led.LitLEDSegmentColor = Nothing Then _led.LitLEDSegmentColor = LitLEDSegmentStandardColor()
+        If _led.DarkLEDSegmentColor = Nothing Then _led.DarkLEDSegmentColor = DarkLEDSegmentStandardColor()
+        '_led.BackColor = Color.Black
+    End Sub
+
+    Private Sub InitializeAllSegmentsWithFirstDraw()
+
+        ' maybe scale all line segments
+        If LEDCount > 0 Then
+            If UsingLEDDisplays Then
+                For Each leddisplay As KeyValuePair(Of String, Dream7Display) In B2SData.LEDDisplays
+                    For i As Integer = 0 To leddisplay.Value.Digits - 1
+                        leddisplay.Value.SetValue(i, cMaxValue)
+                    Next
+                Next
+            Else
+                For Each led As KeyValuePair(Of String, B2SLEDBox) In B2SData.LEDs
+                    led.Value.Value = cMaxValue
+                Next
+            End If
+            Threading.Thread.Sleep(50)
+        End If
+
+    End Sub
+
+#End Region
+
+#Region "timer"
+
+    Private Sub TimerLEDData_Tick(ByVal sender As Object, ByVal e As EventArgs)
+
+        ' stop the timer to do this work without 'pressure' :-)
+        TimerLEDData.Stop()
+
+        Dim doRefresh As Boolean = False
+
+        ' do a refresh every x calls (x is defined in cLEDRefreshCounter) 
+        Static ledRefreshCounter As Integer = cLEDRefreshCounter
+        ledRefreshCounter = ledRefreshCounter - 1
+        If ledRefreshCounter < 1 Then
+            doRefresh = True
+            ledRefreshCounter = cLEDRefreshCounter
+        End If
+
+        ' read LED states from VP
+        Dim ledValues(LEDCount - 1) As Integer
+        For ledIndex As Integer = 0 To LEDCount - 1
+            ledValues(ledIndex) = -1
+            Try
+                ledValues(ledIndex) = My.Computer.Registry.GetValue("HKEY_CURRENT_USER\B2S\", "B2SLED" & ledIndex.ToString(), Nothing)
+            Catch
+            End Try
+        Next
+
+        ' write LED state into LEDs
+        If UsingLEDDisplays Then
+            ' write into LED display
+            Dim i As Integer = If(B2SScreen.DMDFlipY, LEDCount, 0)
+            For Each leddisplay As KeyValuePair(Of String, Dream7Display) In B2SData.LEDDisplays
+                Dim startindex As Integer = i - leddisplay.Value.Digits
+                If B2SScreen.DMDFlipY Then i = startindex
+                For j As Integer = 0 To leddisplay.Value.Digits - 1
+                    If ledValues(i) > -1 Then leddisplay.Value.SetValue(j, ledValues(i))
+                    i += 1
+                Next
+                If B2SScreen.DMDFlipY Then i = startindex
+            Next
+        Else
+            ' write into standard LEDs
+            Dim i As Integer = 0
+            For Each led As KeyValuePair(Of String, B2SLEDBox) In B2SData.LEDs
+                If ledValues(i) > -1 Then led.Value.Value = ledValues(i)
+                i += 1
+            Next
+        End If
+
+        ' restart the timer
+        TimerLEDData.Start()
+
+    End Sub
+
+#End Region
+
+#Region "standard colors"
+
+    Private ReadOnly Property LitLEDSegmentStandardColor() As Color
+        Get
+            Return Color.OrangeRed
+        End Get
+    End Property
+    Private ReadOnly Property DarkLEDSegmentStandardColor() As Color
+        Get
+            Return Color.FromArgb(15, 15, 15)
+        End Get
+    End Property
+
+#End Region
+
+#Region "B2S ssystem and screen communication"
+
+    Private Sub B2SSystem_VPIsActivated(sender As Object, e As System.EventArgs) Handles B2SSystem.VPIsActivated
+
+        ' visual pinball player is activated at B2SSystem so initialize here all LEDs
+        InitLEDs()
+
+    End Sub
+
+#End Region
+
+End Class

@@ -1,0 +1,100 @@
+Imports System
+Imports System.Drawing.Drawing2D
+
+Public Class B2SLEDBox
+
+    Inherits B2SBaseBox
+
+    Private currentSeg As Generic.List(Of PointF()) = New Generic.List(Of PointF())
+
+    Protected Overrides Sub OnResize(e As System.EventArgs)
+
+        ' base call
+        MyBase.OnResize(e)
+
+        ' resize the led segments and load it into the current segment array
+        Dim width As Single = Me.Width / B2SData.ledCoordMax
+        Dim height As Single = Me.Height / B2SData.ledCoordMax
+        currentSeg.Clear()
+        For Each entry As PointF() In If(LEDType = B2SLED.eLEDType.LED10, B2SData.led10Seg, If(LEDType = B2SLED.eLEDType.LED16, B2SData.led16Seg, B2SData.led8Seg))
+            Dim scaled(entry.Length - 1) As PointF
+            For i As Integer = 0 To entry.Length - 1
+                scaled(i) = New PointF(entry(i).X * width, entry(i).Y * height)
+            Next
+            currentSeg.Add(scaled)
+        Next
+
+    End Sub
+    Protected Overrides Sub OnPaint(ByVal e As System.Windows.Forms.PaintEventArgs)
+
+        ' create or recreate brushes
+        Static litbrush As SolidBrush = New SolidBrush(LitLEDSegmentColor)
+        Static darkbrush As SolidBrush = New SolidBrush(DarkLEDSegmentColor)
+        If Not litbrush.Color.Equals(LitLEDSegmentColor) Then
+            litbrush.Dispose()
+            litbrush = New SolidBrush(LitLEDSegmentColor)
+        End If
+        If Not darkbrush.Color.Equals(DarkLEDSegmentColor) Then
+            darkbrush.Dispose()
+            darkbrush = New SolidBrush(DarkLEDSegmentColor)
+        End If
+
+        ' draw LED segments
+        Dim width As Single = Me.Width / B2SData.ledCoordMax
+        Dim height As Single = Me.Height / B2SData.ledCoordMax
+
+        ' set graphics' options
+        e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
+
+        ' draw LED segments
+        For i As Integer = 0 To currentSeg.Count - 1
+            e.Graphics.FillPolygon(If((_Value And 2 ^ i) <> 0, litbrush, darkbrush), currentSeg(i))
+        Next
+ 
+    End Sub
+
+    Public Sub New()
+
+        Me.SetStyle(ControlStyles.ResizeRedraw, True)
+        Me.DoubleBuffered = True
+
+        ' back color
+        Me.BackColor = Color.Black
+
+        ' show control
+        Me.Visible = True
+
+    End Sub
+
+    Public Property ID() As Integer
+
+    Public Property LitLEDSegmentColor() As Color = Nothing
+    Public Property DarkLEDSegmentColor() As Color = Nothing
+
+    Private _LEDType As B2SLED.eLEDType = B2SLED.eLEDType.Undefined
+    Public Property LEDType() As B2SLED.eLEDType
+        Get
+            Return _LEDType
+        End Get
+        Set(ByVal value As B2SLED.eLEDType)
+            If _LEDType <> value Then
+                _LEDType = value
+                Me.Invalidate()
+            End If
+        End Set
+    End Property
+
+    Private _Value As Integer = 0
+    Public Property Value(Optional ByVal refresh As Boolean = False) As Integer
+        Get
+            Return _Value
+        End Get
+        Set(ByVal value As Integer)
+            If _Value <> value OrElse refresh Then
+                _Value = value
+                Me.Refresh()
+            End If
+        End Set
+    End Property
+
+End Class

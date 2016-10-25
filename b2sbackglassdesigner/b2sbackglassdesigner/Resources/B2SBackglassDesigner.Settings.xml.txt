@@ -1,0 +1,47 @@
+<B2SBackglassDesignerSettings>
+  <FormSettings>
+    <formDesigner>
+      <LocX Value="218" />
+      <LocY Value="1" />
+      <Width Value="1161" />
+      <Height Value="837" />
+      <Maximized Value="0" />
+      <Opacity Value="100" />
+      <VPTablesFolder Value="C:\Games\Visual Pinball\Tables" />
+    </formDesigner>
+    <formToolIllumination>
+      <LocX Value="1395" />
+      <LocY Value="327" />
+      <Width Value="206" />
+      <Height Value="500" />
+      <Maximized Value="0" />
+    </formToolIllumination>
+    <formToolUndo>
+      <LocX Value="1396" />
+      <LocY Value="30" />
+      <Width Value="150" />
+      <Height Value="276" />
+      <Maximized Value="0" />
+    </formToolUndo>
+    <formToolReelsAndLEDs>
+      <LocX Value="16" />
+      <LocY Value="274" />
+      <Width Value="198" />
+      <Height Value="564" />
+      <Maximized Value="0" />
+    </formToolReelsAndLEDs>
+    <formToolResources>
+      <LocX Value="19" />
+      <LocY Value="9" />
+      <Width Value="194" />
+      <Height Value="263" />
+      <Maximized Value="0" />
+    </formToolResources>
+  </FormSettings>
+  <OpenToolForms>
+    <Form1 Name="formToolIllumination" />
+    <Form2 Name="formToolReelsAndLEDs" />
+    <Form3 Name="formToolUndo" />
+    <Form4 Name="formToolResources" />
+  </OpenToolForms>
+</B2SBackglassDesignerSettings>

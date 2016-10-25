@@ -1,0 +1,189 @@
+Imports System
+Imports System.Windows.Forms
+Imports System.Drawing
+
+Public Class B2SReelBox
+
+    Inherits B2SBaseBox
+
+    Private timer As Timer = Nothing
+
+    Private length As Integer = 1
+    Private initValue As String = "0"
+    Private reelindex As String = String.Empty
+
+    Protected Overrides Sub OnPaint(ByVal e As System.Windows.Forms.PaintEventArgs)
+
+        If Not String.IsNullOrEmpty(reelindex) Then
+            Dim imagename As String = _ReelType & "_" & reelindex
+            If B2SData.ReelImages.ContainsKey(_ReelType & "_" & reelindex) Then
+                e.Graphics.DrawImage(B2SData.ReelImages(imagename), e.ClipRectangle)
+            Else
+                Dim image As Image = Nothing
+                Try
+                    image = My.Resources.ResourceManager.GetObject(imagename)
+                Catch
+                End Try
+                If image IsNot Nothing Then
+                    e.Graphics.DrawImage(image, e.ClipRectangle)
+                    B2SData.ReelImages.Add(imagename, image)
+                End If
+            End If
+        End If
+
+    End Sub
+
+    Public Sub New()
+
+        ' set some styles
+        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.DoubleBuffer, True)
+        Me.DoubleBuffered = True
+
+        ' create timer
+        timer = New Timer()
+        timer.Interval = 101
+        AddHandler timer.Tick, AddressOf ReelAnimationTimer_Tick
+
+    End Sub
+
+    Private Sub B2SReelBox_Disposed(sender As Object, e As System.EventArgs) Handles Me.Disposed
+        On Error Resume Next
+        If timer IsNot Nothing Then
+            timer.Stop()
+            RemoveHandler timer.Tick, AddressOf ReelAnimationTimer_Tick
+            timer.Dispose()
+            timer = Nothing
+        End If
+    End Sub
+
+    Private Sub ReelAnimationTimer_Tick(ByVal sender As Object, ByVal e As System.EventArgs)
+
+        ' add one reel step
+        _CurrentText += 1
+        If _CurrentText > 9 Then _CurrentText = 0
+
+        reelindex = ConvertText(_CurrentText)
+
+        ' play sound and redraw reel
+        Try
+            My.Computer.Audio.Play(My.Resources.EMReel, AudioPlayMode.Background)
+        Catch
+        End Try
+        Me.Refresh()
+
+        ' maybe stop timer
+        If _CurrentText = _Text OrElse _Text >= 10 Then timer.Stop()
+
+    End Sub
+
+    Public Property ID() As Integer
+
+    Private _ReelType As String
+    Public Property ReelType() As String
+        Get
+            Return _ReelType
+        End Get
+        Set(ByVal value As String)
+            reelindex = "0"
+            If value.Substring(value.Length - 1, 1) = "_" Then
+                length = 2
+                reelindex = "00"
+                value = value.Substring(0, value.Length - 1)
+            End If
+            If value.Equals("LED", StringComparison.CurrentCultureIgnoreCase) Then
+                initValue = "Empty"
+            End If
+            _ReelType = value
+        End Set
+    End Property
+
+    Private _Value As Integer = 0
+    Public Property Value(Optional ByVal refresh As Boolean = False) As Integer
+        Get
+            Return _Value
+        End Get
+        Set(ByVal value As Integer)
+            If _Value <> value OrElse refresh Then
+                _Value = value
+                reelindex = ConvertValue(_Value)
+                Me.Refresh()
+            End If
+        End Set
+    End Property
+
+    Private _CurrentText As Integer = 0
+    Private _Text As Integer = 0
+    Public Shadows Property Text(ByVal AnimateReelChange As Boolean) As Integer
+        Get
+            Return _Text
+        End Get
+        Set(ByVal value As Integer)
+            If value >= 0 Then
+                If _Text <> value Then
+                    _CurrentText = _Text
+                    _Text = value
+                    If AnimateReelChange Then
+                        timer.Start()
+                    Else
+                        reelindex = ConvertText(_Text)
+                        Me.Refresh()
+                    End If
+                End If
+            End If
+        End Set
+    End Property
+
+    Private Function ConvertValue(ByVal value As Integer) As String
+        Dim ret As String = initValue
+        ' remove the "," from the 7-segmenter
+        If value >= 128 AndAlso value <= 255 Then
+            value -= 128
+        End If
+        ' map value
+        If value > 0 Then
+            Select Case value
+                ' 7-segment stuff
+                Case 63
+                    ret = "0"
+                Case 6
+                    ret = "1"
+                Case 91
+                    ret = "2"
+                Case 79
+                    ret = "3"
+                Case 102
+                    ret = "4"
+                Case 109
+                    ret = "5"
+                Case 125
+                    ret = "6"
+                Case 7
+                    ret = "7"
+                Case 127
+                    ret = "8"
+                Case 111
+                    ret = "9"
+                Case Else
+                    'additional 10-segment stuff
+                    Select Case value
+                        Case 768
+                            ret = "1"
+                        Case 124
+                            ret = "6"
+                        Case 103
+                            ret = "9"
+                            'Case Else
+                            '    Debug.WriteLine(_Value)
+                    End Select
+            End Select
+        End If
+        Return If(length = 2, "0", "") & ret
+    End Function
+    Private Function ConvertText(ByVal text As Integer) As String
+        Dim ret As String = String.Empty
+        ret = "00" & text.ToString()
+        ret = ret.Substring(ret.Length - length, length)
+        Return ret
+    End Function
+
+End Class

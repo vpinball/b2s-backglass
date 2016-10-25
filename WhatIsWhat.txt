@@ -1,0 +1,14 @@
+The three main projects:
+- B2SBackglassDesigner: The Backglass Designer to generate directB2S-Backglasses
+- B2SBackglassServer: The COM-Server for the communication between VP and Backglass and the display of the Backglasses in the same process
+- B2SBackglassServerEXE: Backglass display as separate EXE (for performance reasons). Contains copied code of the server. Communication via the COM-Server and to large parts via the Registry
+
+In addition:
+- LEDs: Two projects on the topic of "LED-Display"
+
+Tools:
+- B2SBackglassServerRegisterApp: Register Backglass-COM-Server in the .NET-Environment
+- B2SVPinMAMEStarter: Launch Testmode from the Designer
+
+Unfinished:
+- B2S_ScreenResIdentifier: Tool to organize and to set B2S-Settings

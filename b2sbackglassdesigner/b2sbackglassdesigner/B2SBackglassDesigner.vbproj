@@ -1,0 +1,733 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>B2SBackglassDesigner.My.MyApplication</StartupObject>
+    <RootNamespace>B2SBackglassDesigner</RootNamespace>
+    <AssemblyName>B2SBackglassDesigner</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>B2SBackglassDesigner.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>B2SBackglassDesigner.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>B2SBackglassDesigner_64.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationStartup.vb" />
+    <Compile Include="Classes\Animations\AnimationHeader.vb" />
+    <Compile Include="Classes\Animations\AnimationHeaderCollection.vb" />
+    <Compile Include="Classes\Animations\AnimationStepCollection.vb" />
+    <Compile Include="Classes\Animations\AnimationStep.vb" />
+    <Compile Include="Classes\B2S\B2SLine.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\B2S\BackglassEnums.vb" />
+    <Compile Include="Classes\B2S\GeneralData.vb" />
+    <Compile Include="Classes\Base controls\B2SDream7LEDPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Dream7\Dream7Display.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Dream7\Segment.vb" />
+    <Compile Include="Classes\Dream7\SegmentNumber.vb" />
+    <Compile Include="Classes\Illumination\LightsCreation.vb" />
+    <Compile Include="Classes\Base classes\HelperBase.vb" />
+    <Compile Include="Classes\B2S\BackglassData.vb" />
+    <Compile Include="Classes\Base classes\InfoBase.vb" />
+    <Compile Include="Classes\Base controls\B2SColorBar.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Base controls\B2SRenderedLED.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Base controls\B2SRenderedLEDPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\CreateCode\Coding.vb" />
+    <Compile Include="Classes\Illumination\BulbCollection.vb" />
+    <Compile Include="Classes\Images\ImageCollection.vb" />
+    <Compile Include="Classes\Images\ImageInfo.vb" />
+    <Compile Include="Classes\Recent.vb" />
+    <Compile Include="Classes\Reels\ScoreCollection.vb" />
+    <Compile Include="Classes\Reels\ScoreInfo.vb" />
+    <Compile Include="Classes\Save.vb" />
+    <Compile Include="Classes\Illumination\Lights.vb" />
+    <Compile Include="Classes\Illumination\BulbInfo.vb" />
+    <Compile Include="Classes\PictureBox\Mouse.vb" />
+    <Compile Include="Classes\PictureBox\B2SPictureBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Tab\B2STab.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Tab\B2STabPage.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="formDesigner.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formDesigner.Designer.vb">
+      <DependentUpon>formDesigner.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formSetReelIllumination.Designer.vb">
+      <DependentUpon>formSetReelIllumination.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formSetReelIllumination.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formAbout.Designer.vb">
+      <DependentUpon>formAbout.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formAbout.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formAddSnippit.Designer.vb">
+      <DependentUpon>formAddSnippit.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formAddSnippit.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formAnimations.Designer.vb">
+      <DependentUpon>formAnimations.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formAnimations.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formBackup.Designer.vb">
+      <DependentUpon>formBackup.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formBackup.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formBrightness.Designer.vb">
+      <DependentUpon>formBrightness.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formBrightness.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formReelType.Designer.vb">
+      <DependentUpon>formReelType.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formReelType.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formResize.Designer.vb">
+      <DependentUpon>formResize.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formResize.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formSetLEDColor.Designer.vb">
+      <DependentUpon>formSetLEDColor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formSetLEDColor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formSnippitSettings.Designer.vb">
+      <DependentUpon>formSnippitSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formSnippitSettings.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formToolIllumination.Designer.vb">
+      <DependentUpon>formToolIllumination.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formToolIllumination.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formSettings.Designer.vb">
+      <DependentUpon>formSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formSettings.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\Base classes\formBase.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formToolResources.Designer.vb">
+      <DependentUpon>formToolResources.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formToolResources.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formToolReelsAndLEDs.Designer.vb">
+      <DependentUpon>formToolReelsAndLEDs.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formToolReelsAndLEDs.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formToolUndo.Designer.vb">
+      <DependentUpon>formToolUndo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formToolUndo.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\formVPM.Designer.vb">
+      <DependentUpon>formVPM.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\formVPM.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modules\moduleB2S.vb" />
+    <Compile Include="Classes\B2S\Undo.vb" />
+    <Compile Include="Modules\moduleImageExtensions.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="formDesigner.resx">
+      <DependentUpon>formDesigner.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formSetReelIllumination.resx">
+      <DependentUpon>formSetReelIllumination.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formAbout.resx">
+      <DependentUpon>formAbout.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formAddSnippit.resx">
+      <DependentUpon>formAddSnippit.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formAnimations.resx">
+      <DependentUpon>formAnimations.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formBackup.resx">
+      <DependentUpon>formBackup.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formBrightness.resx">
+      <DependentUpon>formBrightness.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formReelType.resx">
+      <DependentUpon>formReelType.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formResize.resx">
+      <DependentUpon>formResize.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formSetLEDColor.resx">
+      <DependentUpon>formSetLEDColor.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formSnippitSettings.resx">
+      <DependentUpon>formSnippitSettings.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formToolIllumination.resx">
+      <DependentUpon>formToolIllumination.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formSettings.resx">
+      <DependentUpon>formSettings.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formToolResources.resx">
+      <DependentUpon>formToolResources.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formToolReelsAndLEDs.resx">
+      <DependentUpon>formToolReelsAndLEDs.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formToolUndo.resx">
+      <DependentUpon>formToolUndo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formVPM.resx">
+      <DependentUpon>formVPM.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\new_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imagemarker.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\paste.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imagesize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imagefile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\saveas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\saveall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_in.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chooseback1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chooseback2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\resize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\illumination.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\illumination2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\marker.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\saa.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\marker_bulb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\marker_text.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chooseback3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_0.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_4.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_5.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_6.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_7.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_8.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_9.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T1_Empty.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_8.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LED_Empty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\marker_reel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clearrecentlist.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\marker_reel2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\led_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EMR_T6_9.png" />
+    <None Include="Resources\EMR_T6_8.png" />
+    <None Include="Resources\EMR_T6_7.png" />
+    <None Include="Resources\EMR_T6_6.png" />
+    <None Include="Resources\EMR_T6_5.png" />
+    <None Include="Resources\EMR_T6_4.png" />
+    <None Include="Resources\EMR_T6_3.png" />
+    <None Include="Resources\EMR_T6_2.png" />
+    <None Include="Resources\EMR_T6_1.png" />
+    <None Include="Resources\EMR_T6_0.png" />
+    <None Include="Resources\EMR_CT3_25.png" />
+    <None Include="Resources\EMR_CT3_24.png" />
+    <None Include="Resources\EMR_CT3_23.png" />
+    <None Include="Resources\EMR_CT3_22.png" />
+    <None Include="Resources\EMR_CT3_21.png" />
+    <None Include="Resources\EMR_CT3_20.png" />
+    <None Include="Resources\EMR_CT3_19.png" />
+    <None Include="Resources\EMR_CT3_18.png" />
+    <None Include="Resources\EMR_CT3_17.png" />
+    <None Include="Resources\EMR_CT3_16.png" />
+    <None Include="Resources\EMR_CT3_15.png" />
+    <None Include="Resources\EMR_CT3_14.png" />
+    <None Include="Resources\EMR_CT3_13.png" />
+    <None Include="Resources\EMR_CT3_12.png" />
+    <None Include="Resources\EMR_CT3_11.png" />
+    <None Include="Resources\EMR_CT3_10.png" />
+    <None Include="Resources\EMR_CT3_09.png" />
+    <None Include="Resources\EMR_CT3_08.png" />
+    <None Include="Resources\EMR_CT3_07.png" />
+    <None Include="Resources\EMR_CT3_06.png" />
+    <None Include="Resources\EMR_CT3_05.png" />
+    <None Include="Resources\EMR_CT3_04.png" />
+    <None Include="Resources\EMR_CT3_03.png" />
+    <None Include="Resources\EMR_CT3_02.png" />
+    <None Include="Resources\EMR_CT3_01.png" />
+    <None Include="Resources\EMR_CT3_00.png" />
+    <None Include="Resources\EMR_T5_Empty.png" />
+    <None Include="Resources\EMR_T5_9.png" />
+    <None Include="Resources\EMR_T5_8.png" />
+    <None Include="Resources\EMR_T5_7.png" />
+    <None Include="Resources\EMR_T5_6.png" />
+    <None Include="Resources\EMR_T5_5.png" />
+    <None Include="Resources\EMR_T5_4.png" />
+    <None Include="Resources\EMR_T5_3.png" />
+    <None Include="Resources\EMR_T5_2.png" />
+    <None Include="Resources\EMR_T5_1.png" />
+    <None Include="Resources\EMR_T5_0.png" />
+    <None Include="Resources\EMR_T4_Empty.png" />
+    <None Include="Resources\EMR_T4_9.png" />
+    <None Include="Resources\EMR_T4_8.png" />
+    <None Include="Resources\EMR_T4_7.png" />
+    <None Include="Resources\EMR_T4_6.png" />
+    <None Include="Resources\EMR_T4_5.png" />
+    <None Include="Resources\EMR_T4_4.png" />
+    <None Include="Resources\EMR_T4_3.png" />
+    <None Include="Resources\EMR_T4_2.png" />
+    <None Include="Resources\EMR_T4_1.png" />
+    <None Include="Resources\EMR_T4_0.png" />
+    <None Include="Resources\EMReel.wav" />
+    <None Include="Resources\AdjustRight.png" />
+    <None Include="Resources\AdjustLeft.png" />
+    <None Include="Resources\AdjustCenter.png" />
+    <None Include="Resources\Camera32x32.png" />
+    <None Include="Resources\B2SBackglassDesigner.Settings.xml.txt" />
+    <Content Include="Resources\Codefiles\SegmentNumber.vb.txt" />
+    <Content Include="Resources\Codefiles\SegmentDisplay.vb.txt" />
+    <Content Include="Resources\Codefiles\Segment.vb.txt" />
+    <None Include="Resources\marker_reel4.png" />
+    <None Include="Resources\marker_reel3.png" />
+    <None Include="Resources\EMR_T3_Empty.jpg" />
+    <None Include="Resources\EMR_T3_9.jpg" />
+    <None Include="Resources\EMR_T3_8.jpg" />
+    <None Include="Resources\EMR_T3_7.jpg" />
+    <None Include="Resources\EMR_T3_6.jpg" />
+    <None Include="Resources\EMR_T3_5.jpg" />
+    <None Include="Resources\EMR_T3_4.jpg" />
+    <None Include="Resources\EMR_T3_3.jpg" />
+    <None Include="Resources\EMR_T3_2.jpg" />
+    <None Include="Resources\EMR_T3_1.jpg" />
+    <None Include="Resources\EMR_T3_0.jpg" />
+    <None Include="Resources\EMR_CT2_16.jpg" />
+    <None Include="Resources\EMR_CT2_15.jpg" />
+    <None Include="Resources\EMR_CT2_14.jpg" />
+    <None Include="Resources\EMR_CT2_13.jpg" />
+    <None Include="Resources\EMR_CT2_12.jpg" />
+    <None Include="Resources\EMR_CT2_11.jpg" />
+    <None Include="Resources\EMR_CT2_10.jpg" />
+    <None Include="Resources\EMR_CT2_09.jpg" />
+    <None Include="Resources\EMR_CT2_08.jpg" />
+    <None Include="Resources\EMR_CT2_07.jpg" />
+    <None Include="Resources\EMR_CT2_06.jpg" />
+    <None Include="Resources\EMR_CT2_05.jpg" />
+    <None Include="Resources\EMR_CT2_04.jpg" />
+    <None Include="Resources\EMR_CT2_03.jpg" />
+    <None Include="Resources\EMR_CT2_02.jpg" />
+    <None Include="Resources\EMR_CT2_01.jpg" />
+    <None Include="Resources\EMR_CT2_00.jpg" />
+    <None Include="Resources\EMR_T2_Empty.jpg" />
+    <None Include="Resources\EMR_T2_9.jpg" />
+    <None Include="Resources\EMR_T2_8.jpg" />
+    <None Include="Resources\EMR_T2_7.jpg" />
+    <None Include="Resources\EMR_T2_6.jpg" />
+    <None Include="Resources\EMR_T2_5.jpg" />
+    <None Include="Resources\EMR_T2_4.jpg" />
+    <None Include="Resources\EMR_T2_3.jpg" />
+    <None Include="Resources\EMR_T2_2.jpg" />
+    <None Include="Resources\EMR_T2_1.jpg" />
+    <None Include="Resources\EMR_T2_0.jpg" />
+    <None Include="Resources\EMR_CT1_15.jpg" />
+    <None Include="Resources\EMR_CT1_14.jpg" />
+    <None Include="Resources\EMR_CT1_13.jpg" />
+    <None Include="Resources\EMR_CT1_12.jpg" />
+    <None Include="Resources\EMR_CT1_11.jpg" />
+    <None Include="Resources\EMR_CT1_10.jpg" />
+    <None Include="Resources\EMR_CT1_09.jpg" />
+    <None Include="Resources\EMR_CT1_08.jpg" />
+    <None Include="Resources\EMR_CT1_07.jpg" />
+    <None Include="Resources\EMR_CT1_06.jpg" />
+    <None Include="Resources\EMR_CT1_05.jpg" />
+    <None Include="Resources\EMR_CT1_04.jpg" />
+    <None Include="Resources\EMR_CT1_03.jpg" />
+    <None Include="Resources\EMR_CT1_02.jpg" />
+    <None Include="Resources\EMR_CT1_01.jpg" />
+    <None Include="Resources\EMR_CT1_00.jpg" />
+    <None Include="Resources\illumination_intensity.png" />
+    <None Include="Resources\LED_Blue Empty.png" />
+    <None Include="Resources\LED_Blue 9.png" />
+    <None Include="Resources\LED_Blue 8.png" />
+    <None Include="Resources\LED_Blue 7.png" />
+    <None Include="Resources\LED_Blue 6.png" />
+    <None Include="Resources\LED_Blue 5.png" />
+    <None Include="Resources\LED_Blue 4.png" />
+    <None Include="Resources\LED_Blue 3.png" />
+    <None Include="Resources\LED_Blue 2.png" />
+    <None Include="Resources\LED_Blue 1.png" />
+    <None Include="Resources\LED_Blue 0.png" />
+    <None Include="Resources\delete_red.png" />
+    <None Include="Resources\arrow_up_orange.png" />
+    <None Include="Resources\brightness.png" />
+    <None Include="Resources\B2SBackglassDesigner_16x16.png" />
+    <None Include="Resources\arrow2_down.png" />
+    <None Include="Resources\arrow2_up.png" />
+    <Content Include="Resources\Codefiles\B2SBaseBox.vb.txt" />
+    <Content Include="Resources\Codefiles\B2SData.vb.txt" />
+    <Content Include="Resources\Codefiles\B2SPictureBox.vb.txt" />
+    <Content Include="Resources\Codefiles\B2SImageFrame.vb.txt" />
+    <Content Include="Resources\Codefiles\B2SLEDBox.vb.txt" />
+    <Content Include="Resources\Codefiles\B2SReelBox.vb.txt" />
+    <Content Include="Resources\Codefiles\B2SAnimation.vb.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\B2SLED.vb.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\B2SScreen.vb.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\B2SSystem.vb.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="B2SBackglassDesigner_64.ico" />
+    <Content Include="Resources\Codefiles\formDMD.vb.txt" />
+    <Content Include="Resources\Codefiles\Application.Designer.vb.txt" />
+    <None Include="Resources\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\Application.myapp.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\AssemblyInfo.vb.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\redo2.png" />
+    <None Include="Resources\new2.png" />
+    <None Include="Resources\open2.png" />
+    <None Include="Resources\copy2.png" />
+    <None Include="Resources\cut2.png" />
+    <None Include="Resources\paste2.png" />
+    <None Include="Resources\check_checked.png" />
+    <None Include="Resources\check_checked_S.png" />
+    <None Include="Resources\check_default.png" />
+    <None Include="Resources\check_default_S.png" />
+    <None Include="Resources\check_disabled.png" />
+    <None Include="Resources\check_disabled_checked.png" />
+    <Content Include="Resources\Codefiles\formDMD.designer.vb.txt" />
+    <Content Include="Resources\Codefiles\formDMD.resx.txt" />
+    <Content Include="Resources\Codefiles\Resources.Designer.vb.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\Resources.resx.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save2.png" />
+    <Content Include="Resources\Codefiles\Settings.Designer.vb.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\Settings.settings.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\formBackglass.vb.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\formBackglass.Designer.vb.txt">
+      <SubType>Form</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\B2SSolution.sln.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\formBackglass.resx.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Codefiles\B2SSolution.vbproj.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\marker_newbulb.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
