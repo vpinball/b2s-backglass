@@ -12,3 +12,5 @@ Tools:
 
 Unfinished:
 - B2S_ScreenResIdentifier: Tool to organize and to set B2S-Settings
+
+- ScreenRes.txt is an exemplary file how the .txt has to look like
