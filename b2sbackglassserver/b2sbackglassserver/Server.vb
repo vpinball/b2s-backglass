@@ -1542,6 +1542,39 @@ Public Class Server
         End Set
     End Property
 
+    Public ReadOnly Property RawDmdWidth As Integer
+        Get
+            Return VPinMAME.RawDmdWidth
+        End Get
+    End Property
+
+    Public ReadOnly Property RawDmdHeight As Integer
+        Get
+            Return VPinMAME.RawDmdHeight
+        End Get
+    End Property
+
+    Public ReadOnly Property RawDmdPixels As Object
+        Get
+            Return VPinMAME.RawDmdPixels
+        End Get
+    End Property
+
+    Public ReadOnly Property RawDmdColoredPixels As Object
+        Get
+            Return VPinMAME.RawDmdColoredPixels
+        End Get
+    End Property
+
+    Public ReadOnly Property ChangedNVRAM As Object
+        Get
+            Return VPinMAME.ChangedNVRAM
+        End Get
+    End Property
+
+
+
+
 #Region "private mech function"
 
     Private Sub CheckGetMech(ByVal number As Object, ByVal mech As Object)
