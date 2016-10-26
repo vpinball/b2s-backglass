@@ -583,7 +583,7 @@ Public Class formBackglass
         Dim lampsData As String = String.Empty
 
         If B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps Then
-            lampsData = regkey.GetValue("B2SLamps", New String("0", 251))
+            lampsData = regkey.GetValue("B2SLamps", New String("0", 401))
             'If B2SSettings.IsROMControlled AndAlso lampsData.Contains("2") Then
             '    regkey.SetValue("B2SLamps", lampsData.Replace("2", "0"))
             'End If

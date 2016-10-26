@@ -777,7 +777,7 @@ Public Class Server
                 If B2SData.IsBackglassStartedAsEXE Then
                     ' get current registry infos
                     sb.Length = 0
-                    sb.Append(Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SLamps", New String("0", 251)).ToString())
+                    sb.Append(Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SLamps", New String("0", 401)).ToString())
                 End If
 
                 For Each lampdata As KeyValuePair(Of Integer, B2SCollectData.CollectData) In collectLampsData
@@ -796,7 +796,11 @@ Public Class Server
 
                         ' enter new lamp state
                         sb.Remove(lampid, 1)
-                        sb.Insert(lampid, lampstate.ToString())
+                        If lampstate <> 0 Then
+                            sb.Insert(lampid, "1")
+                        Else
+                            sb.Insert(lampid, "0")
+                        End If
 
                     Else
 
@@ -1017,12 +1021,16 @@ Public Class Server
 
                         ' enter new solenoid state  
                         sb.Remove(solenoidid, 1)
-                        sb.Insert(solenoidid, solenoidstate.ToString())
+                        If (solenoidstate <> 0) Then
+                            sb.Insert(solenoidid, "1")
+                        Else
+                            sb.Insert(solenoidid, "0")
+                        End If
 
                     Else
 
-                        ' illumination stuff
-                        If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 OrElse (datatypes And B2SCollectData.eCollectedDataType.SecondImage) <> 0 Then
+                            ' illumination stuff
+                            If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 OrElse (datatypes And B2SCollectData.eCollectedDataType.SecondImage) <> 0 Then
                             Dim topvisible As Boolean = lastTopVisible
                             Dim secondvisible As Boolean = lastSecondVisible
                             If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 Then
