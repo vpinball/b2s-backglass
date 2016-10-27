@@ -12,8 +12,8 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("B2S Backglass Designer")> 
-<Assembly: AssemblyCopyright("Copyright ©  2012-2013")> 
-<Assembly: AssemblyTrademark("A Herweh production")> 
+<Assembly: AssemblyCopyright("Copyright © 2012-2016")> 
+<Assembly: AssemblyTrademark("A Herweh & B2S Team production")> 
 
 <Assembly: ComVisible(False)>
 
