@@ -14,3 +14,16 @@ Unfinished:
 - B2S_ScreenResIdentifier: Tool to organize and to set B2S-Settings
 
 - ScreenRes.txt is an exemplary file how the .txt has to look like
+
+
+Additional info:
+
+- The code is all VB.net (The plugin code was my first VB.net code, since I'm more into C#).
+- The proxy implementation uses some tricks to ensure that all Pinmame data is available for the backglass and the plugins. There are 2 ways how data is fetched:
+        For tables which call the Pinmame commands the get the latestest changes on the table elements, the B2S.Server simply intercepts those commands and passes the data which is returned by PinMame not only to VP, but also the the backglass and to the plugins.
+        For tables which dont call those PinMame commands, the B2S.Server calls those commands on its own at regular intervals. To detect if the B2S.Server has to do its own calls, there is some logic which will switch to this mode if the "changes" command is called within 50ms (not sure about that anymore) after the table has started.
+- Another bit of special logic in B2S.Server detects if the table is still active, so the B2S.Server can shut down on table exit. This is necessary since VP resp. VBA does not always properly release the B2S.Server com object.
+- I have only seen the preliminary code of the proxy implementation, so things might have changed since then, but I'm pretty sure that some cleanup to the code would make things much easier for future development.
+- The plugin code uses Microsoft MEF (https://msdn.microso...(v=vs.110).aspx) to detect and load plugins.
+- The B2S.Server to backglass communication uses the registry to transfer data. IMHO this should be changed.
+- VS2010 was used for B2S.Server, but I think migrating the code the VS2015 should be easy.
