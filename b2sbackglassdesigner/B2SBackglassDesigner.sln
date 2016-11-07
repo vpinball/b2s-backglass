@@ -5,12 +5,18 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "B2SBackglassDesigner", "B2S
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}.Debug|x64.ActiveCfg = Debug|x64
+		{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}.Debug|x64.Build.0 = Debug|x64
 		{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}.Debug|x86.ActiveCfg = Debug|x86
 		{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}.Debug|x86.Build.0 = Debug|x86
+		{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}.Release|x64.ActiveCfg = Release|x64
+		{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}.Release|x64.Build.0 = Release|x64
 		{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}.Release|x86.ActiveCfg = Release|x86
 		{572A7A9A-FB77-43BE-B01F-3CBD1ECB2BAE}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
