@@ -641,11 +641,11 @@ Public Class Server
         End Get
     End Property
 
-    Public ReadOnly Property ChangedLEDs(ByVal mask2 As Object, ByVal mask1 As Object) As Object
+    Public ReadOnly Property ChangedLEDs(ByVal mask2 As Object, ByVal mask1 As Object, Optional ByVal mask3 As Object = 0, Optional ByVal mask4 As Object = 0) As Object
         Get
             Try
                 isChangedLEDsCalled = True
-                Dim chg As Object = VPinMAME.ChangedLEDs(mask2, mask1) ' (&HFFFFFFFF, &HFFFFFFFF) 
+                Dim chg As Object = VPinMAME.ChangedLEDs(mask2, mask1, mask3, mask4) ' (&HFFFFFFFF, &HFFFFFFFF) 
                 If B2SData.GetLEDsData() Then
                     'If B2SData.IsBackglassRunning AndAlso
                     '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseLEDs OrElse B2SData.UseLEDDisplays OrElse B2SData.UseReels OrElse B2SSettings.IsLEDsStateLogOn) AndAlso
