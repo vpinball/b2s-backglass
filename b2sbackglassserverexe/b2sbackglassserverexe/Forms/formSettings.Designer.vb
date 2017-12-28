@@ -78,6 +78,7 @@ Partial Class formSettings
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
+        Me.chkSmall = New System.Windows.Forms.CheckBox()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -164,6 +165,7 @@ Partial Class formSettings
         '
         'grpStartMode
         '
+        Me.grpStartMode.Controls.Add(Me.chkSmall)
         Me.grpStartMode.Controls.Add(Me.lblDefaultStartMode)
         Me.grpStartMode.Controls.Add(Me.chkStartAsEXE)
         Me.grpStartMode.Controls.Add(Me.cmbDefaultStartMode)
@@ -186,9 +188,9 @@ Partial Class formSettings
         'chkStartAsEXE
         '
         Me.chkStartAsEXE.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkStartAsEXE.Location = New System.Drawing.Point(8, 20)
+        Me.chkStartAsEXE.Location = New System.Drawing.Point(80, 20)
         Me.chkStartAsEXE.Name = "chkStartAsEXE"
-        Me.chkStartAsEXE.Size = New System.Drawing.Size(226, 24)
+        Me.chkStartAsEXE.Size = New System.Drawing.Size(173, 24)
         Me.chkStartAsEXE.TabIndex = 6
         Me.chkStartAsEXE.Text = "Start this backglass in EXE mode"
         Me.chkStartAsEXE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -399,7 +401,7 @@ Partial Class formSettings
         Me.lblCopyright.Name = "lblCopyright"
         Me.lblCopyright.Size = New System.Drawing.Size(423, 26)
         Me.lblCopyright.TabIndex = 23
-        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2013 by Stefan Wuehr (""Herweh""). All rig" & _
+        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2017 by Stefan Wuehr (""Herweh""). All rig" &
     "hts reserved."
         '
         'grpVisibility
@@ -664,6 +666,17 @@ Partial Class formSettings
         Me.btnDonate.UseVisualStyleBackColor = True
         Me.btnDonate.Visible = False
         '
+        'chkSmall
+        '
+        Me.chkSmall.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkSmall.Location = New System.Drawing.Point(6, 20)
+        Me.chkSmall.Name = "chkSmall"
+        Me.chkSmall.Size = New System.Drawing.Size(54, 24)
+        Me.chkSmall.TabIndex = 38
+        Me.chkSmall.Text = "Small"
+        Me.chkSmall.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.chkSmall.UseVisualStyleBackColor = True
+        '
         'formSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -676,7 +689,7 @@ Partial Class formSettings
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "formSettings"
-        Me.Opacity = 0.0R
+        Me.Opacity = 0R
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Backglass settings ..."
         Me.PanelSettings.ResumeLayout(False)
@@ -757,4 +770,5 @@ Partial Class formSettings
     Friend WithEvents chkShowStartupError As System.Windows.Forms.CheckBox
     Friend WithEvents chkActivatePlugins As System.Windows.Forms.CheckBox
     Friend WithEvents btnPluginSettings As System.Windows.Forms.Button
+    Friend WithEvents chkSmall As Windows.Forms.CheckBox
 End Class

@@ -3,7 +3,7 @@ Imports System.IO
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "1.3.0.1"
+    Public Const DirectB2SVersion As String = "1.3.0.2"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
@@ -46,6 +46,7 @@ Public Class B2SSettings
     Public Shared Property IsLEDsStateLogOn() As Boolean = False
     Public Shared Property IsPaintingLogOn() As Boolean = True
     Public Shared Property IsStatisticsBackglassOn() As Boolean = True
+    Public Shared Property IsBackglassSearchLogOn As Boolean = False
 
     Public Shared Property ShowStartupError() As Boolean = True
 
@@ -86,6 +87,9 @@ Public Class B2SSettings
     Public Shared Property HyperpinXMLFile() As String = String.Empty
 
     Public Shared Property CurrentDualMode() As B2SSettings.eDualMode = eDualMode.NotSet
+
+    Public Shared Property StartBackground() As Boolean = False
+
 
     Public Shared ReadOnly Property IsROMControlled() As Boolean
         Get
@@ -144,6 +148,7 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("IsLEDsStateLogOn") IsNot Nothing Then IsLEDsStateLogOn = (nodeHeader.SelectSingleNode("IsLEDsStateLogOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("IsPaintingLogOn") IsNot Nothing Then IsPaintingLogOn = (nodeHeader.SelectSingleNode("IsPaintingLogOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("IsStatisticsBackglassOn") IsNot Nothing Then IsStatisticsBackglassOn = (nodeHeader.SelectSingleNode("IsStatisticsBackglassOn").InnerText = "1")
+                If nodeHeader.SelectSingleNode("IsBackglassSearchLogOn") IsNot Nothing Then IsBackglassSearchLogOn = (nodeHeader.SelectSingleNode("IsBackglassSearchLogOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
                 If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
                     ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
@@ -186,6 +191,7 @@ Public Class B2SSettings
                         If nodeTable.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(nodeTable.SelectSingleNode("GlowIndex").InnerText)
                         If nodeTable.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (nodeTable.SelectSingleNode("StartAsEXE").InnerText = "1")
                         If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
+                        If nodeTable.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (nodeTable.SelectSingleNode("StartBackground").InnerText = "1")
                         Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
                         If nodeAnimations IsNot Nothing Then
                             For Each nodeAnimation As Xml.XmlElement In nodeAnimations.ChildNodes
@@ -247,6 +253,8 @@ Public Class B2SSettings
                     AddNode(XML, nodeTable, "GlowIndex", GlowIndex.ToString())
                 End If
                 AddNode(XML, nodeTable, "StartAsEXE", If(StartAsEXE, "1", "0"))
+                AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
+
                 If b2sanimation IsNot Nothing Then
                     Dim nodeAnimations As Xml.XmlElement = AddHeader(XML, nodeTable, "Animations")
                     nodeAnimations.RemoveAll()
@@ -279,6 +287,7 @@ Public Class B2SSettings
         IsGIStringsStateLogOn = False
         IsLEDsStateLogOn = False
         IsPaintingLogOn = False
+        IsBackglassSearchLogOn = False
         IsStatisticsBackglassOn = False
         ScreenshotPath = String.Empty
         ScreenshotFileType = eImageFileType.PNG
@@ -364,18 +373,50 @@ Public Class B2SSettings
     Public Shared ReadOnly Property HyperpinName() As String
         Get
             Dim ret As String = String.Empty
+            Dim searchPathLog As Log = New Log("BackglassSearchPath")
+            searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
+
+            searchPathLog.WriteLogEntry("Start Search Hyperpinname")
             If HyperpinXMLFile <> "Unknown" Then
                 If Not String.IsNullOrEmpty(HyperpinXMLFile) AndAlso IO.File.Exists(HyperpinXMLFile) Then
                     Dim Xml As Xml.XmlDocument = New Xml.XmlDocument
                     Xml.Load(HyperpinXMLFile)
+                    searchPathLog.WriteLogEntry("Loop Hyperpinname")
                     If Xml.SelectNodes("menu") IsNot Nothing Then
                         For Each node As Xml.XmlNode In Xml.SelectNodes("menu")
                             For Each gamenode As Xml.XmlNode In node.SelectNodes("game")
                                 If gamenode.Attributes("name") IsNot Nothing Then
                                     Dim name As String = gamenode.Attributes("name").InnerText
+                                    searchPathLog.WriteLogEntry("Check name: " + name + " compare with: " + B2SData.TableFileName)
                                     If name.Equals(B2SData.TableFileName, StringComparison.CurrentCultureIgnoreCase) Then
                                         ret = gamenode.SelectSingleNode("description").InnerText
+                                        searchPathLog.WriteLogEntry("Found: " + ret + "end search")
                                         Exit For
+                                    Else              'Westworld, allow optional <gamename> syntax
+                                        If gamenode.SelectSingleNode("gamename") IsNot Nothing Then
+                                            Dim gamename As String = gamenode.SelectSingleNode("gamename").InnerText
+                                            If Not String.IsNullOrEmpty(gamename) Then
+                                                searchPathLog.WriteLogEntry("Check gamename: " + gamename + " compare with: " + B2SSettings.GameName)
+                                                If gamename.Equals(B2SSettings.GameName, StringComparison.CurrentCultureIgnoreCase) Then
+                                                    ret = gamenode.SelectSingleNode("description").InnerText
+                                                    searchPathLog.WriteLogEntry("Found: " + ret + "end search")
+                                                    Exit For
+                                                End If
+                                            End If
+                                        End If
+
+                                        'last chance, try rom name
+                                        If gamenode.SelectSingleNode("rom") IsNot Nothing Then
+                                            Dim romname As String = gamenode.SelectSingleNode("rom").InnerText
+                                            If Not String.IsNullOrEmpty(romname) Then
+                                                searchPathLog.WriteLogEntry("Check rom: " + romname + " compare with: " + B2SSettings.GameName)
+                                                If romname.Equals(B2SSettings.GameName, StringComparison.CurrentCultureIgnoreCase) Then
+                                                    ret = gamenode.SelectSingleNode("description").InnerText
+                                                    searchPathLog.WriteLogEntry("Found: " + ret + "end search")
+                                                    Exit For
+                                                End If
+                                            End If
+                                        End If
                                     End If
                                 End If
                             Next
@@ -383,7 +424,10 @@ Public Class B2SSettings
                         Next
                     End If
                 End If
-                If String.IsNullOrEmpty(ret) Then ret = B2SData.TableFileName
+                If String.IsNullOrEmpty(ret) Then
+                    ret = B2SData.TableFileName
+                    searchPathLog.WriteLogEntry("Nothing found, using: " + ret + "as replacement")
+                End If
             End If
             ' get out
             Return ret

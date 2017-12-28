@@ -8,7 +8,8 @@ Public Class B2SScreen
 
     Public formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
-    
+    Public formbackground As Background = Nothing
+
     Public Enum eDMDViewMode
         NotDefined = 0
         NoDMD = 1
@@ -29,6 +30,10 @@ Public Class B2SScreen
     Public Property DMDFlipY() As Boolean = False
     Public Property DMDAtDefaultLocation() As Boolean = True
     Public Property DMDViewMode() As eDMDViewMode = eDMDViewMode.NotDefined
+
+    Public Property BackgroundSize() As Size = New Size(0, 0)
+    Public Property BackgroundLocation() As Point = New Point(0, 0)
+    Public Property BackgroundPath() As String = String.Empty
 
     Public Property BackglassCutOff() As Rectangle = Nothing
 
@@ -67,6 +72,9 @@ Public Class B2SScreen
         ' here we go with one or two forms for the backglass and the DMD
         Me.formBackglass = _formBackglass
         Me.formDMD = _formDMD
+
+        Me.formbackground = New Background
+
 
         ' get all backglass settings
         GetB2SSettings(_DefaultDMDLocation, _DMDViewMode, _BackglassGrillHeight, _BackglassSmallGrillHeight)
@@ -117,12 +125,23 @@ Public Class B2SScreen
             Me.DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
             Me.DMDFlipY = (Trim(line(11)) = "1")
 
+            If (i > 15) Then
+                Me.BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
+                Me.BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
+                Me.BackgroundPath = line(16)
+            Else
+                Me.BackgroundLocation = New Point(0, 0)
+                Me.BackgroundSize = New Point(0, 0)
+                Me.BackgroundPath = ""
+            End If
+
+
             ' close file handle
             FileClose(1)
 
-        Else
+            Else
 
-            MessageBox.Show("There is no B2S screen resolution file '" & FileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
+                MessageBox.Show("There is no B2S screen resolution file '" & FileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
                              "Please create this file with the tool 'B2S_ScreenResEditor.exe'.", _
                              "B2S backglass error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End
@@ -255,15 +274,43 @@ Public Class B2SScreen
 
         ' get the correct screen
         On Error Resume Next
-        Dim screen As Screen = screen.AllScreens(0)
+        Dim screen As Screen = Screen.AllScreens(0)
         If Mid(screen.DeviceName, 1, 12) <> BackglassMonitor Then
-            screen = screen.AllScreens(1)
+            screen = Screen.AllScreens(1)
             If Mid(screen.DeviceName, 1, 12) <> BackglassMonitor Then
-                screen = screen.AllScreens(2)
+                screen = Screen.AllScreens(2)
             End If
         End If
         Me.BackglassScreen = screen
         On Error GoTo 0
+
+
+        ' Westworld show background form, only if background is set and enabled in setting
+        Dim OriginalOffset = Me.BackglassLocation
+        If ((Not (Me.BackgroundSize.IsEmpty)) And B2SSettings.StartBackground) Then
+            Dim swapSize = Me.BackgroundSize
+            Dim swapLocation = Me.BackgroundLocation
+            Me.BackgroundSize = Me.BackglassSize
+            Me.BackglassSize = swapSize
+            Me.BackgroundLocation = Me.BackglassLocation
+            Me.BackglassLocation = swapLocation
+
+            Me.formbackground.StartPosition = FormStartPosition.Manual
+            Me.formbackground.BackgroundImageLayout = ImageLayout.Stretch
+            Me.formbackground.FormBorderStyle = FormBorderStyle.None
+            Me.formbackground.ControlBox = False
+            Me.formbackground.MaximizeBox = False
+            Me.formbackground.MinimizeBox = False
+            Me.formbackground.Location = screen.Bounds.Location + Me.BackgroundLocation
+            Me.formbackground.Size = Me.BackgroundSize
+            Me.formbackground.Text = "Background"
+            Me.formbackground.BackColor = Color.Black
+            If (IO.File.Exists(Me.BackgroundPath)) Then
+                Me.formbackground.BackgroundImage = Image.FromFile(Me.BackgroundPath) ' ("C:\backglass.png")
+            End If
+            Me.formbackground.Show()
+            Me.formbackground.BringToFront()
+        End If
 
         ' set forms to background image size
         If Me.formBackglass IsNot Nothing AndAlso Me.formBackglass.BackgroundImage IsNot Nothing Then
@@ -304,7 +351,8 @@ Public Class B2SScreen
 
         ' move and scale all picked objects
         ScaleAllControls(rescaleBackglassX, rescaleBackglassY, rescaleDMDX, rescaleDMDY)
-        
+
+
         ' show the backglass form
         Me.formBackglass.StartPosition = FormStartPosition.Manual
         Me.formBackglass.BackgroundImageLayout = ImageLayout.Stretch
@@ -316,7 +364,7 @@ Public Class B2SScreen
         Me.formBackglass.Size = Me.BackglassSize
         Me.formBackglass.Text = "Form1"
         Me.formBackglass.Show()
-        
+
         ' bring backglass screen to the front
         Me.formBackglass.BringToFront()
 
@@ -329,7 +377,7 @@ Public Class B2SScreen
             Me.formDMD.ControlBox = False
             Me.formDMD.MaximizeBox = False
             Me.formDMD.MinimizeBox = False
-            Me.formDMD.Location = Me.formBackglass.Location + Me.DMDLocation
+            Me.formDMD.Location = screen.Bounds.Location + OriginalOffset + Me.DMDLocation  ' was Me.formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
             ' show the DMD form
             Me.formDMD.Show() 'formBackglass)

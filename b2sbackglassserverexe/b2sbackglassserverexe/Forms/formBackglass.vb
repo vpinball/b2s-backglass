@@ -10,7 +10,7 @@ Public Class formBackglass
 
     Private Const minSize4Image As Integer = 300000
 
-    Private B2SScreen As B2SScreen = New B2SScreen()
+    Private B2SScreen As B2SScreen = Nothing  '  was New B2SScreen(), delayed to do later  - Westworld, 2016-11-18
     Private B2SLED As B2SLED = New B2SLED()
     Private B2SAnimation As B2SAnimation = New B2SAnimation()
 
@@ -70,6 +70,7 @@ Public Class formBackglass
             End
         End If
 
+
         ' get the game name
         'B2SSettings.GameName = "bguns_l8"
         'B2SSettings.GameName = "closeenc"
@@ -80,6 +81,13 @@ Public Class formBackglass
             B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
             B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)
         End Using
+
+        ' Westworld 2016-18-11 - TableFileName is empty in some cases when launched via PinballX, we use GameName as alternativ
+        If String.IsNullOrEmpty(B2SData.TableFileName) Then
+            B2SData.TableFileName = B2SSettings.GameName
+        End If
+        B2SScreen = New B2SScreen() ' was started before Tablename was identified, so alternativ ScreenRes was failing
+
 
         ' load settings
         B2SSettings.Load()
@@ -152,6 +160,11 @@ Public Class formBackglass
         If formDMD IsNot Nothing Then
             formDMD.Close()
             formDMD.Dispose()
+        End If
+
+        If B2SScreen.formbackground IsNot Nothing Then
+            B2SScreen.formbackground.Close()
+            B2SScreen.formbackground.Dispose()
         End If
 
         ' unload mode form
@@ -1658,6 +1671,13 @@ Public Class formBackglass
         Dim shorthyperpinfilename As String = String.Empty
 
         ' check whether the table name can be found
+        If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+            'Westworld, check for gamename
+            If IO.File.Exists(B2SSettings.GameName & ".directb2s") Then
+                filename = B2SSettings.GameName & ".directb2s"
+            End If
+        End If
+
         If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
             If B2SSettings.LocateHyperpinXMLFile() Then
                 hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"

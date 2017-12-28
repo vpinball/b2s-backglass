@@ -110,6 +110,8 @@ Public Class formSettings
             lblFile.Visible = True
             cmbMatchingFileNames.Visible = True
         End If
+        chkSmall.Checked = B2SSettings.StartBackground
+
         ' plugin stuff
         chkActivatePlugins.Checked = B2SSettings.ArePluginsOn
         chkShowStartupError.Checked = B2SSettings.ShowStartupError
@@ -272,11 +274,15 @@ Public Class formSettings
         isSettingsScreenDirty = True
         B2SSettings.HideB2SDMD = (cmbB2SDMD.SelectedIndex = 1)
     End Sub
-
     Private Sub chkStartAsEXE_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkStartAsEXE.CheckedChanged
         activateMsgBoxAtSaving = True
         isSettingsScreenDirty = True
         B2SSettings.StartAsEXE = chkStartAsEXE.Checked
+    End Sub
+    Private Sub chkSmall_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSmall.CheckedChanged
+        activateMsgBoxAtSaving = True
+        isSettingsScreenDirty = True
+        B2SSettings.StartBackground = chkSmall.Checked
     End Sub
     Private Sub cmbDefaultStartMode_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cmbDefaultStartMode.SelectedIndexChanged
         isSettingsScreenDirty = True
