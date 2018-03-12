@@ -1580,7 +1580,20 @@ Public Class Server
         End Get
     End Property
 
+    Public ReadOnly Property NVRAM As Object
+        Get
+            Return VPinMAME.NVRAM
+        End Get
+    End Property
 
+    Public Property SoundMode As Integer
+        Get
+            Return VPinMAME.SoundMode
+        End Get
+        Set(ByVal value As Integer)
+            VPinMAME.SoundMode = value
+        End Set
+    End Property
 
 
 #Region "private mech function"

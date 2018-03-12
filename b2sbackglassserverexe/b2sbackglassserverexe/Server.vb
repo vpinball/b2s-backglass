@@ -192,6 +192,14 @@ Public Class Server
             VPinMAME.ShowDMDOnly = value
         End Set
     End Property
+    Public Property ShowPinDMD() As Boolean
+        Get
+            Return VPinMAME.ShowPinDMD
+        End Get
+        Set(ByVal value As Boolean)
+            VPinMAME.ShowPinDMD = value
+        End Set
+    End Property
 
     Public Property LockDisplay() As Boolean
         Get
@@ -898,6 +906,59 @@ Public Class Server
         End Set
     End Property
 
+    Public Property SolMask(ByVal number As Object) As Integer
+        Get
+            Return VPinMAME.SolMask(number)
+        End Get
+        Set(ByVal value As Integer)
+            VPinMAME.SolMask(number) = value
+        End Set
+    End Property
+
+    Public ReadOnly Property RawDmdWidth As Integer
+        Get
+            Return VPinMAME.RawDmdWidth
+        End Get
+    End Property
+
+    Public ReadOnly Property RawDmdHeight As Integer
+        Get
+            Return VPinMAME.RawDmdHeight
+        End Get
+    End Property
+
+    Public ReadOnly Property RawDmdPixels As Object
+        Get
+            Return VPinMAME.RawDmdPixels
+        End Get
+    End Property
+
+    Public ReadOnly Property RawDmdColoredPixels As Object
+        Get
+            Return VPinMAME.RawDmdColoredPixels
+        End Get
+    End Property
+
+    Public ReadOnly Property ChangedNVRAM As Object
+        Get
+            Return VPinMAME.ChangedNVRAM
+        End Get
+    End Property
+
+    Public ReadOnly Property NVRAM As Object
+        Get
+            Return VPinMAME.NVRAM
+        End Get
+    End Property
+
+    Public Property SoundMode As Integer
+        Get
+            Return VPinMAME.SoundMode
+        End Get
+        Set(ByVal value As Integer)
+            VPinMAME.SoundMode = value
+        End Set
+    End Property
 #End Region
 
 #Region "non VPinMAME support"
