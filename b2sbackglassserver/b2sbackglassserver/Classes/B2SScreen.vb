@@ -110,7 +110,7 @@ Public Class B2SScreen
             line(i + 1) = 0
             Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
             Me.BackglassSize = New Size(CInt(line(2)), CInt(line(3)))
-            Me.BackglassMonitor = "\\.\DISPLAY" + line(4)
+            Me.BackglassMonitor = line(4)
             Me.BackglassLocation = New Point(CInt(line(5)), CInt(line(6)))
             Me.DMDSize = New Size(CInt(line(7)), CInt(line(8)))
             Me.DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
@@ -255,13 +255,22 @@ Public Class B2SScreen
 
         ' get the correct screen
         On Error Resume Next
-        Dim screen As Screen = screen.AllScreens(0)
-        If Mid(screen.DeviceName, 1, 12) <> BackglassMonitor Then
-            screen = screen.AllScreens(1)
-            If Mid(screen.DeviceName, 1, 12) <> BackglassMonitor Then
-                screen = screen.AllScreens(2)
+
+        Dim screen As Screen = Screen.AllScreens(0)
+        Dim s As Screen
+
+        For Each s In Screen.AllScreens
+            If Left(BackglassMonitor, 1) = "@" Then
+                If s.Bounds.Left = CInt(Mid(BackglassMonitor, 2)) Then
+                    screen = s
+                    Exit For
+                End If
+            ElseIf Mid(s.DeviceName, 1, 12) = "\\.\DISPLAY" + BackglassMonitor Then
+                screen = s
+                Exit For
             End If
-        End If
+        Next
+
         On Error GoTo 0
 
         ' set forms to background image size

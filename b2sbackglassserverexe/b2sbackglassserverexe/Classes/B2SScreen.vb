@@ -119,7 +119,7 @@ Public Class B2SScreen
             line(i + 1) = 0
             Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
             Me.BackglassSize = New Size(CInt(line(2)), CInt(line(3)))
-            Me.BackglassMonitor = "\\.\DISPLAY" + line(4)
+            Me.BackglassMonitor = line(4)
             Me.BackglassLocation = New Point(CInt(line(5)), CInt(line(6)))
             Me.DMDSize = New Size(CInt(line(7)), CInt(line(8)))
             Me.DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
@@ -273,15 +273,20 @@ Public Class B2SScreen
              (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
 
         ' get the correct screen
-        On Error Resume Next
-        Dim screen As Screen = Screen.AllScreens(0)
-        If Mid(screen.DeviceName, 1, 12) <> BackglassMonitor Then
-            screen = Screen.AllScreens(1)
-            If Mid(screen.DeviceName, 1, 12) <> BackglassMonitor Then
-                screen = Screen.AllScreens(2)
+        Me.BackglassScreen = Screen.AllScreens(0)
+        Dim s As Screen
+
+        For Each s In Screen.AllScreens
+            If Left(BackglassMonitor, 1) = "@" Then
+                If s.Bounds.Left = CInt(Mid(BackglassMonitor, 2)) Then
+                    Me.BackglassScreen = s
+                    Exit For
+                End If
+            ElseIf Mid(s.DeviceName, 1, 12) = "\\.\DISPLAY" + BackglassMonitor Then
+                Me.BackglassScreen = s
+                Exit For
             End If
-        End If
-        Me.BackglassScreen = screen
+        Next
         On Error GoTo 0
 
 
@@ -301,7 +306,7 @@ Public Class B2SScreen
             Me.formbackground.ControlBox = False
             Me.formbackground.MaximizeBox = False
             Me.formbackground.MinimizeBox = False
-            Me.formbackground.Location = screen.Bounds.Location + Me.BackgroundLocation
+            Me.formbackground.Location = Me.BackglassScreen.Bounds.Location + Me.BackgroundLocation
             Me.formbackground.Size = Me.BackgroundSize
             Me.formbackground.Text = "Background"
             Me.formbackground.BackColor = Color.Black
@@ -360,7 +365,7 @@ Public Class B2SScreen
         Me.formBackglass.ControlBox = False
         Me.formBackglass.MaximizeBox = False
         Me.formBackglass.MinimizeBox = False
-        Me.formBackglass.Location = screen.Bounds.Location + Me.BackglassLocation
+        Me.formBackglass.Location = Me.BackglassScreen.Bounds.Location + Me.BackglassLocation
         Me.formBackglass.Size = Me.BackglassSize
         Me.formBackglass.Text = "Form1"
         Me.formBackglass.Show()
@@ -377,7 +382,7 @@ Public Class B2SScreen
             Me.formDMD.ControlBox = False
             Me.formDMD.MaximizeBox = False
             Me.formDMD.MinimizeBox = False
-            Me.formDMD.Location = screen.Bounds.Location + OriginalOffset + Me.DMDLocation  ' was Me.formBackglass.Location + Me.DMDLocation
+            Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + OriginalOffset + Me.DMDLocation  ' was Me.formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
             ' show the DMD form
             Me.formDMD.Show() 'formBackglass)

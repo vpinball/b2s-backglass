@@ -81,7 +81,7 @@ Public Class formBackglass
             B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
             B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)
         End Using
-
+        
         ' Westworld 2016-18-11 - TableFileName is empty in some cases when launched via PinballX, we use GameName as alternativ
         If String.IsNullOrEmpty(B2SData.TableFileName) Then
             B2SData.TableFileName = B2SSettings.GameName
@@ -91,6 +91,11 @@ Public Class formBackglass
 
         ' load settings
         B2SSettings.Load()
+
+        If B2SSettings.CPUAffinityMask > 0 Then
+            Dim Proc = Process.GetCurrentProcess
+            Proc.ProcessorAffinity = B2SSettings.CPUAffinityMask
+        End If
 
         ' get B2S xml and start
         Try

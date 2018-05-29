@@ -52,6 +52,8 @@ Public Class B2SSettings
 
     Public Shared Property ArePluginsOn() As Boolean = False
     
+	Public Shared Property CPUAffinityMask() As Integer = 0
+
     Public Shared Property ScreenshotPath() As String = String.Empty
     Public Shared Property ScreenshotFileType() As eImageFileType = eImageFileType.PNG
 
@@ -141,6 +143,7 @@ Public Class B2SSettings
                 If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
                 If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
                 ' get overall settings
+                If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)
                 If nodeHeader.SelectSingleNode("LogPath") IsNot Nothing Then LogPath = nodeHeader.SelectSingleNode("LogPath").InnerText
                 If nodeHeader.SelectSingleNode("IsLampsStateLogOn") IsNot Nothing Then IsLampsStateLogOn = (nodeHeader.SelectSingleNode("IsLampsStateLogOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("IsSolenoidsStateLogOn") IsNot Nothing Then IsSolenoidsStateLogOn = (nodeHeader.SelectSingleNode("IsSolenoidsStateLogOn").InnerText = "1")
