@@ -83,7 +83,7 @@ Public Class B2SSettings
     Public Shared Property IsPaintingLogOn() As Boolean = True
     Public Shared Property IsStatisticsBackglassOn() As Boolean = True
 
-    Public Shared Property ShowStartupError() As Boolean = True
+    Public Shared Property ShowStartupError() As Boolean = False
 
     Public Shared Property ArePluginsOn() As Boolean = False
 
