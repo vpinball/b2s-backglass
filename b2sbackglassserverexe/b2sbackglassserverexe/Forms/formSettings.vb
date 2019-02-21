@@ -83,6 +83,9 @@ Public Class formSettings
             radioDream7LED.Enabled = False
         End If
         chkBulbs.Checked = B2SSettings.IsGlowBulbOn
+        chkFormFront.Checked = B2SSettings.FormToFront
+
+
         cmbGlowing.SelectedIndex = If(B2SSettings.GlowIndex <> -1, B2SSettings.GlowIndex, cmbGlowing.Items.Count - 1)
         activateMsgBoxAtSaving = False
         ' get animation info
@@ -452,4 +455,7 @@ Public Class formSettings
         Return ret
     End Function
 
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles chkFormFront.CheckedChanged
+        B2SSettings.FormToFront = chkFormFront.Checked
+    End Sub
 End Class

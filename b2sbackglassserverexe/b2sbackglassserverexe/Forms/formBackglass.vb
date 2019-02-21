@@ -144,7 +144,14 @@ Public Class formBackglass
     Private Sub formBackglass_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
 
         'Me.TopMost = True
+        'Me.BringToFront()
+        If B2SSettings.FormToFront Then
         Me.BringToFront()
+        Else
+            Me.SendToBack()
+        End If
+
+
         'Me.TopMost = False
 
         SetFocusToVPPlayer()
@@ -467,10 +474,10 @@ Public Class formBackglass
     Private lastSecondVisible As Boolean = False
 
     Private pollingInit As Boolean = False
-    Private lamps(250) As Integer
-    Private solenoids(250) As Integer
-    Private gistrings(250) As Integer
-    Private b2sSets(250) As Integer
+    Private lamps(400) As Integer
+    Private solenoids(400) As Integer
+    Private gistrings(400) As Integer
+    Private b2sSets(400) As Integer
     Private mechs(5) As Integer
     Private leds(100) As Integer
 
@@ -833,7 +840,7 @@ Public Class formBackglass
 
         If B2SData.UseRomLamps Then
             For Each lampid As Integer In B2SData.UsedRomLampIDs.Keys
-                If lampid < lampsData.Length Then
+                If lampid < lampsData.Length And lampid < lamps.Length Then
                     Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
                     If lamps(lampid) <> currentvalue Then
                         If Not B2SData.UsedRomReelLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedAnimationLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then lamps(lampid) = currentvalue
@@ -864,7 +871,7 @@ Public Class formBackglass
         End If
         If B2SData.UseRomReelLamps Then
             For Each lampid As Integer In B2SData.UsedRomReelLampIDs.Keys
-                If lampid < lampsData.Length Then
+                If lampid < lampsData.Length And lampid < lamps.Length Then
                     Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
                     If lamps(lampid) <> currentvalue Then
                         If Not B2SData.UsedAnimationLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then lamps(lampid) = currentvalue
@@ -887,7 +894,7 @@ Public Class formBackglass
         End If
         If B2SData.UseAnimationLamps Then
             For Each lampid As Integer In B2SData.UsedAnimationLampIDs.Keys
-                If lampid < lampsData.Length Then
+                If lampid < lampsData.Length And lampid < lamps.Length Then
                     Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
                     If lamps(lampid) <> currentvalue Then
                         If Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then lamps(lampid) = currentvalue
@@ -907,7 +914,7 @@ Public Class formBackglass
             Next
             ' random animation start
             For Each lampid As Integer In B2SData.UsedRandomAnimationLampIDs.Keys
-                If lampid < lampsData.Length Then
+                If lampid < lampsData.Length And lampid < lamps.Length Then
                     Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
                     If lamps(lampid) <> currentvalue Then
                         lamps(lampid) = currentvalue
@@ -1683,6 +1690,8 @@ Public Class formBackglass
             End If
         End If
 
+        ' BEGIN FUZZY MATCH 
+
         If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
             If B2SSettings.LocateHyperpinXMLFile() Then
                 hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"
@@ -1715,6 +1724,7 @@ Public Class formBackglass
                 End If
             End If
         End If
+		' END FUZZY MATCH
 
         If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) AndAlso Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
             Dim text As String = "File '" & IO.Path.Combine(IO.Directory.GetCurrentDirectory(), filename)

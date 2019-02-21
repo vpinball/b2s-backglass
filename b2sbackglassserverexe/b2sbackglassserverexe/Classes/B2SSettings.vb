@@ -78,6 +78,7 @@ Public Class B2SSettings
     Public Shared Property IsGlowBulbOn() As Boolean = False
     Public Shared Property GlowIndex() As Integer = -1
     Public Shared Property DefaultGlow() As Integer = -1
+    Public Shared Property FormToFront() As Boolean = True
 
     Public Shared Property HideGrill() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
     Public Shared Property HideB2SDMD() As Boolean = False
@@ -153,6 +154,7 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("IsStatisticsBackglassOn") IsNot Nothing Then IsStatisticsBackglassOn = (nodeHeader.SelectSingleNode("IsStatisticsBackglassOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("IsBackglassSearchLogOn") IsNot Nothing Then IsBackglassSearchLogOn = (nodeHeader.SelectSingleNode("IsBackglassSearchLogOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
+                If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
                 If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
                     ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
                     ScreenshotFileType = CInt(nodeHeader.SelectSingleNode("ScreenshotFileType").InnerText)
@@ -195,6 +197,8 @@ Public Class B2SSettings
                         If nodeTable.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (nodeTable.SelectSingleNode("StartAsEXE").InnerText = "1")
                         If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
                         If nodeTable.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (nodeTable.SelectSingleNode("StartBackground").InnerText = "1")
+                        If nodeTable.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeTable.SelectSingleNode("FormToFront").InnerText = "1")
+
                         Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
                         If nodeAnimations IsNot Nothing Then
                             For Each nodeAnimation As Xml.XmlElement In nodeAnimations.ChildNodes
@@ -257,6 +261,7 @@ Public Class B2SSettings
                 End If
                 AddNode(XML, nodeTable, "StartAsEXE", If(StartAsEXE, "1", "0"))
                 AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
+                AddNode(XML, nodeTable, "FormToFront", If(FormToFront, "1", "0"))
 
                 If b2sanimation IsNot Nothing Then
                     Dim nodeAnimations As Xml.XmlElement = AddHeader(XML, nodeTable, "Animations")

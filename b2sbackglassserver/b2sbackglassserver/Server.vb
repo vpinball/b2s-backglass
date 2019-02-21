@@ -536,6 +536,20 @@ Public Class Server
         VPinMAME.CheckROMS(showoptions, handle)
     End Sub
 
+    Public Property PuPHide() As Boolean              'NB change
+        Get
+            Return False
+        End Get
+        Set(ByVal value As Boolean)
+            For Each P As Plugin In B2SSettings.PluginHost.Plugins
+                If P.Name.ToLower.Contains("pinup") And value Then
+                    P.PluginFinish()
+                    P.Status = PluginStatusEnum.Disabled
+                End If
+            Next
+        End Set
+    End Property
+
 #End Region
 
 
@@ -558,6 +572,8 @@ Public Class Server
             VPinMAME.HandleMechanics = value
         End Set
     End Property
+
+
 
 #End Region
 

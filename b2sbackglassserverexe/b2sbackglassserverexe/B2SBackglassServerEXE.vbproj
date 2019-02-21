@@ -7,7 +7,7 @@
     </ProductVersion>
     <SchemaVersion>
     </SchemaVersion>
-    <ProjectGuid>{42A57D3D-5D76-4D46-9CF0-0909C7C799C4}</ProjectGuid>
+    <ProjectGuid>{AC2E94BE-21CD-434A-9039-6551DF43698B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>B2S</RootNamespace>
     <AssemblyName>B2SBackglassServerEXE</AssemblyName>
@@ -227,7 +227,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "C:\Games\Visual Pinball\Tables"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Visual Pinball\Tables"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
