@@ -31,6 +31,7 @@ Partial Class formSettings
         Me.chkActivatePlugins = New System.Windows.Forms.CheckBox()
         Me.btnPluginSettings = New System.Windows.Forms.Button()
         Me.grpStartMode = New System.Windows.Forms.GroupBox()
+        Me.chkFormFront = New System.Windows.Forms.CheckBox()
         Me.chkSmall = New System.Windows.Forms.CheckBox()
         Me.lblDefaultStartMode = New System.Windows.Forms.Label()
         Me.chkStartAsEXE = New System.Windows.Forms.CheckBox()
@@ -79,7 +80,7 @@ Partial Class formSettings
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
-        Me.chkFormFront = New System.Windows.Forms.CheckBox()
+        Me.chkDisableFuzzyMatching = New System.Windows.Forms.CheckBox()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -166,6 +167,7 @@ Partial Class formSettings
         '
         'grpStartMode
         '
+        Me.grpStartMode.Controls.Add(Me.chkDisableFuzzyMatching)
         Me.grpStartMode.Controls.Add(Me.chkFormFront)
         Me.grpStartMode.Controls.Add(Me.chkSmall)
         Me.grpStartMode.Controls.Add(Me.lblDefaultStartMode)
@@ -177,6 +179,16 @@ Partial Class formSettings
         Me.grpStartMode.TabIndex = 2
         Me.grpStartMode.TabStop = False
         Me.grpStartMode.Text = "Backglass start mode"
+        '
+        'chkFormFront
+        '
+        Me.chkFormFront.AutoSize = True
+        Me.chkFormFront.Location = New System.Drawing.Point(80, 50)
+        Me.chkFormFront.Name = "chkFormFront"
+        Me.chkFormFront.Size = New System.Drawing.Size(127, 17)
+        Me.chkFormFront.TabIndex = 39
+        Me.chkFormFront.Text = "Bring BG Form to Top"
+        Me.chkFormFront.UseVisualStyleBackColor = True
         '
         'chkSmall
         '
@@ -679,15 +691,15 @@ Partial Class formSettings
         Me.btnDonate.UseVisualStyleBackColor = True
         Me.btnDonate.Visible = False
         '
-        'chkFormFront
+        'chkDisableFuzzyMatching
         '
-        Me.chkFormFront.AutoSize = True
-        Me.chkFormFront.Location = New System.Drawing.Point(80, 50)
-        Me.chkFormFront.Name = "chkFormFront"
-        Me.chkFormFront.Size = New System.Drawing.Size(127, 17)
-        Me.chkFormFront.TabIndex = 39
-        Me.chkFormFront.Text = "Bring BG Form to Top"
-        Me.chkFormFront.UseVisualStyleBackColor = True
+        Me.chkDisableFuzzyMatching.AutoSize = True
+        Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(221, 50)
+        Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
+        Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(159, 17)
+        Me.chkDisableFuzzyMatching.TabIndex = 40
+        Me.chkDisableFuzzyMatching.Text = "Exact .directb2s match only"
+        Me.chkDisableFuzzyMatching.UseVisualStyleBackColor = True
         '
         'formSettings
         '
@@ -784,4 +796,5 @@ Partial Class formSettings
     Friend WithEvents btnPluginSettings As System.Windows.Forms.Button
     Friend WithEvents chkSmall As Windows.Forms.CheckBox
     Friend WithEvents chkFormFront As Windows.Forms.CheckBox
+    Friend WithEvents chkDisableFuzzyMatching As Windows.Forms.CheckBox
 End Class

@@ -1690,41 +1690,40 @@ Public Class formBackglass
             End If
         End If
 
-        ' BEGIN FUZZY MATCH 
-
-        If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
-            If B2SSettings.LocateHyperpinXMLFile() Then
-                hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"
-                shorthyperpinfilename = B2SData.ShortFileName(hyperpinfilename)
-            End If
-            ' check whether the hyperpin description can be found
-            If Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
-                If filename.Length >= 8 Then
-                    ' look for short name
-                    B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6) & "*.directb2s")
-                    If B2SSettings.MatchingFileNames Is Nothing OrElse Not IsArray(B2SSettings.MatchingFileNames) OrElse B2SSettings.MatchingFileNames.Length <= 0 Then
-                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6).Replace(" ", "") & "*.directb2s")
-                    End If
-                    If B2SSettings.MatchingFileNames IsNot Nothing Then
-                        For i As Integer = 0 To B2SSettings.MatchingFileNames.Length - 1
-                            Dim fileinfo As IO.FileInfo = New IO.FileInfo(B2SSettings.MatchingFileNames(i))
-                            B2SSettings.MatchingFileNames(i) = fileinfo.Name
+        If Not B2SSettings.DisableFuzzyMatching Then
+            If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+                If B2SSettings.LocateHyperpinXMLFile() Then
+                    hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"
+                    shorthyperpinfilename = B2SData.ShortFileName(hyperpinfilename)
+                End If
+                ' check whether the hyperpin description can be found
+                If Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
+                    If filename.Length >= 8 Then
+                        ' look for short name
+                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6) & "*.directb2s")
+                        If B2SSettings.MatchingFileNames Is Nothing OrElse Not IsArray(B2SSettings.MatchingFileNames) OrElse B2SSettings.MatchingFileNames.Length <= 0 Then
+                            B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6).Replace(" ", "") & "*.directb2s")
+                        End If
+                        If B2SSettings.MatchingFileNames IsNot Nothing Then
+                            For i As Integer = 0 To B2SSettings.MatchingFileNames.Length - 1
+                                Dim fileinfo As IO.FileInfo = New IO.FileInfo(B2SSettings.MatchingFileNames(i))
+                                B2SSettings.MatchingFileNames(i) = fileinfo.Name
+                            Next
+                        End If
+                        shortfilename = String.Empty
+                        For Each file As String In B2SSettings.MatchingFileNames
+                            If String.IsNullOrEmpty(shortfilename) Then
+                                shortfilename = file
+                            End If
+                            If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) AndAlso file.Equals(B2SSettings.MatchingFileName, StringComparison.CurrentCultureIgnoreCase) Then
+                                shortfilename = file
+                                Exit For
+                            End If
                         Next
                     End If
-                    shortfilename = String.Empty
-                    For Each file As String In B2SSettings.MatchingFileNames
-                        If String.IsNullOrEmpty(shortfilename) Then
-                            shortfilename = file
-                        End If
-                        If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) AndAlso file.Equals(B2SSettings.MatchingFileName, StringComparison.CurrentCultureIgnoreCase) Then
-                            shortfilename = file
-                            Exit For
-                        End If
-                    Next
                 End If
             End If
         End If
-		' END FUZZY MATCH
 
         If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) AndAlso Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
             Dim text As String = "File '" & IO.Path.Combine(IO.Directory.GetCurrentDirectory(), filename)

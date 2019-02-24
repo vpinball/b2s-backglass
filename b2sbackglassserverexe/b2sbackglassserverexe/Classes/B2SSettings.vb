@@ -11,6 +11,7 @@ Public Class B2SSettings
         Standard = 1
         EXE = 2
     End Enum
+  
     Public Enum eDMDTypes
         Standard = 0
         TwoMonitorSetup = 1
@@ -67,6 +68,7 @@ Public Class B2SSettings
     Public Shared Property LEDsOff() As Boolean = False
     Public Shared Property StartAsEXE() As Boolean = True
     Public Shared Property DefaultStartMode() As eDefaultStartMode = eDefaultStartMode.EXE
+    Public Shared Property DisableFuzzyMatching() As Boolean = False
 
     Public Shared Property LampsSkipFrames() As Integer = 0
     Public Shared Property SolenoidsSkipFrames() As Integer = 0
@@ -143,6 +145,8 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
                 If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
                 If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
+                If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
+
                 ' get overall settings
                 If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)
                 If nodeHeader.SelectSingleNode("LogPath") IsNot Nothing Then LogPath = nodeHeader.SelectSingleNode("LogPath").InnerText
@@ -231,6 +235,7 @@ Public Class B2SSettings
         Else
             AddNode(XML, nodeHeader, "ArePluginsOn", If(ArePluginsOn, "1", "0"))
             AddNode(XML, nodeHeader, "DefaultStartMode", CInt(DefaultStartMode).ToString())
+            AddNode(XML, nodeHeader, "DisableFuzzyMatching", If(DisableFuzzyMatching, "1", "0"))
             AddNode(XML, nodeHeader, "LogPath", LogPath)
             AddNode(XML, nodeHeader, "IsLampsStateLogOn", If(IsLampsStateLogOn, "1", "0"))
             AddNode(XML, nodeHeader, "IsSolenoidsStateLogOn", If(IsSolenoidsStateLogOn, "1", "0"))
@@ -289,6 +294,7 @@ Public Class B2SSettings
     Public Shared Sub ClearAll()
         ' do not add GameName or B2SName here
         DefaultStartMode = eDefaultStartMode.EXE
+        DisableFuzzyMatching = False
         LogPath = String.Empty
         IsLampsStateLogOn = False
         IsSolenoidsStateLogOn = False

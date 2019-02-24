@@ -84,7 +84,7 @@ Public Class formSettings
         End If
         chkBulbs.Checked = B2SSettings.IsGlowBulbOn
         chkFormFront.Checked = B2SSettings.FormToFront
-
+        chkDisableFuzzyMatching.Checked = B2SSettings.DisableFuzzyMatching
 
         cmbGlowing.SelectedIndex = If(B2SSettings.GlowIndex <> -1, B2SSettings.GlowIndex, cmbGlowing.Items.Count - 1)
         activateMsgBoxAtSaving = False
@@ -457,5 +457,9 @@ Public Class formSettings
 
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles chkFormFront.CheckedChanged
         B2SSettings.FormToFront = chkFormFront.Checked
+    End Sub
+
+    Private Sub chkDisableFuzzyMatching_CheckedChanged(sender As Object, e As EventArgs) Handles chkDisableFuzzyMatching.CheckedChanged
+        B2SSettings.DisableFuzzyMatching = chkDisableFuzzyMatching.Checked
     End Sub
 End Class
