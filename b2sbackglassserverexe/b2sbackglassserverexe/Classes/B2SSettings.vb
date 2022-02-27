@@ -3,7 +3,7 @@ Imports System.IO
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "1.3.0.5"
+    Public Const DirectB2SVersion As String = "1.3.0.6"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
@@ -11,7 +11,7 @@ Public Class B2SSettings
         Standard = 1
         EXE = 2
     End Enum
-  
+
     Public Enum eDMDTypes
         Standard = 0
         TwoMonitorSetup = 1
@@ -49,11 +49,11 @@ Public Class B2SSettings
     Public Shared Property IsStatisticsBackglassOn() As Boolean = True
     Public Shared Property IsBackglassSearchLogOn As Boolean = False
 
-    Public Shared Property ShowStartupError() As Boolean = False
+    Public Shared Property ShowStartupError() As Boolean = False ' set to True to display errors
 
     Public Shared Property ArePluginsOn() As Boolean = False
-    
-	Public Shared Property CPUAffinityMask() As Integer = 0
+
+    Public Shared Property CPUAffinityMask() As Integer = 0
 
     Public Shared Property ScreenshotPath() As String = String.Empty
     Public Shared Property ScreenshotFileType() As eImageFileType = eImageFileType.PNG

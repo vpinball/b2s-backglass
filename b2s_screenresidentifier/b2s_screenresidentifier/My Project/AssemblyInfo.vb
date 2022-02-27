@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("B2S ScreenRes Identifier")> 
-<Assembly: AssemblyCopyright("Copyright © 2012-2019")> 
+<Assembly: AssemblyCopyright("Copyright © 2012-2022")> 
 <Assembly: AssemblyTrademark("A Herweh & B2S Team production")> 
 
 <Assembly: ComVisible(False)>
