@@ -303,11 +303,6 @@ Public Class Server
     Public Sub SetPath(ByVal path As String)
         IO.Directory.SetCurrentDirectory(path)
     End Sub
-    Public ReadOnly Property InstallDir() As String
-        Get
-            Return VPinMAME.InstallDir
-        End Get
-    End Property
 
     Public ReadOnly Property Games(ByVal gamename As String) As Object
         Get
@@ -525,15 +520,8 @@ Public Class Server
     Public Sub ShowOptsDialog(ByVal handle As Object)
         VPinMAME.ShowOptsDialog(handle)
     End Sub
-    Public Sub ShowPathesDialog(ByVal handle As Object)
-        VPinMAME.ShowPathesDialog(handle)
-    End Sub
     Public Sub ShowAboutDialog(ByVal handle As Object)
         VPinMAME.ShowAboutDialog(handle)
-    End Sub
-
-    Public Sub CheckROMS(ByVal showoptions As Object, ByVal handle As Object)
-        VPinMAME.CheckROMS(showoptions, handle)
     End Sub
 
     Public Property PuPHide() As Boolean              'NB change
