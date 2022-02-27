@@ -276,6 +276,11 @@ Public Class Server
             B2SSettings.B2SName = String.Empty
         End Set
     End Property
+    Public Property ROMName() As String
+        Get
+            Return VPinMAME.ROMName
+        End Get
+    End Property
     Public Property B2SName() As String
         Get
             Return B2SSettings.B2SName
