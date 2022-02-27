@@ -276,7 +276,7 @@ Public Class Server
             B2SSettings.B2SName = String.Empty
         End Set
     End Property
-    Public Property ROMName() As String
+    Public ReadOnly Property ROMName() As String
         Get
             Return VPinMAME.ROMName
         End Get
