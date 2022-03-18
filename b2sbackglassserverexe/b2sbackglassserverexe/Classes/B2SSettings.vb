@@ -94,6 +94,7 @@ Public Class B2SSettings
     Public Shared Property CurrentDualMode() As B2SSettings.eDualMode = eDualMode.NotSet
 
     Public Shared Property StartBackground() As Boolean = False
+    Public Shared Property GlobalStartBackground() As Nullable(Of Boolean) = Nothing
 
 
     Public Shared ReadOnly Property IsROMControlled() As Boolean
@@ -158,6 +159,10 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("IsStatisticsBackglassOn") IsNot Nothing Then IsStatisticsBackglassOn = (nodeHeader.SelectSingleNode("IsStatisticsBackglassOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("IsBackglassSearchLogOn") IsNot Nothing Then IsBackglassSearchLogOn = (nodeHeader.SelectSingleNode("IsBackglassSearchLogOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
+                If nodeHeader.SelectSingleNode("StartBackground") IsNot Nothing Then
+                    GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
+                    StartBackground = GlobalStartBackground
+                End If
                 If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
                 If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
                     ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
@@ -246,6 +251,10 @@ Public Class B2SSettings
             AddNode(XML, nodeHeader, "ShowStartupError", If(ShowStartupError, "1", "0"))
             AddNode(XML, nodeHeader, "ScreenshotPath", ScreenshotPath)
             AddNode(XML, nodeHeader, "ScreenshotFileType", CInt(ScreenshotFileType).ToString())
+            ' Only save the StartBackground setting on global level if it is definded
+            If GlobalStartBackground.HasValue Then
+                AddNode(XML, nodeHeader, "StartBackground", If(GlobalStartBackground, "1", "0"))
+            End If
             If Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName) Then
                 Dim nodeTable As Xml.XmlElement = AddHeader(XML, nodeHeader, If(Not String.IsNullOrEmpty(GameName), GameName, B2SName))
                 nodeTable.RemoveAll()
@@ -265,7 +274,11 @@ Public Class B2SSettings
                     AddNode(XML, nodeTable, "GlowIndex", GlowIndex.ToString())
                 End If
                 AddNode(XML, nodeTable, "StartAsEXE", If(StartAsEXE, "1", "0"))
+
+                ' Only save the StartBackground setting on table level if different from GlobalStartBackground 
+                If (Not GlobalStartBackground.HasValue) Or (GlobalStartBackground Xor StartBackground) Then
                 AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
+                End If
                 AddNode(XML, nodeTable, "FormToFront", If(FormToFront, "1", "0"))
 
                 If b2sanimation IsNot Nothing Then
