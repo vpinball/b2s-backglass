@@ -1,3 +1,5 @@
+1.3.1.0
+
 - The FormToFront setting now also works correctly when having the StartBackground setting turned on
 
 - The background and backglass are in sync independent of how FormToFront is set (background should not hide backglass)
@@ -24,3 +26,34 @@
   </B2STableSettings>
  
 - Let the 3rd Screen (formDMD) also be controlled by the FormToFront setting
+
+
+1.3.0.6
+
+- Add ROMName call, and adapt ChangedLEDs API change
+
+
+1.3.0.4
+
+- Change default to not show startup errors.
+
+- Merge David Pavia's change to optionally set backglass to not on-top and make "fuzzy match" a setting (default: current behavior) to match functionality in David Pavia's PUP version.
+
+- Fix bug with more than 400 lights causing an index out of range exception reported by Wildman.
+
+- Sync up some of the differences in the EXE/non EXE versions of the settings class.
+
+
+1.3.0.3
+
+- Bug fix: Alternate tablename.res (replacing screenres.txt) failed for Server running as EXE
+
+- Bug fix/feature: support alternative ways to find direct2BS based on gamename
+
+- Feature: proportional aspect ratio for backglass as option per table
+
+- add some more missing VPinMAME interface properties (NVRAM & SoundMode and more for the exe version)
+
+- Allow backglass display to be specified as the X coordinate instead of display ID#, to resolve issues on systems that don't keep a consistent display order.
+
+- CPUAffinity setting
