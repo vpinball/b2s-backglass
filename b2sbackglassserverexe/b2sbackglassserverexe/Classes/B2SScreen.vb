@@ -314,7 +314,11 @@ Public Class B2SScreen
                 Me.formbackground.BackgroundImage = Image.FromFile(Me.BackgroundPath) ' ("C:\backglass.png")
             End If
             Me.formbackground.Show()
-            Me.formbackground.BringToFront()
+            If B2SSettings.FormToFront Then
+                Me.formbackground.BringToFront()
+            Else
+                Me.formbackground.SendToBack()
+            End If
         End If
 
         ' set forms to background image size
