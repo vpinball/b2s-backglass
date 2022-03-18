@@ -4,7 +4,7 @@ Imports System.Drawing
 
 Public Class B2SScreen
 
-    Private Const FileName As String = "ScreenRes.txt"
+    Private ReadOnly FileName As String = Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
 
     Public formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
@@ -39,7 +39,7 @@ Public Class B2SScreen
 
     Public Property IsDMDToBeShown() As Boolean = False
 
-    
+
 #Region "constructor and startup"
 
     Public Sub New()
