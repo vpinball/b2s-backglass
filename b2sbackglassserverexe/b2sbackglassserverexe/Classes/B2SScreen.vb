@@ -372,8 +372,11 @@ Public Class B2SScreen
         Me.formBackglass.Location = Me.BackglassScreen.Bounds.Location + Me.BackglassLocation
         Me.formBackglass.Size = Me.BackglassSize
         Me.formBackglass.Text = "Form1"
-        Me.formBackglass.Show()
-
+        If ((Not (Me.BackgroundSize.IsEmpty)) And B2SSettings.StartBackground) Then
+            Me.formBackglass.Show(Me.formbackground)
+        Else
+            Me.formBackglass.Show()
+        End If
         ' bring backglass screen to the front
         Me.formBackglass.BringToFront()
 
