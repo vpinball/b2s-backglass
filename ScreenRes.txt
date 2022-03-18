@@ -18,11 +18,11 @@
 300
 # Y-flip, flips the LED display upside down
 0
-# X/Y position pos Small display (Small Button Option) Relative upper left corner of Playfield
+# X/Y position pos when StartBackground is active, relative to upper left corner of Playfield ("Small" Button in the Options)
 800
 0
-# width/height of the small display (Small Button Option)
+# width/height of the backglass when StartBackground is active 
 800
 600
-# C:\path\Frame (The path to the location where you have the frame image)	my_bezel_for_EM.png
-C:\path\my_bezel_for_EM.png
+# C:\path\Frame (The path to the location where you have the background image)
+C:\path\my_bezel_for_EM_or_grill_for_dual_screen.png
