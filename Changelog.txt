@@ -1,0 +1,26 @@
+- The FormToFront setting now also works correctly when having the StartBackground setting turned on
+
+- The background and backglass are in sync independent of how FormToFront is set (background should not hide backglass)
+
+- Lines starting with "#" is ignored when reading the ScreenRes.txt or TableName.res files. Now possible to do like this: (template file is updated accordingly)
+
+   # Playfield Screen resolution width/height
+   800
+   600
+   # Backglass Screen resolution width/height
+   800
+   600
+   ...
+ 
+- StartBackground can now also be set globally in the B2STableSettings.xml (but there is no GUI available). When set globally, the GUI will only save StartBackground on table level when they differ.
+ 
+  <B2STableSettings>
+     ...
+     <StartBackground>1</StartBackground>
+     <afm_113>
+        <StartBackground>0</StartBackground>
+        ...
+     </afm_113>
+  </B2STableSettings>
+ 
+- Let the 3rd Screen (formDMD) also be controlled by the FormToFront setting
