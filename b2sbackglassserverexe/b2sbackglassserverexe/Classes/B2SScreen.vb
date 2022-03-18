@@ -394,8 +394,12 @@ Public Class B2SScreen
             Me.formDMD.Size = Me.DMDSize
             ' show the DMD form
             Me.formDMD.Show() 'formBackglass)
-            Me.formDMD.BringToFront()
-            Me.formDMD.TopMost = True
+            If B2SSettings.FormToFront Then
+                Me.formDMD.BringToFront()
+                'Me.formDMD.TopMost = True
+            Else
+                Me.formDMD.SendToBack()
+            End If
         End If
 
     End Sub
