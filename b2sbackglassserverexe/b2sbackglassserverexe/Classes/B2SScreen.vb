@@ -113,6 +113,7 @@ Public Class B2SScreen
             Dim i As Integer = 0
             Do Until EOF(1)
                 line(i) = LineInput(1)
+                If (line(i).StartsWith("#")) Then Continue Do
                 i += 1
             Loop
             line(i) = 0

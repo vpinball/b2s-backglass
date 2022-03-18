@@ -1,12 +1,28 @@
+# Playfield Screen resolution width/height
 800
 600
+# Backglass Screen resolution width/height
 800
 600
+# Display index for the Playfield
 1
+# x position for the backglass relative to the upper left corner of the Playfield screen
 0
+# y position for the backglass on the selected display (Normally left at 0)
 0
+# width/height of the DMD area in pixels - For 3 screen setup
 600
 130
+# X/Y position of the DMD area relative to the upper left corner of the backglass screen - For 3 screen setup
 700
 300
+# Y-flip, flips the LED display upside down
 0
+# X/Y position pos Small display (Small Button Option) Relative upper left corner of Playfield
+800
+0
+# width/height of the small display (Small Button Option)
+800
+600
+# C:\path\Frame (The path to the location where you have the frame image)	my_bezel_for_EM.png
+C:\path\my_bezel_for_EM.png
