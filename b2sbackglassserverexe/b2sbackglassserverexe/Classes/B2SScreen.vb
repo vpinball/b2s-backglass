@@ -1,10 +1,11 @@
 Imports System
 Imports System.Windows.Forms
 Imports System.Drawing
+Imports Microsoft.Win32
 
 Public Class B2SScreen
 
-    Private ReadOnly FileName As String = Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
 
     Public formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
@@ -392,13 +393,14 @@ Public Class B2SScreen
             Me.formDMD.MinimizeBox = False
             Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + OriginalOffset + Me.DMDLocation  ' was Me.formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
-            ' show the DMD form
-            Me.formDMD.Show() 'formBackglass)
-            If B2SSettings.FormToFront Then
-                Me.formDMD.BringToFront()
-                'Me.formDMD.TopMost = True
+            ' show the DMD form (always) on top of the grill with fixed position
+            If Me.DMDAtDefaultLocation Then
+                Me.formDMD.Show(Me.formBackglass)
             Else
-                Me.formDMD.SendToBack()
+                ' show the DMD form without grill
+                Me.formDMD.Show()
+                Me.formDMD.BringToFront()
+                Me.formDMD.TopMost = True
             End If
         End If
 

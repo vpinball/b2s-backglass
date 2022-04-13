@@ -275,7 +275,7 @@ Public Class B2SSettings
                 End If
                 AddNode(XML, nodeTable, "StartAsEXE", If(StartAsEXE, "1", "0"))
 
-                ' Only save the StartBackground setting on table level if different from GlobalStartBackground 
+                ' Only save the StartBackground setting on table level if different from GlobalStartBackground or non existent
                 If (Not GlobalStartBackground.HasValue) Or (GlobalStartBackground Xor StartBackground) Then
                 AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
                 End If
