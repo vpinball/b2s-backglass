@@ -3,7 +3,7 @@ Imports System.IO
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "1.3.1.0"
+    Public Const DirectB2SVersion As String = "1.3.1.1"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
