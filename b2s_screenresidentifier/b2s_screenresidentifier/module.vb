@@ -1,8 +1,9 @@
 ﻿Imports System.Text
+Imports Microsoft.Win32
 
 Module Module1
 
-    Public Const FileName As String = "ScreenRes.txt"
+    Public Property FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
 
     Public ReadOnly screenCount As Integer = Screen.AllScreens.Count
 
@@ -11,6 +12,7 @@ Module Module1
     Public Property FileFound() As Boolean = False
     Public Property PlayfieldSize() As Size = New Size(0, 0)
     Public Property BackglassMonitor() As String = String.Empty
+    Public Property BackglassMonitorType() As String = String.Empty
     Public Property BackglassSize() As Size = New Size(0, 0)
     Public Property BackglassLocation() As Point = New Point(0, 0)
     Public Property BackglassGrillHeight() As Integer = 0
@@ -36,6 +38,9 @@ Module Module1
     End Property
 
     Public Sub GetSettings()
+        If My.Application.CommandLineArgs.Count > 0 AndAlso IO.File.Exists(My.Application.CommandLineArgs.ElementAt(0)) Then
+            FileName = My.Application.CommandLineArgs.ElementAt(0)
+        End If
         If IO.File.Exists(FileName) Then
             FileFound = True
 
@@ -55,6 +60,11 @@ Module Module1
             PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
             BackglassSize = New Size(CInt(line(2)), CInt(line(3)))
             BackglassMonitor = line(4)
+
+            If BackglassMonitor.StartsWith("@") Or BackglassMonitor.StartsWith("=") Then
+                BackglassMonitorType = Mid(BackglassMonitor, 1, 1)
+            End If
+
             BackglassLocation = New Point(CInt(line(5)), CInt(line(6)))
             DMDSize = New Size(CInt(line(7)), CInt(line(8)))
             DMDLocation = New Point(CInt(line(9)), CInt(line(10)))

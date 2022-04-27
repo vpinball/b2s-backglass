@@ -77,6 +77,7 @@ Public Class formPlayfield
             IO.File.CreateText(FileName).Close()
         End If
 
+        Dim currentScreen = 0
         ' open file
         FileOpen(1, FileName, OpenMode.Output)
 
@@ -88,8 +89,19 @@ Public Class formPlayfield
         WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
         WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
 
-        PrintLine(1, "# Backglass Display Devicename screen number (\\.\DISPLAY)x for the Playfield or screen on position (@x) or screen index (=x)")
-        WriteLine(1, formBackglass.BackglassScreenNo)
+        PrintLine(1, "# Define Backglass using Display Devicename screen number (\\.\DISPLAY)x or screen coordinates (@x) or screen index (=x)")
+        If BackglassMonitorType.StartsWith("@") Then
+            PrintLine(1, BackglassMonitorType & Me.txtPlayfieldSizeWidth.Text)
+        ElseIf BackglassMonitorType.StartsWith("=") Then
+            For Each scr As Screen In Screen.AllScreens
+                currentScreen += 1
+                If Mid(scr.DeviceName, 1, 12) = "\\.\DISPLAY" + formBackglass.BackglassScreenNo.ToString Then
+                    PrintLine(1, BackglassMonitorType & currentScreen)
+                End If
+            Next
+        Else
+            WriteLine(1, formBackglass.BackglassScreenNo)
+        End If
 
         PrintLine(1, "# x position For the backglass relative To the upper left corner Of the Playfield screen")
         WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
