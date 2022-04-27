@@ -4,7 +4,7 @@
 # Backglass Screen resolution width/height
 800
 600
-# Display index for the Playfield
+# Backglass Display Devicename screen number (\\.\DISPLAY)x for the Playfield or screen on position (@x) or screen index (=x)
 1
 # x position for the backglass relative to the upper left corner of the Playfield screen
 0

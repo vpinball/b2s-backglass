@@ -80,34 +80,44 @@ Public Class formPlayfield
         ' open file
         FileOpen(1, FileName, OpenMode.Output)
 
-        WriteLine(1, "# Playfield Screen resolution width/height")
+        PrintLine(1, "# Playfield Screen resolution width/height")
         WriteLine(1, CInt(Me.txtPlayfieldSizeWidth.Text))
         WriteLine(1, CInt(Me.txtPlayfieldSizeHeight.Text))
-        WriteLine(1, "# Backglass Screen resolution width/height")
+
+        PrintLine(1, "# Backglass Screen resolution width/height")
         WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
         WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
-        WriteLine(1, "# Display index For the Playfield")
+
+        PrintLine(1, "# Backglass Display Devicename screen number (\\.\DISPLAY)x for the Playfield or screen on position (@x) or screen index (=x)")
         WriteLine(1, formBackglass.BackglassScreenNo)
-        WriteLine(1, "# x position For the backglass relative To the upper left corner Of the Playfield screen")
+
+        PrintLine(1, "# x position For the backglass relative To the upper left corner Of the Playfield screen")
         WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
-        WriteLine(1, "# y position For the backglass On the selected display (Normally left at 0)")
+
+        PrintLine(1, "# y position For the backglass On the selected display (Normally left at 0)")
         WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
-        WriteLine(1, "# width/height Of the DMD area In pixels - For 3 screen setup")
+
+        PrintLine(1, "# width/height Of the DMD area In pixels - For 3 screen setup")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Width, CInt(formDMD.txtDMDSizeWidth.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Height, CInt(formDMD.txtDMDSizeHeight.Text)))
-        WriteLine(1, "# X/Y position Of the DMD area relative To the upper left corner Of the backglass screen - For 3 screen setup")
+
+        PrintLine(1, "# X/Y position Of the DMD area relative To the upper left corner Of the backglass screen - For 3 screen setup")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.X - Screen.FromControl(formBackglass).Bounds.X + CInt(formDMD.txtDMDLocationX.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.Y - Screen.FromControl(formBackglass).Bounds.Y + CInt(formDMD.txtDMDLocationY.Text)))
-        WriteLine(1, "# Y-flip, flips the LED display upside down")
+
+        PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
-        WriteLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield ('Small' Button In the Options)")
-        WriteLine(1, "#0")
-        WriteLine(1, "#0")
-        WriteLine(1, "# width/height Of the backglass When StartBackground Is active")
-        WriteLine(1, "#0")
-        WriteLine(1, "#0")
-        WriteLine(1, "# C:\path\Frame (The path To the location where you have the background image)")
-        WriteLine(1, "#C:\...")
+
+        PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield ('Small' Button In the Options)")
+        PrintLine(1, BackgroundLocation.X.ToString)
+        PrintLine(1, BackgroundLocation.Y.ToString)
+
+        PrintLine(1, "# width/height Of the backglass When StartBackground Is active")
+        PrintLine(1, BackgroundSize.Width.ToString)
+        PrintLine(1, BackgroundSize.Height.ToString)
+
+        PrintLine(1, "# C:\path\Frame (The path To the location where you have the background image)")
+        PrintLine(1, BackgroundPath.ToString)
 
         ' close file handle
         FileClose(1)
@@ -118,6 +128,7 @@ Public Class formPlayfield
     End Sub
 
     Private Sub StartupPlayfield()
+        Dim currentScreen = 0
         IsInStartup = True
 
         radio1Screen.Checked = True
@@ -130,6 +141,7 @@ Public Class formPlayfield
 
         If FileFound Then
             For Each scr As Screen In Screen.AllScreens
+                currentScreen += 1
                 ' set playfield
                 If scr.Primary Then
                     Me.Location = scr.Bounds.Location
@@ -139,8 +151,9 @@ Public Class formPlayfield
                 End If
 
                 ' set backglass and DMD
-                Dim len As Integer = BackglassMonitor.Length
-                If scr.DeviceName.Substring(0, len) = BackglassMonitor Then
+                If (Mid(scr.DeviceName, 1, 12) = "\\.\DISPLAY" + BackglassMonitor) Or
+                   (BackglassMonitor.StartsWith("@") AndAlso scr.Bounds.Left = CInt(Mid(BackglassMonitor, 2))) Or
+                   (BackglassMonitor.StartsWith("=") AndAlso currentScreen = CInt(Mid(BackglassMonitor, 2))) Then
                     formBackglass.Location = scr.Bounds.Location + BackglassLocation
                     If BackglassSize = scr.Bounds.Size Then
                         formBackglass.chkBackglassFullSize.Checked = True

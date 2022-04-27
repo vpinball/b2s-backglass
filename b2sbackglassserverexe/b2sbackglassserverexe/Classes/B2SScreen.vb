@@ -277,10 +277,17 @@ Public Class B2SScreen
         ' get the correct screen
         Me.BackglassScreen = Screen.AllScreens(0)
         Dim s As Screen
+        Dim currentScreen = 0
 
         For Each s In Screen.AllScreens
+            currentScreen += 1
             If Left(BackglassMonitor, 1) = "@" Then
                 If s.Bounds.Left = CInt(Mid(BackglassMonitor, 2)) Then
+                    Me.BackglassScreen = s
+                    Exit For
+                End If
+            ElseIf Left(BackglassMonitor, 1) = "=" Then
+                If currentScreen = CInt(Mid(BackglassMonitor, 2)) Then
                     Me.BackglassScreen = s
                     Exit For
                 End If

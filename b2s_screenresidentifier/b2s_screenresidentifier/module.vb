@@ -17,7 +17,10 @@ Module Module1
     Public Property DMDSize() As Size = New Size(0, 0)
     Public Property DMDLocation() As Point = New Point(0, 0)
     Public Property DMDFlipY() As Boolean = False
- 
+    Public Property BackgroundSize() As Size = New Size(0, 0)
+    Public Property BackgroundLocation() As Point = New Point(0, 0)
+    Public Property BackgroundPath() As String = String.Empty
+
     Public Function ShortDevice(ByVal device As String) As String
         Return device.Replace("\\", "").Replace(".\", "")
     End Function
@@ -51,11 +54,21 @@ Module Module1
             line(i + 1) = 0
             PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
             BackglassSize = New Size(CInt(line(2)), CInt(line(3)))
-            BackglassMonitor = "\\.\DISPLAY" + line(4)
+            BackglassMonitor = line(4)
             BackglassLocation = New Point(CInt(line(5)), CInt(line(6)))
             DMDSize = New Size(CInt(line(7)), CInt(line(8)))
             DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
             DMDFlipY = (Trim(line(11)) = "1")
+
+            If (i > 15) Then
+                BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
+                BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
+                BackgroundPath = line(16)
+            Else
+                BackgroundLocation = New Point(0, 0)
+                BackgroundSize = New Point(0, 0)
+                BackgroundPath = ""
+            End If
 
             ' close file handle
             FileClose(1)
