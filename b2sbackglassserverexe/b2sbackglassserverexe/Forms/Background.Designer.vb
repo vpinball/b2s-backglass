@@ -31,7 +31,7 @@ Partial Class Background
         Me.ClientSize = New System.Drawing.Size(284, 261)
         Me.ControlBox = False
         Me.Name = "Background"
-        Me.Text = "Background"
+        Me.Text = "B2SServer"
         Me.ResumeLayout(False)
 
     End Sub

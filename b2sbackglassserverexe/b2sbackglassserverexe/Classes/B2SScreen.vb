@@ -317,7 +317,7 @@ Public Class B2SScreen
             Me.formbackground.MinimizeBox = False
             Me.formbackground.Location = Me.BackglassScreen.Bounds.Location + Me.BackgroundLocation
             Me.formbackground.Size = Me.BackgroundSize
-            Me.formbackground.Text = "Background"
+            Me.formbackground.Text = "B2S Backglass Server"
             Me.formbackground.BackColor = Color.Black
             If (IO.File.Exists(Me.BackgroundPath)) Then
                 Me.formbackground.BackgroundImage = Image.FromFile(Me.BackgroundPath) ' ("C:\backglass.png")
@@ -380,13 +380,18 @@ Public Class B2SScreen
         Me.formBackglass.MinimizeBox = False
         Me.formBackglass.Location = Me.BackglassScreen.Bounds.Location + Me.BackglassLocation
         Me.formBackglass.Size = Me.BackglassSize
-        Me.formBackglass.Text = "Form1"
-        If ((Not (Me.BackgroundSize.IsEmpty)) And B2SSettings.StartBackground) Then
+
+        If ((Not (Me.BackgroundSize.IsEmpty)) AndAlso B2SSettings.StartBackground) Then
+            Me.formBackglass.Text = "B2S Background"
+            Me.formBackglass.ShowInTaskbar = False
+
             Me.formBackglass.Show(Me.formbackground)
         Else
+            Me.formBackglass.Text = "B2S Backglass Server"
             Me.formBackglass.Show()
         End If
         ' bring backglass screen to the front
+        If B2SSettings.FormToFront Then Me.formBackglass.TopMost = True
         Me.formBackglass.BringToFront()
 
         ' maybe show DMD form
@@ -400,15 +405,12 @@ Public Class B2SScreen
             Me.formDMD.MinimizeBox = False
             Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + OriginalOffset + Me.DMDLocation  ' was Me.formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
-            ' show the DMD form (always) on top of the grill with fixed position
-            If Me.DMDAtDefaultLocation Then
-                Me.formDMD.Show(Me.formBackglass)
-            Else
-                ' show the DMD form without grill
-                Me.formDMD.Show()
-                Me.formDMD.BringToFront()
-                Me.formDMD.TopMost = True
-            End If
+            Me.formDMD.Text = "B2S DMD"
+            Me.formDMD.ShowInTaskbar = False
+            Me.formDMD.Show(Me.formBackglass)
+            If B2SSettings.FormToFront Then Me.formDMD.TopMost = True
+            Me.formDMD.BringToFront()
+
         End If
 
     End Sub
