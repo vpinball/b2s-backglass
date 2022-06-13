@@ -279,12 +279,12 @@ Public Class formReelType
 
     Private Sub AddReelOrLEDSet(ByVal type As eImageSetType)
         If MessageBox.Show(My.Resources.MSG_ReelImportStart, AppTitle, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) = Windows.Forms.DialogResult.OK Then
-            Dim images(9) As Image
+            Dim images(10) As Image
             Using filedialog As OpenFileDialog = New OpenFileDialog
                 With filedialog
                     .Filter = ImageFileExtensionFilter
                     Dim i As Integer = 0
-                    Do While i <= 9
+                    Do While i <= 10
                         Dim ret As DialogResult = .ShowDialog(Me)
                         If ret = Windows.Forms.DialogResult.OK Then
                             Try

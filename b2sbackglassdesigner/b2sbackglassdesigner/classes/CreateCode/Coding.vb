@@ -231,7 +231,7 @@ Public Class Coding
                         End If
                         Dim index As Integer = 0
                         Do While True
-                            Dim currentname As String = reelname & "_" & If(index >= 0, index.ToString("D" & length - 1), "Empty")
+                            Dim currentname As String = reelname & "_" & If(index < 10, index.ToString("D" & length - 1), "Empty")
                             Dim reelimage As Image = Nothing
                             If reeltype.StartsWith(ImportedStartString) Then
                                 Try
@@ -477,18 +477,18 @@ Public Class Coding
             RaiseEvent ReportProgress(Me, New CodingProgressEventArgs(90))
 
             ' add sounds
-            nodeHeader.AppendChild(nodeSounds)
-            For Each name As String In New String() {"10", "100", "1000"}
-                Using stream As IO.FileStream = New IO.FileStream("C:\Users\Stefan\Dropbox\WIP Tables\Resources\Sound Resources\" & name & ".wav", IO.FileMode.Open)
-                    If stream IsNot Nothing Then
-                        Dim nodeSound As Xml.XmlElement = XML.CreateElement("Sound")
-                        nodeSounds.AppendChild(nodeSound)
-                        nodeSound.SetAttribute("Name", name)
-                        nodeSound.SetAttribute("Type", "wav")
-                        nodeSound.SetAttribute("Stream", WavToBase64(stream))
-                    End If
-                End Using
-            Next
+            'nodeHeader.AppendChild(nodeSounds)
+            'For Each name As String In New String() {"10", "100", "1000"}
+            '    Using stream As IO.FileStream = New IO.FileStream("C:\Users\Stefan\Dropbox\WIP Tables\Resources\Sound Resources\" & name & ".wav", IO.FileMode.Open)
+            '        If stream IsNot Nothing Then
+            '            Dim nodeSound As Xml.XmlElement = XML.CreateElement("Sound")
+            '            nodeSounds.AppendChild(nodeSound)
+            '            nodeSound.SetAttribute("Name", name)
+            '            nodeSound.SetAttribute("Type", "wav")
+            '            nodeSound.SetAttribute("Stream", WavToBase64(stream))
+            '        End If
+            '    End Using
+            'Next
 
             ' add images
             nodeHeader.AppendChild(nodeImages)
