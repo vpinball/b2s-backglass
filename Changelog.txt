@@ -9,6 +9,8 @@
    1. "2" means the screen with the device name = \\.\DISPLAY2. This is the default old way.
    2. "@1920" means the screen sitting on the x position 1920 measured from Point(0,0) on the playfield, in this example the screen right next to the HD playfield screen.
    3. "=2" means the screen sitting on index number 2 walking left to right. 
+- Redo Westworld bugfix from 2017. Allow additional "empty" picture while importing reels. Export the "empty" reel into the XML file
+- Comment out the hardcoded sound loading. The last version committed from Herweh contained half finished code with hard coded sound files which make the exe fail on start. This is now on comment
 
 
 1.3.1.0
