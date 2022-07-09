@@ -1,6 +1,6 @@
 ﻿Module ModuleGeneral
 
-    Public Const AppTitle As String = "B2S Backglass Designer v0.1"
+    Public Const AppTitle As String = "B2S Backglass Designer"
 
     Public DefaultReels As String() = New String() {"EMR_T1", "LED"}
 

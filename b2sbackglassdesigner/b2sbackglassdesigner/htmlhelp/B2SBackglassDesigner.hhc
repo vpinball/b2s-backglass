@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+	<meta name="generator" content="HelpNDoc Personal Edition 3.7.1.482">
+</head>
+
+<body>
+
+	<object type="text/site properties">
+		<param name="Font" value="Arial,8,0">
+		<param name="Window Styles" value="0x800025">
+	</object>
+    
+	<ul>
+
+	<li> <object type="text/sitemap">
+				<param name="Name" value="Introduction">
+				<param name="Local" value="Introduction.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Creating a first B2S backglass">
+				<param name="Local" value="CreatingafirstB2Sbackglass.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="A B2S backglass from scratch">
+				<param name="Local" value="AB2Sbackglassfromscratch.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="Preparation">
+				<param name="Local" value="Preparation.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="The designer for the first time">
+				<param name="Local" value="Thedesignerforthefirsttime.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Start a new backglass project">
+				<param name="Local" value="Startanewbackglassproject.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Import the background image">
+				<param name="Local" value="Importthebackgroundimage.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Save the backglass project">
+				<param name="Local" value="Savethebackglassproject.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Resize and/or change brightness">
+				<param name="Local" value="Resizeandorchangebrightness.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Add some illumination">
+				<param name="Local" value="Addsomeillumination.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Show the illumination">
+				<param name="Local" value="Showtheillumination.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Choose reels or LEDs">
+				<param name="Local" value="ChoosereelsorLEDs.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Connect backglass and ROM">
+				<param name="Local" value="ConnectbackglassandROM.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Add more illumination">
+				<param name="Local" value="Addmoreillumination.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Create the backglass file">
+				<param name="Local" value="Createthebackglassfile.htm">
+				</object>
+
+	</li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="Reusing an existing B2S backglass project">
+				<param name="Local" value="ReusinganexistingB2Sbackglasspro.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="Select a matching backglass">
+				<param name="Local" value="Selectamatchingbackglass.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Save as a new backglass">
+				<param name="Local" value="Saveasanewbackglass.htm">
+				</object>
+
+	</li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="Managing animations">
+				<param name="Local" value="Managinganimations.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="An animation">
+				<param name="Local" value="Ananimation.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Some animation steps">
+				<param name="Local" value="Someanimationsteps.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Add a new animation with steps">
+				<param name="Local" value="Addanewanimationwithsteps.htm">
+				</object>
+
+	</li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="More interesting designer stuff">
+				<param name="Local" value="Moreinterestingdesignerstuff.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="Create a project backup">
+				<param name="Local" value="Createaprojectbackup.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Use an illumination image">
+				<param name="Local" value="Useanilluminationimage.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Use illumination snippits">
+				<param name="Local" value="Useilluminationsnippits.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Set grill height">
+				<param name="Local" value="Setgrillheight.htm">
+				</object>
+
+	</li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="Some interesting tips">
+				<param name="Local" value="Someinterestingtips.htm">
+				</object>
+
+	</li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="B2S backglasses for all type of tables">
+				<param name="Local" value="B2Sbackglassesforalltypeoftables.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="An EM or Original 'directB2S' backglass">
+				<param name="Local" value="AnEMorOriginaldirectB2Sbackglass.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="Start an EM backglass project for 'Baseball'">
+				<param name="Local" value="StartanEMbackglassprojectforBase.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Some EM settings for the 'Baseball' backglass">
+				<param name="Local" value="SomeEMsettingsfortheBaseballback.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Designing the backglass of 'Baseball' part one">
+				<param name="Local" value="DesigningthebackglassofBaseballp.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Designing the backglass of 'Baseball' part two">
+				<param name="Local" value="DesigningthebackglassofBaseball1.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Do some VP script coding for 'Baseball'">
+				<param name="Local" value="DosomeVPscriptcodingforBaseball.htm">
+				</object>
+
+	</li></ul></li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="Tool bar and menu items">
+				<param name="Local" value="Toolbarandmenuitems.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="File">
+				<param name="Local" value="File.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Edit">
+				<param name="Local" value="Edit.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="View">
+				<param name="Local" value="View.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Image">
+				<param name="Local" value="Image.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Reels &amp; LEDs">
+				<param name="Local" value="ReelsLEDs.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Illumination">
+				<param name="Local" value="Illumination.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Backglass">
+				<param name="Local" value="Backglass.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Window">
+				<param name="Local" value="Window.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="Help">
+				<param name="Local" value="Help.htm">
+				</object>
+
+	</li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="Tool windows">
+				<param name="Local" value="Toolwindows.htm">
+				</object>
+
+	<ul><li> <object type="text/sitemap">
+				<param name="Name" value="'Resources' tool window">
+				<param name="Local" value="Resourcestoolwindow.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="'Reels &amp; LEDs' tool window">
+				<param name="Local" value="ReelsLEDstoolwindow.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="'Illumination' tool window">
+				<param name="Local" value="Illuminationtoolwindow.htm">
+				</object>
+
+	</li><li> <object type="text/sitemap">
+				<param name="Name" value="'History' tool window">
+				<param name="Local" value="Historytoolwindow.htm">
+				</object>
+
+	</li></ul></li><li> <object type="text/sitemap">
+				<param name="Name" value="Copyright">
+				<param name="Local" value="Copyright.htm">
+				</object>
+
+	</li></ul>
+    
+</body>
+
+</html>
+

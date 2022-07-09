@@ -1,0 +1,116 @@
+﻿<html>
+	
+<head>
+	<title>Choose reels or LEDs</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Microsoft HTML Help Compiler 4.74.8702">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+</head>
+
+<body>
+	<div id="topic_header">
+			<div id="topic_header_content">
+				<h1>Choose reels or LEDs</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="CreatingafirstB2Sbackglass.htm">Creating a first B2S backglass</a> &rsaquo;&rsaquo; <a href="AB2Sbackglassfromscratch.htm">A B2S backglass from scratch</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="AB2Sbackglassfromscratch.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Showtheillumination.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="ConnectbackglassandROM.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts6">Time to start with the LEDs. </span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">I'm sure you know what an EM reel is. And of course you know a LED is a 'shiny sign'. But do you know some more background of backglass LEDs? &nbsp;</span></p>
+<p class="rvps2"><span class="rvts6">LED displays are composed of several single LEDs. I.e. you can find 2 LED displays with up to 18 single LEDs or 6 or 7 LED displays with up to 7 LEDs each. A single LED is composed of several separated segments. You can find 7, 10, 14 or 16 segments each digit. Most of the early LED tables (Kiss, Lost World, Cosmic Gunfight, ...) are using 7-segmented LEDs, some early Gottlieb tables (Close Encounters, ...) are using 10-segmented LEDs, the newer tables (like Funhouse, Elvira, ...) are using 14-segmented LEDs. Very interesting, some pins have a mix of different LEDs, i.e. Taxi is using 14-segmented LEDs for the standard display but a 7-segmented LED for the taximeter. Main advantage of the LEDs with more segments is of course the ability to show much more different signs.</span></p>
+<p class="rvps2"><span class="rvts6">VPinMAME is sending the info which segments of each digit has to be lit. </span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Some infos about 'reels and LEDs' in the designer: There are two base types of designer 'reels or LEDs': </span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts15">Image sets</span><br/><span class="rvts6">Image sets are a set of minimum 11 images. They are very limited since they have no possibility to access the segments individually (because each number is just an image). Right now there are predifined image sets for EM reels, EM credit reels and 7-segmented LEDs. A feature to import own image sets will be implemented sometime.</span></li>
+<li class="rvps2"><span class="rvts15">Rendered LEDs</span><br/><span class="rvts6">Rendered LEDs are rendered at runtime. There is nearly no limitation to these LEDs. Right now there are two types of LEDs, optically medium-level standard LEDs and high-level 'Dream 7' LEDs. Each of these two types can be selected in a 7-, 10- or 14-segmented version. 16-segmented will be implemented when necessary.</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">What does this mean for you? </span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">First of all figure out which type of reels or LEDs you have to use. When you need ...</span></li>
+<ul style="text-indent: 0px; margin-left: 48px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">... EM reels or EM credit reels, select (or import if possible) an EM reel or EM credit reel image set.</span></li>
+<li class="rvps2"><span class="rvts6">... LEDs and you need ...</span></li>
+<ul style="text-indent: 0px; margin-left: 48px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">... 10- or 14- (or even 16-) segmented LED select the rendered LEDs with matching segment count in either case.</span></li>
+<li class="rvps2"><span class="rvts6">... 7-segmented LEDs select the rendered LEDs or a matching LED image set.</span></li>
+</ul></ul>
+<li class="rvps2"><span class="rvts6">Now figure out how many digits the LED displays are having.</span></li>
+<li class="rvps2"><span class="rvts6">And your last job here is to figure out the order of your LED displays. Normally the LED displays are numbered logically (i.e. LED display of 'Player 1' is the first LED display, LED display of 'Player 2' is the second one, ...) but do not trust this too much.</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Let's return to </span><span class="rvts15">'The Bally Game Show'</span><span class="rvts6">. This is the second of two LED displays at the original backglass image from IPDB.ORG. </span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Backglass.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">We do job 1 and 2 from our work list: &nbsp;</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">Both LED displays are equal. </span></li>
+<li class="rvps2"><span class="rvts6">Each LED display has 16 digits. </span></li>
+<li class="rvps2"><span class="rvts6">It looks like each digit is made of 14 segments (this is not easy to identify, IMHO it's better discoverable at the non-light LED digits).</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Back to the designer. We have to select the used type of LED. Click on 'Reels &amp; LEDs' -&gt; 'Choose Reel or LED type ...'</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/ChooseReels.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">..., since we need 14-segmented LEDs we have to select the rendered LEDs. Check the 'Use 'Dream7' LEDs' check box, select the '14 segmented' previewed LED (there has to be a blue frame around the LED '14') and maybe have fun with the sliders of style and color. Then click 'Ok'.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">These are the three score tool buttons:</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Toolbar_Reels.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Click the tool button in the middle, 'Add new reel or LED frame' and add a new score frame. </span></p>
+<p class="rvps2"><span class="rvts6">Since I zoomed to '125%' and scrolled the image down this is what I see</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Designer7.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">The 'Reels &amp; LEDs tool window' is automatically opened too. Set the 'Reel/LED count' to '16', 'Reel/LED spacing' to '5' and click on the previewed 'Rendered LED'.</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Toolwindow_Reels.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Now move and resize the score frame to a nearly perfect fit at the left bottom of the backglass.</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Designer8.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Add a second score frame, all the settings should be applied from the first LED display, and move the second one to the right.</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Designer9.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">That's it, nothing more to do. The left score frame is hosting the LEDs 1 to 16, the right one is hosting the LEDs 17 to 32 since the little '1' or '2' in the upper left corner of the score frames is specifying the LED order. With this order the backglass server is able to distribute the LED info from VPinMAME to the LEDs.</span></p>
+<p class="rvps2"><span class="rvts15"><br/></span></p>
+<p class="rvps2"><span class="rvts15">Pretty important, save all your changes, don't forget this.</span></p>
+<p class="rvps2"><span class="rvts15"><br/></span></p>
+<p class="rvps2"><span class="rvts15"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Need a break? No, of course not. But it's getting a &nbsp;bit more complicated since we need some infos to </span><a class="rvts10" href="ConnectbackglassandROM.htm">connect the backglass and the original ROM code</a><span class="rvts6">.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p></p>
+
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2012-2022 by Stefan Wuehr ('Herweh') &amp; B2S Team. All Rights Reserved.</div>
+		</div>
+	</body>
+	
+</html>
+

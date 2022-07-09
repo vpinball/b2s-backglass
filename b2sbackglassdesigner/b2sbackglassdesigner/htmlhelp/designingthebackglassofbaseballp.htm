@@ -1,0 +1,223 @@
+﻿<html>
+	
+<head>
+	<title>Designing the backglass of 'Baseball' part one</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Microsoft HTML Help Compiler 4.74.8702">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+</head>
+
+<body>
+	<div id="topic_header">
+			<div id="topic_header_content">
+				<h1>Designing the backglass of 'Baseball' part one</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="B2Sbackglassesforalltypeoftables.htm">B2S backglasses for all type of tables</a> &rsaquo;&rsaquo; <a href="AnEMorOriginaldirectB2Sbackglass.htm">An EM or Original 'directB2S' backglass</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="AnEMorOriginaldirectB2Sbackglass.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="SomeEMsettingsfortheBaseballback.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="DesigningthebackglassofBaseball1.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts6">The 'Baseball' backglass project is still open.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">We can see three reel displays, for score, homeruns and credits. And a lot bulbs are added as illuminations snippits. This is the backglass in the designer.</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Baseball03.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Let's start with the bulbs as we can find there some very interesting infos. </span></p>
+<p class="rvps2"><span class="rvts6">Please look at the 'Game over' bulb. To the top left you can see the name of the bulb, 'GameOver'. To the bottom left there is the lamp state, 'Off'. That's not new. To the top right you can see the number '35'. This number is new. Look at the tilt bulb. There you can see the number '33'. And now look at the 'Match' lights, the ten bulbs around the pitcher, from 0 to 9. There you can see the number '34' followed by a '/' and another number from '1' to '10'.</span></p>
+<p class="rvps2"><span class="rvts6">These numbers are the identifiers to access these bulbs from the VP table script. These identifiers are built up of one or two numbers. With these identifiers you can call a command in the VP table script to set the info whether the corresponding bulb(s) should be switched on or off. </span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Maybe your question right now is: How do I get these numbers? Or: Why is the 'Tilt' bulb the number '33'?</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">You know this numbers already when you have read the 'Animated backglasses for EM tables' tutorial of Roger Svensson. Roger defined a list of 36 fixed links between an identifier and a backglass counterpart. The only difference is that Roger's list starts with 0 and the designer's list starts with 1. So here we go, this is the list:</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<div class="rvps2"><table width="100%" border="1" cellpadding="1" cellspacing="2" style="border-color: #000000; border-style: solid;">
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts16">Identifier</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts16">Function</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts16">Allowed values</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">1 to 6</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Score digits for player 1</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 9</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">7 to 12</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Score digits for player 2</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 9</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">13 to 18</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Score digits for player 3</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 9</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">19 to 24</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Score digits for player 4</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 9</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">25</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Rollover for player 1</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">26</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Rollover for player 2</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">27</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Rollover for player 3</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">28</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Rollover for player 4</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">29</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Credits</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to max image</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">30</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Player up</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">31</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">1 to 4 can play</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">32</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Ball in play</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">33</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Tilt</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">34</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Match</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">35</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Game over</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">36</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Shoot again</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 255</span></p>
+</td>
+</tr>
+</table>
+</div>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">This list is implemented in the designer, no need to memorize it. Since you've chosen the '</span><span class="rvts7">B2S data element communication</span><span class="rvts6">' communication mode three text boxes in the 'Illumination tool window' and two text boxes in the 'Reels &amp; LED tool window' are enabled.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">In the 'Illumination tool window' these are 'B2S ID', 'B2S ID type' and 'B2S value'. This is what you have to do for a 'Game over' bulb with corresponding identifier: Open the 'B2S ID type' combo box, move to 'Game Over' ...</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Baseball04.jpg"/><span class="rvts6"> ... and select it. No need to enter the 'B2S ID' ... </span><img alt="" style="padding : 1px;" src="lib/Baseball05.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">This was pretty simple since normally the 'Game Over' bulb(s) are on or off. No need for more functionality. </span></p>
+<p class="rvps2"><span class="rvts6">It's a bit different when you look at the 'Match' bulbs. Here we have ten bulbs to show the values from 0 to 9. Either all the bulbs are switched off or one of these ten bulbs is on. Now we use the 'B2S value'. Choose 'Match' for the 'B2S ID type' and enter a value larger 0 into the 'B2S value' text box since the value 0 is reserved to switch off all corresponding lights. This is what I've selected for the 'Match' light '2' ...</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Baseball06.jpg"/><span class="rvts6"> </span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">... and this is for 'Match' light '0' since I'm not allowed to use a 'B2S value' of '0' ...</span></p>
+<p class="rvps2"><span class="rvts6"> </span><img alt="" style="padding : 1px;" src="lib/Baseball07.jpg"/><span class="rvts6">.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">But how to control these bulbs? You will learn this pretty soon. Right now we look at the </span><a class="rvts10" href="DesigningthebackglassofBaseball1.htm">backglass designing part two</a><span class="rvts6">.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p></p>
+
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2012-2022 by Stefan Wuehr ('Herweh') &amp; B2S Team. All Rights Reserved.</div>
+		</div>
+	</body>
+	
+</html>
+
