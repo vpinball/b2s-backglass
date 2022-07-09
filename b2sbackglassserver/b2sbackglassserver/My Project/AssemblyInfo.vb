@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("B2S Backglass Server")> 
-<Assembly: AssemblyCopyright("Copyright © 2012-2022")> 
+<Assembly: AssemblyCopyright("Copyright (c) 2012-2022")> 
 <Assembly: AssemblyTrademark("A Herweh & B2S Team production")> 
 
 <Assembly: ComVisible(True)> 
@@ -33,3 +33,4 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyVersion("1.3.1.1")> 
 <Assembly: AssemblyFileVersion("1.3.1.1")> 
+<Assembly: AssemblyInformationalVersion("1.3.1.1")> 

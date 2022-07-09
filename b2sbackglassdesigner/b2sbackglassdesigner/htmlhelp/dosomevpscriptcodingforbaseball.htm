@@ -1,0 +1,616 @@
+﻿<html>
+	
+<head>
+	<title>Do some VP script coding for 'Baseball'</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Microsoft HTML Help Compiler 4.74.8702">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+</head>
+
+<body>
+	<div id="topic_header">
+			<div id="topic_header_content">
+				<h1>Do some VP script coding for 'Baseball'</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="B2Sbackglassesforalltypeoftables.htm">B2S backglasses for all type of tables</a> &rsaquo;&rsaquo; <a href="AnEMorOriginaldirectB2Sbackglass.htm">An EM or Original 'directB2S' backglass</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="AnEMorOriginaldirectB2Sbackglass.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="DesigningthebackglassofBaseball1.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Toolbarandmenuitems.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts6">Let's start this VP script coding from scratch. As I mentioned already what you need from now on is some basic knowledge about 'Visual Pinball' table scripting.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">The 'B2S.Server' is enabling the communication between the VP table and the backglass. This is pretty important. And this is our entry into the script coding since we need an instance of this 'B2S.Server'. First of all you have to declare a new variable 'Controller' to the VP script. The VP script code starts normally with statements like 'Option Explicit', 'Randomize' or 'Dim ...'. This is the place where you have to add the following line:</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Dim Controller</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">And these are the three lines of code we need for a start, very similar to the coding for VPinMAME. Maybe add it in the 'Table_Init' sub:</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Set Controller = CreateObject("B2S.Server")</span></p>
+<p class="rvps2"><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Controller.B2SName = "..."</span></p>
+<p class="rvps2"><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Controller.Run</span></p>
+<p class="rvps11"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">The 'Set Controller = ...' command is creating your instance of the 'B2S.Server'. The controller property 'B2SName' is the counterpart to VPinMAME's 'GameName'. DO NOT SET 'GameName' since this property is responsible for the internal calling of VPinMAME in the 'B2S.Server'. Use an unique name for the 'B2SName' property since with this name all backglass settings are saved. Start the backglass with the controller's 'Run' command.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">With this controller instance of the 'B2S.Server' you are able to call a bunch of methods to control the backglass: Switch bulbs on or off, show or hide text lights, set reels and credits, and so on. Here is a list of all available commands.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts15">Don't be surprised that some commands are listed twice. You are able to call these commands with different parameter lists.</span></p>
+<p class="rvps2"><span class="rvts15"><br/></span></p>
+<div class="rvps2"><table width="100%" border="1" cellpadding="1" cellspacing="2" style="border-color: #000000; border-style: solid;">
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts16">Command</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts16">Description</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><p class="rvps10"><span class="rvts16">Parameters</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts15">B2SSetScore</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the score of a score display.</span></p>
+<p class="rvps10"><span class="rvts6">A score display is identified by the display id. The display id is visible in the left upper corner of the score frame. </span></p>
+<p class="rvps10"><span class="rvts15">Is working for reels and LEDs. Reels are rolling in the most realistic way.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">display As Integer: The id of the score display to be changed</span></li>
+<li class="rvps2"><span class="rvts6">score As Integer: The new score</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts15">B2SSetScorePlayer</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the score of the score display for a player. The score display has to be assigned to the 'B2S player no'. When assigning more than one score display to the same player no all these score displays will be connected in-line. </span></p>
+<p class="rvps10"><span class="rvts15">Is working for reels and LEDs. Reels are rolling in the most realistic way.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">playerno As Integer: The number of the player</span></li>
+<li class="rvps2"><span class="rvts6">score As Integer: The new score for a player</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts15">B2SSetScorePlayer1</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the score of the score display for player 1. The score display has to be assigned to the 'B2S player no' 1. When assigning more than one score display to the same player no all these score displays will be connected in-line. </span></p>
+<p class="rvps10"><span class="rvts15">Is working for reels and LEDs. Reels are rolling in the most realistic way.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">score As Integer: The new score for player 1</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts15">B2SSetScorePlayer2</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the score of the score display for player 2. The score display has to be assigned to the 'B2S player no' 2. When assigning more than one score display to the same player no all these score displays will be connected in-line. </span></p>
+<p class="rvps10"><span class="rvts15">Is working for reels and LEDs. Reels are rolling in the most realistic way.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">score As Integer: The new score for player 2</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts15">B2SSetScorePlayer3</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the score of the score display for player 3. The score display has to be assigned to the 'B2S player no' 3. When assigning more than one score display to the same player no all these score displays will be connected in-line. </span></p>
+<p class="rvps10"><span class="rvts15">Is working for reels and LEDs. Reels are rolling in the most realistic way.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">score As Integer: The new score for player 3</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts15">B2SSetScorePlayer4</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the score of the score display for player 4. The score display has to be assigned to the 'B2S player no' 4. When assigning more than one score display to the same player no all these score displays will be connected in-line. </span></p>
+<p class="rvps10"><span class="rvts15">Is working for reels and LEDs. Reels are rolling in the most realistic way.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">score As Integer: The new score for player 4</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts15">B2SSetScorePlayer5</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the score of the score display for player 5. The score display has to be assigned to the 'B2S player no' 5. When assigning more than one score display to the same player no all these score displays will be connected in-line. </span></p>
+<p class="rvps10"><span class="rvts15">Is working for reels and LEDs. Reels are rolling in the most realistic way.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">score As Integer: The new score for player 5</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts15">B2SSetScorePlayer6</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the score of the score display for player 6. The score display has to be assigned to the 'B2S player no' 6. When assigning more than one score display to the same player no all these score displays will be connected in-line. </span></p>
+<p class="rvps10"><span class="rvts15">Is working for reels and LEDs. Reels are rolling in the most realistic way.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">score As Integer: The new score for player 6</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetReel</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the value of one digit of the score reels. The reel rolling direction is always up (i.e. changing the value from old value 4 to new value 2 means the reel digit is changed to 5, then to 6, to 7, to 8, to 9, to 0, to 1 and to 2).</span></p>
+<p class="rvps10"><span class="rvts15"> Is working only for reels.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">digit As Integer: The changed digit</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The new value of the changed digit</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetLED</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the value of one digit of the score LEDs. </span></p>
+<p class="rvps10"><span class="rvts15">Is working only for LEDs.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">digit As Integer: The changed digit</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The new value of the changed digit</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetCredits</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the credits, or to be more precise sets the value of a digit of the credits reels. The reel rolling direction is always direct (i.e. changing the value from old value 4 to new value 2 means the credit reel digit is changed from 4 to 2 without any other changes in between).</span></p>
+<p class="rvps10"><span class="rvts15"> Is working only for reels.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">digit As Integer: The changed digit</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The new value of the changed digit</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetCredits</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the credits, or to be more precise sets the value of a digit of the credits reels. The reel rolling direction is always direct (i.e. changing the value from old value 4 to new value 2 means the credit reel digit is changed from 4 to 2 without any other changes in between).</span></p>
+<p class="rvps10"><span class="rvts6">The digit is set to the recommended value 29.</span></p>
+<p class="rvps10"><span class="rvts15"> Is working only for reels.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The new value of the changed digit</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetScoreRollover</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the score rollover lights.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: The ID of the rollover lights (recommendation is from 25 to 28)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the rollover lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetScoreRolloverPlayer1</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the score rollover lights for player 1. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value 25.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the rollover lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetScoreRolloverPlayer2</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the score rollover lights for player 2. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value 26.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the rollover lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetScoreRolloverPlayer3</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the score rollover lights for player 3. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value 27.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the rollover lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetScoreRolloverPlayer4</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the score rollover lights for player 4. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value 28.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the rollover lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetPlayerUp</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'which player is up to play' lights.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: The ID of the player up lights (recommendation is 30)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the player up lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetPlayerUp</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'which player is up to play' lights. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value of 30.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the player up lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetCanPlay</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the '1 to 4 can play' lights. </span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: The ID of the can play lights (recommendation is 31)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the can play lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetCanPlay</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the '1 to 4 can play' lights. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value of 31.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the can play lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetBallInPlay</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'which ball is in play' lights. </span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: The ID of the ball in play lights (recommendation is 32)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the ball in play lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetBallInPlay</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'which ball is in play' lights. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value of 32.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the ball in play lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetTilt</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'tilt' lights. </span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: The ID of the tilt lights (recommendation is 33)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the tilt lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetTilt</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'tilt' lights. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value of 33.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the tilt lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetMatch</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'match' lights. </span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: The ID of the match lights (recommendation is 34)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the match lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetMatch</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'match' lights. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value of 34.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the match lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetGameOver</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'game over' lights. </span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: The ID of the game over lights (recommendation is 35)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the game over lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetGameOver</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'game over' lights. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value of 35.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the game over lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetShootAgain</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'shoot again' lights. </span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: The ID of the shoot again lights (recommendation is 36)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the shoot again lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetShootAgain</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Sets the visibility of the 'shoot again' lights. </span></p>
+<p class="rvps10"><span class="rvts6">The id is set to the recommended value of 36.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">value As Integer: The visibility value of the shoot again lights. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SSetData</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">General method to pass data to the backglass.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">id As Integer: Any ID you want to pass (no recommendation)</span></li>
+<li class="rvps2"><span class="rvts6">value As Integer: Any visibility value. 0 is all off.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SStartAnimation</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Starts an stored animation.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">animationname As String: The name of the animation to be started.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SStartAnimationReverse</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Starts an stored animation and runs reverse thru the steps.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">animationname As String: The name of the animation to be started running reverse.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SStopAnimation</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Stops a running animation.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">animationname As String: The name of the animation to be stopped.</span></li>
+</ul>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 232px;"><p class="rvps10"><span class="rvts24">B2SStopAllAnimations</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 536px;"><p class="rvps10"><span class="rvts6">Stops all running animations.</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 444px;"><p class="rvps9"><span class="rvts6">(no parameters)</span></p>
+</td>
+</tr>
+</table>
+</div>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Here are some simple samples for Gottlieb's 'Baseball'. </span></p>
+<p class="rvps2"><span class="rvts6">You can see that many ways are leading to the same result. I know this and it's on purpose since you're able to explain your script logic with using the dedicated methods and without writing huge comments.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts15">To switch 'Tilt' on:</span><span class="rvts6"> </span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">'Controller.B2SSetTilt 1' or 'Controller.B2SSetData 33, 1'</span></p>
+<p class="rvps2"><span class="rvts15">To switch 'Tilt' off:</span><span class="rvts6"> </span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">'Controller.B2SSetTilt 0' or 'Controller.B2SSetData 33, 0'</span></p>
+<p class="rvps2"><span class="rvts15">To switch 'GameOver' on:</span><span class="rvts6"> </span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">'Controller.B2SSetGameOver 1' or 'Controller.B2SSetData 35, 1'</span></p>
+<p class="rvps2"><span class="rvts15">To switch 'GameOver' off:</span><span class="rvts6"> </span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">'Controller.B2SSetGameOver 0' or 'Controller.B2SSetData 35, 0'</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Maybe a bit more interesting at the match lights, number '34'. There are ten bulbs with this identifier since ten bulbs do have a similar meaning.</span></p>
+<p class="rvps2"><span class="rvts15">To switch 'Match 5' on:</span><span class="rvts6"> </span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">'Controller.B2SSetMatch 5' or 'Controller.B2SSetData 34, 5'</span></p>
+<p class="rvps2"><span class="rvts15">To switch 'Match 9' on:</span><span class="rvts6"> </span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">'Controller.B2SSetMatch 9' or 'Controller.B2SSetData 34, 9'</span></p>
+<p class="rvps2"><span class="rvts15">To switch 'Match 0' on:</span><span class="rvts6"> </span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">'Controller.B2SSetMatch </span><span class="rvts15">10</span><span class="rvts6">' or 'Controller.B2SSetData 34, </span><span class="rvts15">10</span><span class="rvts6">'</span></p>
+<p class="rvps2"><span class="rvts15">To switch all 'Match' bulbs off:</span><span class="rvts6"> </span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">'Controller.B2SSetMatch 0' or 'Controller.B2SSetData 34, 0'</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Now we wanna set the value of the score display to a value of 350 points. It's made of four digits, starting at 'B2S start digit' 1, is assigned to 'player 1' and has the display id '1'.</span></p>
+<p class="rvps2"><span class="rvts15">The first recommended way to set the score display is using the player assignment:</span></p>
+<p class="rvps12"><span class="rvts6">'Controller.B2SSetScorePlayer1 350'</span></p>
+<p class="rvps2"><span class="rvts15">The second recommended way to set the score display is using the display id:</span></p>
+<p class="rvps12"><span class="rvts6">'Controller.B2SSetScore 1, 350'</span></p>
+<p class="rvps2"><span class="rvts15">Ant the third but </span><span class="rvts25">not </span><span class="rvts15">recommended way is to set each digit separately:</span><span class="rvts6"> </span></p>
+<p class="rvps12"><span class="rvts6">'Controller.B2SSetReel 1, 0</span></p>
+<p class="rvps12"><span class="rvts6"> Controller.B2SSetReel 2, 3</span></p>
+<p class="rvps12"><span class="rvts6"> Controller.B2SSetReel 3, 5</span></p>
+<p class="rvps12"><span class="rvts6"> Controller.B2SSetReel 4, 0'</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Now we wanna set the value of the homerun display to 23 homeruns. It's made of two digits, starting at 'B2S start digit' 7, is not assigned to any player no and has the display id '2'.</span></p>
+<p class="rvps2"><span class="rvts15">No way to use the first recommended way because there is no player assignment done</span></p>
+<p class="rvps12"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts15">The second recommended way to set the score display is using the display id:</span></p>
+<p class="rvps12"><span class="rvts6">'Controller.B2SSetScore 2, 23'</span></p>
+<p class="rvps2"><span class="rvts15">Ant the third but </span><span class="rvts25">not </span><span class="rvts15">recommended way is to set each digit separately:</span><span class="rvts6"> </span></p>
+<p class="rvps12"><span class="rvts6">'Controller.B2SSetReel 7, 2</span></p>
+<p class="rvps12"><span class="rvts6"> Controller.B2SSetReel 8, 3</span></p>
+<p class="rvps12"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">And here are some VP table script code samples to explain the commands. I'm still at Gottlieb's 'Baseball':</span></p>
+<div class="rvps2"><table width="100%" border="1" cellpadding="1" cellspacing="2" style="border-color: #000000; border-style: solid;">
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 236px;"><p class="rvps10"><span class="rvts16">Used B2S command</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 500px;"><p class="rvps10"><span class="rvts16">Sample code for 'Baseball'</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 495px;"><p class="rvps10"><span class="rvts16">Description</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 236px;"><p class="rvps10"><span class="rvts15">(startup)</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 500px;"><p class="rvps2"><span class="rvts6">Set Controller = CreateObject("B2S.Server")</span></p>
+<p class="rvps2"><span class="rvts6">Controller.B2SName = "Baseball"</span></p>
+<p class="rvps2"><span class="rvts6">Controller.Run</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 495px;"><p class="rvps2"><span class="rvts6">Creates an instance of the &nbsp;'B2S.Server', available as 'Controller' in the script. Sets the 'B2SName' to a unique name 'Baseball' and starts the backglass with 'Run'.</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 236px;"><p class="rvps10"><span class="rvts15">B2SSetTilt</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 500px;"><p class="rvps2"><span class="rvts6">Sub B2SSetTilt(value)</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"> &nbsp; &nbsp;Controller.B2SSetTilt value</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">End Sub</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 495px;"><p class="rvps2"><span class="rvts6">Pretty simple, the visibility of id '33' is set to 'value'.</span></p>
+<p class="rvps2"><span class="rvts6">Since there is one bulb for 'Tilt' at 'Baseball' and this bulb is entered without a 'B2S value' in the designer 'value' '0' switches the 'Tilt' light off and any other 'value' switches it on.</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 236px;"><p class="rvps10"><span class="rvts15">B2SSetScoreRolloverPlayer1</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 500px;"><p class="rvps2"><span class="rvts6">Sub B2SScore10K()</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Score10K = Score10K + 1</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">If Score10K &lt;= 4 Then</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Controller.B2SSetScoreRolloverPlayer1 Score10K</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Else</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Controller.B2SSetScoreRolloverPlayer1 5</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">End If</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">End Sub</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 495px;"><p class="rvps2"><span class="rvts6">At 'Baseball' we have 5 score rollover lights, all for player 1 (since 'Baseball' is a one player pin). The lights show the values '10000', '20000', '30000', '40000' and '50000'.</span></p>
+<p class="rvps2"><span class="rvts6">The sub 'B2SScore10K' is called every time the score is running over 10000 points. The 'Score10K' variable stores how many times a rollover happens. </span></p>
+<p class="rvps2"><span class="rvts6">At the rollover from 10000 to 10001 points 'Score10K' is incremented to 1 and the 'B2S.Server' is told to show the light joined to id '25' and value '1' (since the id of 'B2SSetScoreRolloverPlayer1' is the recommendation of '25').</span></p>
+<p class="rvps2"><span class="rvts6">At the next rollover from 20000 to 20001 points 'Score10K' is incremented to 2 and the 'B2S.Server' is told to show the light joined to id '25' and value '2'.</span></p>
+<p class="rvps2"><span class="rvts6">And so on. </span></p>
+<p class="rvps2"><span class="rvts6">All above 50000 will be visualized with the '50000' light joined to value '5'.</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 236px;"><p class="rvps10"><span class="rvts15">B2SSetCredits</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 500px;"><p class="rvps2"><span class="rvts6">Sub B2SSetCredits(credits)</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Controller.B2SSetCredits credits</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">End Sub</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 495px;"><p class="rvps2"><span class="rvts6">Sets the credit reel to the value of 'credits'. Since I'm using 'Controller.B2SCredits' with just one parameter the credit reel digit is the recommended '29'.</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 236px;"><p class="rvps10"><span class="rvts15">B2SSetScorePlayer1</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 500px;"><p class="rvps2"><span class="rvts6">Sub B2SSetScore(value)</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Controller.B2SSetScorePlayer1 value</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span></p>
+<p class="rvps2"><span class="rvts6">End Sub</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 495px;"><p class="rvps2"><span class="rvts6">The current score of player 1 is set to 'value'.</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 236px;"><p class="rvps10"><span class="rvts15">B2SSetScore</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 500px;"><p class="rvps2"><span class="rvts6">Sub B2SAddRun()</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">b2sruns = b2sruns + 1</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="rvts6">Controller.B2SSetScore 2, b2sruns</span></p>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"> &nbsp; &nbsp; &nbsp; &nbsp;</span></p>
+<p class="rvps2"><span class="rvts6">End Sub</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 495px;"><p class="rvps2"><span class="rvts6">This sub is called every time a homerun is counted. This count of homeruns is stored in the variable 'b2sruns'.</span></p>
+<p class="rvps2"><span class="rvts6">This value of 'b2sruns' is sent to the backglass reel display with id '2'.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">In the case of 'Baseball' and since the homeruns' reel display starts at 'B2S start digit' 7 this command would be exact the same:</span></p>
+<p class="rvps2"><span class="rvts6">Controller.B2SSetScorePlayer2 b2sruns</span></p>
+</td>
+</tr>
+</table>
+</div>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p></p>
+
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2012-2022 by Stefan Wuehr ('Herweh') &amp; B2S Team. All Rights Reserved.</div>
+		</div>
+	</body>
+	
+</html>
+

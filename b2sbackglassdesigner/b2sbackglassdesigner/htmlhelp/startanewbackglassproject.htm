@@ -1,0 +1,103 @@
+﻿<html>
+	
+<head>
+	<title>Start a new backglass project</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Microsoft HTML Help Compiler 4.74.8702">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+</head>
+
+<body>
+	<div id="topic_header">
+			<div id="topic_header_content">
+				<h1>Start a new backglass project</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="CreatingafirstB2Sbackglass.htm">Creating a first B2S backglass</a> &rsaquo;&rsaquo; <a href="AB2Sbackglassfromscratch.htm">A B2S backglass from scratch</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="AB2Sbackglassfromscratch.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Thedesignerforthefirsttime.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Importthebackgroundimage.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts6">Let's start a new backglass for </span><span class="rvts15">'The Bally Game Show'</span><span class="rvts6">.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">You are able to start your new B2S backglass project in two different ways:</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">Click on the 'New ...' tool button in the toolbar</span></li>
+<li class="rvps2"><span class="rvts6">Click on the menu item 'File' -&gt; 'New ...'.</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">The following dialog will show up:</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Settings.png"/></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps8"><span class="rvts21">'Project name'</span><br/><span class="rvts7">This is the name of your B2S backglass project. This name is for internal use, i.e. the project file and the project subdirectory will be named like this name.</span></li>
+<li class="rvps3"><span class="rvts21">'Backglass (file) name'</span><br/><span class="rvts7">The name of your output file. Name should be like the name of the table.</span></li>
+<li class="rvps3"><span class="rvts21">'Table type'</span><br/><span class="rvts7">Type of the underlying table: Choose between</span></li>
+<ul style="text-indent: 0px; margin-left: 48px; list-style-position: outside;">
+<li class="rvps3"><span class="rvts7">'EM - Electro Mechanical'</span></li>
+<li class="rvps3"><span class="rvts7">'SS - Solid State Electronic'</span></li>
+<li class="rvps3"><span class="rvts7">'SS DMD - Solid State Electronic with DMD'</span></li>
+<li class="rvps3"><span class="rvts7">'OR - Original'</span></li>
+</ul>
+<li class="rvps3"><span class="rvts21">'Number of players'</span><br/><span class="rvts7">The count of players</span></li>
+<li class="rvps3"><span class="rvts21">'Dual backglass (contains Authentic and Fantasy)'</span><br/><span class="rvts7">A B2S backglass is able to contain two backglass modes: One for a real 'Authentic' look, as close to the original pin as possible, a second for a 'Fantasy' look with some more lightning, some more animations and so on.</span></li>
+<li class="rvps3"><span class="rvts21">'Communication mode'</span><br/><span class="rvts7">Pretty important. Type of communication between table and B2S backglass. Choose between</span></li>
+<ul style="text-indent: 0px; margin-left: 48px; list-style-position: outside;">
+<li class="rvps3"><span class="rvts20">'VPinMAME ROM communication'</span><br/><span class="rvts7">The output of the designer will be a 'directB2S' file. This file has to be executed by the 'B2S.Server'. All bulbs have to be connected to a ROM output number. This is the new direct ROM controlled B2S style. More infos later.</span></li>
+<li class="rvps3"><span class="rvts20">'B2S data element communication'</span><br/><span class="rvts7">The output of the designer will be a Microsoft Visual Studio 2010 solution. You need this development tool to edit and compile the code and to generate an backglass EXE file. You have to edit the VP table script and add some B2S commands since all scores and bulbs are controlled by these commands. This is the well-known 'Rosve' style. More infos later.</span></li>
+</ul>
+<li class="rvps3"><span class="rvts21">'Destination type'</span><br/><span class="rvts7">Pretty important too: Type of the designer's output. Joined to the 'Destination type'. Possible options are</span></li>
+<ul style="text-indent: 0px; margin-left: 48px; list-style-position: outside;">
+<li class="rvps3"><span class="rvts20">'B2S.Server 'directB2S' backglass'</span><br/><span class="rvts7">Output of the designer will be a 'directB2S' file. Necessary for communication mode 'VPinMAME'. Available for 'data element communication' too.</span></li>
+<li class="rvps3"><span class="rvts20">'Microsoft Visual Studio 2010 project'</span><br/><span class="rvts7">Output of the designer will be a Microsoft Visual Studio 2010 solution. Not available for communication mode 'VPinMAME'. Available for 'data element communication'.</span></li>
+</ul>
+<li class="rvps3"><span class="rvts21">'Create EM default code (24 reels, 4 rollover, ...)'</span><br/><span class="rvts7">An option for the MS Visual Studio 2010 backglass to create some EM default code in the project files. </span></li>
+<li class="rvps3"><span class="rvts21">'Count of B2S data elements'</span><br/><span class="rvts7">Only available at 'B2S data element communication' communication mode. More infos later.</span></li>
+<li class="rvps3"><span class="rvts21">''B2S DMD' location setting'</span><br/><span class="rvts7">This is NOT the standard VPinMAME DMD, this is a B2S controlled extra DMD. I.e. it can be a simple image at the third monitor or a complex score display like in TAXI. Choose between</span></li>
+<ul style="text-indent: 0px; margin-left: 48px; list-style-position: outside;">
+<li class="rvps3"><span class="rvts20">'No 'B2S DMD''</span><br/><span class="rvts7">No extra B2S DMD is shown.</span></li>
+<li class="rvps3"><span class="rvts20">''B2S DMD' always on Backglass ('second monitor')'</span><br/><span class="rvts7">(right now I have no idea where to use this option :-) )</span></li>
+<li class="rvps3"><span class="rvts20">''B2S DMD' only on DMD ('third monitor')'</span><br/><span class="rvts7">An extra B2S DMD is always on a third monitor (if existing). Could be i.e. a simple image on the unused third monitor.</span></li>
+<li class="rvps3"><span class="rvts20">''B2S DMD' on Backglass or DMD'</span><br/><span class="rvts7">An extra B2S DMD will be shown on the second monitor in the grill or on the third monitor, like in TAXI.</span></li>
+</ul></ul>
+<p class="rvps3"><span class="rvts7"><br/></span></p>
+<p class="rvps7"><span class="rvts18">Please notice: </span></p>
+<p class="rvps3"><span class="rvts7">The red labeled fields are mandatory. </span></p>
+<p class="rvps3"><span class="rvts7"><br/></span></p>
+<p class="rvps3"><span class="rvts7">This is the settings screen after entering all necessary data for our new </span><span class="rvts20">'The Bally Game Show'</span><span class="rvts7"> backglass:</span></p>
+<p class="rvps3"><img alt="" style="padding : 1px;" src="lib/Settings_Gameshow.png"/></p>
+<p class="rvps3"><span class="rvts7"><br/></span></p>
+<p class="rvps3"><span class="rvts7"><br/></span></p>
+<p class="rvps3"><span class="rvts7">Well, time to </span><a class="rvts19" href="Importthebackgroundimage.htm">import our first background image</a><span class="rvts7">.</span></p>
+<p class="rvps3"><span class="rvts7"><br/></span></p>
+<p class="rvps3"><span class="rvts7"><br/></span></p>
+<p class="rvps3"><span class="rvts7"><br/></span></p>
+<p class="rvps3"><span class="rvts7"><br/></span></p>
+<p></p>
+
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2012-2022 by Stefan Wuehr ('Herweh') &amp; B2S Team. All Rights Reserved.</div>
+		</div>
+	</body>
+	
+</html>
+

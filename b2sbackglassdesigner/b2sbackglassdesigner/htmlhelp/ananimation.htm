@@ -1,0 +1,104 @@
+﻿<html>
+	
+<head>
+	<title>An animation</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Microsoft HTML Help Compiler 4.74.8702">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+</head>
+
+<body>
+	<div id="topic_header">
+			<div id="topic_header_content">
+				<h1>An animation</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="CreatingafirstB2Sbackglass.htm">Creating a first B2S backglass</a> &rsaquo;&rsaquo; <a href="Managinganimations.htm">Managing animations</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Managinganimations.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Managinganimations.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Someanimationsteps.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts6">You have opened the backglass project file of 'Close Encounters of the Third Kind'? If not please do.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">To get into the animation configuration tool window please ...</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">... click on 'Illumination' -&gt; 'Manage animations ...'</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Two things are happening right now. First of all the animation configuration window is opened. This is no surprise. Second some illumination frames are visible and the lamp filter is set to '(with name)' since only illumination frames and snippits with a name can be added to an animation.</span></p>
+<p class="rvps2"><span class="rvts6">Please notice: This name doesn't need to be unique. The idea is lamps with the same name act like a group. In an animation you are able to switch a complete group on or off with just one command.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">This is how the animation configuration window looks like:</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Animations01.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">With the combo box and the two buttons at the top of the window &nbsp;you can start with three basic options:</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">Select an already existing animation to modify it</span></li>
+<li class="rvps2"><span class="rvts6">Add a new animation</span></li>
+<li class="rvps2"><span class="rvts6">Remove an already existing animation</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Open the 'Select animation' combo box and select the third entry, 'Flying Saucer Top (IL1)'. This is what you get:</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Animations02.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts16">'Animation name'</span><br/><span class="rvts6">Each animation needs an unique name.</span></li>
+<li class="rvps2"><span class="rvts16">'Interval in ms'</span><br/><span class="rvts6">The base interval between each animation step in milliseconds. Very interesting in combination with the animation steps. Wait to the next chapter for more details.</span></li>
+<li class="rvps2"><span class="rvts16">'Loops'</span><br/><span class="rvts6">The loops the animation is running. 0 means the animation is running endless.</span></li>
+<li class="rvps2"><span class="rvts16">'Join to B2S/ROM ID:'</span><br/><span class="rvts6">A B2S or Rom id the animation is joined to. A B2S id is just a number. A ROM id is composed of one to three letters and a number since a ROM controlled animation is joined to a lamp, a solenoid or a GI string. See more details below at the sample.</span></li>
+<li class="rvps2"><span class="rvts16">'Start animation at backglass startup'</span><br/><span class="rvts6">Check this option to start your animation immediatelly after the backglass startup.</span></li>
+<li class="rvps2"><span class="rvts16">'All lights off at animation start'</span><br/><span class="rvts6">All backglass lights (and I mean all lights except the 'Always on' lights ) are switched off when the animation is started.</span></li>
+<li class="rvps2"><span class="rvts16">'All involved lights off at animation end' </span><span class="rvts23">or</span><span class="rvts16"> 'All involved lights on at animation end' </span><span class="rvts23">or</span><span class="rvts16"> 'Reset all lights at animation end'</span><span class="rvts23"> or </span><span class="rvts16">'Do not change any lights at animation end'</span><br/><span class="rvts6">Select one of the four options above. At the end of the animation you can switch all involved lights off or on or you can reset all lights to their state at the animation start or you can leave them like they are after the last animation step.</span></li>
+<li class="rvps2"><span class="rvts16">'Run animation steps till end'</span><br/><span class="rvts6">Force the animation to finish all animation steps and loops and not to stop immediatelly when the B2S or ROM id join wants to stop it.</span></li>
+<li class="rvps2"><span class="rvts16">'Lock involved lights during animation'</span><br/><span class="rvts6">Force all in the animation involved illumination bulbs to ignore direct on or off orders from B2S or ROM commands.</span></li>
+<li class="rvps2"><span class="rvts16">'Bring involved lights to front, too'</span><br/><span class="rvts6">This option forces lights and snippits to be brought in front of overlapping lights and snippits.</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Right to the 'Animation name' and 'Loops' text box there is a button with a light bulb icon. Click this button to get a preview of your animation at the backglass window in the background.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Well, let's have a look at our sample animation of 'Close Encounters of the Third Kind'. </span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">Pretty simple, the animation has got the name 'Flying Saucer Top'. </span></li>
+<li class="rvps2"><span class="rvts6">Between each animation step there is a minimum waiting interval of 200 milliseconds. More explanation in the next chapter.</span></li>
+<li class="rvps2"><span class="rvts6">The animation is set to run endlessly.</span></li>
+<li class="rvps2"><span class="rvts6">The animation is joined to the ROM id 'IL1' since the backglass is ROM controlled. Since the animation is joined to a Rom lamp, solenoid or GI string and the control can be inverted, this id starts with a 'L', a 'S' or a 'GI' or, if inverted, with 'IL', 'IS' or 'IGI' followed by the according number. In our sample the animation is started when the lamp with id '1' is switched off (since inverted) and the animation is stopped when the lamp with id '1' is switched on. </span><br/><span class="rvts6">Since I've done my investigation job at 'Close Encounters' pretty well I know this lamp id is fired when a match is started. This means that this animation is running during the table 'attract mode' and switched off when the first player starts to play.</span></li>
+<li class="rvps2"><span class="rvts6">The next two check boxes are not checked so the animation will not start at the backglass start and all the backglass lights stay like they are when the animation starts.</span></li>
+<li class="rvps2"><span class="rvts6">'All involved lights off at animation end' is selected. When the animations is stopped by the fired lamp id all in the animation involved lights are switched off. This is the default setting too.</span></li>
+<li class="rvps2"><span class="rvts6">Finally the next two check boxes are not checked so the animation will stop immediatelly when the ROM stops it and the involved lamps are reacting on the direct ROM control.</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Got it? It isn't absolutely easy stuff, I know. But there is more because we need </span><a class="rvts10" href="Someanimationsteps.htm">some animation steps </a><span class="rvts6">to tell the animation exactly what to do.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p></p>
+
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2012-2022 by Stefan Wuehr ('Herweh') &amp; B2S Team. All Rights Reserved.</div>
+		</div>
+	</body>
+	
+</html>
+

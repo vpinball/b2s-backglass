@@ -1,4 +1,5 @@
 ﻿Imports System.Text
+Imports System.Windows.Forms
 
 Public Class formAbout
 
@@ -8,17 +9,19 @@ Public Class formAbout
         sb.AppendLine("Thanks a lot to:")
         sb.AppendLine()
         sb.AppendLine("'Dream7' for a first illumination code and wonderful LEDs.")
-        sb.AppendLine()
         sb.AppendLine("'Rosve' for all his great B2S' ideas.")
-        sb.AppendLine()
         sb.AppendLine("'Flying Dutchman' for images, infos and a lot UVP knowhow.")
-        sb.AppendLine()
         sb.AppendLine("'Grizz' for wonderful backglass and grill images.")
-        sb.AppendLine()
         sb.AppendLine("'Andy1710', 'boogies2', 'darquayle', 'Dazz', 'Dozer316', 'Itchigo', 'luvthatapex', 'Slydog43', 'thewool', 'tipoto', 'tttttwii' and 'Westworld' for supporting me and a lot testing.")
         sb.AppendLine()
         sb.AppendLine("'chriz99' for some backglass images of his highres backglass compilation.")
         txtCredits.Text = sb.ToString()
+
+        Dim cr As StringBuilder = New StringBuilder()
+        cr.AppendLine("B2S Backglass Designer " & Application.ProductVersion)
+        'cr.AppendLine("(" & My.Application.Info.WorkingSet & ")")  My.Application.Info.Version.ToString &
+        cr.AppendLine(My.Application.Info.Copyright.ToString & " by Herweh && B2S Team, All rights reserved.")
+        lblCopyright.Text = cr.ToString()
 
     End Sub
 

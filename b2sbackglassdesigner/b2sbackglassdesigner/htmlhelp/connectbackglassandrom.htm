@@ -1,0 +1,74 @@
+﻿<html>
+	
+<head>
+	<title>Connect backglass and ROM</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Microsoft HTML Help Compiler 4.74.8702">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+</head>
+
+<body>
+	<div id="topic_header">
+			<div id="topic_header_content">
+				<h1>Connect backglass and ROM</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="CreatingafirstB2Sbackglass.htm">Creating a first B2S backglass</a> &rsaquo;&rsaquo; <a href="AB2Sbackglassfromscratch.htm">A B2S backglass from scratch</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="AB2Sbackglassfromscratch.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="ChoosereelsorLEDs.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Addmoreillumination.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts6">It's getting more interesting. We have added some LEDs but now we want to complete the illumination.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">First of all you have to learn some basics about the original table ROM code. To control the backglass illumination VPinMAME is sending you up to three types of infos from the ROM:</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts15">'Lamps'</span><br/><span class="rvts6">The info you get is 'Is a table's lamp on or off'</span></li>
+<li class="rvps2"><span class="rvts15">'Solenoids'</span><br/><span class="rvts6">The info you get is similar to the lamps 'Is a table's solenoid fired yes or no'</span></li>
+<li class="rvps2"><span class="rvts15">'GI strings'</span><br/><span class="rvts6">The GI ('General Illumination') strings give you a table illumination intensity value between 0 and 8</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Sometimes you have to invert the values. That means a lamp or solenoid or GI string is sending the 'On' info but you want to switch off your backglass light. This option is called 'Inverted'.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">You can use each of these three types to control your backglass lightning. The 'GI strings' are &nbsp;connected similar like lamps and solenoids just with a value mapping 0 to 4 means 'Off' and 5 to 8 means 'On'.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts15">Sounds difficult, so let me explain it in other words (these are just some examples): &nbsp;It works like ...</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts15">... table lamp 35 is connected to my backglass bulbs 5, 6 and 7 and the backglass lights are going on or off when the table lamp is going on or off</span></li>
+<li class="rvps2"><span class="rvts15">... table solenoid 11 is connected to the backglass bulbs 3 but the backglass bulb is going off when the table solenoid is on and vice versa". </span></li>
+<li class="rvps2"><span class="rvts15">... table GI string 4 is connected to the backglass bulbs 1, 2, 3, 4, 5 ,6 ,7 , 8 and 9 and with a value of 0 to 4 of the GI string the backglass bulbs are going off and with a value of 5 to 8 of the GI string the backglass bulbs are going on</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Of course your next question is 'What the heck is this guy telling me. From where do I get all these infos?'. Let's go on and </span><a class="rvts10" href="Addmoreillumination.htm">add a lot more illumination with ROM control</a><span class="rvts6">.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p></p>
+
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2012-2022 by Stefan Wuehr ('Herweh') &amp; B2S Team. All Rights Reserved.</div>
+		</div>
+	</body>
+	
+</html>
+

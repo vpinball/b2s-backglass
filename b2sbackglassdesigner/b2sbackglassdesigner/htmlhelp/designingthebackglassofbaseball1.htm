@@ -1,0 +1,140 @@
+﻿<html>
+	
+<head>
+	<title>Designing the backglass of 'Baseball' part two</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Microsoft HTML Help Compiler 4.74.8702">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+</head>
+
+<body>
+	<div id="topic_header">
+			<div id="topic_header_content">
+				<h1>Designing the backglass of 'Baseball' part two</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="B2Sbackglassesforalltypeoftables.htm">B2S backglasses for all type of tables</a> &rsaquo;&rsaquo; <a href="AnEMorOriginaldirectB2Sbackglass.htm">An EM or Original 'directB2S' backglass</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="AnEMorOriginaldirectB2Sbackglass.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="DesigningthebackglassofBaseballp.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="DosomeVPscriptcodingforBaseball.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts6">The 'Baseball' backglass project is still open.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Let's return to the three reel displays, for score, homeruns and credits.</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Baseball03.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">There are very interesting infos at the reel displays too. Let's start with the main score display. It's the one at the upper left part of the backglass with a bit thicker orange frame around it. The '1' at the upper left corner of the score frame means this is the reel display with id '1'. This id is very interesting to access this score display, later. 'P1/1' in the upper right corner of the frame shows this display is assigned to 'Player 1' and starts at a overall digit of '1'. And the '32' at the upper right corner is the same as the bulb identifiers, with this identifier you can control the illumination of the reels.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">This is the 'Reels &amp; LEDs' tool window for this score display:</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Baseball09.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">A lot stuff that you already know. </span></p>
+<p class="rvps2"><span class="rvts6">Pretty new for you is the 'B2S score type' and the 'B2S player no'. The type is set to 'Scores', the player no is set to 'Player 1'. When you select the type or the player no a recommended value for 'B2S start digit' will be inserted. To set this 'B2S start digit' is the very important part. Here it is set to '1'. Means that this score display starts with digit 1 and since it is made of 4 reels these reels are the reels 1 to 4.</span></p>
+<p class="rvps2"><span class="rvts6">Look at Roger's &nbsp;'identifier and a backglass counterpart' list. This first reel display matches 'player 1' since it starts with 'B2S start digit' '1':</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<div class="rvps2"><table width="100%" border="1" cellpadding="1" cellspacing="2" style="border-color: #000000; border-style: solid;">
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts16">Identifier</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts16">Function</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts16">Allowed values</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">1 to 6</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Score digits for player 1</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 9</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">7 to 12</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Score digits for player 2</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 9</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">13 to 18</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Score digits for player 3</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 9</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">19 to 24</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Score digits for player 4</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to 9</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td style="border-color: #000000; border-style: solid; width: 319px;"><p class="rvps10"><span class="rvts6">29</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 481px;"><p class="rvps10"><span class="rvts6">Credits</span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; width: 315px;"><p class="rvps10"><span class="rvts6">0 to max image</span></p>
+</td>
+</tr>
+</table>
+</div>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">This list and the wish to access these reels very easily is the reason that</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside;">
+<li class="rvps2"><span class="rvts6">reel display 1 starts at 'B2S start digit' '1'</span></li>
+<li class="rvps2"><span class="rvts6">reel display 2 starts at 'B2S start digit' '7'</span></li>
+<li class="rvps2"><span class="rvts6">reel display 3, the credit reel, starts at 'B2S start digit' '29'</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts15">Please notice one thing:</span><span class="rvts6"> Click on the second reel display, the homerun display. Reel display 2 isn't a reel display for player 2 so there isn't the player no set to any value. You will see all the 'relationship' and impact in the next chapter.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Now please click on the 'Reel illumination ...' button of the 'Reels &amp; LEDs' tool window. You will get this window:</span></p>
+<p class="rvps2"><img alt="" style="padding : 1px;" src="lib/Baseball10.jpg"/></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Here you can find some well-known infos like 'B2S ID type', 'B2S ID', 'B2S value' and 'Intensity'. They are working like you have seen it the </span><a class="rvts10" href="DesigningthebackglassofBaseballp.htm">'Baseball' designing chapter part one </a><span class="rvts6">or earlier.</span></p>
+<p class="rvps2"><span class="rvts6">With the 'Illu location' you can choose the position of the imaginary light source: From above, from below or from both directions. </span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Click 'Ok' to save your settings.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">But how to control all these illumination and the reels? We need </span><a class="rvts10" href="DosomeVPscriptcodingforBaseball.htm">some VP script coding for 'Baseball'</a><span class="rvts6">.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p></p>
+
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2012-2022 by Stefan Wuehr ('Herweh') &amp; B2S Team. All Rights Reserved.</div>
+		</div>
+	</body>
+	
+</html>
+

@@ -227,7 +227,7 @@ Public Class formVPM
                 End Using
 
                 Dim process As Process = New Process()
-                process.StartInfo.FileName = "B2SVPinMAMEStarter.exe"
+                process.StartInfo.FileName = IO.Path.Combine(My.Application.Info.DirectoryPath, "B2SVPinMAMEStarter.exe")
                 process.StartInfo.Arguments = """" & Backglass.currentData.VSName & """ """ & txtVPTablesFolder.Text & """"
                 process.Start()
 

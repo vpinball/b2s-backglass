@@ -1,0 +1,239 @@
+﻿/* ========== Text Styles ========== */
+hr { color: #000000}
+body, table, span.rvts0 /* Normal text */
+{
+ font-size: 10pt;
+ font-family: 'Arial', 'Helvetica', sans-serif;
+ font-style: normal;
+ font-weight: normal;
+ color: #000000;
+ text-decoration: none;
+}
+span.rvts1 /* Heading */
+{
+ font-weight: bold;
+ color: #0000ff;
+}
+span.rvts2 /* Subheading */
+{
+ font-weight: bold;
+ color: #000080;
+}
+span.rvts3 /* Keywords */
+{
+ font-style: italic;
+ color: #800000;
+}
+a.rvts4, span.rvts4 /* Jump 1 */
+{
+ color: #008000;
+ text-decoration: underline;
+}
+a.rvts5, span.rvts5 /* Jump 2 */
+{
+ color: #008000;
+ text-decoration: underline;
+}
+span.rvts6 /* Font Style */
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+}
+span.rvts7
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+}
+span.rvts8
+{
+ font-family: 'Tahoma', 'Geneva', sans-serif;
+}
+span.rvts9 /* Font Style */
+{
+ font-size: 18pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+ color: #365f91;
+}
+a.rvts10, span.rvts10
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+ color: #0000ff;
+ text-decoration: underline;
+}
+a.rvts10:hover { color: #0000ff; }
+span.rvts11 /* Font Style */
+{
+ font-size: 13pt;
+ font-weight: bold;
+ color: #4f81bd;
+}
+span.rvts12 /* Font Style */
+{
+ font-family: 'Tahoma', 'Geneva', sans-serif;
+ font-style: italic;
+ color: #c0c0c0;
+}
+a.rvts13, span.rvts13 /* Font Style */
+{
+ font-family: 'Tahoma', 'Geneva', sans-serif;
+ font-style: italic;
+ color: #6666ff;
+ text-decoration: underline;
+}
+span.rvts14
+{
+ font-size: 11pt;
+ font-family: 'Tahoma', 'Geneva', sans-serif;
+}
+span.rvts15
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+}
+span.rvts16
+{
+ font-size: 12pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+}
+a.rvts17, span.rvts17
+{
+ font-size: 12pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+ color: #0000ff;
+ text-decoration: underline;
+}
+a.rvts17:hover { color: #0000ff; }
+span.rvts18
+{
+ font-size: 13pt;
+ font-weight: bold;
+ color: #4f81bd;
+}
+a.rvts19, span.rvts19
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+ color: #0000ff;
+ text-decoration: underline;
+}
+a.rvts19:hover { color: #0000ff; }
+span.rvts20
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+}
+span.rvts21
+{
+ font-size: 12pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+}
+span.rvts22 /* Font Style */
+{
+ font-size: 12pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+ color: #000000;
+}
+span.rvts23
+{
+ font-size: 12pt;
+ font-family: 'Calibri';
+}
+span.rvts24
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+}
+span.rvts25
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+ font-weight: bold;
+ text-decoration: underline;
+}
+span.rvts26 /* Font Style */
+{
+ font-size: 11pt;
+ font-weight: bold;
+ color: #4f81bd;
+}
+span.rvts27
+{
+ font-size: 11pt;
+ font-family: 'Calibri';
+ font-style: italic;
+ font-weight: bold;
+}
+/* ========== Para Styles ========== */
+p,ul,ol /* Paragraph Style */
+{
+ text-align: left;
+ text-indent: 0px;
+ padding: 0px 0px 0px 0px;
+ margin: 0px 0px 0px 0px;
+}
+.rvps1 /* Centered */
+{
+ text-align: center;
+}
+.rvps2 /* Paragraph Style */
+{
+}
+.rvps3
+{
+}
+.rvps4 /* Paragraph Style */
+{
+}
+.rvps5 /* Paragraph Style */
+{
+}
+.rvps6 /* Paragraph Style */
+{
+ text-align: center;
+ border-color: #c0c0c0;
+ border-style: solid;
+ border-width: 1px;
+ border-right: none;
+ border-left: none;
+ padding: 2px 0px 2px 0px;
+ margin: 7px 0px 7px 0px;
+}
+.rvps7
+{
+}
+.rvps8 /* Paragraph Style */
+{
+}
+.rvps9
+{
+ margin: 0px 0px 0px 24px;
+}
+.rvps10
+{
+ text-align: center;
+}
+.rvps11
+{
+ text-indent: 48px;
+}
+.rvps12
+{
+ text-indent: 48px;
+ margin: 0px 0px 0px 144px;
+}
+.rvps13 /* Paragraph Style */
+{
+}
+.rvps14
+{
+ margin: 0px 0px 0px 24px;
+}
