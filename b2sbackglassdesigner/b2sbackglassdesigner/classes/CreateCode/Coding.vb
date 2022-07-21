@@ -254,7 +254,7 @@ Public Class Coding
                                     reelimages(reelname).Add(currentname, reelimage)
                                 End If
                                 ' maybe get out here
-                                If index < 0 Then
+                                If index < 0 Or index > 10 Then
                                     Exit Do
                                 End If
                             Else
