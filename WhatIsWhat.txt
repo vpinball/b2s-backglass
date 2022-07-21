@@ -13,7 +13,7 @@ Tools:
 Unfinished:
 - B2S_ScreenResIdentifier: Tool to organize and to set B2S-Settings
 
-- ScreenRes.txt is an exemplary file how the .txt has to look like
+- ScreenRes.txt is an exemplary file how the .txt has to look like. From release 1.3.1.1 it supports comment lines starting with a "#". If you use tools not supporting comments, you need to remove these lines.
 
 
 Additional info:
@@ -26,4 +26,4 @@ Additional info:
 - I have only seen the preliminary code of the proxy implementation, so things might have changed since then, but I'm pretty sure that some cleanup to the code would make things much easier for future development.
 - The plugin code uses Microsoft MEF (https://msdn.microsoft.com/en-us/library/dd460648(v=vs.110).aspx) to detect and load plugins.
 - The B2S.Server to backglass communication uses the registry to transfer data. IMHO this should be changed.
-- VS2010 was used for B2S.Server, but I think migrating the code the VS2015 should be easy.
+
