@@ -6,7 +6,7 @@ Public Class Save
 
     Inherits HelperBase
 
-    Private Const SaveVersion As String = "1.26"
+    Private Const SaveVersion As String = "1.27"
 
     Public Function LoadData(ByRef _backglassData As Backglass.Data, ByVal filename As String) As Boolean
 

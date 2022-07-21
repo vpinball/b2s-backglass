@@ -7,7 +7,7 @@ Public Class Coding
 
     Inherits HelperBase
 
-    Private Const DirectB2SVersion As String = "1.26"
+    Private Const DirectB2SVersion As String = "1.27"
     Private Const DirectB2SVersionMaybeWithDataLost As String = "1.3"
     Private Const DirectB2SVersionWithImportFeature As String = "0.85" ' nicht ändern
 

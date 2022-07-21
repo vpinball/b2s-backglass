@@ -122,7 +122,7 @@
   </metadata>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tsmiNew.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+N</value>
+    <value>Control+N</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="tsmiNew.Size" type="System.Drawing.Size, System.Drawing">
@@ -132,7 +132,7 @@
     <value>&amp;New ...</value>
   </data>
   <data name="tsmiOpen.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+O</value>
+    <value>Control+O</value>
   </data>
   <data name="tsmiOpen.Size" type="System.Drawing.Size, System.Drawing">
     <value>253, 22</value>
@@ -168,7 +168,7 @@
     <value>250, 6</value>
   </data>
   <data name="tsmiClose.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+W</value>
+    <value>Control+W</value>
   </data>
   <data name="tsmiClose.Size" type="System.Drawing.Size, System.Drawing">
     <value>253, 22</value>
@@ -180,7 +180,7 @@
     <value>250, 6</value>
   </data>
   <data name="tsmiSave.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+S</value>
+    <value>Control+S</value>
   </data>
   <data name="tsmiSave.Size" type="System.Drawing.Size, System.Drawing">
     <value>253, 22</value>
@@ -195,7 +195,7 @@
     <value>Save &amp;backup as ...</value>
   </data>
   <data name="tsmiSaveAs.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+S</value>
+    <value>Control+Shift+S</value>
   </data>
   <data name="tsmiSaveAs.Size" type="System.Drawing.Size, System.Drawing">
     <value>253, 22</value>
@@ -237,7 +237,7 @@
     <value>E&amp;xit</value>
   </data>
   <data name="tsmiFile.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+O</value>
+    <value>Control+O</value>
   </data>
   <data name="tsmiFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 20</value>
@@ -246,7 +246,7 @@
     <value>&amp;File</value>
   </data>
   <data name="tsmiUndo.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Z</value>
+    <value>Control+Z</value>
   </data>
   <data name="tsmiUndo.Size" type="System.Drawing.Size, System.Drawing">
     <value>144, 22</value>
@@ -255,7 +255,7 @@
     <value>&amp;Undo</value>
   </data>
   <data name="tsmiRedo.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Y</value>
+    <value>Control+Y</value>
   </data>
   <data name="tsmiRedo.Size" type="System.Drawing.Size, System.Drawing">
     <value>144, 22</value>
@@ -267,7 +267,7 @@
     <value>141, 6</value>
   </data>
   <data name="tsmiCut.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+X</value>
+    <value>Control+X</value>
   </data>
   <data name="tsmiCut.Size" type="System.Drawing.Size, System.Drawing">
     <value>144, 22</value>
@@ -276,7 +276,7 @@
     <value>Cu&amp;t</value>
   </data>
   <data name="tsmiCopy.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+C</value>
+    <value>Control+C</value>
   </data>
   <data name="tsmiCopy.Size" type="System.Drawing.Size, System.Drawing">
     <value>144, 22</value>
@@ -285,7 +285,7 @@
     <value>&amp;Copy</value>
   </data>
   <data name="tsmiPaste.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+V</value>
+    <value>Control+V</value>
   </data>
   <data name="tsmiPaste.Size" type="System.Drawing.Size, System.Drawing">
     <value>144, 22</value>
@@ -297,7 +297,7 @@
     <value>141, 6</value>
   </data>
   <data name="tsmiDelete.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Del</value>
+    <value>Delete</value>
   </data>
   <data name="tsmiDelete.Size" type="System.Drawing.Size, System.Drawing">
     <value>144, 22</value>
@@ -312,10 +312,10 @@
     <value>&amp;Edit</value>
   </data>
   <data name="tsmiZoomIn.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Ctrl++</value>
+    <value>Control++</value>
   </data>
   <data name="tsmiZoomIn.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Oemplus</value>
+    <value>Control+Oemplus</value>
   </data>
   <data name="tsmiZoomIn.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 22</value>
@@ -324,10 +324,10 @@
     <value>Zoom &amp;In</value>
   </data>
   <data name="tsmiZoomOut.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Ctrl+-</value>
+    <value>Control+-</value>
   </data>
   <data name="tsmiZoomOut.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+OemMinus</value>
+    <value>Control+OemMinus</value>
   </data>
   <data name="tsmiZoomOut.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 22</value>
@@ -336,7 +336,7 @@
     <value>Zoom &amp;Out</value>
   </data>
   <data name="tsmiZoomToWindow.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+B</value>
+    <value>Control+B</value>
   </data>
   <data name="tsmiZoomToWindow.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 22</value>
@@ -345,7 +345,7 @@
     <value>Zoom to &amp;Window</value>
   </data>
   <data name="tsmiZoomActualSize.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+0</value>
+    <value>Control+0</value>
   </data>
   <data name="tsmiZoomActualSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 22</value>
@@ -441,7 +441,7 @@
     <value>156, 6</value>
   </data>
   <data name="tsmiResize.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+R</value>
+    <value>Control+R</value>
   </data>
   <data name="tsmiResize.Size" type="System.Drawing.Size, System.Drawing">
     <value>159, 22</value>
@@ -474,7 +474,7 @@
     <value>271, 6</value>
   </data>
   <data name="tsmiShowScoreFrames.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+R</value>
+    <value>Control+Shift+R</value>
   </data>
   <data name="tsmiShowScoreFrames.Size" type="System.Drawing.Size, System.Drawing">
     <value>274, 22</value>
@@ -495,7 +495,7 @@
     <value>271, 6</value>
   </data>
   <data name="tsmiShowScoring.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+E</value>
+    <value>Control+Shift+E</value>
   </data>
   <data name="tsmiShowScoring.Size" type="System.Drawing.Size, System.Drawing">
     <value>274, 22</value>
@@ -529,7 +529,7 @@
     <value>358, 6</value>
   </data>
   <data name="tsmiAddNewBulbFrame.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+A</value>
+    <value>Control+Shift+A</value>
   </data>
   <data name="tsmiAddNewBulbFrame.Size" type="System.Drawing.Size, System.Drawing">
     <value>361, 22</value>
@@ -538,7 +538,7 @@
     <value>&amp;Add a new illumination frame</value>
   </data>
   <data name="tsmiAddANewIlluminationSnippit.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+N</value>
+    <value>Control+Shift+N</value>
   </data>
   <data name="tsmiAddANewIlluminationSnippit.Size" type="System.Drawing.Size, System.Drawing">
     <value>361, 22</value>
@@ -550,7 +550,7 @@
     <value>358, 6</value>
   </data>
   <data name="tsmiShowIllumination.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+L</value>
+    <value>Control+Shift+L</value>
   </data>
   <data name="tsmiShowIllumination.Size" type="System.Drawing.Size, System.Drawing">
     <value>361, 22</value>
@@ -559,7 +559,7 @@
     <value>Show i&amp;llumination</value>
   </data>
   <data name="tsmiShowIlluminationWithAccurateIntensity.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+I</value>
+    <value>Control+Shift+I</value>
   </data>
   <data name="tsmiShowIlluminationWithAccurateIntensity.Size" type="System.Drawing.Size, System.Drawing">
     <value>361, 22</value>
@@ -583,7 +583,7 @@
     <value>I&amp;llumination</value>
   </data>
   <data name="tsmiBackglassPreviewAndTest.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+T</value>
+    <value>Control+Shift+T</value>
   </data>
   <data name="tsmiBackglassPreviewAndTest.Size" type="System.Drawing.Size, System.Drawing">
     <value>388, 22</value>
@@ -610,7 +610,7 @@
     <value>385, 6</value>
   </data>
   <data name="tsmiCreateDirectAccessBackglassCodeFile.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+C</value>
+    <value>Control+Shift+C</value>
   </data>
   <data name="tsmiCreateDirectAccessBackglassCodeFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>388, 22</value>
@@ -619,7 +619,7 @@
     <value>Create '&amp;directB2S' backglass file</value>
   </data>
   <data name="tsmiCreateMSBackglassCode.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+V</value>
+    <value>Control+Shift+V</value>
   </data>
   <data name="tsmiCreateMSBackglassCode.Size" type="System.Drawing.Size, System.Drawing">
     <value>388, 22</value>

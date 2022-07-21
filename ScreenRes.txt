@@ -1,3 +1,5 @@
+# This is a ScreenRes file for the B2SBackglassServer. 
+# From release 1.3.1.1 comment lines like this starting with a "#" are supported. If you use tools not supporting comments (or old releases), you need to remove these lines.
 # Playfield Screen resolution width/height
 800
 600
@@ -24,5 +26,5 @@
 # width/height of the backglass when StartBackground is active 
 800
 600
-# C:\path\Frame (The path to the location where you have the background image)
+# C:\path\Frame = The path to the location where you have the background image, it is called "small" button in the settings.
 C:\path\my_bezel_for_EM_or_grill_for_dual_screen.png
