@@ -56,34 +56,46 @@ Public Class PluginList
     End Sub
 
 
-    ''' <summary>
+        ''' <summary>
     ''' Is called when new data on a table element (Lamp, Switch, Solenoid, Mech, GI) is available.
     ''' </summary>
     ''' <param name="TableElementTypeChar">Type of the table element.</param>
     ''' <param name="Data">The data received from Pinmame.</param>
     Public Sub DataReceive(TableElementTypeChar As Char, Data As Object)
-        If Count > 0 AndAlso Not Data Is Nothing Then
-            Dim DataArray As Object(,) = DirectCast(Data, Object(,))
-            If Not DataArray Is Nothing AndAlso DataArray.GetType().IsArray Then
-
-                Dim IntDataArray(DataArray.GetLength(0), 2) As Integer
-                For T = 0 To DataArray.GetLength(0) - 1
-                    IntDataArray(T, 0) = Convert.ToInt32(DataArray(T, 0))
-                    IntDataArray(T, 1) = Convert.ToInt32(DataArray(T, 1))
-                Next
-
-
-                For Each P As Plugin In Me
-                    If P.Status = PluginStatusEnum.Active Then
-                        For T As Integer = 0 To IntDataArray.GetLength(0) - 1
-                            P.DataReceive(TableElementTypeChar, IntDataArray(T, 0), IntDataArray(T, 1))
-                        Next
-                    End If
+        If TableElementTypeChar = "D" Then                                   ' *** Unsure Why Logic Below Doesn't Work for "D"igits, but this does work
+            If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 AndAlso Not Data Is Nothing Then
+                For i As Integer = 0 To Data.GetUpperBound(0)
+                    For Each P As Plugin In Me
+                        If P.Status = PluginStatusEnum.Active Then
+                            P.DataReceive(TableElementTypeChar, CInt(Data(i, 0)), CInt(Data(i, 2)))
+                        End If
+                    Next
                 Next
             End If
-        End If
+        Else                                                                 ' *** Everything Except "D"igits
+            If Count > 0 AndAlso Not Data Is Nothing Then
+                Dim DataArray As Object(,) = DirectCast(Data, Object(,))
+                If Not DataArray Is Nothing AndAlso DataArray.GetType().IsArray Then
 
+                    Dim IntDataArray(DataArray.GetLength(0), 2) As Integer
+                    For T = 0 To DataArray.GetLength(0) - 1
+                        IntDataArray(T, 0) = Convert.ToInt32(DataArray(T, 0))
+                        IntDataArray(T, 1) = Convert.ToInt32(DataArray(T, 1))
+                    Next
+
+
+                    For Each P As Plugin In Me
+                        If P.Status = PluginStatusEnum.Active Then
+                            For T As Integer = 0 To IntDataArray.GetLength(0) - 1
+                                P.DataReceive(TableElementTypeChar, IntDataArray(T, 0), IntDataArray(T, 1))
+                            Next
+                        End If
+                    Next
+                End If
+            End If
+        End If
     End Sub
+    
     ''' <summary>
     ''' Adds the specified direct plugins.
     ''' </summary>
