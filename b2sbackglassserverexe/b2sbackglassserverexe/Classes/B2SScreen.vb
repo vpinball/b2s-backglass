@@ -323,10 +323,10 @@ Public Class B2SScreen
                 Me.formbackground.BackgroundImage = Image.FromFile(Me.BackgroundPath) ' ("C:\backglass.png")
             End If
             Me.formbackground.Show()
-            If B2SSettings.FormToFront Then
-                Me.formbackground.BringToFront()
-            Else
+            If B2SSettings.FormToBack Then
                 Me.formbackground.SendToBack()
+            Else
+                Me.formbackground.BringToFront()
             End If
         End If
 
@@ -406,11 +406,11 @@ Public Class B2SScreen
             Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + OriginalOffset + Me.DMDLocation  ' was Me.formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
             Me.formDMD.Text = "B2S DMD"
-            Me.formDMD.ShowInTaskbar = False
-            Me.formDMD.Show(Me.formBackglass)
-            If B2SSettings.FormToFront Then Me.formDMD.TopMost = True
+            'Me.formDMD.ShowInTaskbar = False
+            'Me.formDMD.Show(Me.formBackglass)
+            Me.formDMD.Show()
             Me.formDMD.BringToFront()
-
+            Me.formDMD.TopMost = True
         End If
 
     End Sub

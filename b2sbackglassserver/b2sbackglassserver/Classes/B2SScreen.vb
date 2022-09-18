@@ -331,10 +331,11 @@ Public Class B2SScreen
         Me.formBackglass.MinimizeBox = False
         Me.formBackglass.Location = screen.Bounds.Location + Me.BackglassLocation
         Me.formBackglass.Size = Me.BackglassSize
-        Me.formBackglass.Text = "Form1"
+        Me.formBackglass.Text = "B2S Backglass Server"
         Me.formBackglass.Show()
         
         ' bring backglass screen to the front
+        If B2SSettings.FormToFront Then Me.formBackglass.TopMost = True
         Me.formBackglass.BringToFront()
 
         ' maybe show DMD form
@@ -348,8 +349,9 @@ Public Class B2SScreen
             Me.formDMD.MinimizeBox = False
             Me.formDMD.Location = Me.formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
+            Me.formDMD.Text = "B2S DMD"
             ' show the DMD form
-            Me.formDMD.Show() 'formBackglass)
+            Me.formDMD.Show()
             Me.formDMD.BringToFront()
             Me.formDMD.TopMost = True
         End If

@@ -31,7 +31,9 @@ Partial Class formSettings
         Me.chkActivatePlugins = New System.Windows.Forms.CheckBox()
         Me.btnPluginSettings = New System.Windows.Forms.Button()
         Me.grpStartMode = New System.Windows.Forms.GroupBox()
-        Me.chkFormFront = New System.Windows.Forms.CheckBox()
+        Me.lblFormFront = New System.Windows.Forms.Label()
+        Me.chkDisableFuzzyMatching = New System.Windows.Forms.CheckBox()
+        Me.cmbFormFront = New System.Windows.Forms.ComboBox()
         Me.chkSmall = New System.Windows.Forms.CheckBox()
         Me.lblDefaultStartMode = New System.Windows.Forms.Label()
         Me.chkStartAsEXE = New System.Windows.Forms.CheckBox()
@@ -49,7 +51,7 @@ Partial Class formSettings
         Me.cmbAnimations = New System.Windows.Forms.ComboBox()
         Me.lblVersion = New System.Windows.Forms.Label()
         Me.grpScreenshot = New System.Windows.Forms.GroupBox()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblFileType = New System.Windows.Forms.Label()
         Me.cmbScreenshotType = New System.Windows.Forms.ComboBox()
         Me.btnScreenshotPath = New System.Windows.Forms.Button()
         Me.btnCloseSettings = New System.Windows.Forms.Button()
@@ -80,7 +82,6 @@ Partial Class formSettings
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
-        Me.chkDisableFuzzyMatching = New System.Windows.Forms.CheckBox()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -167,8 +168,9 @@ Partial Class formSettings
         '
         'grpStartMode
         '
+        Me.grpStartMode.Controls.Add(Me.lblFormFront)
         Me.grpStartMode.Controls.Add(Me.chkDisableFuzzyMatching)
-        Me.grpStartMode.Controls.Add(Me.chkFormFront)
+        Me.grpStartMode.Controls.Add(Me.cmbFormFront)
         Me.grpStartMode.Controls.Add(Me.chkSmall)
         Me.grpStartMode.Controls.Add(Me.lblDefaultStartMode)
         Me.grpStartMode.Controls.Add(Me.chkStartAsEXE)
@@ -180,15 +182,34 @@ Partial Class formSettings
         Me.grpStartMode.TabStop = False
         Me.grpStartMode.Text = "Backglass start mode"
         '
-        'chkFormFront
+        'lblFormFront
         '
-        Me.chkFormFront.AutoSize = True
-        Me.chkFormFront.Location = New System.Drawing.Point(80, 50)
-        Me.chkFormFront.Name = "chkFormFront"
-        Me.chkFormFront.Size = New System.Drawing.Size(127, 17)
-        Me.chkFormFront.TabIndex = 39
-        Me.chkFormFront.Text = "Bring BG Form to Top"
-        Me.chkFormFront.UseVisualStyleBackColor = True
+        Me.lblFormFront.AutoSize = True
+        Me.lblFormFront.Location = New System.Drawing.Point(12, 49)
+        Me.lblFormFront.Name = "lblFormFront"
+        Me.lblFormFront.Size = New System.Drawing.Size(47, 13)
+        Me.lblFormFront.TabIndex = 41
+        Me.lblFormFront.Text = "Bring BG"
+        '
+        'chkDisableFuzzyMatching
+        '
+        Me.chkDisableFuzzyMatching.AutoSize = True
+        Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(221, 50)
+        Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
+        Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(159, 17)
+        Me.chkDisableFuzzyMatching.TabIndex = 40
+        Me.chkDisableFuzzyMatching.Text = "Exact .directb2s match only"
+        Me.chkDisableFuzzyMatching.UseVisualStyleBackColor = True
+        '
+        'cmbFormFront
+        '
+        Me.cmbFormFront.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbFormFront.FormattingEnabled = True
+        Me.cmbFormFront.Items.AddRange(New Object() {"Form to Back", "Standard", "Form to Top"})
+        Me.cmbFormFront.Location = New System.Drawing.Point(65, 46)
+        Me.cmbFormFront.Name = "cmbFormFront"
+        Me.cmbFormFront.Size = New System.Drawing.Size(127, 21)
+        Me.cmbFormFront.TabIndex = 27
         '
         'chkSmall
         '
@@ -353,12 +374,12 @@ Partial Class formSettings
         Me.lblVersion.Location = New System.Drawing.Point(54, 30)
         Me.lblVersion.Name = "lblVersion"
         Me.lblVersion.Size = New System.Drawing.Size(265, 13)
-        Me.lblVersion.TabIndex = 27
+        Me.lblVersion.TabIndex = 38
         Me.lblVersion.Text = "Server version {0}, Backglass file version {1}"
         '
         'grpScreenshot
         '
-        Me.grpScreenshot.Controls.Add(Me.Label1)
+        Me.grpScreenshot.Controls.Add(Me.lblFileType)
         Me.grpScreenshot.Controls.Add(Me.cmbScreenshotType)
         Me.grpScreenshot.Controls.Add(Me.btnScreenshotPath)
         Me.grpScreenshot.Location = New System.Drawing.Point(12, 453)
@@ -368,15 +389,15 @@ Partial Class formSettings
         Me.grpScreenshot.TabStop = False
         Me.grpScreenshot.Text = "Screenshot"
         '
-        'Label1
+        'lblFileType
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(268, 19)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(83, 13)
-        Me.Label1.TabIndex = 27
-        Me.Label1.Text = "Image file type:"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblFileType.AutoSize = True
+        Me.lblFileType.Location = New System.Drawing.Point(268, 19)
+        Me.lblFileType.Name = "lblFileType"
+        Me.lblFileType.Size = New System.Drawing.Size(83, 13)
+        Me.lblFileType.TabIndex = 0
+        Me.lblFileType.Text = "Image file type:"
+        Me.lblFileType.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbScreenshotType
         '
@@ -691,16 +712,6 @@ Partial Class formSettings
         Me.btnDonate.UseVisualStyleBackColor = True
         Me.btnDonate.Visible = False
         '
-        'chkDisableFuzzyMatching
-        '
-        Me.chkDisableFuzzyMatching.AutoSize = True
-        Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(221, 50)
-        Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
-        Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(159, 17)
-        Me.chkDisableFuzzyMatching.TabIndex = 40
-        Me.chkDisableFuzzyMatching.Text = "Exact .directb2s match only"
-        Me.chkDisableFuzzyMatching.UseVisualStyleBackColor = True
-        '
         'formSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -747,7 +758,7 @@ Partial Class formSettings
     Friend WithEvents cmbAnimations As System.Windows.Forms.ComboBox
     Friend WithEvents lblVersion As System.Windows.Forms.Label
     Friend WithEvents grpScreenshot As System.Windows.Forms.GroupBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents lblFileType As System.Windows.Forms.Label
     Friend WithEvents cmbScreenshotType As System.Windows.Forms.ComboBox
     Friend WithEvents btnScreenshotPath As System.Windows.Forms.Button
     Friend WithEvents btnCloseSettings As System.Windows.Forms.Button
@@ -795,6 +806,7 @@ Partial Class formSettings
     Friend WithEvents chkActivatePlugins As System.Windows.Forms.CheckBox
     Friend WithEvents btnPluginSettings As System.Windows.Forms.Button
     Friend WithEvents chkSmall As Windows.Forms.CheckBox
-    Friend WithEvents chkFormFront As Windows.Forms.CheckBox
+    Friend WithEvents lblFormFront As Windows.Forms.Label
+    Friend WithEvents cmbFormFront As Windows.Forms.ComboBox
     Friend WithEvents chkDisableFuzzyMatching As Windows.Forms.CheckBox
 End Class
