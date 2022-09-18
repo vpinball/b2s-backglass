@@ -83,7 +83,7 @@ Public Class formSettings
             radioDream7LED.Enabled = False
         End If
         chkBulbs.Checked = B2SSettings.IsGlowBulbOn
-        chkFormFront.Checked = B2SSettings.FormToFront
+        cmbFormFront.SelectedIndex = If(B2SSettings.FormToBack, 0, If(B2SSettings.FormToFront, 2, 1))
         chkDisableFuzzyMatching.Checked = B2SSettings.DisableFuzzyMatching
 
         cmbGlowing.SelectedIndex = If(B2SSettings.GlowIndex <> -1, B2SSettings.GlowIndex, cmbGlowing.Items.Count - 1)
@@ -455,8 +455,15 @@ Public Class formSettings
         Return ret
     End Function
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles chkFormFront.CheckedChanged
-        B2SSettings.FormToFront = chkFormFront.Checked
+    Private Sub cmbFormFront_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbFormFront.SelectedIndexChanged
+        B2SSettings.FormToBack = False
+        B2SSettings.FormToFront = False
+
+        If cmbFormFront.SelectedIndex = 0 Then
+            B2SSettings.FormToBack = True
+        ElseIf cmbFormFront.SelectedIndex = 2 Then
+            B2SSettings.FormToFront = True
+        End If
     End Sub
 
     Private Sub chkDisableFuzzyMatching_CheckedChanged(sender As Object, e As EventArgs) Handles chkDisableFuzzyMatching.CheckedChanged

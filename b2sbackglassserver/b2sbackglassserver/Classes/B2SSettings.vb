@@ -3,7 +3,7 @@ Imports System.IO
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "1.3.1.1"
+    Public Const DirectB2SVersion As String = "1.3.1.2"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
@@ -154,7 +154,7 @@ Public Class B2SSettings
     Public Shared Property GlowIndex() As Integer = -1
     Public Shared Property DefaultGlow() As Integer = -1
     Public Shared Property FormToFront() As Boolean = True
-
+    Public Shared Property FormToBack() As Boolean = False
     Public Shared Property HideGrill() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
     Public Shared Property HideB2SDMD() As Boolean = False
     Public Shared Property HideDMD() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
@@ -239,7 +239,11 @@ Public Class B2SSettings
                             StartBackground = GlobalStartBackground
                         End If
 
-                If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
+                        If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
+                        If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
+                            FormToBack = (nodeHeader.SelectSingleNode("FormToBack").InnerText = "1")
+                            If FormToBack Then FormToFront = False
+                        End If
                         If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
                             ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
                             ScreenshotFileType = CInt(nodeHeader.SelectSingleNode("ScreenshotFileType").InnerText)
@@ -281,8 +285,12 @@ Public Class B2SSettings
                                 If nodeTable.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(nodeTable.SelectSingleNode("GlowIndex").InnerText)
                                 If nodeTable.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (nodeTable.SelectSingleNode("StartAsEXE").InnerText = "1")
                                 If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
-                        If nodeTable.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (nodeTable.SelectSingleNode("StartBackground").InnerText = "1")
-                        If nodeTable.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeTable.SelectSingleNode("FormToFront").InnerText = "1")
+                                If nodeTable.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (nodeTable.SelectSingleNode("StartBackground").InnerText = "1")
+                                If nodeTable.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeTable.SelectSingleNode("FormToFront").InnerText = "1")
+                                If nodeTable.SelectSingleNode("FormToBack") IsNot Nothing Then
+                                    FormToBack = (nodeTable.SelectSingleNode("FormToBack").InnerText = "1")
+                                    If FormToBack Then FormToFront = False
+                                End If
 
                                 Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
                                 If nodeAnimations IsNot Nothing Then
@@ -358,10 +366,11 @@ Public Class B2SSettings
 
                 ' Only save the StartBackground setting on table level if different from GlobalStartBackground or non existent
                 If (Not GlobalStartBackground.HasValue) Or (GlobalStartBackground Xor StartBackground) Then
-                AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
+                    AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
                 End If
 
                 AddNode(XML, nodeTable, "FormToFront", If(FormToFront, "1", "0"))
+                AddNode(XML, nodeTable, "FormToBack", If(FormToBack, "1", "0"))
 
                 If b2sanimation IsNot Nothing Then
                     Dim nodeAnimations As Xml.XmlElement = AddHeader(XML, nodeTable, "Animations")
@@ -422,6 +431,8 @@ Public Class B2SSettings
         AnimationSlowDowns.Clear()
         AllAnimationSlowDown = 1
         CurrentDualMode = eDualMode.NotSet
+        FormToFront = True
+        FormToBack = False
     End Sub
 
     Private Shared Function AddHeader(XML As Xml.XmlDocument, parentnode As Xml.XmlNode, nodename As String) As Xml.XmlNode

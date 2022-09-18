@@ -1,3 +1,9 @@
+1.3.1.2
+
+- Add additional setting FormToBack complementing FormToFront. The "Standard" setting (both FormToBack and FormToFront turned off) is now as it was in 1.3.0.6. -> formDMD isn't controlled by the FormToFront/Back setting
+- Merge some more settings in the dll version.
+- Make sure LED "D" (Digit) updates from VPMame is forwarded to all plugins. thanks to rdowens11vx!
+
 1.3.1.1
 
 - Its now possible to use a different filename than ScreenRes.txt via the registry-key "Software\B2S\B2SScreenResFileNameOverride"

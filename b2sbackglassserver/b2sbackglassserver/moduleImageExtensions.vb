@@ -56,13 +56,4 @@ Module moduleImageExtensions
         Return ret
     End Function
 
-    '<System.Runtime.CompilerServices.Extension()> _
-    'Public Function PartFromImage(image As Image, area As Rectangle) As Image
-    '    If image Is Nothing Then Return Nothing
-    '    Dim imageBackground As Bitmap = CType(image, Bitmap)
-    '    Dim imagePart As Image = New Bitmap(area.Width, area.Height)
-    '    imagePart = imageBackground.Clone(area, Imaging.PixelFormat.Format32bppArgb)
-    '    Return imagePart
-    'End Function
-
 End Module
