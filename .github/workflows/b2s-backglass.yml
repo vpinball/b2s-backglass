@@ -151,6 +151,7 @@ jobs:
          path: tmp
 
   build-betterled:
+    if: ${{ false }}  # disable for now
     name: Build BetterLed-${{ matrix.config }}-win-${{ matrix.platform }}
     runs-on: windows-2019
     strategy:
