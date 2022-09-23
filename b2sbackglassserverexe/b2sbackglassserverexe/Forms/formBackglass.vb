@@ -4,7 +4,7 @@ Imports System.Windows.Forms
 Imports Microsoft.Win32
 
 Public Class formBackglass
-
+    Inherits System.Windows.Forms.Form
     Private Declare Function SetForegroundWindow Lib "user32.dll" (ByVal hwnd As IntPtr) As Integer
     Private Declare Function IsWindow Lib "user32.dll" (ByVal hwnd As IntPtr) As Boolean
 
@@ -30,8 +30,26 @@ Public Class formBackglass
     Private rotateSteps As Integer = 0
     Private rotateAngle As Single = 0
     Private rotateTimerInterval As Integer = 0
+    Private Const WS_EX_NOACTIVATE As Integer = &H8000000L
 
+#Region " Properties "
 
+    ''' <summary>
+    ''' This member overrides <see cref="System.Windows.Forms.Form.CreateParams">Form.CreateParams</see>.
+    ''' </summary>
+    Protected Overrides ReadOnly Property CreateParams() As CreateParams
+        Get
+            Dim value As CreateParams = MyBase.CreateParams
+
+            'Don't allow the window to be activated.
+            If B2SSettings.FormToBack Then
+                value.ExStyle = value.ExStyle Or WS_EX_NOACTIVATE
+            End If
+            Return value
+        End Get
+    End Property
+
+#End Region 'Properties
 #Region "constructor and closing"
 
     Public Sub New()

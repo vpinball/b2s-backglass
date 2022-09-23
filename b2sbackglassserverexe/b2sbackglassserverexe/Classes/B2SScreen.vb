@@ -325,6 +325,7 @@ Public Class B2SScreen
             Me.formbackground.Show()
             If B2SSettings.FormToBack Then
                 Me.formbackground.SendToBack()
+                Me.formbackground.ShowInTaskbar = False
             Else
                 Me.formbackground.BringToFront()
             End If
@@ -391,8 +392,15 @@ Public Class B2SScreen
             Me.formBackglass.Show()
         End If
         ' bring backglass screen to the front
-        If B2SSettings.FormToFront Then Me.formBackglass.TopMost = True
-        Me.formBackglass.BringToFront()
+        If B2SSettings.FormToFront Then
+            Me.formBackglass.TopMost = True
+            Me.formBackglass.BringToFront()
+        ElseIf B2SSettings.FormToBack Then
+            Me.formBackglass.SendToBack()
+            Me.formBackglass.ShowInTaskbar = False
+        Else
+            Me.formBackglass.BringToFront()
+        End If
 
         ' maybe show DMD form
         If IsDMDToBeShown Then
@@ -406,11 +414,15 @@ Public Class B2SScreen
             Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + OriginalOffset + Me.DMDLocation  ' was Me.formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
             Me.formDMD.Text = "B2S DMD"
-            'Me.formDMD.ShowInTaskbar = False
-            'Me.formDMD.Show(Me.formBackglass)
-            Me.formDMD.Show()
-            Me.formDMD.BringToFront()
-            Me.formDMD.TopMost = True
+
+            If B2SSettings.FormToBack Then
+                Me.formDMD.ShowInTaskbar = False
+                Me.formDMD.Show(Me.formBackglass)
+            Else
+                Me.formDMD.Show()
+                Me.formDMD.BringToFront()
+                Me.formDMD.TopMost = True
+            End If
         End If
 
     End Sub
