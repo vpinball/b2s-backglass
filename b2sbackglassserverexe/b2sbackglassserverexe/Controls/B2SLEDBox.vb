@@ -79,6 +79,7 @@ Public Class B2SLEDBox
 
         ' show control
         Me.Visible = True
+        Me.BringToFront()
 
     End Sub
 

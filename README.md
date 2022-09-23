@@ -4,12 +4,13 @@
 
 ## Installation:
 
-- Unzip all files into your VP tables folder and overwrite already existing files with this new ones.
+- Unzip all files into a folder under your VP folder and overwrite already existing files with this new ones.
+  **It doesn't have to be installed in the tables folder! An example would be C:\vPinball\VisualPinball\B2SServer.**
 - Right click the `B2SBackglassServer.dll` and click on `Properties`. Maybe you'll find the following text on the `General` tab:
   `This file came from another computer and might be blocked to help protect this computer`. Click on the `Unblock` button.
   Everything is fine when you are not able to find this text.
 - Start the `B2SBackglassServerRegisterApp.exe` in the VP tables folder and the server dll should be registered.
-  **IMPORTANT**: With Win7 (and above) start the .exe as administrator.
+  **IMPORTANT**: With Win7 (and above) start the .exe as administrator. Old installations can be cleaned up using [Nirsoft's RegDllView](https://www.nirsoft.net/utils/registered_dll_view.html)
 - On older windows machines, check the color depth of the backglass monitor. It has to be 32bit.
 - Also on older windows versions, the B2S backglass server requires .NET Framework 4 to be installed on your computer. It can be downloaded [here](http://www.microsoft.com/downloads/en/details.aspx?FamilyID=0a391abd-25c1-4fc0-919f-b21f31ab88b7&displaylang=en).
 
