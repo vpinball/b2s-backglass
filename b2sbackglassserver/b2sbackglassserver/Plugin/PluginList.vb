@@ -56,7 +56,7 @@ Public Class PluginList
     End Sub
 
 
-        ''' <summary>
+    ''' <summary>
     ''' Is called when new data on a table element (Lamp, Switch, Solenoid, Mech, GI) is available.
     ''' </summary>
     ''' <param name="TableElementTypeChar">Type of the table element.</param>
@@ -83,7 +83,6 @@ Public Class PluginList
                         IntDataArray(T, 1) = Convert.ToInt32(DataArray(T, 1))
                     Next
 
-
                     For Each P As Plugin In Me
                         If P.Status = PluginStatusEnum.Active Then
                             For T As Integer = 0 To IntDataArray.GetLength(0) - 1
@@ -95,7 +94,7 @@ Public Class PluginList
             End If
         End If
     End Sub
-    
+
     ''' <summary>
     ''' Adds the specified direct plugins.
     ''' </summary>
