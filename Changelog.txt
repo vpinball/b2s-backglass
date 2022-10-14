@@ -1,4 +1,4 @@
-1.3.1.2
+1.4.0
 
 - Add additional setting FormToBack complementing FormToFront. Now three states available:
    1. "Standard" setting (both FormToBack and FormToFront turned off) is now as it was in 1.3.0.6. -> formDMD isn't controlled by the FormToFront/Back setting
@@ -6,6 +6,7 @@
    3. FormToBack, forces the forms to the back and ignores any try to get them come forward -> Windows stay in back. The B2S Server is not available in the taskbar anymore.
 - Merge some more settings from the dll version.
 - Make sure LED "D" (Digit) updates from VPinMame is forwarded to all plugins. thanks to rdowens11vx!
+- Make the B2SBackglassServerEXE Large Address Aware by changing the build flags for x86 builds (x86 to AnyCPU). No need to patch 4GB anymore!
 
 1.3.1.1
 
