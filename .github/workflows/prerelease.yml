@@ -20,8 +20,8 @@ jobs:
         run: |
            SHA=$(if [[ "${{ github.event.inputs.sha }}" ]]; then echo "${{ github.event.inputs.sha }}"; else echo "${GITHUB_SHA}"; fi)
            SHA7="${SHA::7}"
-           echo "::set-output name=sha::${SHA}"
-           echo "::set-output name=sha7::${SHA7}"
+           echo "sha=${SHA}" >> $GITHUB_OUTPUT
+           echo "sha7=${SHA7}" >> $GITHUB_OUTPUT
 
   prerelease:
     runs-on: ubuntu-latest
@@ -41,18 +41,11 @@ jobs:
            done
            rm *.json
       - id: create_release
-        uses: actions/create-release@v1
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: "b2s-backglass-${{ needs.version.outputs.sha7 }}" 
-          release_name: "b2s-backglass-${{ needs.version.outputs.sha7 }}"
           prerelease: true
-          commitish: ${{ needs.version.outputs.sha }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - id: upload_release_assets
-        uses: dwenegar/upload-release-assets@v1
-        with:
-          release_id: ${{ steps.create_release.outputs.id }}
-          assets_path: .
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: "b2s-backglass-${{ needs.version.outputs.sha7 }}"
+          tag: "b2s-backglass-${{ needs.version.outputs.sha7 }}" 
+          commit: ${{ needs.version.outputs.sha }}
+          token:  ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "*"
