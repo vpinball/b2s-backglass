@@ -3223,6 +3223,16 @@ Public Class formBackglass
 
     End Function
 
+    Private Sub formBackglass_MouseUp(sender As Object, e As MouseEventArgs) Handles MyBase.MouseUp
+        If B2SSettings.FormToBack Then
+            If B2SScreen.StartBackground Then
+                B2SScreen.formbackground.SendToBack()
+            Else
+                Me.SendToBack()
+            End If
+        End If
+    End Sub
+
 #End Region
 
 

@@ -39,6 +39,7 @@ Public Class B2SScreen
     Public Property BackglassCutOff() As Rectangle = Nothing
 
     Public Property IsDMDToBeShown() As Boolean = False
+    Public Property StartBackground() As Boolean = False
 
 
 #Region "constructor and startup"
@@ -267,6 +268,9 @@ Public Class B2SScreen
     Private Sub Show()
 
         'On Error Resume Next
+        If ((Not (Me.BackgroundSize.IsEmpty)) And B2SSettings.StartBackground) Then
+            StartBackground = True
+        End If
 
         ' first of all get the info whether the DMD is to be shown or not
         IsDMDToBeShown = (Me.formDMD IsNot Nothing AndAlso Not Point.Empty.Equals(Me.DMDLocation) AndAlso
@@ -301,7 +305,7 @@ Public Class B2SScreen
 
         ' Westworld show background form, only if background is set and enabled in setting
         Dim OriginalOffset = Me.BackglassLocation
-        If ((Not (Me.BackgroundSize.IsEmpty)) And B2SSettings.StartBackground) Then
+        If StartBackground Then
             Dim swapSize = Me.BackgroundSize
             Dim swapLocation = Me.BackgroundLocation
             Me.BackgroundSize = Me.BackglassSize
@@ -382,20 +386,23 @@ Public Class B2SScreen
         Me.formBackglass.Location = Me.BackglassScreen.Bounds.Location + Me.BackglassLocation
         Me.formBackglass.Size = Me.BackglassSize
 
-        If ((Not (Me.BackgroundSize.IsEmpty)) AndAlso B2SSettings.StartBackground) Then
+        If StartBackground Then
             Me.formBackglass.Text = "B2S Background"
             Me.formBackglass.ShowInTaskbar = False
 
             Me.formBackglass.Show(Me.formbackground)
         Else
+            ' Without background picture the backglass is the main form
             Me.formBackglass.Text = "B2S Backglass Server"
             Me.formBackglass.Show()
         End If
-        ' bring backglass screen to the front
+
         If B2SSettings.FormToFront Then
+            ' bring backglass screen to the front and force it to stay
             Me.formBackglass.TopMost = True
             Me.formBackglass.BringToFront()
         ElseIf B2SSettings.FormToBack Then
+            ' bring backglass screen to the back and force it to stay
             Me.formBackglass.SendToBack()
             Me.formBackglass.ShowInTaskbar = False
         Else
@@ -415,9 +422,22 @@ Public Class B2SScreen
             Me.formDMD.Size = Me.DMDSize
             Me.formDMD.Text = "B2S DMD"
 
-            If B2SSettings.FormToBack Then
+            If B2SSettings.FormToFront Then
+                If Me.DMDAtDefaultLocation Then
+                    ' DMD and Back Glass one unit, make sure they are together
+                    Me.formDMD.ShowInTaskbar = False
+                    Me.formDMD.Show(Me.formBackglass)
+                Else
+                    ' DMD and Back Glass separate and accessed separately
+                    Me.formDMD.Show()
+                End If
+                Me.formDMD.BringToFront()
+                Me.formDMD.TopMost = True
+            ElseIf B2SSettings.FormToBack Then
+                ' DMD and Back Glass one unit, make sure they are together and also make sure it is impossible to activate
                 Me.formDMD.ShowInTaskbar = False
                 Me.formDMD.Show(Me.formBackglass)
+                Me.formDMD.SendToBack()
             Else
                 Me.formDMD.Show()
                 Me.formDMD.BringToFront()
