@@ -23,8 +23,7 @@ See the [Changelog.txt](Changelog.txt) for recent changes.
 
 ### Backglass settings:
 
-You can set, tweak and save a lot settings for each backglass. **Most of the features only work when run in `EXE` mode**
-To get into this settings screen, please click the backglass with the mouse and press `S` on your keyboard. A dialog window opens.
+You can set, tweak and save a lot settings for each backglass. To get into this settings screen, please click the backglass with the mouse and press `S` on your keyboard. A dialog window opens.
 
 In this settings dialog you're able to:
 
@@ -41,7 +40,7 @@ In this settings dialog you're able to:
 ### Pretty important when you're having some stutter:
 
 - Check the color depth of the backglass monitor. It has to be 32bit.
-- Check the `Start the backglass in EXE mode` check button and restart the backglass
+- Check the `Start the backglass in EXE mode` check button and restart the backglass. **Most of the features will only work when run in `EXE` mode**
 - Tweak with the `Skip ... frames`. Maybe start with Lamps 2 or 3, Solenoids 10 and LED 2.
 - Tweak with the LED type. Try to use the `Simple LEDs`.
 - Don't forget to save your settings.
@@ -53,15 +52,21 @@ When the B2S Server loads a backglass, it tries to find TableName.res and if not
 
 The default filename can be altered by setting the registry key Software\B2S\B2SScreenResFileNameOverride
 
-From release 1.3.1.1 comment lines starting with a "#" are supported. If you use tools not supporting comments (or old releases), you need to remove these lines.
+The B2S Server uses the Backglass Screen value on the fifth line from top (excluding comments). There are 3 different ways possible to describe which screen the backglass sits on:
+   1. "2" means the screen with the device name = \\.\DISPLAY2. This is the default way.
+   2. "@1920" means the screen sitting on the x position 1920 measured from Point(0,0) on the playfield, in this example the screen right next to the HD playfield screen.
+   3. "=2" means the screen sitting on index number 2 walking left to right.
+
+From release 1.3.1.1 comment lines starting with a "#" are supported. **If you use tools not supporting comments (or older releases), you need to remove these lines.**
 ([PinballX 5.55](https://forums.gameex.com/forums/topic/28239-news-pinballx-555/#comment-209692) has been updated for example.)
 
 ### B2S_ScreenResIdentifier
 
-The `B2S_ScreenResIdentifier.exe` tool included in the package will help you alter your *.res files.
+The **B2S_ScreenResIdentifier** tool included in the package will help you alter your *.res files.
 You can even "throw" one of the res files on the execuatable and it will edit it for you (the first parameter when started on a command line is the filename to a res file).
 
 ## B2S.Backglass Designer
 
-The B2S Backglass Server is also available as a separate download here.
+The **B2SBackglassDesigner** is also available as a separate download here. It allows you to edit and create directB2S backglasses using a "WYSIWYG" editor.
+
 Documentation is available in the package as htmlhelp but can also be watched [online here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/vpinball/b2s-backglass/master/b2sbackglassdesigner/b2sbackglassdesigner/htmlhelp/Introduction.htm)
