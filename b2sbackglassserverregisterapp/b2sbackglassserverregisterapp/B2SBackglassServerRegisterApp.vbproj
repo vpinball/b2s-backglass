@@ -84,7 +84,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>B2SBackglassDesigner_64.ico</ApplicationIcon>
+    <ApplicationIcon>B2SBackglassRegister_64.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
@@ -160,7 +160,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="B2SBackglassDesigner_64.ico" />
+    <Content Include="B2SBackglassRegister_64.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
