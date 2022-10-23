@@ -81,15 +81,15 @@ Public Class formPlayfield
         ' open file
         FileOpen(1, FileName, OpenMode.Output)
 
-        PrintLine(1, "# Playfield Screen resolution width/height")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Playfield Screen resolution width/height")
         WriteLine(1, CInt(Me.txtPlayfieldSizeWidth.Text))
         WriteLine(1, CInt(Me.txtPlayfieldSizeHeight.Text))
 
-        PrintLine(1, "# Backglass Screen resolution width/height")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Backglass Screen resolution width/height")
         WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
         WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
 
-        PrintLine(1, "# Define Backglass using Display Devicename screen number (\\.\DISPLAY)x or screen coordinates (@x) or screen index (=x)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Define Backglass using Display Devicename screen number (\\.\DISPLAY)x or screen coordinates (@x) or screen index (=x)")
         If BackglassMonitorType.StartsWith("@") Then
             PrintLine(1, BackglassMonitorType & Me.txtPlayfieldSizeWidth.Text)
         ElseIf BackglassMonitorType.StartsWith("=") Then
@@ -103,32 +103,32 @@ Public Class formPlayfield
             WriteLine(1, formBackglass.BackglassScreenNo)
         End If
 
-        PrintLine(1, "# x position For the backglass relative To the upper left corner Of the Playfield screen")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# x position for the backglass relative To the upper left corner Of the Playfield screen")
         WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
 
-        PrintLine(1, "# y position For the backglass On the selected display (Normally left at 0)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# y position for the backglass On the selected display (Normally left at 0)")
         WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
 
-        PrintLine(1, "# width/height Of the DMD area In pixels - For 3 screen setup")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height Of the DMD area In pixels - For 3 screen setup")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Width, CInt(formDMD.txtDMDSizeWidth.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Height, CInt(formDMD.txtDMDSizeHeight.Text)))
 
-        PrintLine(1, "# X/Y position Of the DMD area relative To the upper left corner Of the backglass screen - For 3 screen setup")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position Of the DMD area relative To the upper left corner of the backglass screen - For 3 screen setup")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.X - Screen.FromControl(formBackglass).Bounds.X + CInt(formDMD.txtDMDLocationX.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.Y - Screen.FromControl(formBackglass).Bounds.Y + CInt(formDMD.txtDMDLocationY.Text)))
 
-        PrintLine(1, "# Y-flip, flips the LED display upside down")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
-        PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield ('Small' Button In the Options)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield ('Small' Button In the Options)")
         PrintLine(1, BackgroundLocation.X.ToString)
         PrintLine(1, BackgroundLocation.Y.ToString)
 
-        PrintLine(1, "# width/height Of the backglass When StartBackground Is active")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height Of the backglass When StartBackground Is active")
         PrintLine(1, BackgroundSize.Width.ToString)
         PrintLine(1, BackgroundSize.Height.ToString)
 
-        PrintLine(1, "# C:\path\Frame (The path To the location where you have the background image)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# C:\path\Frame (The path To the location where you have the background image)")
         PrintLine(1, BackgroundPath.ToString)
 
         ' close file handle
@@ -150,7 +150,7 @@ Public Class formPlayfield
         If screenCount <= 1 Then
             radio2Screen.Enabled = False
         End If
-
+        Me.chkSaveComments.Checked = SaveComments
         If FileFound Then
             For Each scr As Screen In Screen.AllScreens
                 currentScreen += 1
