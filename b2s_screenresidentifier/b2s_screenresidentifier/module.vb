@@ -22,6 +22,7 @@ Module Module1
     Public Property BackgroundSize() As Size = New Size(0, 0)
     Public Property BackgroundLocation() As Point = New Point(0, 0)
     Public Property BackgroundPath() As String = String.Empty
+    Public Property SaveComments() As Boolean = False
 
     Public Function ShortDevice(ByVal device As String) As String
         Return device.Replace("\\", "").Replace(".\", "")
@@ -52,7 +53,10 @@ Module Module1
             Dim i As Integer = 0
             Do Until EOF(1)
                 line(i) = LineInput(1)
-                If (line(i).StartsWith("#")) Then Continue Do
+                If (line(i).StartsWith("#")) Then
+                    SaveComments = True
+                    Continue Do
+                End If
                 i += 1
             Loop
             line(i) = 0
