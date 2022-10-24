@@ -82,15 +82,20 @@ Public Class formBackglass
         Dim screenCount As Integer = Screen.AllScreens.Count
 
         ' backglass
+        If String.Compare(txtBackglassScreen.Text, ShortDevice(currentScreen.DeviceName)) <> 0 Then
+            Dim screenSize As Size
+            screenSize = TrueResolution(currentScreen.DeviceName)
+            txtBackglassScreenSizeWidth.Text = screenSize.Width
+            txtBackglassScreenSizeHeight.Text = screenSize.Height
+        End If
         txtBackglassScreen.Text = ShortDevice(currentScreen.DeviceName)
-        txtBackglassScreenSizeWidth.Text = currentScreen.Bounds.Width
-        txtBackglassScreenSizeHeight.Text = currentScreen.Bounds.Height
+
         chkBackglassFullSize.Checked = (form.WindowState = FormWindowState.Maximized)
         If form.WindowState = FormWindowState.Maximized Then
             txtBackglassLocationX.Text = "0"
             txtBackglassLocationY.Text = "0"
-            txtBackglassSizeWidth.Text = currentScreen.Bounds.Width
-            txtBackglassSizeHeight.Text = currentScreen.Bounds.Height
+            txtBackglassSizeWidth.Text = txtBackglassScreenSizeWidth.Text
+            txtBackglassSizeHeight.Text = txtBackglassScreenSizeHeight.Text
             txtBackglassLocationX.ReadOnly = True
             txtBackglassLocationY.ReadOnly = True
             txtBackglassSizeWidth.ReadOnly = True

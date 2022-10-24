@@ -79,9 +79,14 @@ Public Class formDMD
         Dim screenCount As Integer = Screen.AllScreens.Count
 
         ' DMD
+        If String.Compare(txtDMDScreen.Text, ShortDevice(currentScreen.DeviceName)) <> 0 Then
+            Dim screenSize As Size
+            screenSize = TrueResolution(currentScreen.DeviceName)
+            txtDMDScreenSizeWidth.Text = screenSize.Width
+            txtDMDScreenSizeHeight.Text = screenSize.Height
+        End If
+
         txtDMDScreen.Text = ShortDevice(currentScreen.DeviceName)
-        txtDMDScreenSizeWidth.Text = currentScreen.Bounds.Width
-        txtDMDScreenSizeHeight.Text = currentScreen.Bounds.Height
         If chkDMDAtDefaultLocation.Checked Then
             txtDMDLocationX.Text = ""
             txtDMDLocationY.Text = ""

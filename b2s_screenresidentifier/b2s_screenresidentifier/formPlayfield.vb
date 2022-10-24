@@ -61,7 +61,7 @@ Public Class formPlayfield
         formBackglass.BringToFront()
         formDMD.BringToFront()
     End Sub
- 
+
     Private Sub radio1Screen_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles radio1Screen.CheckedChanged
         If radio1Screen.Checked Then MaybeDoRecommendation()
     End Sub
@@ -216,15 +216,21 @@ Public Class formPlayfield
         End If
 
         ' playfield
+        If String.Compare(txtPlayfieldScreen.Text, ShortDevice(currentScreen.DeviceName)) <> 0 Then
+            Dim screenSize As Size
+            screenSize = TrueResolution(currentScreen.DeviceName)
+            txtPlayfieldScreenSizeWidth.Text = screenSize.Width
+            txtPlayfieldScreenSizeHeight.Text = screenSize.Height
+        End If
+
         txtPlayfieldScreen.Text = ShortDevice(currentScreen.DeviceName)
-        txtPlayfieldScreenSizeWidth.Text = currentScreen.Bounds.Width
-        txtPlayfieldScreenSizeHeight.Text = currentScreen.Bounds.Height
+
         chkPlayfieldFullSize.Checked = (form.WindowState = FormWindowState.Maximized)
         If form.WindowState = FormWindowState.Maximized Then
             txtPlayfieldLocationX.Text = "0"
             txtPlayfieldLocationY.Text = "0"
-            txtPlayfieldSizeWidth.Text = currentScreen.Bounds.Width
-            txtPlayfieldSizeHeight.Text = currentScreen.Bounds.Height
+            txtPlayfieldSizeWidth.Text = txtPlayfieldScreenSizeWidth.Text
+            txtPlayfieldSizeHeight.Text = txtPlayfieldScreenSizeHeight.Text
         Else
             txtPlayfieldLocationX.Text = form.Location.X
             txtPlayfieldLocationY.Text = form.Location.Y
@@ -298,5 +304,4 @@ Public Class formPlayfield
         If ret AndAlso radio3Screen.Checked Then ret = False
         Return ret
     End Function
- 
 End Class
