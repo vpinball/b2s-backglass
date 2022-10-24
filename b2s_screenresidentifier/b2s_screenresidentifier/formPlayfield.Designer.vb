@@ -50,8 +50,8 @@ Partial Class formPlayfield
         Me.lblChooseSetup = New System.Windows.Forms.Label()
         Me.lblInfo2 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.lblCopyright = New System.Windows.Forms.Label()
         Me.chkSaveComments = New System.Windows.Forms.CheckBox()
+        Me.lblCopyright = New System.Windows.Forms.Label()
         Me.groupPlayfield.SuspendLayout()
         Me.panelChooseSetup.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -61,9 +61,9 @@ Partial Class formPlayfield
         '
         Me.buttonSave.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.buttonSave.Location = New System.Drawing.Point(0, 12)
+        Me.buttonSave.Location = New System.Drawing.Point(0, 30)
         Me.buttonSave.Name = "buttonSave"
-        Me.buttonSave.Size = New System.Drawing.Size(654, 60)
+        Me.buttonSave.Size = New System.Drawing.Size(185, 43)
         Me.buttonSave.TabIndex = 3
         Me.buttonSave.Text = "&Save settings"
         Me.buttonSave.UseVisualStyleBackColor = True
@@ -355,6 +355,18 @@ Partial Class formPlayfield
         Me.Panel2.Size = New System.Drawing.Size(1088, 75)
         Me.Panel2.TabIndex = 8
         '
+        'chkSaveComments
+        '
+        Me.chkSaveComments.AccessibleDescription = "Save Comments"
+        Me.chkSaveComments.AccessibleName = "chk_save_comments"
+        Me.chkSaveComments.AutoSize = True
+        Me.chkSaveComments.Location = New System.Drawing.Point(3, 3)
+        Me.chkSaveComments.Name = "chkSaveComments"
+        Me.chkSaveComments.Size = New System.Drawing.Size(167, 23)
+        Me.chkSaveComments.TabIndex = 6
+        Me.chkSaveComments.Text = "generate comments"
+        Me.chkSaveComments.UseVisualStyleBackColor = True
+        '
         'lblCopyright
         '
         Me.lblCopyright.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -365,18 +377,6 @@ Partial Class formPlayfield
         Me.lblCopyright.TabIndex = 5
         Me.lblCopyright.Text = "(c) 2012-2022 by Herweh && B2S Team"
         Me.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'chkSaveComments
-        '
-        Me.chkSaveComments.AccessibleDescription = "Save Comments"
-        Me.chkSaveComments.AccessibleName = "chk_save_comments"
-        Me.chkSaveComments.AutoSize = True
-        Me.chkSaveComments.Location = New System.Drawing.Point(660, 32)
-        Me.chkSaveComments.Name = "chkSaveComments"
-        Me.chkSaveComments.Size = New System.Drawing.Size(139, 23)
-        Me.chkSaveComments.TabIndex = 6
-        Me.chkSaveComments.Text = "Save comments"
-        Me.chkSaveComments.UseVisualStyleBackColor = True
         '
         'formPlayfield
         '
