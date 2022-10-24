@@ -2,7 +2,8 @@
 Imports Microsoft.Win32
 
 Module Module1
-
+    Private Const DESKTOPVERTRES As Integer = &H75
+    Private Const DESKTOPHORZRES As Integer = &H76
     Public Property FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
 
     Public ReadOnly screenCount As Integer = Screen.AllScreens.Count
@@ -23,9 +24,29 @@ Module Module1
     Public Property BackgroundLocation() As Point = New Point(0, 0)
     Public Property BackgroundPath() As String = String.Empty
     Public Property SaveComments() As Boolean = False
-
+    Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hdc As IntPtr, ByVal nIndex As Integer) As Integer
+    Private Declare Function CreateDCA Lib "gdi32" (lpszDriver As String, lpszDevice As String, lpszOutput As String, lpInitData As IntPtr) As Integer
+    Private Declare Function DeleteDC Lib "gdi32" (ByVal hdc As IntPtr) As Boolean
     Public Function ShortDevice(ByVal device As String) As String
         Return device.Replace("\\", "").Replace(".\", "")
+    End Function
+    Public Function TrueResolution(ByVal hwnd As IntPtr)
+        Using g As Graphics = Graphics.FromHwnd(hwnd)
+            Dim hdc As IntPtr = g.GetHdc
+            Dim TrueScreenSize As New Size(GetDeviceCaps(hdc, DESKTOPHORZRES), GetDeviceCaps(hdc, DESKTOPVERTRES))
+            g.ReleaseHdc(hdc)
+
+            Return TrueScreenSize
+        End Using
+
+    End Function
+    Public Function TrueResolution(ByVal deviceName As String)
+        Dim screen As IntPtr = CreateDCA(deviceName, Nothing, Nothing, 0)
+        Dim TrueScreenSize As New Size(GetDeviceCaps(screen, DESKTOPHORZRES), GetDeviceCaps(screen, DESKTOPVERTRES))
+        DeleteDC(screen)
+
+        Return TrueScreenSize
+
     End Function
 
     Private _IsDirty As Boolean = False
