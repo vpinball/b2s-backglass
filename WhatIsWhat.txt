@@ -15,7 +15,6 @@ Tools:
   If you use tools not supporting comments, you need to remove these lines. PinballX has now been updated as well!
   The comments will be removed when unchecking the checkbox before save.
 
-
 Additional info:
 
 - The code is all VB.net (The plugin code was my first VB.net code, since I'm more into C#).

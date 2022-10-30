@@ -76,7 +76,7 @@ Partial Class formPlayfield
         Me.radio1Screen.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.radio1Screen.Location = New System.Drawing.Point(261, 15)
         Me.radio1Screen.Name = "radio1Screen"
-        Me.radio1Screen.Size = New System.Drawing.Size(146, 20)
+        Me.radio1Screen.Size = New System.Drawing.Size(186, 25)
         Me.radio1Screen.TabIndex = 0
         Me.radio1Screen.TabStop = True
         Me.radio1Screen.Text = "... 1-screen setup"""
@@ -88,7 +88,7 @@ Partial Class formPlayfield
         Me.radio2Screen.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.radio2Screen.Location = New System.Drawing.Point(421, 15)
         Me.radio2Screen.Name = "radio2Screen"
-        Me.radio2Screen.Size = New System.Drawing.Size(146, 20)
+        Me.radio2Screen.Size = New System.Drawing.Size(186, 25)
         Me.radio2Screen.TabIndex = 1
         Me.radio2Screen.TabStop = True
         Me.radio2Screen.Text = "... 2-screen setup"""
@@ -100,7 +100,7 @@ Partial Class formPlayfield
         Me.radio3Screen.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.radio3Screen.Location = New System.Drawing.Point(581, 15)
         Me.radio3Screen.Name = "radio3Screen"
-        Me.radio3Screen.Size = New System.Drawing.Size(146, 20)
+        Me.radio3Screen.Size = New System.Drawing.Size(186, 25)
         Me.radio3Screen.TabIndex = 2
         Me.radio3Screen.TabStop = True
         Me.radio3Screen.Text = "... 3-screen setup"""
@@ -124,7 +124,7 @@ Partial Class formPlayfield
         Me.lblInfo.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblInfo.Location = New System.Drawing.Point(15, 15)
         Me.lblInfo.Name = "lblInfo"
-        Me.lblInfo.Size = New System.Drawing.Size(1087, 144)
+        Me.lblInfo.Size = New System.Drawing.Size(1417, 189)
         Me.lblInfo.TabIndex = 4
         Me.lblInfo.Text = resources.GetString("lblInfo.Text")
         '
@@ -181,7 +181,7 @@ Partial Class formPlayfield
         Me.lblPlayfieldLocationY.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblPlayfieldLocationY.Location = New System.Drawing.Point(210, 112)
         Me.lblPlayfieldLocationY.Name = "lblPlayfieldLocationY"
-        Me.lblPlayfieldLocationY.Size = New System.Drawing.Size(11, 16)
+        Me.lblPlayfieldLocationY.Size = New System.Drawing.Size(15, 21)
         Me.lblPlayfieldLocationY.TabIndex = 22
         Me.lblPlayfieldLocationY.Text = ","
         Me.lblPlayfieldLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -220,7 +220,7 @@ Partial Class formPlayfield
         Me.lblPlayfieldScreenSizeHeight.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblPlayfieldScreenSizeHeight.Location = New System.Drawing.Point(210, 83)
         Me.lblPlayfieldScreenSizeHeight.Name = "lblPlayfieldScreenSizeHeight"
-        Me.lblPlayfieldScreenSizeHeight.Size = New System.Drawing.Size(11, 16)
+        Me.lblPlayfieldScreenSizeHeight.Size = New System.Drawing.Size(15, 21)
         Me.lblPlayfieldScreenSizeHeight.TabIndex = 18
         Me.lblPlayfieldScreenSizeHeight.Text = ","
         Me.lblPlayfieldScreenSizeHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -259,7 +259,7 @@ Partial Class formPlayfield
         Me.chkPlayfieldFullSize.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkPlayfieldFullSize.Location = New System.Drawing.Point(152, 166)
         Me.chkPlayfieldFullSize.Name = "chkPlayfieldFullSize"
-        Me.chkPlayfieldFullSize.Size = New System.Drawing.Size(150, 20)
+        Me.chkPlayfieldFullSize.Size = New System.Drawing.Size(202, 25)
         Me.chkPlayfieldFullSize.TabIndex = 13
         Me.chkPlayfieldFullSize.Text = "Playfield is fullsized"
         Me.chkPlayfieldFullSize.UseVisualStyleBackColor = True
@@ -270,7 +270,7 @@ Partial Class formPlayfield
         Me.lblPlayfieldSizeHeight.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblPlayfieldSizeHeight.Location = New System.Drawing.Point(210, 141)
         Me.lblPlayfieldSizeHeight.Name = "lblPlayfieldSizeHeight"
-        Me.lblPlayfieldSizeHeight.Size = New System.Drawing.Size(11, 16)
+        Me.lblPlayfieldSizeHeight.Size = New System.Drawing.Size(15, 21)
         Me.lblPlayfieldSizeHeight.TabIndex = 13
         Me.lblPlayfieldSizeHeight.Text = ","
         Me.lblPlayfieldSizeHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -328,7 +328,7 @@ Partial Class formPlayfield
         Me.lblPlayfield.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblPlayfield.Location = New System.Drawing.Point(6, 23)
         Me.lblPlayfield.Name = "lblPlayfield"
-        Me.lblPlayfield.Size = New System.Drawing.Size(833, 16)
+        Me.lblPlayfield.Size = New System.Drawing.Size(1108, 21)
         Me.lblPlayfield.TabIndex = 5
         Me.lblPlayfield.Text = "This is the dummy window for the playfield. The playfield has to be on your prima" &
     "ry screen, 'DISPLAY 1', and has to be fullsized."
@@ -351,7 +351,7 @@ Partial Class formPlayfield
         Me.lblChooseSetup.Font = New System.Drawing.Font("Tahoma", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblChooseSetup.Location = New System.Drawing.Point(-1, 17)
         Me.lblChooseSetup.Name = "lblChooseSetup"
-        Me.lblChooseSetup.Size = New System.Drawing.Size(235, 16)
+        Me.lblChooseSetup.Size = New System.Drawing.Size(306, 21)
         Me.lblChooseSetup.TabIndex = 1
         Me.lblChooseSetup.Text = """I want to setup my system as a ..."
         '
@@ -362,7 +362,7 @@ Partial Class formPlayfield
         Me.lblInfo2.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblInfo2.Location = New System.Drawing.Point(15, 265)
         Me.lblInfo2.Name = "lblInfo2"
-        Me.lblInfo2.Size = New System.Drawing.Size(916, 32)
+        Me.lblInfo2.Size = New System.Drawing.Size(1186, 42)
         Me.lblInfo2.TabIndex = 7
         Me.lblInfo2.Text = resources.GetString("lblInfo2.Text")
         '
@@ -385,7 +385,7 @@ Partial Class formPlayfield
         Me.chkSaveComments.AutoSize = True
         Me.chkSaveComments.Location = New System.Drawing.Point(3, 3)
         Me.chkSaveComments.Name = "chkSaveComments"
-        Me.chkSaveComments.Size = New System.Drawing.Size(167, 23)
+        Me.chkSaveComments.Size = New System.Drawing.Size(210, 28)
         Me.chkSaveComments.TabIndex = 6
         Me.chkSaveComments.Text = "generate comments"
         Me.chkSaveComments.UseVisualStyleBackColor = True
