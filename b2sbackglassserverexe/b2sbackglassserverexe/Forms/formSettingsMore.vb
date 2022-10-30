@@ -22,7 +22,8 @@ Public Class formSettingsMore
 
         Me.formSettings = owner
         Me.formBackglass = _formbackglass
-
+        MyBase.TopMost = True
+        MyBase.BringToFront()
         Dim ret As DialogResult = MyBase.ShowDialog(owner)
         Return Windows.Forms.DialogResult.OK
 
