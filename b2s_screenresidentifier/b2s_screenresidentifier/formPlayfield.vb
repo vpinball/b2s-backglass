@@ -1,4 +1,5 @@
 ﻿Imports System.Text
+Imports System.Drawing
 
 Public Class formPlayfield
 
@@ -217,10 +218,20 @@ Public Class formPlayfield
 
         ' playfield
         If String.Compare(txtPlayfieldScreen.Text, ShortDevice(currentScreen.DeviceName)) <> 0 Then
-            Dim screenSize As Size
-            screenSize = TrueResolution(currentScreen.DeviceName)
+            Dim screenSize As Size = TrueResolution(currentScreen.DeviceName)
+            Dim dpi As Integer
+
             txtPlayfieldScreenSizeWidth.Text = screenSize.Width
             txtPlayfieldScreenSizeHeight.Text = screenSize.Height
+
+            dpi = 100 * screenSize.Width / currentScreen.Bounds.Width
+
+            txtPlayfieldScreenScale.Text = dpi & "%"
+            If dpi <> 100 Then
+                txtPlayfieldScreenScale.BackColor = System.Drawing.Color.Red
+            Else
+                txtPlayfieldScreenScale.BackColor = txtPlayfieldScreenSizeHeight.BackColor
+            End If
         End If
 
         txtPlayfieldScreen.Text = ShortDevice(currentScreen.DeviceName)
@@ -238,7 +249,6 @@ Public Class formPlayfield
             txtPlayfieldSizeHeight.Text = form.Size.Height
         End If
 
-        'If ShortDevice(currentScreen.DeviceName).Equals("DISPLAY1", StringComparison.CurrentCultureIgnoreCase) Then
     End Sub
 
     Private Sub MaybeDoRecommendation()

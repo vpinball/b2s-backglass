@@ -1,4 +1,5 @@
 ﻿Imports System.Text
+Imports System.Drawing
 
 Public Class formDMD
 
@@ -81,9 +82,20 @@ Public Class formDMD
         ' DMD
         If String.Compare(txtDMDScreen.Text, ShortDevice(currentScreen.DeviceName)) <> 0 Then
             Dim screenSize As Size
+            Dim dpi As Integer
+
             screenSize = TrueResolution(currentScreen.DeviceName)
             txtDMDScreenSizeWidth.Text = screenSize.Width
             txtDMDScreenSizeHeight.Text = screenSize.Height
+
+            dpi = 100 * screenSize.Width / currentScreen.Bounds.Width
+
+            txtDMDScreenScale.Text = dpi & "%"
+            If dpi <> 100 Then
+                txtDMDScreenScale.BackColor = System.Drawing.Color.Red
+            Else
+                txtDMDScreenScale.BackColor = txtDMDScreenSizeHeight.BackColor
+            End If
         End If
 
         txtDMDScreen.Text = ShortDevice(currentScreen.DeviceName)

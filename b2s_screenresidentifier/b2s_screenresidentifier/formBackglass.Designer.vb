@@ -24,6 +24,7 @@ Partial Class formBackglass
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formBackglass))
         Me.groupBackglass = New System.Windows.Forms.GroupBox()
+        Me.txtBackglassScreenScale = New System.Windows.Forms.TextBox()
         Me.chkBackglassGrillVisible = New System.Windows.Forms.CheckBox()
         Me.lblBackglassLocationY = New System.Windows.Forms.Label()
         Me.txtBackglassLocationY = New B2STextBox()
@@ -46,6 +47,7 @@ Partial Class formBackglass
         '
         'groupBackglass
         '
+        Me.groupBackglass.Controls.Add(Me.txtBackglassScreenScale)
         Me.groupBackglass.Controls.Add(Me.chkBackglassGrillVisible)
         Me.groupBackglass.Controls.Add(Me.lblBackglassLocationY)
         Me.groupBackglass.Controls.Add(Me.txtBackglassLocationY)
@@ -70,6 +72,15 @@ Partial Class formBackglass
         Me.groupBackglass.TabIndex = 6
         Me.groupBackglass.TabStop = False
         Me.groupBackglass.Text = "Backglass"
+        '
+        'txtBackglassScreenScale
+        '
+        Me.txtBackglassScreenScale.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtBackglassScreenScale.Location = New System.Drawing.Point(287, 141)
+        Me.txtBackglassScreenScale.Name = "txtBackglassScreenScale"
+        Me.txtBackglassScreenScale.ReadOnly = True
+        Me.txtBackglassScreenScale.Size = New System.Drawing.Size(93, 27)
+        Me.txtBackglassScreenScale.TabIndex = 25
         '
         'chkBackglassGrillVisible
         '
@@ -272,4 +283,5 @@ Partial Class formBackglass
     Friend WithEvents lblBackglassScreen As System.Windows.Forms.Label
     Friend WithEvents lblBackglass As System.Windows.Forms.Label
     Friend WithEvents chkBackglassGrillVisible As System.Windows.Forms.CheckBox
+    Friend WithEvents txtBackglassScreenScale As TextBox
 End Class

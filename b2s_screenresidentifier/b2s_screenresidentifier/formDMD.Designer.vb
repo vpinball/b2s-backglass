@@ -23,6 +23,7 @@ Partial Class formDMD
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.groupDMD = New System.Windows.Forms.GroupBox()
+        Me.txtDMDScreenScale = New System.Windows.Forms.TextBox()
         Me.chkDMDFlipY = New System.Windows.Forms.CheckBox()
         Me.lblDMDLocationY = New System.Windows.Forms.Label()
         Me.txtDMDLocationY = New WindowsApplication1.Module1.B2STextBox()
@@ -45,6 +46,7 @@ Partial Class formDMD
         '
         'groupDMD
         '
+        Me.groupDMD.Controls.Add(Me.txtDMDScreenScale)
         Me.groupDMD.Controls.Add(Me.chkDMDFlipY)
         Me.groupDMD.Controls.Add(Me.lblDMDLocationY)
         Me.groupDMD.Controls.Add(Me.txtDMDLocationY)
@@ -69,6 +71,15 @@ Partial Class formDMD
         Me.groupDMD.TabIndex = 7
         Me.groupDMD.TabStop = False
         Me.groupDMD.Text = "DMD"
+        '
+        'txtDMDScreenScale
+        '
+        Me.txtDMDScreenScale.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDMDScreenScale.Location = New System.Drawing.Point(287, 94)
+        Me.txtDMDScreenScale.Name = "txtDMDScreenScale"
+        Me.txtDMDScreenScale.ReadOnly = True
+        Me.txtDMDScreenScale.Size = New System.Drawing.Size(93, 27)
+        Me.txtDMDScreenScale.TabIndex = 25
         '
         'chkDMDFlipY
         '
@@ -272,4 +283,5 @@ Partial Class formDMD
     Friend WithEvents lblDMDScreen As System.Windows.Forms.Label
     Friend WithEvents lblDMD As System.Windows.Forms.Label
     Friend WithEvents chkDMDFlipY As System.Windows.Forms.CheckBox
+    Friend WithEvents txtDMDScreenScale As TextBox
 End Class

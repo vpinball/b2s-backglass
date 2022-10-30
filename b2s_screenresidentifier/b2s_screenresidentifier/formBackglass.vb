@@ -1,4 +1,5 @@
 ﻿Imports System.Text
+Imports System.Drawing
 
 Public Class formBackglass
 
@@ -84,9 +85,21 @@ Public Class formBackglass
         ' backglass
         If String.Compare(txtBackglassScreen.Text, ShortDevice(currentScreen.DeviceName)) <> 0 Then
             Dim screenSize As Size
+            Dim dpi As Integer
+
             screenSize = TrueResolution(currentScreen.DeviceName)
             txtBackglassScreenSizeWidth.Text = screenSize.Width
             txtBackglassScreenSizeHeight.Text = screenSize.Height
+
+            dpi = 100 * screenSize.Width / currentScreen.Bounds.Width
+
+            txtBackglassScreenScale.Text = dpi & "%"
+            If dpi <> 100 Then
+                txtBackglassScreenScale.BackColor = System.Drawing.Color.Red
+            Else
+                txtBackglassScreenScale.BackColor = txtBackglassScreenSizeHeight.BackColor
+            End If
+
         End If
         txtBackglassScreen.Text = ShortDevice(currentScreen.DeviceName)
 
