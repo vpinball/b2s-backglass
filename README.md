@@ -47,10 +47,10 @@ In this settings dialog you're able to:
 
 ### ScreenRes files
 
-The B2S Server uses [ScreenRes files](ScreenRes.txt) files. The default file name is "ScreenRes.txt". 
-When the B2S Server loads a backglass, it tries to find "TableName.res" and if not found it will revert to "ScreenRes.txt".
+The B2S Server uses [ScreenRes files](ScreenRes.txt) files. The default file name is ScreenRes.txt. 
+When the B2S Server loads a backglass, it tries to find TableName.res and if not found it will revert to ScreenRes.txt.
 
-The default filename can be altered by setting the registry key Software\B2S\B2SScreenResFileNameOverride
+The default filename ScreenRes.txt can be altered by setting the registry key Software\B2S\B2SScreenResFileNameOverride.
 
 The B2S Server uses the Backglass Screen value on the fifth line from top (excluding comments). There are 3 different ways possible to describe which screen the backglass sits on:
    1. "2" means the screen with the device name = \\.\DISPLAY2. This is the default way.
@@ -62,7 +62,8 @@ From release 1.3.1.1 comment lines starting with a "#" are supported. **If you u
 
 ### B2S_ScreenResIdentifier
 
-The **B2S_ScreenResIdentifier** tool included in the package will help you alter your *.res files.
+The **B2S_ScreenResIdentifier** tool included in the package will help you alter your *.res files and add or remove the comment lines.
+B2S_ScreenResIdentifier will now warn with a red background if the scaling is not set to 100% on your screens.
 You can even "throw" one of the res files on the execuatable and it will edit it for you (the first parameter when started on a command line is the filename to a res file).
 It is now possible to turn off saving comments. Any manual entered comments will be overwritten!
 

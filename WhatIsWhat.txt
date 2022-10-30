@@ -7,12 +7,13 @@ In addition:
 - LEDs: Two projects on the topic of "LED-Display"
 
 Tools:
-- B2SBackglassServerRegisterApp: Register Backglass-COM-Server in the .NET-Environment
-- B2SVPinMAMEStarter: Launch Testmode from the Designer
+- B2SBackglassServerRegisterApp: Register Backglass-COM-Server in the .NET-Environment. No need to register once done already!
+- B2SVPinMAMEStarter: Launches Testmode from the Designer
 - B2S_ScreenResIdentifier: Tool to organize and to set B2S-Settings
 
-- ScreenRes.txt is an exemplary file how the .txt has to look like. From release 1.3.1.1 it supports comment lines starting with a "#". 
+- ScreenRes.txt is an exemplary file how the .txt has to look like. From release 1.3.1.1 it supports comment lines starting with a "#".
   If you use tools not supporting comments, you need to remove these lines. PinballX has now been updated as well!
+  Will be removed when unchecking the checkbox.
 
 
 Additional info:
