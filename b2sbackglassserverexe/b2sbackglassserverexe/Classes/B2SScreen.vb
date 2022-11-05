@@ -92,28 +92,33 @@ Public Class B2SScreen
 #Region "get backglass settings and show backglass"
 
     Private Sub ReadB2SSettingsFromFile()
+        Dim loadFileName As String = String.Empty
 
-        Dim specialFileName As String = String.Empty
-        Dim specialDirFileName As String = String.Empty
-        Dim loadSpecialOne As Boolean = False
-        Dim loadSpecialDirOne As Boolean = False
         Try
-            specialFileName = IO.Path.Combine(B2SData.TableFileName & ".res")
-            loadSpecialOne = IO.File.Exists(specialFileName)
-            specialDirFileName = IO.Path.Combine(B2SData.TableFileName, FileName)
-            loadSpecialDirOne = IO.File.Exists(specialDirFileName)
+            Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & ".res"),    ' .\TableName.res
+                                             IO.Path.Combine(B2SData.TableFileName, FileName),   ' .\TableNameScreenRes.txt
+                                             FileName,                                           ' .\ScreenRes.txt
+                                             IO.Path.Combine(Application.StartupPath(), FileName)' B2SFolder\ScreenRes.txt
+                                            }
+
+            For Each testFileName As String In loadFileNames
+                If IO.File.Exists(testFileName) Then
+                    loadFileName = testFileName
+                    Exit For
+                End If
+            Next
         Catch
         End Try
 
-        If loadSpecialOne OrElse loadSpecialDirOne OrElse IO.File.Exists(FileName) Then
+        If Not loadFileName = String.Empty Then
 
             ' open settings file
-            FileOpen(1, If(loadSpecialOne, specialFileName, If(loadSpecialDirOne, specialDirFileName, FileName)), OpenMode.Input)
+            FileOpen(1, loadFileName, OpenMode.Input)
 
             ' get all settings
             Dim line(50) As String
             Dim i As Integer = 0
-            Do Until EOF(1)
+            Do Until EOF(1) Or i > 20
                 line(i) = LineInput(1)
                 If (line(i).StartsWith("#")) Then Continue Do
                 i += 1
@@ -142,9 +147,9 @@ Public Class B2SScreen
             ' close file handle
             FileClose(1)
 
-            Else
+        Else
 
-                MessageBox.Show("There is no B2S screen resolution file '" & FileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
+            MessageBox.Show("There is no B2S screen resolution file '" & FileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
                              "Please create this file with the tool 'B2S_ScreenResEditor.exe'.", _
                              "B2S backglass error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End
