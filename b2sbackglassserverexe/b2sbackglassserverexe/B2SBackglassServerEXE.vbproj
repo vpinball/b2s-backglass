@@ -76,6 +76,9 @@
   <PropertyGroup>
     <StartupObject>B2S.formBackglass</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>B2SBackglassServerEXE.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
