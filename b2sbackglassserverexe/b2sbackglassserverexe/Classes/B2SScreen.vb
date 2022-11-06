@@ -96,7 +96,7 @@ Public Class B2SScreen
 
         Try
             Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & ".res"),    ' .\TableName.res
-                                             IO.Path.Combine(B2SData.TableFileName, FileName),   ' .\TableNameScreenRes.txt
+                                             IO.Path.Combine(B2SData.TableFileName, FileName),   ' .\TableName\ScreenRes.txt
                                              FileName,                                           ' .\ScreenRes.txt
                                              IO.Path.Combine(Application.StartupPath(), FileName)' B2SFolder\ScreenRes.txt
                                             }
@@ -300,7 +300,7 @@ Public Class B2SScreen
                     Me.BackglassScreen = s
                     Exit For
                 End If
-            ElseIf Mid(s.DeviceName, 1, 12) = "\\.\DISPLAY" + BackglassMonitor Then
+            ElseIf s.DeviceName = "\\.\DISPLAY" + BackglassMonitor Then
                 Me.BackglassScreen = s
                 Exit For
             End If
