@@ -50,9 +50,6 @@
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>B2SBackglassServer.ico</ApplicationIcon>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="B2SServerPluginInterface">
       <HintPath>Plugin\B2SServerPluginInterface.dll</HintPath>
