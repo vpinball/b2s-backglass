@@ -114,7 +114,7 @@ Public Class formSettings
             cmbMatchingFileNames.Visible = True
         End If
         chkSmall.Checked = B2SSettings.StartBackground
-
+        chkFormNoFocus.Checked = B2SSettings.FormNoFocus
         ' plugin stuff
         chkActivatePlugins.Checked = B2SSettings.ArePluginsOn
         chkShowStartupError.Checked = B2SSettings.ShowStartupError
@@ -468,5 +468,9 @@ Public Class formSettings
 
     Private Sub chkDisableFuzzyMatching_CheckedChanged(sender As Object, e As EventArgs) Handles chkDisableFuzzyMatching.CheckedChanged
         B2SSettings.DisableFuzzyMatching = chkDisableFuzzyMatching.Checked
+    End Sub
+
+    Private Sub chkFormNoFocus_CheckedChanged(sender As Object, e As EventArgs) Handles chkFormNoFocus.CheckedChanged
+        B2SSettings.FormNoFocus = chkFormNoFocus.Checked
     End Sub
 End Class

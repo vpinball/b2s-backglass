@@ -82,6 +82,7 @@ Public Class B2SSettings
     Public Shared Property DefaultGlow() As Integer = -1
     Public Shared Property FormToFront() As Boolean = True
     Public Shared Property FormToBack() As Boolean = False
+    Public Shared Property FormNoFocus() As Boolean = False
     Public Shared Property HideGrill() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
     Public Shared Property HideB2SDMD() As Boolean = False
     Public Shared Property HideDMD() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
@@ -163,6 +164,9 @@ Public Class B2SSettings
                     GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
                     StartBackground = GlobalStartBackground
                 End If
+                If nodeHeader.SelectSingleNode("FormNoFocus") IsNot Nothing Then
+                    FormNoFocus = (nodeHeader.SelectSingleNode("FormNoFocus").InnerText = "1")
+                End If
                 If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
                 If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
                     FormToBack = (nodeHeader.SelectSingleNode("FormToBack").InnerText = "1")
@@ -215,6 +219,7 @@ Public Class B2SSettings
                             FormToBack = (nodeTable.SelectSingleNode("FormToBack").InnerText = "1")
                             If FormToBack Then FormToFront = False
                         End If
+                        If nodeTable.SelectSingleNode("FormNoFocus") IsNot Nothing Then FormNoFocus = (nodeTable.SelectSingleNode("FormNoFocus").InnerText = "1")
 
                         Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
                         If nodeAnimations IsNot Nothing Then
@@ -289,6 +294,7 @@ Public Class B2SSettings
                 End If
                 AddNode(XML, nodeTable, "FormToFront", If(FormToFront, "1", "0"))
                 AddNode(XML, nodeTable, "FormToBack", If(FormToBack, "1", "0"))
+                AddNode(XML, nodeTable, "FormNoFocus", If(FormNoFocus, "1", "0"))
 
                 If b2sanimation IsNot Nothing Then
                     Dim nodeAnimations As Xml.XmlElement = AddHeader(XML, nodeTable, "Animations")

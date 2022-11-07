@@ -335,6 +335,10 @@ Public Class B2SScreen
             If B2SSettings.FormToBack Then
                 Me.formbackground.SendToBack()
                 Me.formbackground.ShowInTaskbar = False
+            ElseIf B2SSettings.FormToFront Then
+                Me.formbackground.BringToFront()
+                Me.formbackground.TopMost = True
+                If B2SSettings.FormNoFocus Then Me.formbackground.ShowInTaskbar = False
             Else
                 Me.formbackground.BringToFront()
             End If
@@ -392,7 +396,7 @@ Public Class B2SScreen
         Me.formBackglass.Size = Me.BackglassSize
 
         If StartBackground Then
-            Me.formBackglass.Text = "B2S Background"
+            Me.formBackglass.Text = "B2S Backglass"
             Me.formBackglass.ShowInTaskbar = False
 
             Me.formBackglass.Show(Me.formbackground)
@@ -406,6 +410,7 @@ Public Class B2SScreen
             ' bring backglass screen to the front and force it to stay
             Me.formBackglass.TopMost = True
             Me.formBackglass.BringToFront()
+            If B2SSettings.FormNoFocus Then Me.formBackglass.ShowInTaskbar = False
         ElseIf B2SSettings.FormToBack Then
             ' bring backglass screen to the back and force it to stay
             Me.formBackglass.SendToBack()
@@ -428,6 +433,7 @@ Public Class B2SScreen
             Me.formDMD.Text = "B2S DMD"
 
             If B2SSettings.FormToFront Then
+                If B2SSettings.FormNoFocus Then Me.formDMD.ShowInTaskbar = False
                 If Me.DMDAtDefaultLocation Then
                     ' DMD and Back Glass one unit, make sure they are together
                     Me.formDMD.ShowInTaskbar = False
