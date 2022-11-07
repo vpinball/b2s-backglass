@@ -30,25 +30,19 @@ Public Class formBackglass
     Private rotateSteps As Integer = 0
     Private rotateAngle As Single = 0
     Private rotateTimerInterval As Integer = 0
-    Private Const WS_EX_NOACTIVATE As Integer = &H8000000L
+    Private Const MA_NOACTIVATE As System.Int32 = 3
+    Private Const WM_MOUSEACTIVATE As Integer = &H21
 
 #Region " Properties "
 
-    ''' <summary>
-    ''' This member overrides <see cref="System.Windows.Forms.Form.CreateParams">Form.CreateParams</see>.
-    ''' </summary>
-    Protected Overrides ReadOnly Property CreateParams() As CreateParams
-        Get
-            Dim value As CreateParams = MyBase.CreateParams
-
-            'Don't allow the window to be activated.
-            If B2SSettings.FormToBack Then
-                value.ExStyle = value.ExStyle Or WS_EX_NOACTIVATE
-            End If
-            Return value
-        End Get
-    End Property
-
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        'Don't allow the window to be activated by swallowing the mouse event.
+        If B2SSettings.FormNoFocus And m.Msg = WM_MOUSEACTIVATE Then
+            m.Result = New IntPtr(MA_NOACTIVATE)
+            Return
+        End If
+        MyBase.WndProc(m)
+    End Sub
 #End Region 'Properties
 #Region "constructor and closing"
 
@@ -163,11 +157,11 @@ Public Class formBackglass
 
         'Me.TopMost = True
         'Me.BringToFront()
-        If B2SSettings.FormToFront Then
-            Me.BringToFront()
-        Else
-            Me.SendToBack()
-        End If
+        'If B2SSettings.FormToFront Then
+        ' Me.BringToFront()
+        'Else
+        'Me.SendToBack()
+        'End If
 
 
         'Me.TopMost = False
@@ -2735,9 +2729,9 @@ Public Class formBackglass
                 End Using
 
                 ' set backglass to topmost window
-                Me.TopMost = True
-                Me.BringToFront()
-                Me.TopMost = False
+                'Me.TopMost = True
+                'Me.BringToFront()
+                'Me.TopMost = False
 
             End If
 

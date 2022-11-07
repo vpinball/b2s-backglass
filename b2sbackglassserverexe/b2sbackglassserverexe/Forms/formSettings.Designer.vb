@@ -82,6 +82,7 @@ Partial Class formSettings
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
+        Me.chkFormNoFocus = New System.Windows.Forms.CheckBox()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -168,6 +169,7 @@ Partial Class formSettings
         '
         'grpStartMode
         '
+        Me.grpStartMode.Controls.Add(Me.chkFormNoFocus)
         Me.grpStartMode.Controls.Add(Me.lblFormFront)
         Me.grpStartMode.Controls.Add(Me.chkDisableFuzzyMatching)
         Me.grpStartMode.Controls.Add(Me.cmbFormFront)
@@ -185,7 +187,7 @@ Partial Class formSettings
         'lblFormFront
         '
         Me.lblFormFront.AutoSize = True
-        Me.lblFormFront.Location = New System.Drawing.Point(12, 49)
+        Me.lblFormFront.Location = New System.Drawing.Point(10, 49)
         Me.lblFormFront.Name = "lblFormFront"
         Me.lblFormFront.Size = New System.Drawing.Size(47, 13)
         Me.lblFormFront.TabIndex = 41
@@ -194,7 +196,7 @@ Partial Class formSettings
         'chkDisableFuzzyMatching
         '
         Me.chkDisableFuzzyMatching.AutoSize = True
-        Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(221, 50)
+        Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(313, 49)
         Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
         Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(159, 17)
         Me.chkDisableFuzzyMatching.TabIndex = 40
@@ -206,9 +208,9 @@ Partial Class formSettings
         Me.cmbFormFront.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbFormFront.FormattingEnabled = True
         Me.cmbFormFront.Items.AddRange(New Object() {"Form to Back", "Standard", "Form to Top"})
-        Me.cmbFormFront.Location = New System.Drawing.Point(65, 46)
+        Me.cmbFormFront.Location = New System.Drawing.Point(61, 46)
         Me.cmbFormFront.Name = "cmbFormFront"
-        Me.cmbFormFront.Size = New System.Drawing.Size(127, 21)
+        Me.cmbFormFront.Size = New System.Drawing.Size(100, 21)
         Me.cmbFormFront.TabIndex = 27
         '
         'chkSmall
@@ -216,16 +218,16 @@ Partial Class formSettings
         Me.chkSmall.Appearance = System.Windows.Forms.Appearance.Button
         Me.chkSmall.Location = New System.Drawing.Point(6, 20)
         Me.chkSmall.Name = "chkSmall"
-        Me.chkSmall.Size = New System.Drawing.Size(54, 24)
+        Me.chkSmall.Size = New System.Drawing.Size(101, 24)
         Me.chkSmall.TabIndex = 38
-        Me.chkSmall.Text = "Small"
+        Me.chkSmall.Text = "Background/Small"
         Me.chkSmall.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.chkSmall.UseVisualStyleBackColor = True
         '
         'lblDefaultStartMode
         '
         Me.lblDefaultStartMode.AutoSize = True
-        Me.lblDefaultStartMode.Location = New System.Drawing.Point(263, 24)
+        Me.lblDefaultStartMode.Location = New System.Drawing.Point(284, 24)
         Me.lblDefaultStartMode.Name = "lblDefaultStartMode"
         Me.lblDefaultStartMode.Size = New System.Drawing.Size(101, 13)
         Me.lblDefaultStartMode.TabIndex = 26
@@ -234,9 +236,9 @@ Partial Class formSettings
         'chkStartAsEXE
         '
         Me.chkStartAsEXE.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkStartAsEXE.Location = New System.Drawing.Point(80, 20)
+        Me.chkStartAsEXE.Location = New System.Drawing.Point(111, 20)
         Me.chkStartAsEXE.Name = "chkStartAsEXE"
-        Me.chkStartAsEXE.Size = New System.Drawing.Size(173, 24)
+        Me.chkStartAsEXE.Size = New System.Drawing.Size(171, 24)
         Me.chkStartAsEXE.TabIndex = 6
         Me.chkStartAsEXE.Text = "Start this backglass in EXE mode"
         Me.chkStartAsEXE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -247,9 +249,9 @@ Partial Class formSettings
         Me.cmbDefaultStartMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDefaultStartMode.FormattingEnabled = True
         Me.cmbDefaultStartMode.Items.AddRange(New Object() {"Standard", "In EXE"})
-        Me.cmbDefaultStartMode.Location = New System.Drawing.Point(370, 21)
+        Me.cmbDefaultStartMode.Location = New System.Drawing.Point(391, 21)
         Me.cmbDefaultStartMode.Name = "cmbDefaultStartMode"
-        Me.cmbDefaultStartMode.Size = New System.Drawing.Size(98, 21)
+        Me.cmbDefaultStartMode.Size = New System.Drawing.Size(76, 21)
         Me.cmbDefaultStartMode.TabIndex = 7
         '
         'btnMore
@@ -445,10 +447,10 @@ Partial Class formSettings
         Me.lblCopyright.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCopyright.Location = New System.Drawing.Point(54, 4)
         Me.lblCopyright.Name = "lblCopyright"
-        Me.lblCopyright.Size = New System.Drawing.Size(423, 26)
+        Me.lblCopyright.Size = New System.Drawing.Size(407, 26)
         Me.lblCopyright.TabIndex = 23
-        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Stefan Wuehr (""Herweh""). All rig" &
-    "hts reserved."
+        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Stefan Wuehr (""Herweh"") && the B" &
+    "2S team. "
         '
         'grpVisibility
         '
@@ -712,6 +714,16 @@ Partial Class formSettings
         Me.btnDonate.UseVisualStyleBackColor = True
         Me.btnDonate.Visible = False
         '
+        'chkFormNoFocus
+        '
+        Me.chkFormNoFocus.AutoSize = True
+        Me.chkFormNoFocus.Location = New System.Drawing.Point(171, 49)
+        Me.chkFormNoFocus.Name = "chkFormNoFocus"
+        Me.chkFormNoFocus.Size = New System.Drawing.Size(70, 17)
+        Me.chkFormNoFocus.TabIndex = 42
+        Me.chkFormNoFocus.Text = "Form No Focus"
+        Me.chkFormNoFocus.UseVisualStyleBackColor = True
+        '
         'formSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -809,4 +821,5 @@ Partial Class formSettings
     Friend WithEvents lblFormFront As Windows.Forms.Label
     Friend WithEvents cmbFormFront As Windows.Forms.ComboBox
     Friend WithEvents chkDisableFuzzyMatching As Windows.Forms.CheckBox
+    Friend WithEvents chkFormNoFocus As Windows.Forms.CheckBox
 End Class
