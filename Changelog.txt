@@ -1,3 +1,12 @@
+1.4.1
+- Add installation folder to the search path of ScreenRes.txt file. Current search "path":
+1. tablename.res
+2. Screenres.txt ( or whatever you set in the registry) in the table folder
+3. tablename\Screenres.txt ( or whatever you set in the registry)
+4. Screenres.txt ( or whatever you set in the registry) in the B2SServer folder.
+- Add additional setting FormNoFocus complementing FormToFront. When set also FormToFront will stay in front and will ignore mouse key presses.
+- B2SBackglassServerRegisterApp: Added registration of a .vpx file context menu copying template res files next to the table. Incl. small cmd to copy the file.
+
 1.4.0
 
 - Add additional setting FormToBack complementing FormToFront. Now three states available:
