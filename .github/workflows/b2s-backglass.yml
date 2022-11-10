@@ -89,6 +89,8 @@ jobs:
           cp license.txt tmp
           cp README.md tmp
           cp ScreenRes.txt tmp
+          cp -r ScreenResTemplates tmp
+          cp b2sbackglassserverregisterapp/ScreenResTemplates.cmd tmp
       - uses: actions/upload-artifact@v3
         with:
          name: B2SBackglassServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
