@@ -78,8 +78,8 @@ Public Class formBackglassServerRegApp
                     End Try
                 End If
             End Using
-            If Not pinEditValue = "" Then
-                Using openKey As RegistryKey = rkReg.OpenSubKey(strKey, True)
+            If Not pinEditValue = "" And Directory.Exists("ScreenResTemplates") Then
+                Using openKey As RegistryKey = rkReg.CreateSubKey("SystemFileAssociations\.vpx\shell", True)
                     Try
                         ' Clean old registry for the ScreenRes path and only if Yes is choosen it is regenerated.
                         Try
@@ -107,13 +107,13 @@ Public Class formBackglassServerRegApp
                                 For Each resFileName As String In sFiles
                                     '           "D:\vPinball\VisualPinball\B2SServer\ScreenResTemplates.cmd" "ScreenResTemplates\Full Screen.res" "%L"
                                     Dim shellText As String = """" + IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "ScreenResTemplates.cmd") + """ """ + resFileName + """ ""%L"""
-                                    vpxtoolstoplevel.CreateSubKey("shell").CreateSubKey(Path.GetFileNameWithoutExtension(resFileName)).CreateSubKey("command").SetValue("", shellText)
+                                    vpxtoolstoplevel.CreateSubKey("shell\" + Path.GetFileNameWithoutExtension(resFileName) + "\command").SetValue("", shellText)
                                 Next
                                 vpxtoolstoplevel.Close()
                             End If
                         End If
                     Catch ex As UnauthorizedAccessException
-                            MessageBox.Show("UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show("UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End If
