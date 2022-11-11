@@ -79,8 +79,9 @@ Public Class formBackglassServerRegApp
                 End If
             End Using
             If Not pinEditValue = "" And Directory.Exists("ScreenResTemplates") Then
-                Using openKey As RegistryKey = rkReg.CreateSubKey("SystemFileAssociations\.vpx\shell", True)
+                Using sysFileKey As RegistryKey = rkReg.OpenSubKey("SystemFileAssociations", True)
                     Try
+                        Dim openKey As RegistryKey = sysFileKey.CreateSubKey(".vpx\shell")
                         ' Clean old registry for the ScreenRes path and only if Yes is choosen it is regenerated.
                         Try
                             openKey.DeleteSubKeyTree("B2SServer")
