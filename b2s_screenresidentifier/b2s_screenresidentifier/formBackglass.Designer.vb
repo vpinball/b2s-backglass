@@ -22,7 +22,7 @@ Partial Class formBackglass
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formBackglass))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formPlayfield))
         Me.groupBackglass = New System.Windows.Forms.GroupBox()
         Me.txtBackglassScreenScale = New System.Windows.Forms.TextBox()
         Me.chkBackglassGrillVisible = New System.Windows.Forms.CheckBox()
@@ -255,6 +255,7 @@ Partial Class formBackglass
         Me.ClientSize = New System.Drawing.Size(464, 300)
         Me.Controls.Add(Me.groupBackglass)
         Me.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MinimizeBox = False
