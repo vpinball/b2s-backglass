@@ -413,6 +413,7 @@ Partial Class formPlayfield
         Me.Controls.Add(Me.groupPlayfield)
         Me.Controls.Add(Me.lblInfo)
         Me.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MinimizeBox = False

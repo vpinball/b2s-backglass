@@ -22,6 +22,7 @@ Partial Class formDMD
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formPlayfield))
         Me.groupDMD = New System.Windows.Forms.GroupBox()
         Me.txtDMDScreenScale = New System.Windows.Forms.TextBox()
         Me.chkDMDFlipY = New System.Windows.Forms.CheckBox()
@@ -243,7 +244,7 @@ Partial Class formDMD
         Me.lblDMD.Name = "lblDMD"
         Me.lblDMD.Size = New System.Drawing.Size(382, 32)
         Me.lblDMD.TabIndex = 5
-        Me.lblDMD.Text = "This is the dummy window for the DMD. Drag and drop me" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "whereever you want to hav" & _
+        Me.lblDMD.Text = "This is the dummy window for the DMD. Drag and drop me" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "whereever you want to hav" &
     "e me."
         '
         'formDMD
@@ -254,6 +255,7 @@ Partial Class formDMD
         Me.ClientSize = New System.Drawing.Size(410, 255)
         Me.Controls.Add(Me.groupDMD)
         Me.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Icon = CType(Resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MaximizeBox = False
