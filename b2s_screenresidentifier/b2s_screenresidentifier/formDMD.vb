@@ -77,7 +77,6 @@ Public Class formDMD
         IsDirty = True
 
         Dim currentScreen As Screen = Screen.FromControl(form)
-        Dim screenCount As Integer = Screen.AllScreens.Count
 
         ' DMD
         If String.Compare(txtDMDScreen.Text, ShortDevice(currentScreen.DeviceName)) <> 0 Then

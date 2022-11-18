@@ -6,7 +6,7 @@ Public Class formBackglass
     Public ReadOnly Property BackglassScreenNo() As Integer
         Get
             Dim device As String = Screen.FromControl(Me).DeviceName
-            Return CInt(device.Substring(11, 1))
+            Return CInt(device.Substring(11))
         End Get
     End Property
 
@@ -80,7 +80,6 @@ Public Class formBackglass
         IsDirty = True
 
         Dim currentScreen As Screen = Screen.FromControl(form)
-        Dim screenCount As Integer = Screen.AllScreens.Count
 
         ' backglass
         If String.Compare(txtBackglassScreen.Text, ShortDevice(currentScreen.DeviceName)) <> 0 Then

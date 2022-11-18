@@ -94,9 +94,9 @@ Public Class formPlayfield
         If BackglassMonitorType.StartsWith("@") Then
             PrintLine(1, BackglassMonitorType & Me.txtPlayfieldSizeWidth.Text)
         ElseIf BackglassMonitorType.StartsWith("=") Then
-            For Each scr As Screen In Screen.AllScreens
+            For Each scr As Screen In ScreensOrdered
                 currentScreen += 1
-                If Mid(scr.DeviceName, 1, 12) = "\\.\DISPLAY" + formBackglass.BackglassScreenNo.ToString Then
+                If scr.DeviceName.Substring(11) = formBackglass.BackglassScreenNo.ToString Then
                     PrintLine(1, BackglassMonitorType & currentScreen)
                 End If
             Next
@@ -153,7 +153,7 @@ Public Class formPlayfield
         End If
         Me.chkSaveComments.Checked = SaveComments
         If FileFound Then
-            For Each scr As Screen In Screen.AllScreens
+            For Each scr As Screen In ScreensOrdered
                 currentScreen += 1
                 ' set playfield
                 If scr.Primary Then
@@ -164,9 +164,9 @@ Public Class formPlayfield
                 End If
 
                 ' set backglass and DMD
-                If (Mid(scr.DeviceName, 1, 12) = "\\.\DISPLAY" + BackglassMonitor) Or
-                   (BackglassMonitor.StartsWith("@") AndAlso scr.Bounds.Left = CInt(Mid(BackglassMonitor, 2))) Or
-                   (BackglassMonitor.StartsWith("=") AndAlso currentScreen = CInt(Mid(BackglassMonitor, 2))) Then
+                If (scr.DeviceName.Substring(11) = BackglassMonitor) Or
+                   (BackglassMonitor.StartsWith("@") AndAlso scr.Bounds.Left = CInt(BackglassMonitor.Substring(1))) Or
+                   (BackglassMonitor.StartsWith("=") AndAlso currentScreen = CInt(BackglassMonitor.Substring(1))) Then
                     formBackglass.Location = scr.Bounds.Location + BackglassLocation
                     If BackglassSize = scr.Bounds.Size Then
                         formBackglass.chkBackglassFullSize.Checked = True
@@ -209,7 +209,6 @@ Public Class formPlayfield
         IsDirty = True
 
         Dim currentScreen As Screen = Screen.FromControl(form)
-        Dim screenCount As Integer = Screen.AllScreens.Count
 
         ' general
         If lblInfo.Text.Contains("{0}") Then
@@ -260,7 +259,7 @@ Public Class formPlayfield
             formDMD.WindowState = FormWindowState.Normal
             Select Case recommendedScreenCount
                 Case 1
-                    Dim scr1 As Screen = Screen.AllScreens(0)
+                    Dim scr1 As Screen = ScreensOrdered(0)
                     formBackglass.txtBackglassLocationX.Text = 0
                     formBackglass.txtBackglassLocationY.Text = 0
                     formBackglass.txtBackglassSizeWidth.Text = CInt(scr1.Bounds.Width / 2)
@@ -269,10 +268,7 @@ Public Class formPlayfield
                     formDMD.chkDMDAtDefaultLocation.Checked = True
                     formDMD.OnValidate(Nothing, True)
                 Case 2
-                    Dim scr2 As Screen = Screen.AllScreens(1)
-                    If screenCount > 2 AndAlso scr2.Bounds.Location.X > Screen.AllScreens(2).Bounds.Location.X Then
-                        scr2 = Screen.AllScreens(2)
-                    End If
+                    Dim scr2 As Screen = ScreensOrdered(1)
                     formBackglass.txtBackglassLocationX.Text = 0
                     formBackglass.txtBackglassLocationY.Text = 0
                     formBackglass.txtBackglassSizeWidth.Text = CInt(scr2.Bounds.Width / 2)
@@ -282,12 +278,8 @@ Public Class formPlayfield
                     formDMD.chkDMDAtDefaultLocation.Checked = True
                     formDMD.OnValidate(scr2, True)
                 Case 3
-                    Dim scr2 As Screen = Screen.AllScreens(1)
-                    Dim scr3 As Screen = Screen.AllScreens(2)
-                    If scr2.Bounds.Location.X > scr3.Bounds.Location.X Then
-                        scr2 = scr3
-                        scr3 = Screen.AllScreens(1)
-                    End If
+                    Dim scr2 As Screen = ScreensOrdered(1)
+                    Dim scr3 As Screen = ScreensOrdered(2)
                     formBackglass.txtBackglassLocationX.Text = 0
                     formBackglass.txtBackglassLocationY.Text = 0
                     formBackglass.txtBackglassSizeWidth.Text = CInt(scr2.Bounds.Width / 2)
