@@ -14,6 +14,18 @@ Public Class Background
         End If
         MyBase.WndProc(m)
     End Sub
+
+    Private Sub Background_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
+
+        'If B2SSettings.FormToFront And Me.TopMost = True Then
+        '    ' We have TopMost set, so it is safe to send back!
+        '    Me.SendToBack()
+        '    Me.TopMost = True
+        'ElseIf Me.TopMost = False Then
+        '    Me.BringToFront()
+        'End If
+
+    End Sub
 #End Region 'Properties
 #Region "constructor"
 

@@ -6,6 +6,7 @@ Imports Microsoft.Win32
 Public Class B2SScreen
 
     Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Left).ToArray()
 
     Public formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
@@ -123,6 +124,9 @@ Public Class B2SScreen
                 If (line(i).StartsWith("#")) Then Continue Do
                 i += 1
             Loop
+            ' close file handle
+            FileClose(1)
+
             line(i) = 0
             line(i + 1) = 0
             Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
@@ -142,10 +146,6 @@ Public Class B2SScreen
                 Me.BackgroundSize = New Point(0, 0)
                 Me.BackgroundPath = ""
             End If
-
-
-            ' close file handle
-            FileClose(1)
 
         Else
 
@@ -284,11 +284,11 @@ Public Class B2SScreen
              (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
 
         ' get the correct screen
-        Me.BackglassScreen = Screen.AllScreens(0)
+        Me.BackglassScreen = ScreensOrdered(0)
         Dim s As Screen
         Dim currentScreen = 0
 
-        For Each s In Screen.AllScreens
+        For Each s In ScreensOrdered
             currentScreen += 1
             If Left(BackglassMonitor, 1) = "@" Then
                 If s.Bounds.Left = CInt(Mid(BackglassMonitor, 2)) Then
@@ -395,17 +395,6 @@ Public Class B2SScreen
         Me.formBackglass.Location = Me.BackglassScreen.Bounds.Location + Me.BackglassLocation
         Me.formBackglass.Size = Me.BackglassSize
 
-        If StartBackground Then
-            Me.formBackglass.Text = "B2S Backglass"
-            Me.formBackglass.ShowInTaskbar = False
-
-            Me.formBackglass.Show(Me.formbackground)
-        Else
-            ' Without background picture the backglass is the main form
-            Me.formBackglass.Text = "B2S Backglass Server"
-            Me.formBackglass.Show()
-        End If
-
         If B2SSettings.FormToFront Then
             ' bring backglass screen to the front and force it to stay
             Me.formBackglass.TopMost = True
@@ -417,6 +406,17 @@ Public Class B2SScreen
             Me.formBackglass.ShowInTaskbar = False
         Else
             Me.formBackglass.BringToFront()
+        End If
+
+        If StartBackground Then
+            Me.formBackglass.Text = "B2S Backglass"
+            Me.formBackglass.ShowInTaskbar = False
+
+            Me.formBackglass.Show(Me.formbackground)
+        Else
+            ' Without background picture the backglass is the main form
+            Me.formBackglass.Text = "B2S Backglass Server"
+            Me.formBackglass.Show()
         End If
 
         ' maybe show DMD form
@@ -434,25 +434,27 @@ Public Class B2SScreen
 
             If B2SSettings.FormToFront Then
                 If B2SSettings.FormNoFocus Then Me.formDMD.ShowInTaskbar = False
+
+                Me.formDMD.BringToFront()
+                Me.formDMD.TopMost = True
+
                 If Me.DMDAtDefaultLocation Then
-                    ' DMD and Back Glass one unit, make sure they are together
-                    Me.formDMD.ShowInTaskbar = False
+                    ' DMD and Back Glass one unit, make sure they stay together
                     Me.formDMD.Show(Me.formBackglass)
                 Else
                     ' DMD and Back Glass separate and accessed separately
                     Me.formDMD.Show()
                 End If
-                Me.formDMD.BringToFront()
-                Me.formDMD.TopMost = True
             ElseIf B2SSettings.FormToBack Then
                 ' DMD and Back Glass one unit, make sure they are together and also make sure it is impossible to activate
                 Me.formDMD.ShowInTaskbar = False
-                Me.formDMD.Show(Me.formBackglass)
                 Me.formDMD.SendToBack()
+                Me.formDMD.Show(Me.formBackglass)
             Else
-                Me.formDMD.Show()
+                ' show the DMD form without grill
                 Me.formDMD.BringToFront()
                 Me.formDMD.TopMost = True
+                Me.formDMD.Show()
             End If
         End If
 

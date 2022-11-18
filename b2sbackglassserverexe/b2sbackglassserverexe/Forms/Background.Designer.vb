@@ -22,6 +22,7 @@ Partial Class Background
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Background))
         Me.SuspendLayout()
         '
         'Background
@@ -30,6 +31,7 @@ Partial Class Background
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(284, 261)
         Me.ControlBox = False
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Background"
         Me.Text = "B2SServer"
         Me.ResumeLayout(False)

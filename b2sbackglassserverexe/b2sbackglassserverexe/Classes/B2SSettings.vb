@@ -164,13 +164,14 @@ Public Class B2SSettings
                     GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
                     StartBackground = GlobalStartBackground
                 End If
-                If nodeHeader.SelectSingleNode("FormNoFocus") IsNot Nothing Then
-                    FormNoFocus = (nodeHeader.SelectSingleNode("FormNoFocus").InnerText = "1")
-                End If
                 If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
                 If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
                     FormToBack = (nodeHeader.SelectSingleNode("FormToBack").InnerText = "1")
                     If FormToBack Then FormToFront = False
+                    FormNoFocus = True
+                End If
+                If nodeHeader.SelectSingleNode("FormNoFocus") IsNot Nothing Then
+                    FormNoFocus = (nodeHeader.SelectSingleNode("FormNoFocus").InnerText = "1")
                 End If
                 If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
                     ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
@@ -218,6 +219,7 @@ Public Class B2SSettings
                         If nodeTable.SelectSingleNode("FormToBack") IsNot Nothing Then
                             FormToBack = (nodeTable.SelectSingleNode("FormToBack").InnerText = "1")
                             If FormToBack Then FormToFront = False
+                            FormNoFocus = True
                         End If
                         If nodeTable.SelectSingleNode("FormNoFocus") IsNot Nothing Then FormNoFocus = (nodeTable.SelectSingleNode("FormNoFocus").InnerText = "1")
 
