@@ -155,13 +155,9 @@ Public Class formBackglass
 
     Private Sub formBackglass_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
 
-        'Me.TopMost = True
-        'Me.BringToFront()
-        'If B2SSettings.FormToFront Then
-        ' Me.BringToFront()
-        'Else
-        'Me.SendToBack()
-        'End If
+        If Not B2SSettings.FormToFront Then
+            Me.SendToBack()
+        End If
 
 
         'Me.TopMost = False
