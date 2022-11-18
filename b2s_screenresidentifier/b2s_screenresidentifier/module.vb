@@ -7,6 +7,7 @@ Module Module1
     Public Property FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
 
     Public ReadOnly screenCount As Integer = Screen.AllScreens.Count
+    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Left).ToArray()
 
     Public Property IsInStartup() As Boolean = False
 
@@ -72,7 +73,7 @@ Module Module1
             ' get all settings
             Dim line(50) As String
             Dim i As Integer = 0
-            Do Until EOF(1)
+            Do Until EOF(1) Or i > 20
                 line(i) = LineInput(1)
                 If (line(i).StartsWith("#")) Then
                     SaveComments = True
@@ -88,6 +89,7 @@ Module Module1
 
             If BackglassMonitor.StartsWith("@") Or BackglassMonitor.StartsWith("=") Then
                 BackglassMonitorType = Mid(BackglassMonitor, 1, 1)
+                BackglassMonitor = BackglassMonitor.Substring(1)
             End If
 
             BackglassLocation = New Point(CInt(line(5)), CInt(line(6)))

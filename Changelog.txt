@@ -6,6 +6,8 @@
 4. Screenres.txt ( or whatever you set in the registry) in the B2SServer folder.
 - Add additional setting FormNoFocus complementing FormToFront. When set also FormToFront will stay in front and will ignore mouse key presses.
 - B2SBackglassServerRegisterApp: Added registration of a .vpx file context menu copying template res files next to the table. Incl. small cmd to copy the file.
+- B2S_ScreenResIdentifier: Better automated setup proposals
+- Sort screens left to right for screen assignment
 
 1.4.0
 
