@@ -104,7 +104,7 @@ Public Class formPlayfield
             WriteLine(1, formBackglass.BackglassScreenNo)
         End If
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# x position for the backglass relative To the upper left corner Of the Playfield screen")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# x position for the backglass relative To the upper left corner Of the screen selected")
         WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# y position for the backglass On the selected display (Normally left at 0)")
@@ -227,7 +227,7 @@ Public Class formPlayfield
 
             txtPlayfieldScreenScale.Text = dpi & "%"
             If dpi <> 100 Then
-                txtPlayfieldScreenScale.BackColor = System.Drawing.Color.Red
+                txtPlayfieldScreenScale.BackColor = Color.Red
             Else
                 txtPlayfieldScreenScale.BackColor = txtPlayfieldScreenSizeHeight.BackColor
             End If
@@ -254,12 +254,18 @@ Public Class formPlayfield
         If IsInStartup Then Return
         If IsFirstCheck() OrElse MessageBox.Show(My.Resources.DoRecommendation, My.Resources.AppTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             Dim recommendedScreenCount As Integer = If(radio1Screen.Checked, 1, If(radio2Screen.Checked, 2, 3))
-            Me.chkPlayfieldFullSize.Checked = True
+            Dim scr1 As Screen = ScreensOrdered(0)
+
             formBackglass.WindowState = FormWindowState.Normal
             formDMD.WindowState = FormWindowState.Normal
+
+            Me.Location = scr1.Bounds.Location
+            Me.txtPlayfieldLocationX.Text = 0
+            Me.txtPlayfieldLocationY.Text = 0
+            Me.chkPlayfieldFullSize.Checked = True
+
             Select Case recommendedScreenCount
                 Case 1
-                    Dim scr1 As Screen = ScreensOrdered(0)
                     formBackglass.txtBackglassLocationX.Text = 0
                     formBackglass.txtBackglassLocationY.Text = 0
                     formBackglass.txtBackglassSizeWidth.Text = CInt(scr1.Bounds.Width / 2)
@@ -269,6 +275,9 @@ Public Class formPlayfield
                     formDMD.OnValidate(Nothing, True)
                 Case 2
                     Dim scr2 As Screen = ScreensOrdered(1)
+                    If screenCount > 2 AndAlso scr2.Bounds.Location.X > ScreensOrdered(2).Bounds.Location.X Then
+                        scr2 = ScreensOrdered(2)
+                    End If
                     formBackglass.txtBackglassLocationX.Text = 0
                     formBackglass.txtBackglassLocationY.Text = 0
                     formBackglass.txtBackglassSizeWidth.Text = CInt(scr2.Bounds.Width / 2)
@@ -280,10 +289,15 @@ Public Class formPlayfield
                 Case 3
                     Dim scr2 As Screen = ScreensOrdered(1)
                     Dim scr3 As Screen = ScreensOrdered(2)
+                    If scr2.Bounds.Location.X > scr3.Bounds.Location.X Then
+                        scr2 = scr3
+                        scr3 = ScreensOrdered(1)
+                    End If
                     formBackglass.txtBackglassLocationX.Text = 0
                     formBackglass.txtBackglassLocationY.Text = 0
                     formBackglass.txtBackglassSizeWidth.Text = CInt(scr2.Bounds.Width / 2)
                     formBackglass.txtBackglassSizeHeight.Text = CInt(scr2.Bounds.Height / 2)
+                    formBackglass.Location = scr2.Bounds.Location
                     formBackglass.OnValidate(scr2)
                     formBackglass.WindowState = FormWindowState.Maximized
                     formDMD.txtDMDLocationX.Text = 100

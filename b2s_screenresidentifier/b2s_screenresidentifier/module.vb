@@ -7,7 +7,7 @@ Module Module1
     Public Property FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
 
     Public ReadOnly screenCount As Integer = Screen.AllScreens.Count
-    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Left).ToArray()
+    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
 
     Public Property IsInStartup() As Boolean = False
 
@@ -81,6 +81,9 @@ Module Module1
                 End If
                 i += 1
             Loop
+            ' close file handle
+            FileClose(1)
+
             line(i) = 0
             line(i + 1) = 0
             PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
@@ -107,8 +110,6 @@ Module Module1
                 BackgroundPath = ""
             End If
 
-            ' close file handle
-            FileClose(1)
         End If
     End Sub
 

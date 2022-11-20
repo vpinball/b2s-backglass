@@ -48,14 +48,18 @@ Public Class formBackglass
 
     Private Sub txtBackglassLocationX_Validated(sender As System.Object, e As System.EventArgs) Handles txtBackglassLocationX.Validated
         If Not String.IsNullOrEmpty(txtBackglassLocationX.Text) AndAlso IsNumeric(txtBackglassLocationX.Text) Then
+            Dim currentScreen As Screen = Screen.FromControl(Me)
+
             IsDirty = True
-            Me.Location = New Point(txtBackglassLocationX.Text, Me.Location.Y)
+            Me.Location = New Point(txtBackglassLocationX.Text + currentScreen.Bounds.Location.X, Me.Location.Y)
         End If
     End Sub
     Private Sub txtBackglassLocationY_Validated(sender As System.Object, e As System.EventArgs) Handles txtBackglassLocationY.Validated
         If Not String.IsNullOrEmpty(txtBackglassLocationY.Text) AndAlso IsNumeric(txtBackglassLocationY.Text) Then
+            Dim currentScreen As Screen = Screen.FromControl(Me)
+
             IsDirty = True
-            Me.Location = New Point(Me.Location.X, txtBackglassLocationY.Text)
+            Me.Location = New Point(Me.Location.X, txtBackglassLocationY.Text + currentScreen.Bounds.Location.Y)
         End If
     End Sub
     Private Sub txtBackglassSizeWidth_Validated(sender As System.Object, e As System.EventArgs) Handles txtBackglassSizeWidth.Validated
