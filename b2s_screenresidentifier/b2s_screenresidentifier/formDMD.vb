@@ -45,14 +45,18 @@ Public Class formDMD
 
     Private Sub txtDMDLocationX_Validated(sender As System.Object, e As System.EventArgs) Handles txtDMDLocationX.Validated
         If Not String.IsNullOrEmpty(txtDMDLocationX.Text) AndAlso IsNumeric(txtDMDLocationX.Text) Then
+            Dim currentScreen As Screen = Screen.FromControl(Me)
+
             IsDirty = True
-            Me.Location = New Point(txtDMDLocationX.Text, Me.Location.Y)
+            Me.Location = New Point(txtDMDLocationX.Text + currentScreen.Bounds.Location.X, Me.Location.Y)
         End If
     End Sub
     Private Sub txtDMDLocationY_Validated(sender As System.Object, e As System.EventArgs) Handles txtDMDLocationY.Validated
         If Not String.IsNullOrEmpty(txtDMDLocationY.Text) AndAlso IsNumeric(txtDMDLocationY.Text) Then
+            Dim currentScreen As Screen = Screen.FromControl(Me)
+
             IsDirty = True
-            Me.Location = New Point(Me.Location.X, txtDMDLocationY.Text)
+            Me.Location = New Point(Me.Location.X, txtDMDLocationY.Text + currentScreen.Bounds.Location.Y)
         End If
     End Sub
     Private Sub txtDMDSizeWidth_Validated(sender As System.Object, e As System.EventArgs) Handles txtDMDSizeWidth.Validated
