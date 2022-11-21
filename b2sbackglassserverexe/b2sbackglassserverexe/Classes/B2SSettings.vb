@@ -360,6 +360,7 @@ Public Class B2SSettings
         CurrentDualMode = eDualMode.NotSet
         FormToFront = True
         FormToBack = False
+        FormNoFocus = False
     End Sub
 
     Private Shared Function AddHeader(XML As Xml.XmlDocument, parentnode As Xml.XmlNode, nodename As String) As Xml.XmlNode
