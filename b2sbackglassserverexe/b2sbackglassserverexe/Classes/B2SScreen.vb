@@ -6,7 +6,7 @@ Imports Microsoft.Win32
 Public Class B2SScreen
 
     Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
-    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Left).ToArray()
+    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
 
     Public formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
