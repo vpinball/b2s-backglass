@@ -453,7 +453,6 @@ Public Class B2SScreen
             Else
                 ' show the DMD form without grill
                 Me.formDMD.BringToFront()
-                Me.formDMD.TopMost = True
                 Me.formDMD.Show()
             End If
         End If
