@@ -1,5 +1,7 @@
 ﻿Imports System.Text
 Imports System.Drawing
+'Imports System.IO
+'Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class formPlayfield
 
@@ -142,6 +144,8 @@ Public Class formPlayfield
 
     Private Sub StartupPlayfield()
         Dim currentScreen = 0
+        'Dim filePath = Path.Combine(Application.StartupPath, "Test.txt")
+
         IsInStartup = True
 
         radio1Screen.Checked = True
@@ -154,6 +158,8 @@ Public Class formPlayfield
         Me.chkSaveComments.Checked = SaveComments
         If FileFound Then
             For Each scr As Screen In ScreensOrdered
+                'File.AppendAllText(filePath, Environment.NewLine & "BackglassMonitor: " + BackglassMonitorType + BackglassMonitor)
+
                 currentScreen += 1
                 ' set playfield
                 If scr.Primary Then
@@ -162,11 +168,14 @@ Public Class formPlayfield
                         Me.chkPlayfieldFullSize.Checked = True
                     End If
                 End If
+                'File.AppendAllText(filePath, Environment.NewLine + "Comparing: " + scr.DeviceName)
+                'File.AppendAllText(filePath, Environment.NewLine + "Location.X: " + scr.Bounds.Location.X.ToString)
+                'File.AppendAllText(filePath, Environment.NewLine + "currentScreen: " + currentScreen.ToString)
 
                 ' set backglass and DMD
                 If (scr.DeviceName.Substring(11) = BackglassMonitor) Or
-                   (BackglassMonitor.StartsWith("@") AndAlso scr.Bounds.Left = CInt(BackglassMonitor.Substring(1))) Or
-                   (BackglassMonitor.StartsWith("=") AndAlso currentScreen = CInt(BackglassMonitor.Substring(1))) Then
+                   (BackglassMonitorType = "@" AndAlso scr.Bounds.Location.X = CInt(BackglassMonitor)) Or
+                   (BackglassMonitorType = "=" AndAlso currentScreen = CInt(BackglassMonitor)) Then
                     formBackglass.Location = scr.Bounds.Location + BackglassLocation
                     If BackglassSize = scr.Bounds.Size Then
                         formBackglass.chkBackglassFullSize.Checked = True

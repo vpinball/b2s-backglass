@@ -94,6 +94,10 @@ Public Class B2SScreen
 
     Private Sub ReadB2SSettingsFromFile()
         Dim loadFileName As String = String.Empty
+        'Dim searchPathLog As Log = New Log("BackglassSearchPath")
+        'searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
+
+        'searchPathLog.WriteLogEntry("Start Search ScreenRes")
 
         Try
             Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & ".res"),    ' .\TableName.res
@@ -103,13 +107,16 @@ Public Class B2SScreen
                                             }
 
             For Each testFileName As String In loadFileNames
+                'searchPathLog.WriteLogEntry("  Test " & testFileName)
                 If IO.File.Exists(testFileName) Then
                     loadFileName = testFileName
+                    'searchPathLog.WriteLogEntry("Found ScreenRes " & loadFileName)
                     Exit For
                 End If
             Next
         Catch
         End Try
+        'searchPathLog.WriteLogEntry("Stop Search ScreenRes")
 
         If Not loadFileName = String.Empty Then
 
@@ -271,6 +278,10 @@ Public Class B2SScreen
     End Sub
 
     Private Sub Show()
+        'Dim searchPathLog As Log = New Log("BackglassShow")
+        'searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
+
+        'searchPathLog.WriteLogEntry("Start Show")
 
         'On Error Resume Next
         If ((Not (Me.BackgroundSize.IsEmpty)) And B2SSettings.StartBackground) Then
@@ -288,19 +299,24 @@ Public Class B2SScreen
         Dim s As Screen
         Dim currentScreen = 0
 
+        'searchPathLog.WriteLogEntry("BackglassMonitor " & BackglassMonitor)
         For Each s In ScreensOrdered
             currentScreen += 1
+            'searchPathLog.WriteLogEntry("Screen: " & (s.DeviceName) & " Location " & s.Bounds.Location.X & " #" & currentScreen)
             If Left(BackglassMonitor, 1) = "@" Then
-                If s.Bounds.Left = CInt(Mid(BackglassMonitor, 2)) Then
+                If s.Bounds.Location.X = CInt(Mid(BackglassMonitor, 2)) Then
                     Me.BackglassScreen = s
+                    'searchPathLog.WriteLogEntry("Found: @" & (s.Bounds.Location.X))
                     Exit For
                 End If
             ElseIf Left(BackglassMonitor, 1) = "=" Then
                 If currentScreen = CInt(Mid(BackglassMonitor, 2)) Then
                     Me.BackglassScreen = s
+                    'searchPathLog.WriteLogEntry("Found: =" & currentScreen)
                     Exit For
                 End If
             ElseIf s.DeviceName = "\\.\DISPLAY" + BackglassMonitor Then
+                'searchPathLog.WriteLogEntry("Found: " & (s.DeviceName))
                 Me.BackglassScreen = s
                 Exit For
             End If
