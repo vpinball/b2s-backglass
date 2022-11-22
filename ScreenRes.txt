@@ -1,18 +1,19 @@
 # This is a ScreenRes file for the B2SBackglassServer. 
-# From release 1.3.1.1 comment lines like this starting with a "#" are supported. If you use tools not supporting comments (or old releases), you need to remove these lines.
+# From release 1.3.1.1 comment lines like this starting with a "#" are supported. 
+# If you use tools not supporting comments (or old releases), you need to remove these lines or let B2S_ScreenResIdentifier do it for you!
 # Playfield Screen resolution width/height
-800
-600
-# Backglass Screen resolution width/height
+1920
+1080
+# If StartBackground is active ("Small" Button in the Options) the Backglass settings are for the background!
+# Backglass width/height (or background when StartBackground is active)
 800
 600
 # Backglass Display Devicename screen number (\\.\DISPLAY)x for the Playfield or screen on position (@x) or screen index (=x)
 1
-# x position for the backglass relative to the upper left corner of the Playfield screen
+# X/Y position for the backglass relative to the upper left corner of the selected screen (background when StartBackground is active)
 0
-# y position for the backglass on the selected display (Normally left at 0)
 0
-# width/height of the DMD area in pixels - For 3 screen setup
+# width/height of the DMD area in pixels - For 3 screen setup (DMD gets defaults when set to 0/0)
 600
 130
 # X/Y position of the DMD area relative to the upper left corner of the backglass screen - For 3 screen setup
@@ -20,11 +21,11 @@
 300
 # Y-flip, flips the LED display upside down
 0
-# X/Y position pos when StartBackground is active, relative to upper left corner of Playfield ("Small" Button in the Options)
-800
+# Backglass X/Y position when StartBackground is active, relative to upper left corner of the selected screen
+100
 0
-# width/height of the backglass when StartBackground is active 
-800
+# Backglass width/height when StartBackground is active
 600
-# C:\path\Frame = The path to the location where you have the background image, it is called "small" button in the settings.
+600
+# C:\path\Frame = The path to the location where you have the background image or black if none selected.
 C:\path\my_bezel_for_EM_or_grill_for_dual_screen.png
