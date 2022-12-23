@@ -1,5 +1,6 @@
 ﻿Imports System
 Imports System.Drawing
+Imports System.IO
 Imports System.Windows.Forms
 Imports Microsoft.Win32
 
@@ -72,6 +73,9 @@ Public Class formBackglass
         'B2SData.TableFileName = "ScaredStiff_FS_B2S"
         If My.Application.CommandLineArgs.Count > 0 Then
             B2SData.TableFileName = My.Application.CommandLineArgs(0).ToString
+
+            If B2SData.TableFileName.EndsWith(".directb2s") Then B2SData.TableFileName = System.IO.Path.GetFileNameWithoutExtension(B2SData.TableFileName)
+
             If My.Application.CommandLineArgs.Count > 1 Then
                 If My.Application.CommandLineArgs(1).ToString = "1" Then
                     Me.TopMost = True
@@ -381,7 +385,7 @@ Public Class formBackglass
     Private Sub Timer_Tick()
 
         timer.Stop()
-        
+
         ' set focus to the VP player
         SetFocusToVPPlayer()
 
