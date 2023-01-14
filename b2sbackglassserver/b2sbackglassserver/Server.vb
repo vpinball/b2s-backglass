@@ -2873,6 +2873,37 @@ Public Class Server
 
         End If
 
+        If True Then
+            Dim exePath As String = String.Empty
+            Dim B2SinitCmd As String = "B2SInit.cmd"
+            Dim B2SinitFound As Boolean = False
+
+            If IO.File.Exists(IO.Path.Combine(IO.Directory.GetCurrentDirectory, B2SinitCmd)) Then
+                B2SinitFound = True
+                exePath = IO.Directory.GetCurrentDirectory
+            ElseIf IO.File.Exists(IO.Path.Combine(My.Application.Info.DirectoryPath, B2SinitCmd)) Then
+                B2SinitFound = True
+                exePath = My.Application.Info.DirectoryPath
+            End If
+
+            Dim p As Process = New Process()
+            Dim pi As ProcessStartInfo = New ProcessStartInfo()
+            Dim cmdGameName As String = ""
+
+            If Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName) Then
+                cmdGameName = If(Not String.IsNullOrEmpty(GameName), GameName, B2SName)
+            End If
+
+            If B2SinitFound Then
+                pi.CreateNoWindow = True
+                pi.WindowStyle = ProcessWindowStyle.Hidden
+
+                pi.Arguments = """" & B2SData.TableFileName & """ """ & cmdGameName & """"
+                pi.FileName = IO.Path.Combine(exePath, B2SinitCmd)
+                p.StartInfo = pi
+                p.Start()
+            End If
+        End If
     End Sub
     Private Sub HideBackglassForm()
 
