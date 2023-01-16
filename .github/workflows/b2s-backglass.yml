@@ -52,11 +52,11 @@ jobs:
           VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
           TAG="${VERSION}-${SHA7}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
-          ASSEMBLY_INFO="B2SWindowPunch/B2SWindowPunch/Properties/AssemblyInfo.vb"
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          ASSEMBLY_INFO="B2SWindowPunch/B2SWindowPunch/Properties/AssemblyInfo.cs"
           VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
           TAG="${VERSION}-${SHA7}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
-          echo "tag=${TAG}" >> $GITHUB_OUTPUT
       - uses: microsoft/setup-msbuild@v1.1
       - name: Build B2SServerPluginInterface
         run: |
