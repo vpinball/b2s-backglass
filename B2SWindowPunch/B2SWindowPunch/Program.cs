@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using CommandLine;
 
 namespace B2SWindowPunch
 {
@@ -62,50 +61,40 @@ namespace B2SWindowPunch
 
             public class Options
         {
-            [Value(0)]
             public string destination { get; set; }
-            [Value(1)]
             public string cutter { get; set; }
 
-            /*[Value(1, Min = 0, Max = 5)]
-            public IEnumerable<string> StringSeq { get; set; }*/
-
-            [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
-            public bool Verbose { get; set; }
         }
 
         private static int Main(string[] args)
         {
-            return Parser.Default.ParseArguments<Options>(args)
-                .MapResult(
-                options => RunAndReturnExitCode(options),
-                  _ => 1);
+            string[] cargs = Environment.GetCommandLineArgs();
+            Options inputOptions = new Options();
 
-            /*            Parser.Default.ParseArguments<Options>(args)
-                               .WithParsed<Options>(o =>
-                               {
-                                   if (o.Verbose)
-                                   {
-                                       Console.WriteLine($"Verbose output enabled. Current Arguments: -v {o.Verbose}");
-                                       Console.WriteLine("Quick Start Example! App is in Verbose mode!");
-                                   }
-                                   else
-                                   {
-                                       Console.WriteLine($"Current Arguments: -v {o.Verbose}");
-                                       Console.WriteLine("Quick Start Example!");
-                                   }
-                                   Console.WriteLine($"Current destination: {o.destination}");
-                                   Console.WriteLine("options.StringValues= '{0}'", String.Join (",",o.StringSeq));
-                               });
-                        */
+            if (cargs.Length != 3)
+            {
+                PrintUsage();
+                return 1;
+            }
+            inputOptions.destination = cargs[1].ToString();
+            inputOptions.cutter = cargs[2].ToString();
+            return RunAndReturnExitCode(inputOptions);
         }
-
+        private static void PrintUsage()
+        {
+            Console.WriteLine("B2SWindowPunch");
+            Console.WriteLine("©2023 Richard Ludwig (Jarr3) and the B2S Team\n");
+            Console.WriteLine("Usage: B2SWindowPunch \"Destination regex\" \"Cutter Regex\" \n");
+            Console.WriteLine("Destination and the cutter window string has to be valid regular expressions\n");
+            Console.WriteLine("E.g. \n Cut holes in the \"B2S Backglass Server\" form using \"Virtual DMD\" and all \"PUPSCREEN\" forms as two regular expressions:");
+            Console.WriteLine("B2SWindowPunch.exe \"^B2S Backglass Server$\" \"^Virtual DMD$|^PUPSCREEN[0-9]+$\"");
+        }
         private static int RunAndReturnExitCode(Options options)
         {
             const int RGN_DIFF = 4;
 
             Dictionary <HWND, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
-
+            /*
             if (String.IsNullOrEmpty(options.destination) || String.IsNullOrEmpty(options.cutter))
             {
                 Console.WriteLine("input parameters missing, listing all windows:\n");
@@ -114,7 +103,7 @@ namespace B2SWindowPunch
                     Console.WriteLine(window.Value);
                 }
                 return 1;
-            }
+            }*/
             Regex rxDest;
             Regex rxCutter;
             try
@@ -122,11 +111,9 @@ namespace B2SWindowPunch
                 rxDest = new Regex(options.destination, RegexOptions.Compiled);
                 rxCutter = new Regex(options.cutter, RegexOptions.Compiled);
             }
-            catch (System.ArgumentException)
+            catch (ArgumentException)
             {
-                Console.WriteLine("Destination and the cut window names has to be valid regular expressions\n");
-                Console.WriteLine("E.g. Cut holes in the \"B2S Backglass Server\" form using \"Virtual DMD\" and all \"PUPSCREEN\" forms as regular expressions:")
-                Console.WriteLine("B2SWindowPunch.exe \"^B2S Backglass Server$\" \"^Virtual DMD$|^PUPSCREEN[0-9]+$\"");
+                PrintUsage();
                 return 1;
             }
 
@@ -141,7 +128,6 @@ namespace B2SWindowPunch
                     Console.WriteLine("Destination {0}: {1}", handle, title);
                     GetWindowRect(handle, out RECT VPWR);
 
-                    //IntPtr FRegion = CreateRectRgn(VPWR.Left, VPWR.Top, VPWR.Right, VPWR.Bottom);
                     IntPtr FRegion = CreateRectRgn(0, 0, VPWR.Right, VPWR.Bottom);
 
                     foreach (KeyValuePair<IntPtr, string> cutwindow in windows)
@@ -149,7 +135,7 @@ namespace B2SWindowPunch
                         IntPtr cuthandle = cutwindow.Key;
                         string cuttitle = cutwindow.Value;
 
-                        if (rxCutter.IsMatch(cuttitle) )
+                        if ( cuthandle != handle && rxCutter.IsMatch(cuttitle) )
                         {
                             Console.WriteLine("   cutout {0}: {1}", cuthandle, cuttitle);
 
