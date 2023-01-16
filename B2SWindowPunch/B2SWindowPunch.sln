@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "B2SWindowPunch", "B2SWindowPunch\B2SWindowPunch.csproj", "{FDF3F829-05EC-4E51-96FF-A05CE50D6C7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDF3F829-05EC-4E51-96FF-A05CE50D6C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDF3F829-05EC-4E51-96FF-A05CE50D6C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDF3F829-05EC-4E51-96FF-A05CE50D6C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDF3F829-05EC-4E51-96FF-A05CE50D6C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {87706127-BB70-4179-A511-927C95205571}
+	EndGlobalSection
+EndGlobal
