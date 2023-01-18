@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -85,7 +86,7 @@ namespace B2SWindowPunch
             Console.WriteLine("B2SWindowPunch");
             Console.WriteLine("©2023 Richard Ludwig (Jarr3) and the B2S Team\n");
             Console.WriteLine("Usage: B2SWindowPunch \"Destination regex\" \"Cutter Regex\" \n");
-            Console.WriteLine("Destination and the cutter window string has to be valid regular expressions\n");
+            Console.WriteLine("Destination and the cutter window string has to be valid regular expressions.\n");
             Console.WriteLine("E.g. \n Cut holes in the \"B2S Backglass Server\" form using \"Virtual DMD\" and all \"PUPSCREEN\" forms as two regular expressions:");
             Console.WriteLine("B2SWindowPunch.exe \"^B2S Backglass Server$\" \"^Virtual DMD$|^PUPSCREEN[0-9]+$\"");
         }
@@ -94,16 +95,7 @@ namespace B2SWindowPunch
             const int RGN_DIFF = 4;
 
             Dictionary <HWND, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
-            /*
-            if (String.IsNullOrEmpty(options.destination) || String.IsNullOrEmpty(options.cutter))
-            {
-                Console.WriteLine("input parameters missing, listing all windows:\n");
-                foreach (KeyValuePair<IntPtr, string> window in windows)
-                { 
-                    Console.WriteLine(window.Value);
-                }
-                return 1;
-            }*/
+
             Regex rxDest;
             Regex rxCutter;
             try
@@ -149,6 +141,13 @@ namespace B2SWindowPunch
                     SetWindowRgn(handle, FRegion, true);
                     DeleteObject(FRegion);
                 }
+            }
+
+
+            Console.WriteLine("\nListing all available windows:\n");
+            foreach (var window in windows.OrderBy(p => p.Value))
+            {
+                Console.WriteLine($"{window.Value}");
             }
 
             return 0;
