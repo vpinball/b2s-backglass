@@ -12,6 +12,15 @@
 
       B2SWindowPunch.exe "^B2S Backglass Server$" "^Virtual DMD$|^PUPSCREEN[0-9]+$"
 
+  The Tablename.res file is checked for lines after the background picture like:
+
+    destination=Other regular expression as destination(s)
+    cutter=Other regular expression as cutter(s)
+
+  or:
+
+    destination=  -> no destination means B2SWindowPunch isn't called
+
 1.4.1
 
 - B2SBackglassServerEXE.exe can now be started from command line and in explorer to "debug" directb2s files.
