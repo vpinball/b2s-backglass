@@ -6,25 +6,37 @@ See the [Changelog.txt](Changelog.txt) for recent changes.
 
 ## B2S.Backglass Server
 
-### Installation:
+### Upgrade:
 
-- Unzip all files into a folder under your VisualPinball\B2SServer folder and overwrite already existing files with this new ones.
-  **It doesn't have to be installed in the tables folder! A better example would be C:\vPinball\VisualPinball\B2SServer.**
+**PinUP Popper BALLER Installer users** please wait for an update to come officially, work is being made to make it a smooth upgrade.
+
+- Unzip all files into the folder **where you have the B2S Server installed** and overwrite already existing files with this new ones.
+
+- Check that the dll and exe files is unblocked. There is no need to register the dll this time.
+
+- If you move your B2S Server folder, do not forget the **Plugins** folder has to be next to the B2S Server files in the same folder.
+
+The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues for .vpx files (if wanted):
+
+When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` -> each file present in the ScreenResTemplates folder will be available in the menu. The file.res file selected will be copied to tablename.res next to your tablename.vpx file.
+
+**You will have to add your own res files of preference to the ScreenResTemplates folder**
+
+
+### New Installations:
+
+- Unzip all files into a folder of your choice. The tables folder is commonly used, but can also be put separate.
+
 - Right click the `B2SBackglassServer.dll` and click on `Properties`. Maybe you'll find the following text on the `General` tab:
   `This file came from another computer and might be blocked to help protect this computer`. Click on the `Unblock` button.
   Everything is fine when you are not able to find this text.
 
 - Start the `B2SBackglassServerRegisterApp.exe` in the folder and the server dll should be registered.
   **IMPORTANT**: With Win7 (and above) start the .exe as administrator. 
-  Old installations can be cleaned up using [Nirsoft's RegDllView](https://www.nirsoft.net/utils/registered_dll_view.html)
 - On older windows machines, check the color depth of the backglass monitor. It has to be 32bit.
 - Also on older windows versions, the B2S backglass server requires .NET Framework 4 to be installed on your computer. It can be downloaded [here](http://www.microsoft.com/downloads/en/details.aspx?FamilyID=0a391abd-25c1-4fc0-919f-b21f31ab88b7&displaylang=en).
 
-The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues for .vpx files (if wanted):
-
-When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` -> each file present in the ScreenResTemplates folder will be available in the menu. The file.res file selected will be copied to tablename.res next to your tablename.vpx file.
-
-**You will have to modify and rename the ScreenResTemplates files to your preference!**
+- If you move your B2S Server folder, do not forget the **Plugins** folder has to be next to the B2S Server files in the same folder.
 
 - You're ready to download and play some `directB2S` backglasses.
 
@@ -77,8 +89,8 @@ From release 1.3.1.1 comment lines starting with a "#" are supported. **If you u
 
 The **B2S_ScreenResIdentifier** tool included in the package will help you alter your *.res files and add or remove the comment lines.
 B2S_ScreenResIdentifier will now warn with a red background if the scaling is not set to 100% on your screens.
-You can even "throw" one of the res files on the execuatable and it will edit it for you (the first parameter when started on a command line is the filename to a res file).
-It is now possible to turn off saving comments. Any manual entered comments will be overwritten!
+You can even "throw" one of the res files on the executable and it will edit it for you (the first parameter when started on a command line is the filename to a res file).
+It is now possible to turn off saving comments. Any manual entered comments will be removed!
 
 ## B2S.Backglass Designer
 
