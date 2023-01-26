@@ -105,6 +105,7 @@ jobs:
          path: tmp
 
   build-designer:
+    if: ${{ false }}  # disable for now
     name: Build B2SBackglassDesigner-${{ matrix.config }}-win-${{ matrix.platform }}
     runs-on: windows-2019
     strategy:
