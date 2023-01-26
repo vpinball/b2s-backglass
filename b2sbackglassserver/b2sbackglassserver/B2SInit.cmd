@@ -10,7 +10,10 @@ set "destination=^B2S Backglass|^B2S DMD$"
 REM using "Virtual DMD" and all "PUPSCREEN" forms as regular expressions
 set "cutter=^Virtual DMD$|^Virtual Alphanumeric Display$|^PUPSCREEN[0-9]+$"
 
-for /f "usebackq eol=# tokens=1,2 delims==" %%G in (`findstr "=" "%resfile%"`) do set "%%G=%%H"
+REM If started from explorer, remove all Windowpunch by searching for something nonexisting...
+if [%2] == [] set "cutter=^B2SDeactivated$"
+
+if exist "%resfile%" for /f "usebackq eol=# tokens=1,2 delims==" %%G in (`findstr "=" "%resfile%"`) do set "%%G=%%H"
 
 echo destination = "!destination!" >> "%~dp0B2SWindowPunch.log"
 echo cutter = "!cutter!" >> "%~dp0B2SWindowPunch.log"
