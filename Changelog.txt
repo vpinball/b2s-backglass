@@ -1,5 +1,6 @@
 2.0.0
-
+- The default for "Exact .directb2s match only" is now set to true, if not set already.
+- B2SBackglassServer will try to find B2STableSettings.xml in current directory and then installation directory.
 - B2SBackglassServer.dll: Add support for B2SInit.cmd to be called after Backglass is started.
 - Add B2SWindowPunch: General window punch routine to cut holes into B2S Backglass Form and make DMD and PuP Windows shine through.
 

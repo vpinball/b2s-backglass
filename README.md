@@ -6,23 +6,6 @@ See the [Changelog.txt](Changelog.txt) for recent changes.
 
 ## B2S.Backglass Server
 
-### Upgrade:
-
-**PinUP Popper BALLER Installer users** please wait for an update to come officially, work is being made to make it a smooth upgrade.
-
-- Unzip all files into the folder **where you have the B2S Server installed** and overwrite already existing files with this new ones.
-
-- Check that the dll and exe files is unblocked. There is no need to register the dll this time.
-
-- If you move your B2S Server folder, do not forget the **Plugins** folder has to be next to the B2S Server files in the same folder.
-
-The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues for .vpx files (if wanted):
-
-When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` -> each file present in the ScreenResTemplates folder will be available in the menu. The file.res file selected will be copied to tablename.res next to your tablename.vpx file.
-
-**You will have to add your own res files of preference to the ScreenResTemplates folder**
-
-
 ### New Installations:
 
 - Unzip all files into a folder of your choice. The tables folder is commonly used, but can also be put separate.
@@ -36,9 +19,19 @@ When you select a tablename.vpx file, press right mouse and select `B2S Server c
 - On older windows machines, check the color depth of the backglass monitor. It has to be 32bit.
 - Also on older windows versions, the B2S backglass server requires .NET Framework 4 to be installed on your computer. It can be downloaded [here](http://www.microsoft.com/downloads/en/details.aspx?FamilyID=0a391abd-25c1-4fc0-919f-b21f31ab88b7&displaylang=en).
 
-- If you move your B2S Server folder, do not forget the **Plugins** folder has to be next to the B2S Server files in the same folder.
+- **If you should move your B2S Server folder**, do not forget the **Plugins** folder has to be next to the B2S Server files in the same folder. 
 
 - You're ready to download and play some `directB2S` backglasses.
+
+### Upgrade:
+
+**PinUP Popper BALLER Installer users** please wait for an update to come officially, work is being made to make it a smooth upgrade.
+
+1. Make a backup of all file B2S Server related (all B2S* files, ScreenRes.txt and B2StableSettings.xml). This is easier if folder is sorted by name.
+2. Unzip all files into the folder **where you have the B2S Server installed** and overwrite already existing files with the new ones.
+3. Check that the dll and exe files is unblocked, see note on unblocking above. There is no need to register the dll this time.
+4. **If you should move your B2S Server folder**, do not forget the **Plugins** folder has to be next to the B2S Server files in the same folder. 
+   The B2StableSettings.xml can stay in the old place. **You need to re-register your dll**.
 
 ### Backglass settings:
 
@@ -82,6 +75,11 @@ The B2S Server uses the Backglass Screen value on the fifth line from top (exclu
    2. "@1920" means the screen sitting on the x position 1920 measured from Point(0,0) on the playfield, in this example the screen right next to the HD playfield screen.
    3. "=2" means the screen sitting on index number 2 walking left to right.
 
+The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues for .vpx files (if wanted). You can run the register app again to update this menu.
+When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` -> each file present in the ScreenResTemplates folder will be available in the menu. The file.res file selected will be copied to tablename.res next to your tablename.vpx file.
+
+**You will have to add your own res files of preference to the ScreenResTemplates folder**
+
 From release 1.3.1.1 comment lines starting with a "#" are supported. **If you use tools not supporting comments (or older releases), you need to remove these lines.**
 ([PinballX 5.55](https://forums.gameex.com/forums/topic/28239-news-pinballx-555/#comment-209692) has been updated for example.)
 
@@ -90,7 +88,7 @@ From release 1.3.1.1 comment lines starting with a "#" are supported. **If you u
 The **B2S_ScreenResIdentifier** tool included in the package will help you alter your *.res files and add or remove the comment lines.
 B2S_ScreenResIdentifier will now warn with a red background if the scaling is not set to 100% on your screens.
 You can even "throw" one of the res files on the executable and it will edit it for you (the first parameter when started on a command line is the filename to a res file).
-It is now possible to turn off saving comments. Any manual entered comments will be removed!
+It is now possible to turn off saving comments. **Any manual entered comments will be removed!**
 
 ## B2S.Backglass Designer
 
