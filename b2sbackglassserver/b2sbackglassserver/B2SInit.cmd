@@ -6,9 +6,9 @@ setlocal EnableDelayedExpansion
 
 set resfile=%cd%\%~1.res
 REM Cut holes in the destination "B2S Backglass Server" & "B2S DMD" forms
-set "destination=^B2S Backglass Server$|^B2S DMD$"
+set "destination=^B2S Backglass|^B2S DMD$"
 REM using "Virtual DMD" and all "PUPSCREEN" forms as regular expressions
-set "cutter=^Virtual DMD$|^PUPSCREEN[0-9]+$"
+set "cutter=^Virtual DMD$|^Virtual Alphanumeric Display$|^PUPSCREEN[0-9]+$"
 
 for /f "usebackq eol=# tokens=1,2 delims==" %%G in (`findstr "=" "%resfile%"`) do set "%%G=%%H"
 
