@@ -1,5 +1,6 @@
 ﻿Imports System
 Imports System.IO
+Imports System.Windows.Forms
 
 Public Class B2SSettings
 
@@ -36,6 +37,7 @@ Public Class B2SSettings
     End Enum
 
     Private Const filename As String = "B2STableSettings.xml"
+    Public Shared Property SettingFilePath() As String = GetSettingFilename()
 
     Public Shared Property MatchingFileName() As String = String.Empty
     Public Shared Property MatchingFileNames() As String() = Nothing
@@ -132,13 +134,21 @@ Public Class B2SSettings
             Load(False)
         End Set
     End Property
-
+    Public Shared Function GetSettingFilename() As String
+        If IO.File.Exists(filename) Then
+            Return filename
+        ElseIf IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
+            Return IO.Path.Combine(Application.StartupPath(), filename)
+        End If
+        Return filename
+    End Function
     Public Shared Sub Load(Optional ByVal resetLogs As Boolean = True)
         ClearAll()
+
         ' load settings
-        If IO.File.Exists(filename) Then
+        If IO.File.Exists(SettingFilePath) Then
             Dim XML As Xml.XmlDocument = New Xml.XmlDocument
-            XML.Load(filename)
+            XML.Load(SettingFilePath)
             If XML IsNot Nothing AndAlso XML.SelectSingleNode("B2STableSettings") IsNot Nothing Then
                 Dim nodeHeader As Xml.XmlNode = XML.SelectSingleNode("B2STableSettings")
                 ' get plugin status
@@ -243,7 +253,7 @@ Public Class B2SSettings
                            Optional ByVal justSaveHyperpinXMLFile As Boolean = False)
         ' save settings
         Dim XML As Xml.XmlDocument = New Xml.XmlDocument
-        If IO.File.Exists(filename) Then XML.Load(filename)
+        If IO.File.Exists(SettingFilePath) Then XML.Load(SettingFilePath)
         Dim nodeHeader As Xml.XmlElement = AddHeader(XML, XML, "B2STableSettings")
         If justSaveDualMode Then
             If B2SData.DualBackglass AndAlso (Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName)) Then
@@ -318,13 +328,13 @@ Public Class B2SSettings
                 End If
             End If
         End If
-        XML.Save(filename)
+        XML.Save(SettingFilePath)
     End Sub
 
     Public Shared Sub ClearAll()
         ' do not add GameName or B2SName here
         DefaultStartMode = eDefaultStartMode.EXE
-        DisableFuzzyMatching = False
+        DisableFuzzyMatching = True
         LogPath = String.Empty
         IsLampsStateLogOn = False
         IsSolenoidsStateLogOn = False
