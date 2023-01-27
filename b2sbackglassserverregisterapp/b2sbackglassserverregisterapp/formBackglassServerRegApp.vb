@@ -14,7 +14,25 @@ Public Class formBackglassServerRegApp
         Dim dialogResult As DialogResult
 
         If CheckB2SServer(False) Then
-            dialogResult = MessageBox.Show("The 'B2S Server' is already registered." & vbCrLf & vbCrLf & "Do you REALLY want to (try to) reregister it???", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+            Dim dllURI As String = "file://Unknown"
+            Try
+                Using regRoot As RegistryKey = Registry.ClassesRoot
+                    Dim clsID As String = String.Empty
+                    Using openKey As RegistryKey = regRoot.OpenSubKey("B2S.Server\CLSID", False)
+                        If openKey IsNot Nothing Then
+                            clsID = openKey.GetValue("")
+                        End If
+                    End Using
+                    Using openKey As RegistryKey = regRoot.OpenSubKey(IO.Path.Combine("CLSID", clsID, "InprocServer32"), False)
+                        If openKey IsNot Nothing Then
+                            dllURI = openKey.GetValue("CodeBase")
+                        End If
+                    End Using
+                End Using
+            Catch
+            End Try
+            Dim filepath As String = New Uri(dllURI).LocalPath
+            dialogResult = MessageBox.Show("The 'B2S Server' is already registered here:" & vbCrLf & vbCrLf & filepath & vbCrLf & vbCrLf & "Do you REALLY want to (try to) reregister it???", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
         Else
             dialogResult = MessageBox.Show("The 'B2S Server' is not registered yet." & vbCrLf & vbCrLf & "Do you want to register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
         End If
