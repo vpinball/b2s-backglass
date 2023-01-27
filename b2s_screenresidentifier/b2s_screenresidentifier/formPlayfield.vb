@@ -1,5 +1,7 @@
 ﻿Imports System.Text
 Imports System.Drawing
+Imports System.Windows.Forms
+Imports System.IO
 'Imports System.IO
 'Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
@@ -13,7 +15,23 @@ Public Class formPlayfield
         formDMD = New formDMD
         formDMD.formBackglass = formBackglass
         ' get all saved data
-        GetSettings()
+        If My.Application.CommandLineArgs.Count > 0 Then
+            FileName = My.Application.CommandLineArgs.ElementAt(0)
+
+            If Not Path.GetExtension(FileName).ToLower().Equals(".res") And Not Path.GetExtension(FileName).ToLower().Equals(".txt") Then
+                FileName = Path.ChangeExtension(FileName, ".res")
+            End If
+            If IO.File.Exists(FileName) Then
+                GetSettings(FileName)
+            ElseIf IO.File.Exists(GlobalFileName) Then
+                GetSettings(GlobalFileName)
+            ElseIf IO.File.Exists(IO.Path.Combine(Application.StartupPath(), GlobalFileName)) Then
+                GetSettings(IO.Path.Combine(Application.StartupPath(), GlobalFileName))
+            End If
+        Else
+            GetSettings(FileName)
+        End If
+
         StartupPlayfield()
         ' create all other forms
         formBackglass.Show()
@@ -76,13 +94,31 @@ Public Class formPlayfield
     End Sub
 
     Private Sub buttonSave_Click(sender As System.Object, e As System.EventArgs) Handles buttonSave.Click
-        If Not IO.File.Exists(FileName) Then
-            IO.File.CreateText(FileName).Close()
+        SaveResFile(FileName)
+    End Sub
+
+    Private Sub buttonSaveGlobal_Click(sender As Object, e As EventArgs) Handles buttonSaveGlobal.Click
+        Dim saveFilename As String
+
+        If IO.File.Exists(GlobalFileName) Or CurDir() = Application.StartupPath() Then
+            saveFilename = GlobalFileName
+        Else
+            saveFilename = IO.Path.Combine(Application.StartupPath(), GlobalFileName)
+        End If
+
+        If MessageBox.Show($"Do You want to save these settings globally?{vbCrLf}filename: {saveFilename}", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            SaveResFile(saveFilename)
+        End If
+    End Sub
+
+    Private Sub SaveResFile(ResFileName As String)
+        If Not IO.File.Exists(ResFileName) Then
+            IO.File.CreateText(ResFileName).Close()
         End If
 
         Dim currentScreen = 0
         ' open file
-        FileOpen(1, FileName, OpenMode.Output)
+        FileOpen(1, ResFileName, OpenMode.Output)
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Playfield Screen resolution width/height")
         WriteLine(1, CInt(Me.txtPlayfieldSizeWidth.Text))
@@ -147,6 +183,13 @@ Public Class formPlayfield
         'Dim filePath = Path.Combine(Application.StartupPath, "Test.txt")
 
         IsInStartup = True
+        Me.ResFileLabel.Text = Path.GetFileName(FileName)
+
+        'If the filename coming in as parameter is already the "global" name then we can only save as global
+        If Path.GetFileName(FileName).Equals(GlobalFileName) Then
+            buttonSaveGlobal.Enabled = False
+            buttonSaveGlobal.Visible = False
+        End If
 
         radio1Screen.Checked = True
         If screenCount <= 2 Then

@@ -4,8 +4,8 @@ Imports Microsoft.Win32
 Module Module1
     Private Const DESKTOPVERTRES As Integer = &H75
     Private Const DESKTOPHORZRES As Integer = &H76
-    Public Property FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
-
+    Public Property GlobalFileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Public Property FileName As String = GlobalFileName
     Public ReadOnly screenCount As Integer = Screen.AllScreens.Count
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
 
@@ -60,15 +60,12 @@ Module Module1
         End Set
     End Property
 
-    Public Sub GetSettings()
-        If My.Application.CommandLineArgs.Count > 0 AndAlso IO.File.Exists(My.Application.CommandLineArgs.ElementAt(0)) Then
-            FileName = My.Application.CommandLineArgs.ElementAt(0)
-        End If
-        If IO.File.Exists(FileName) Then
+    Public Sub GetSettings(ResFileName)
+        If IO.File.Exists(ResFileName) Then
             FileFound = True
 
             ' open settings file
-            FileOpen(1, FileName, OpenMode.Input)
+            FileOpen(1, ResFileName, OpenMode.Input)
 
             ' get all settings
             Dim line(50) As String

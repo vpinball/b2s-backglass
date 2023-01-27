@@ -52,20 +52,26 @@ Partial Class formPlayfield
         Me.lblChooseSetup = New System.Windows.Forms.Label()
         Me.lblInfo2 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.buttonSaveGlobal = New System.Windows.Forms.Button()
+        Me.ResFileLabel = New System.Windows.Forms.TextBox()
         Me.chkSaveComments = New System.Windows.Forms.CheckBox()
         Me.lblCopyright = New System.Windows.Forms.Label()
         Me.groupPlayfield.SuspendLayout()
         Me.panelChooseSetup.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.FlowLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'buttonSave
         '
         Me.buttonSave.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.buttonSave.Location = New System.Drawing.Point(0, 30)
+        Me.buttonSave.Location = New System.Drawing.Point(3, 3)
+        Me.buttonSave.MaximumSize = New System.Drawing.Size(146, 43)
+        Me.buttonSave.MinimumSize = New System.Drawing.Size(120, 43)
         Me.buttonSave.Name = "buttonSave"
-        Me.buttonSave.Size = New System.Drawing.Size(185, 43)
+        Me.buttonSave.Size = New System.Drawing.Size(120, 43)
         Me.buttonSave.TabIndex = 3
         Me.buttonSave.Text = "&Save settings"
         Me.buttonSave.UseVisualStyleBackColor = True
@@ -110,11 +116,11 @@ Partial Class formPlayfield
         '
         Me.buttonBringMeTheOtherWindows.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.buttonBringMeTheOtherWindows.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.buttonBringMeTheOtherWindows.Location = New System.Drawing.Point(822, 12)
+        Me.buttonBringMeTheOtherWindows.Location = New System.Drawing.Point(868, 5)
         Me.buttonBringMeTheOtherWindows.Name = "buttonBringMeTheOtherWindows"
-        Me.buttonBringMeTheOtherWindows.Size = New System.Drawing.Size(266, 43)
+        Me.buttonBringMeTheOtherWindows.Size = New System.Drawing.Size(217, 43)
         Me.buttonBringMeTheOtherWindows.TabIndex = 4
-        Me.buttonBringMeTheOtherWindows.Text = "Have you seen my &backglass and DMD window?"
+        Me.buttonBringMeTheOtherWindows.Text = "Where is my &backglass and DMD window?"
         Me.buttonBringMeTheOtherWindows.UseVisualStyleBackColor = True
         '
         'lblInfo
@@ -368,22 +374,56 @@ Partial Class formPlayfield
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.FlowLayoutPanel1)
         Me.Panel2.Controls.Add(Me.chkSaveComments)
         Me.Panel2.Controls.Add(Me.lblCopyright)
-        Me.Panel2.Controls.Add(Me.buttonSave)
         Me.Panel2.Controls.Add(Me.buttonBringMeTheOtherWindows)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(15, 495)
+        Me.Panel2.Location = New System.Drawing.Point(15, 483)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1088, 75)
+        Me.Panel2.Size = New System.Drawing.Size(1088, 87)
         Me.Panel2.TabIndex = 8
+        '
+        'FlowLayoutPanel1
+        '
+        Me.FlowLayoutPanel1.Controls.Add(Me.buttonSave)
+        Me.FlowLayoutPanel1.Controls.Add(Me.buttonSaveGlobal)
+        Me.FlowLayoutPanel1.Controls.Add(Me.ResFileLabel)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 3)
+        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(813, 52)
+        Me.FlowLayoutPanel1.TabIndex = 9
+        '
+        'buttonSaveGlobal
+        '
+        Me.buttonSaveGlobal.Location = New System.Drawing.Point(129, 3)
+        Me.buttonSaveGlobal.MaximumSize = New System.Drawing.Size(146, 43)
+        Me.buttonSaveGlobal.MinimumSize = New System.Drawing.Size(120, 43)
+        Me.buttonSaveGlobal.Name = "buttonSaveGlobal"
+        Me.buttonSaveGlobal.Size = New System.Drawing.Size(120, 43)
+        Me.buttonSaveGlobal.TabIndex = 8
+        Me.buttonSaveGlobal.Text = "Save &global"
+        Me.buttonSaveGlobal.UseVisualStyleBackColor = True
+        '
+        'ResFileLabel
+        '
+        Me.ResFileLabel.AccessibleDescription = "ScreenRes file"
+        Me.ResFileLabel.AccessibleName = "Filename"
+        Me.ResFileLabel.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ResFileLabel.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.ResFileLabel.Location = New System.Drawing.Point(255, 12)
+        Me.ResFileLabel.Margin = New System.Windows.Forms.Padding(3, 12, 3, 12)
+        Me.ResFileLabel.Name = "ResFileLabel"
+        Me.ResFileLabel.ReadOnly = True
+        Me.ResFileLabel.Size = New System.Drawing.Size(547, 23)
+        Me.ResFileLabel.TabIndex = 7
         '
         'chkSaveComments
         '
         Me.chkSaveComments.AccessibleDescription = "Save Comments"
         Me.chkSaveComments.AccessibleName = "chk_save_comments"
         Me.chkSaveComments.AutoSize = True
-        Me.chkSaveComments.Location = New System.Drawing.Point(3, 3)
+        Me.chkSaveComments.Location = New System.Drawing.Point(3, 61)
         Me.chkSaveComments.Name = "chkSaveComments"
         Me.chkSaveComments.Size = New System.Drawing.Size(167, 23)
         Me.chkSaveComments.TabIndex = 6
@@ -394,7 +434,7 @@ Partial Class formPlayfield
         '
         Me.lblCopyright.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblCopyright.Font = New System.Drawing.Font("Tahoma", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCopyright.Location = New System.Drawing.Point(910, 60)
+        Me.lblCopyright.Location = New System.Drawing.Point(907, 68)
         Me.lblCopyright.Name = "lblCopyright"
         Me.lblCopyright.Size = New System.Drawing.Size(178, 13)
         Me.lblCopyright.TabIndex = 5
@@ -427,6 +467,8 @@ Partial Class formPlayfield
         Me.panelChooseSetup.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        Me.FlowLayoutPanel1.ResumeLayout(False)
+        Me.FlowLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -462,4 +504,7 @@ Partial Class formPlayfield
     Friend WithEvents chkSaveComments As CheckBox
     Friend WithEvents txtPlayfieldScreenScale As TextBox
     Friend WithEvents lblPlayfieldScreenScale As Label
+    Friend WithEvents ResFileLabel As TextBox
+    Friend WithEvents buttonSaveGlobal As Button
+    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
 End Class
