@@ -22,6 +22,7 @@ Module Module1
     Public Property DMDLocation() As Point = New Point(0, 0)
     Public Property DMDFlipY() As Boolean = False
     Public Property BackgroundSize() As Size = New Size(0, 0)
+    Public Property BackgroundActive() As Boolean = True
     Public Property BackgroundLocation() As Point = New Point(0, 0)
     Public Property BackgroundPath() As String = String.Empty
     Public Property SaveComments() As Boolean = False
@@ -70,7 +71,7 @@ Module Module1
             ' get all settings
             Dim line(50) As String
             Dim i As Integer = 0
-            Do Until EOF(1) Or i > 20
+            Do Until EOF(1) Or i > 30
                 line(i) = LineInput(1)
                 If (line(i).StartsWith("#")) Then
                     SaveComments = True
@@ -98,8 +99,22 @@ Module Module1
             DMDFlipY = (Trim(line(11)) = "1")
 
             If (i > 15) Then
-                BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
-                BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
+                Dim TempBackglassLocation As New Point(CInt(line(12)), CInt(line(13)))
+                Dim TempBackglassize As New Size(CInt(line(14)), CInt(line(15)))
+
+                If Not TempBackglassize.IsEmpty Then
+                    BackgroundActive = False
+                    BackgroundLocation = BackglassLocation
+                    BackgroundSize = BackglassSize
+
+                    BackglassLocation = TempBackglassLocation
+                    BackglassSize = TempBackglassize
+                Else
+                    BackgroundActive = True
+                    BackgroundLocation = TempBackglassLocation
+                    BackgroundSize = TempBackglassize
+                End If
+
                 BackgroundPath = line(16)
             Else
                 BackgroundLocation = New Point(0, 0)

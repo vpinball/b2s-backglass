@@ -8,25 +8,34 @@ Imports System.IO
 Public Class formPlayfield
 
     Private formBackglass As formBackglass = Nothing
+    Private formBackground As formBackground = Nothing
     Private formDMD As formDMD = Nothing
 
     Private Sub formPlayfield_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
-        formBackglass = New formBackglass
+
         formDMD = New formDMD
         formDMD.formBackglass = formBackglass
+
+        formBackglass = New formBackglass
+        formBackground = New formBackground
+
+        formBackglass.formBackground = formBackground
+
         ' get all saved data
         If My.Application.CommandLineArgs.Count > 0 Then
             FileName = My.Application.CommandLineArgs.ElementAt(0)
 
-            If Not Path.GetExtension(FileName).ToLower().Equals(".res") And Not Path.GetExtension(FileName).ToLower().Equals(".txt") Then
+            ' In case a Table or backglass file is thrown on the executable
+            If Not Path.GetExtension(FileName).ToLower().Equals(".res") And Not Path.GetExtension(FileName).ToLower().Equals(".txt") And Not FileName.ToLower().Equals(GlobalFileName.ToLower()) Then
                 FileName = Path.ChangeExtension(FileName, ".res")
             End If
-            If IO.File.Exists(FileName) Then
+
+            If File.Exists(FileName) Then
                 GetSettings(FileName)
-            ElseIf IO.File.Exists(GlobalFileName) Then
+            ElseIf File.Exists(GlobalFileName) Then
                 GetSettings(GlobalFileName)
-            ElseIf IO.File.Exists(IO.Path.Combine(Application.StartupPath(), GlobalFileName)) Then
-                GetSettings(IO.Path.Combine(Application.StartupPath(), GlobalFileName))
+            ElseIf File.Exists(Path.Combine(Application.StartupPath(), GlobalFileName)) Then
+                GetSettings(Path.Combine(Application.StartupPath(), GlobalFileName))
             End If
         Else
             GetSettings(FileName)
@@ -34,7 +43,17 @@ Public Class formPlayfield
 
         StartupPlayfield()
         ' create all other forms
+        Me.BringToFront()
+
+        formBackground.BringToFront()
+        formBackground.Show()
+        formBackground.Visible = BackgroundActive
+
+        formBackglass.BringToFront()
         formBackglass.Show()
+        formBackglass.BackgroundActiveCheckBox.Checked = BackgroundActive
+
+        formDMD.BringToFront()
         formDMD.Show()
         IsDirty = False
     End Sub
@@ -79,6 +98,7 @@ Public Class formPlayfield
 
     Private Sub buttonBringMeTheOtherWindows_Click(sender As System.Object, e As System.EventArgs) Handles buttonBringMeTheOtherWindows.Click
         'formBackglass.SetDesktopLocation(10, 10)
+        formBackground.BringToFront()
         formBackglass.BringToFront()
         formDMD.BringToFront()
     End Sub
@@ -125,8 +145,14 @@ Public Class formPlayfield
         WriteLine(1, CInt(Me.txtPlayfieldSizeHeight.Text))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Backglass Screen resolution width/height")
-        WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
-        WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
+
+        If BackgroundActive Then
+            WriteLine(1, CInt(formBackground.txtBackgroundSizeWidth.Text))
+            WriteLine(1, CInt(formBackground.txtBackgroundSizeHeight.Text))
+        Else
+            WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
+            WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
+        End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Define Backglass using Display Devicename screen number (\\.\DISPLAY)x or screen coordinates (@x) or screen index (=x)")
         If BackglassMonitorType.StartsWith("@") Then
@@ -143,10 +169,18 @@ Public Class formPlayfield
         End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# x position for the backglass relative To the upper left corner Of the screen selected")
-        WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
+        If BackgroundActive Then
+            WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text))
+        Else
+            WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
+        End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# y position for the backglass On the selected display (Normally left at 0)")
-        WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
+        If BackgroundActive Then
+            WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text))
+        Else
+            WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
+        End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height Of the DMD area In pixels - For 3 screen setup")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Width, CInt(formDMD.txtDMDSizeWidth.Text)))
@@ -160,15 +194,27 @@ Public Class formPlayfield
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield ('Small' Button In the Options)")
-        PrintLine(1, BackgroundLocation.X.ToString)
-        PrintLine(1, BackgroundLocation.Y.ToString)
+
+        If BackgroundActive Then
+            WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
+            WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
+        Else
+            WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text))
+            WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text))
+        End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height Of the backglass When StartBackground Is active")
-        PrintLine(1, BackgroundSize.Width.ToString)
-        PrintLine(1, BackgroundSize.Height.ToString)
+
+        If BackgroundActive Then
+            WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
+            WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
+        Else
+            PrintLine(1, "0")
+            PrintLine(1, "0")
+        End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# C:\path\Frame (The path To the location where you have the background image)")
-        PrintLine(1, BackgroundPath.ToString)
+        PrintLine(1, formBackground.TxtBackgroundPath.Text)
 
         ' close file handle
         FileClose(1)
@@ -228,8 +274,18 @@ Public Class formPlayfield
 
                     formDMD.Location = scr.Bounds.Location + DMDLocation
                     formDMD.Size = DMDSize
-                End If
 
+                    formBackground.Location = scr.Bounds.Location + BackgroundLocation
+
+                    If BackgroundSize.Height = 0 And BackgroundSize.Width = 0 Then
+                        BackgroundActive = False
+                        formBackground.Visible = False
+                    Else
+                        formBackground.Size = BackgroundSize
+                        BackgroundActive = True
+                        formBackground.Visible = True
+                    End If
+                End If
                 ' DMD default location
                 formDMD.chkDMDAtDefaultLocation.Checked = (DMDLocation = New Point(0, 0))
                 If formDMD.chkDMDAtDefaultLocation.Checked Then

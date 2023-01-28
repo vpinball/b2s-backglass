@@ -116,11 +116,11 @@ Partial Class formPlayfield
         '
         Me.buttonBringMeTheOtherWindows.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.buttonBringMeTheOtherWindows.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.buttonBringMeTheOtherWindows.Location = New System.Drawing.Point(868, 5)
+        Me.buttonBringMeTheOtherWindows.Location = New System.Drawing.Point(897, 5)
         Me.buttonBringMeTheOtherWindows.Name = "buttonBringMeTheOtherWindows"
-        Me.buttonBringMeTheOtherWindows.Size = New System.Drawing.Size(217, 43)
+        Me.buttonBringMeTheOtherWindows.Size = New System.Drawing.Size(188, 43)
         Me.buttonBringMeTheOtherWindows.TabIndex = 4
-        Me.buttonBringMeTheOtherWindows.Text = "Where is my &backglass and DMD window?"
+        Me.buttonBringMeTheOtherWindows.Text = "Where are the other windows?"
         Me.buttonBringMeTheOtherWindows.UseVisualStyleBackColor = True
         '
         'lblInfo
@@ -391,7 +391,7 @@ Partial Class formPlayfield
         Me.FlowLayoutPanel1.Controls.Add(Me.ResFileLabel)
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 3)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(813, 52)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(874, 52)
         Me.FlowLayoutPanel1.TabIndex = 9
         '
         'buttonSaveGlobal
@@ -461,6 +461,7 @@ Partial Class formPlayfield
         Me.Padding = New System.Windows.Forms.Padding(15)
         Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
         Me.Text = "Playfield - B2S Screen Resolution Identifier"
+        Me.TopMost = True
         Me.groupPlayfield.ResumeLayout(False)
         Me.groupPlayfield.PerformLayout()
         Me.panelChooseSetup.ResumeLayout(False)

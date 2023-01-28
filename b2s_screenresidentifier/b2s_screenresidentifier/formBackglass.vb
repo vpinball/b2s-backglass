@@ -2,6 +2,7 @@
 Imports System.Drawing
 
 Public Class formBackglass
+    Friend formBackground As formBackground = Nothing
 
     Public ReadOnly Property BackglassScreenNo() As Integer
         Get
@@ -136,4 +137,8 @@ Public Class formBackglass
         Me.Size = New Size(width, height)
     End Sub
 
+    Private Sub BackgroundActiveCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles BackgroundActiveCheckBox.CheckedChanged
+        formBackground.Visible = BackgroundActiveCheckBox.Checked
+        BackgroundActive = BackgroundActiveCheckBox.Checked
+    End Sub
 End Class

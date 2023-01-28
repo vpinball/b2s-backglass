@@ -109,6 +109,12 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="formBackground.designer.vb">
+      <DependentUpon>formBackground.vb</DependentUpon>
+    </Compile>
+    <Compile Include="formBackground.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="formBackglass.Designer.vb">
       <DependentUpon>formBackglass.vb</DependentUpon>
     </Compile>
@@ -148,6 +154,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="formBackground.resx">
+      <DependentUpon>formBackground.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="formBackglass.resx">
       <DependentUpon>formBackglass.vb</DependentUpon>
     </EmbeddedResource>
