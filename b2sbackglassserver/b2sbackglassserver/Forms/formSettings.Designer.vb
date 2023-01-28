@@ -26,6 +26,7 @@ Partial Class formSettings
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formSettings))
         Me.TimerOpacity = New System.Windows.Forms.Timer(Me.components)
         Me.PanelSettings = New System.Windows.Forms.Panel()
+        Me.btnEditScreenRes = New System.Windows.Forms.Button()
         Me.grpPlugins = New System.Windows.Forms.GroupBox()
         Me.chkShowStartupError = New System.Windows.Forms.CheckBox()
         Me.chkActivatePlugins = New System.Windows.Forms.CheckBox()
@@ -83,7 +84,6 @@ Partial Class formSettings
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
-        Me.btnEditScreenRes = New System.Windows.Forms.Button()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -126,6 +126,16 @@ Partial Class formSettings
         Me.PanelSettings.Name = "PanelSettings"
         Me.PanelSettings.Size = New System.Drawing.Size(504, 619)
         Me.PanelSettings.TabIndex = 2
+        '
+        'btnEditScreenRes
+        '
+        Me.btnEditScreenRes.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnEditScreenRes.Location = New System.Drawing.Point(94, 586)
+        Me.btnEditScreenRes.Name = "btnEditScreenRes"
+        Me.btnEditScreenRes.Size = New System.Drawing.Size(99, 24)
+        Me.btnEditScreenRes.TabIndex = 39
+        Me.btnEditScreenRes.Text = "Edit ScreenRes..."
+        Me.btnEditScreenRes.UseVisualStyleBackColor = True
         '
         'grpPlugins
         '
@@ -189,6 +199,7 @@ Partial Class formSettings
         'chkFormNoFocus
         '
         Me.chkFormNoFocus.AutoSize = True
+        Me.chkFormNoFocus.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkFormNoFocus.Location = New System.Drawing.Point(171, 49)
         Me.chkFormNoFocus.Name = "chkFormNoFocus"
         Me.chkFormNoFocus.Size = New System.Drawing.Size(97, 17)
@@ -228,6 +239,7 @@ Partial Class formSettings
         'chkSmall
         '
         Me.chkSmall.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkSmall.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkSmall.Location = New System.Drawing.Point(6, 20)
         Me.chkSmall.Name = "chkSmall"
         Me.chkSmall.Size = New System.Drawing.Size(101, 24)
@@ -461,8 +473,8 @@ Partial Class formSettings
         Me.lblCopyright.Name = "lblCopyright"
         Me.lblCopyright.Size = New System.Drawing.Size(392, 26)
         Me.lblCopyright.TabIndex = 23
-        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Herweh && B2S Team. All rights r" &
-    "eserved."
+        Me.lblCopyright.Text = "B2S Backglass Server.dll" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Herweh && B2S Team. All righ" &
+    "ts reserved."
         '
         'grpVisibility
         '
@@ -725,16 +737,6 @@ Partial Class formSettings
         Me.btnDonate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnDonate.UseVisualStyleBackColor = True
         Me.btnDonate.Visible = False
-        '
-        'btnEditScreenRes
-        '
-        Me.btnEditScreenRes.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnEditScreenRes.Location = New System.Drawing.Point(94, 586)
-        Me.btnEditScreenRes.Name = "btnEditScreenRes"
-        Me.btnEditScreenRes.Size = New System.Drawing.Size(99, 24)
-        Me.btnEditScreenRes.TabIndex = 39
-        Me.btnEditScreenRes.Text = "Edit ScreenRes..."
-        Me.btnEditScreenRes.UseVisualStyleBackColor = True
         '
         'formSettings
         '
