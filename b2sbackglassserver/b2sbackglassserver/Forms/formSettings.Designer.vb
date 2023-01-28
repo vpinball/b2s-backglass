@@ -31,8 +31,11 @@ Partial Class formSettings
         Me.chkActivatePlugins = New System.Windows.Forms.CheckBox()
         Me.btnPluginSettings = New System.Windows.Forms.Button()
         Me.grpStartMode = New System.Windows.Forms.GroupBox()
+        Me.chkFormNoFocus = New System.Windows.Forms.CheckBox()
         Me.lblFormFront = New System.Windows.Forms.Label()
+        Me.chkDisableFuzzyMatching = New System.Windows.Forms.CheckBox()
         Me.cmbFormFront = New System.Windows.Forms.ComboBox()
+        Me.chkSmall = New System.Windows.Forms.CheckBox()
         Me.lblDefaultStartMode = New System.Windows.Forms.Label()
         Me.chkStartAsEXE = New System.Windows.Forms.CheckBox()
         Me.cmbDefaultStartMode = New System.Windows.Forms.ComboBox()
@@ -80,6 +83,7 @@ Partial Class formSettings
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
+        Me.btnEditScreenRes = New System.Windows.Forms.Button()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -101,6 +105,7 @@ Partial Class formSettings
         '
         'PanelSettings
         '
+        Me.PanelSettings.Controls.Add(Me.btnEditScreenRes)
         Me.PanelSettings.Controls.Add(Me.grpPlugins)
         Me.PanelSettings.Controls.Add(Me.grpStartMode)
         Me.PanelSettings.Controls.Add(Me.btnMore)
@@ -119,7 +124,7 @@ Partial Class formSettings
         Me.PanelSettings.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelSettings.Location = New System.Drawing.Point(0, 0)
         Me.PanelSettings.Name = "PanelSettings"
-        Me.PanelSettings.Size = New System.Drawing.Size(491, 593)
+        Me.PanelSettings.Size = New System.Drawing.Size(504, 619)
         Me.PanelSettings.TabIndex = 2
         '
         'grpPlugins
@@ -127,10 +132,10 @@ Partial Class formSettings
         Me.grpPlugins.Controls.Add(Me.chkShowStartupError)
         Me.grpPlugins.Controls.Add(Me.chkActivatePlugins)
         Me.grpPlugins.Controls.Add(Me.btnPluginSettings)
-        Me.grpPlugins.Location = New System.Drawing.Point(15, 501)
+        Me.grpPlugins.Location = New System.Drawing.Point(12, 510)
         Me.grpPlugins.Name = "grpPlugins"
         Me.grpPlugins.Size = New System.Drawing.Size(475, 50)
-        Me.grpPlugins.TabIndex = 36
+        Me.grpPlugins.TabIndex = 37
         Me.grpPlugins.TabStop = False
         Me.grpPlugins.Text = "Plugins"
         '
@@ -166,52 +171,86 @@ Partial Class formSettings
         '
         'grpStartMode
         '
+        Me.grpStartMode.Controls.Add(Me.chkFormNoFocus)
         Me.grpStartMode.Controls.Add(Me.lblFormFront)
+        Me.grpStartMode.Controls.Add(Me.chkDisableFuzzyMatching)
         Me.grpStartMode.Controls.Add(Me.cmbFormFront)
+        Me.grpStartMode.Controls.Add(Me.chkSmall)
         Me.grpStartMode.Controls.Add(Me.lblDefaultStartMode)
         Me.grpStartMode.Controls.Add(Me.chkStartAsEXE)
         Me.grpStartMode.Controls.Add(Me.cmbDefaultStartMode)
-        Me.grpStartMode.Location = New System.Drawing.Point(15, 160)
+        Me.grpStartMode.Location = New System.Drawing.Point(15, 161)
         Me.grpStartMode.Name = "grpStartMode"
-        Me.grpStartMode.Size = New System.Drawing.Size(474, 75)
+        Me.grpStartMode.Size = New System.Drawing.Size(474, 74)
         Me.grpStartMode.TabIndex = 2
         Me.grpStartMode.TabStop = False
         Me.grpStartMode.Text = "Backglass start mode"
         '
+        'chkFormNoFocus
+        '
+        Me.chkFormNoFocus.AutoSize = True
+        Me.chkFormNoFocus.Location = New System.Drawing.Point(171, 49)
+        Me.chkFormNoFocus.Name = "chkFormNoFocus"
+        Me.chkFormNoFocus.Size = New System.Drawing.Size(97, 17)
+        Me.chkFormNoFocus.TabIndex = 42
+        Me.chkFormNoFocus.Text = "Form No Focus"
+        Me.chkFormNoFocus.UseVisualStyleBackColor = True
+        '
         'lblFormFront
         '
         Me.lblFormFront.AutoSize = True
-        Me.lblFormFront.Location = New System.Drawing.Point(50, 49)
+        Me.lblFormFront.Location = New System.Drawing.Point(10, 49)
         Me.lblFormFront.Name = "lblFormFront"
         Me.lblFormFront.Size = New System.Drawing.Size(47, 13)
         Me.lblFormFront.TabIndex = 41
         Me.lblFormFront.Text = "Bring BG"
+        '
+        'chkDisableFuzzyMatching
+        '
+        Me.chkDisableFuzzyMatching.AutoSize = True
+        Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(313, 49)
+        Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
+        Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(159, 17)
+        Me.chkDisableFuzzyMatching.TabIndex = 40
+        Me.chkDisableFuzzyMatching.Text = "Exact .directb2s match only"
+        Me.chkDisableFuzzyMatching.UseVisualStyleBackColor = True
         '
         'cmbFormFront
         '
         Me.cmbFormFront.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbFormFront.FormattingEnabled = True
         Me.cmbFormFront.Items.AddRange(New Object() {"Form to Back", "Standard", "Form to Top"})
-        Me.cmbFormFront.Location = New System.Drawing.Point(103, 46)
+        Me.cmbFormFront.Location = New System.Drawing.Point(61, 46)
         Me.cmbFormFront.Name = "cmbFormFront"
-        Me.cmbFormFront.Size = New System.Drawing.Size(127, 21)
+        Me.cmbFormFront.Size = New System.Drawing.Size(100, 21)
         Me.cmbFormFront.TabIndex = 27
+        '
+        'chkSmall
+        '
+        Me.chkSmall.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkSmall.Location = New System.Drawing.Point(6, 20)
+        Me.chkSmall.Name = "chkSmall"
+        Me.chkSmall.Size = New System.Drawing.Size(101, 24)
+        Me.chkSmall.TabIndex = 38
+        Me.chkSmall.Text = "Background/Small"
+        Me.chkSmall.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.chkSmall.UseVisualStyleBackColor = True
         '
         'lblDefaultStartMode
         '
         Me.lblDefaultStartMode.AutoSize = True
-        Me.lblDefaultStartMode.Location = New System.Drawing.Point(262, 23)
+        Me.lblDefaultStartMode.Location = New System.Drawing.Point(284, 24)
         Me.lblDefaultStartMode.Name = "lblDefaultStartMode"
         Me.lblDefaultStartMode.Size = New System.Drawing.Size(101, 13)
-        Me.lblDefaultStartMode.TabIndex = 24
+        Me.lblDefaultStartMode.TabIndex = 26
         Me.lblDefaultStartMode.Text = "Default start mode:"
         '
         'chkStartAsEXE
         '
         Me.chkStartAsEXE.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkStartAsEXE.Location = New System.Drawing.Point(6, 17)
+        Me.chkStartAsEXE.Location = New System.Drawing.Point(111, 20)
         Me.chkStartAsEXE.Name = "chkStartAsEXE"
-        Me.chkStartAsEXE.Size = New System.Drawing.Size(228, 24)
+        Me.chkStartAsEXE.Size = New System.Drawing.Size(171, 24)
         Me.chkStartAsEXE.TabIndex = 6
         Me.chkStartAsEXE.Text = "Start this backglass in EXE mode"
         Me.chkStartAsEXE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -222,15 +261,15 @@ Partial Class formSettings
         Me.cmbDefaultStartMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDefaultStartMode.FormattingEnabled = True
         Me.cmbDefaultStartMode.Items.AddRange(New Object() {"Standard", "In EXE"})
-        Me.cmbDefaultStartMode.Location = New System.Drawing.Point(369, 20)
+        Me.cmbDefaultStartMode.Location = New System.Drawing.Point(391, 21)
         Me.cmbDefaultStartMode.Name = "cmbDefaultStartMode"
-        Me.cmbDefaultStartMode.Size = New System.Drawing.Size(98, 21)
+        Me.cmbDefaultStartMode.Size = New System.Drawing.Size(76, 21)
         Me.cmbDefaultStartMode.TabIndex = 7
         '
         'btnMore
         '
         Me.btnMore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnMore.Location = New System.Drawing.Point(15, 562)
+        Me.btnMore.Location = New System.Drawing.Point(15, 586)
         Me.btnMore.Name = "btnMore"
         Me.btnMore.Size = New System.Drawing.Size(73, 24)
         Me.btnMore.TabIndex = 32
@@ -264,10 +303,10 @@ Partial Class formSettings
         'lblFile
         '
         Me.lblFile.AutoSize = True
-        Me.lblFile.Location = New System.Drawing.Point(162, 23)
+        Me.lblFile.Location = New System.Drawing.Point(162, 24)
         Me.lblFile.Name = "lblFile"
         Me.lblFile.Size = New System.Drawing.Size(27, 13)
-        Me.lblFile.TabIndex = 14
+        Me.lblFile.TabIndex = 15
         Me.lblFile.Text = "File:"
         Me.lblFile.Visible = False
         '
@@ -316,7 +355,7 @@ Partial Class formSettings
         '
         Me.grpAnimationSettings.Controls.Add(Me.cmbAnimationSetting)
         Me.grpAnimationSettings.Controls.Add(Me.cmbAnimations)
-        Me.grpAnimationSettings.Location = New System.Drawing.Point(15, 391)
+        Me.grpAnimationSettings.Location = New System.Drawing.Point(12, 399)
         Me.grpAnimationSettings.Name = "grpAnimationSettings"
         Me.grpAnimationSettings.Size = New System.Drawing.Size(474, 51)
         Me.grpAnimationSettings.TabIndex = 5
@@ -349,7 +388,7 @@ Partial Class formSettings
         Me.lblVersion.Location = New System.Drawing.Point(54, 30)
         Me.lblVersion.Name = "lblVersion"
         Me.lblVersion.Size = New System.Drawing.Size(265, 13)
-        Me.lblVersion.TabIndex = 37
+        Me.lblVersion.TabIndex = 38
         Me.lblVersion.Text = "Server version {0}, Backglass file version {1}"
         '
         'grpScreenshot
@@ -357,7 +396,7 @@ Partial Class formSettings
         Me.grpScreenshot.Controls.Add(Me.lblFileType)
         Me.grpScreenshot.Controls.Add(Me.cmbScreenshotType)
         Me.grpScreenshot.Controls.Add(Me.btnScreenshotPath)
-        Me.grpScreenshot.Location = New System.Drawing.Point(15, 447)
+        Me.grpScreenshot.Location = New System.Drawing.Point(12, 453)
         Me.grpScreenshot.Name = "grpScreenshot"
         Me.grpScreenshot.Size = New System.Drawing.Size(475, 50)
         Me.grpScreenshot.TabIndex = 6
@@ -379,14 +418,14 @@ Partial Class formSettings
         Me.cmbScreenshotType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbScreenshotType.FormattingEnabled = True
         Me.cmbScreenshotType.Items.AddRange(New Object() {"PNG", "JPG", "GIF", "BMP"})
-        Me.cmbScreenshotType.Location = New System.Drawing.Point(357, 18)
+        Me.cmbScreenshotType.Location = New System.Drawing.Point(357, 16)
         Me.cmbScreenshotType.Name = "cmbScreenshotType"
         Me.cmbScreenshotType.Size = New System.Drawing.Size(111, 21)
         Me.cmbScreenshotType.TabIndex = 19
         '
         'btnScreenshotPath
         '
-        Me.btnScreenshotPath.Location = New System.Drawing.Point(8, 18)
+        Me.btnScreenshotPath.Location = New System.Drawing.Point(8, 16)
         Me.btnScreenshotPath.Name = "btnScreenshotPath"
         Me.btnScreenshotPath.Size = New System.Drawing.Size(226, 24)
         Me.btnScreenshotPath.TabIndex = 18
@@ -398,7 +437,7 @@ Partial Class formSettings
         Me.btnCloseSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCloseSettings.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnCloseSettings.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCloseSettings.Location = New System.Drawing.Point(401, 562)
+        Me.btnCloseSettings.Location = New System.Drawing.Point(414, 586)
         Me.btnCloseSettings.Name = "btnCloseSettings"
         Me.btnCloseSettings.Size = New System.Drawing.Size(78, 24)
         Me.btnCloseSettings.TabIndex = 35
@@ -420,10 +459,10 @@ Partial Class formSettings
         Me.lblCopyright.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCopyright.Location = New System.Drawing.Point(54, 4)
         Me.lblCopyright.Name = "lblCopyright"
-        Me.lblCopyright.Size = New System.Drawing.Size(423, 26)
+        Me.lblCopyright.Size = New System.Drawing.Size(392, 26)
         Me.lblCopyright.TabIndex = 23
-        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Stefan Wuehr (""Herweh""). All rig" & _
-    "hts reserved."
+        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Herweh && B2S Team. All rights r" &
+    "eserved."
         '
         'grpVisibility
         '
@@ -502,9 +541,9 @@ Partial Class formSettings
         Me.btnSaveSettings.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSaveSettings.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveSettings.Location = New System.Drawing.Point(96, 562)
+        Me.btnSaveSettings.Location = New System.Drawing.Point(199, 586)
         Me.btnSaveSettings.Name = "btnSaveSettings"
-        Me.btnSaveSettings.Size = New System.Drawing.Size(298, 24)
+        Me.btnSaveSettings.Size = New System.Drawing.Size(207, 24)
         Me.btnSaveSettings.TabIndex = 34
         Me.btnSaveSettings.Text = "Save settings"
         Me.btnSaveSettings.UseVisualStyleBackColor = True
@@ -517,7 +556,7 @@ Partial Class formSettings
         Me.grpLEDs.Controls.Add(Me.radioDream7LED)
         Me.grpLEDs.Controls.Add(Me.chkWireframe)
         Me.grpLEDs.Controls.Add(Me.chkBulbs)
-        Me.grpLEDs.Location = New System.Drawing.Point(15, 306)
+        Me.grpLEDs.Location = New System.Drawing.Point(12, 316)
         Me.grpLEDs.Name = "grpLEDs"
         Me.grpLEDs.Size = New System.Drawing.Size(474, 80)
         Me.grpLEDs.TabIndex = 4
@@ -599,16 +638,16 @@ Partial Class formSettings
         Me.grpPerfTuning.Controls.Add(Me.lblSolenoidBlackTurns)
         Me.grpPerfTuning.Controls.Add(Me.numGISkipFrames)
         Me.grpPerfTuning.Controls.Add(Me.lblGIBlackTurns)
-        Me.grpPerfTuning.Location = New System.Drawing.Point(15, 233)
+        Me.grpPerfTuning.Location = New System.Drawing.Point(12, 241)
         Me.grpPerfTuning.Name = "grpPerfTuning"
-        Me.grpPerfTuning.Size = New System.Drawing.Size(474, 75)
+        Me.grpPerfTuning.Size = New System.Drawing.Size(474, 73)
         Me.grpPerfTuning.TabIndex = 3
         Me.grpPerfTuning.TabStop = False
         Me.grpPerfTuning.Text = "Performance tuning"
         '
         'numLampsSkipFrames
         '
-        Me.numLampsSkipFrames.Location = New System.Drawing.Point(118, 20)
+        Me.numLampsSkipFrames.Location = New System.Drawing.Point(117, 18)
         Me.numLampsSkipFrames.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.numLampsSkipFrames.Name = "numLampsSkipFrames"
         Me.numLampsSkipFrames.Size = New System.Drawing.Size(51, 21)
@@ -617,7 +656,7 @@ Partial Class formSettings
         'lblLampsBlackTurns
         '
         Me.lblLampsBlackTurns.AutoSize = True
-        Me.lblLampsBlackTurns.Location = New System.Drawing.Point(16, 22)
+        Me.lblLampsBlackTurns.Location = New System.Drawing.Point(14, 22)
         Me.lblLampsBlackTurns.Name = "lblLampsBlackTurns"
         Me.lblLampsBlackTurns.Size = New System.Drawing.Size(91, 13)
         Me.lblLampsBlackTurns.TabIndex = 10
@@ -626,7 +665,7 @@ Partial Class formSettings
         'lblLEDBlackTurns
         '
         Me.lblLEDBlackTurns.AutoSize = True
-        Me.lblLEDBlackTurns.Location = New System.Drawing.Point(218, 48)
+        Me.lblLEDBlackTurns.Location = New System.Drawing.Point(219, 46)
         Me.lblLEDBlackTurns.Name = "lblLEDBlackTurns"
         Me.lblLEDBlackTurns.Size = New System.Drawing.Size(87, 13)
         Me.lblLEDBlackTurns.TabIndex = 22
@@ -634,7 +673,7 @@ Partial Class formSettings
         '
         'numSolenoidsSkipFrames
         '
-        Me.numSolenoidsSkipFrames.Location = New System.Drawing.Point(314, 20)
+        Me.numSolenoidsSkipFrames.Location = New System.Drawing.Point(313, 18)
         Me.numSolenoidsSkipFrames.Maximum = New Decimal(New Integer() {30, 0, 0, 0})
         Me.numSolenoidsSkipFrames.Name = "numSolenoidsSkipFrames"
         Me.numSolenoidsSkipFrames.Size = New System.Drawing.Size(51, 21)
@@ -642,7 +681,7 @@ Partial Class formSettings
         '
         'numLEDSkipFrames
         '
-        Me.numLEDSkipFrames.Location = New System.Drawing.Point(314, 46)
+        Me.numLEDSkipFrames.Location = New System.Drawing.Point(313, 44)
         Me.numLEDSkipFrames.Maximum = New Decimal(New Integer() {5, 0, 0, 0})
         Me.numLEDSkipFrames.Name = "numLEDSkipFrames"
         Me.numLEDSkipFrames.Size = New System.Drawing.Size(51, 21)
@@ -651,7 +690,7 @@ Partial Class formSettings
         'lblSolenoidBlackTurns
         '
         Me.lblSolenoidBlackTurns.AutoSize = True
-        Me.lblSolenoidBlackTurns.Location = New System.Drawing.Point(197, 22)
+        Me.lblSolenoidBlackTurns.Location = New System.Drawing.Point(198, 20)
         Me.lblSolenoidBlackTurns.Name = "lblSolenoidBlackTurns"
         Me.lblSolenoidBlackTurns.Size = New System.Drawing.Size(108, 13)
         Me.lblSolenoidBlackTurns.TabIndex = 12
@@ -659,7 +698,7 @@ Partial Class formSettings
         '
         'numGISkipFrames
         '
-        Me.numGISkipFrames.Location = New System.Drawing.Point(118, 46)
+        Me.numGISkipFrames.Location = New System.Drawing.Point(117, 44)
         Me.numGISkipFrames.Maximum = New Decimal(New Integer() {30, 0, 0, 0})
         Me.numGISkipFrames.Name = "numGISkipFrames"
         Me.numGISkipFrames.Size = New System.Drawing.Size(51, 21)
@@ -668,7 +707,7 @@ Partial Class formSettings
         'lblGIBlackTurns
         '
         Me.lblGIBlackTurns.AutoSize = True
-        Me.lblGIBlackTurns.Location = New System.Drawing.Point(27, 48)
+        Me.lblGIBlackTurns.Location = New System.Drawing.Point(25, 47)
         Me.lblGIBlackTurns.Name = "lblGIBlackTurns"
         Me.lblGIBlackTurns.Size = New System.Drawing.Size(80, 13)
         Me.lblGIBlackTurns.TabIndex = 19
@@ -678,20 +717,30 @@ Partial Class formSettings
         '
         Me.btnDonate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDonate.Image = CType(resources.GetObject("btnDonate.Image"), System.Drawing.Image)
-        Me.btnDonate.Location = New System.Drawing.Point(44, 49)
+        Me.btnDonate.Location = New System.Drawing.Point(57, 49)
         Me.btnDonate.Name = "btnDonate"
-        Me.btnDonate.Size = New System.Drawing.Size(435, 31)
-        Me.btnDonate.TabIndex = 35
+        Me.btnDonate.Size = New System.Drawing.Size(435, 32)
+        Me.btnDonate.TabIndex = 36
         Me.btnDonate.Text = "   If you want to donate, click here for infos ..."
         Me.btnDonate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnDonate.UseVisualStyleBackColor = True
         Me.btnDonate.Visible = False
         '
+        'btnEditScreenRes
+        '
+        Me.btnEditScreenRes.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnEditScreenRes.Location = New System.Drawing.Point(94, 586)
+        Me.btnEditScreenRes.Name = "btnEditScreenRes"
+        Me.btnEditScreenRes.Size = New System.Drawing.Size(99, 24)
+        Me.btnEditScreenRes.TabIndex = 39
+        Me.btnEditScreenRes.Text = "Edit ScreenRes..."
+        Me.btnEditScreenRes.UseVisualStyleBackColor = True
+        '
         'formSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(491, 593)
+        Me.ClientSize = New System.Drawing.Size(504, 619)
         Me.Controls.Add(Me.PanelSettings)
         Me.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
@@ -699,9 +748,10 @@ Partial Class formSettings
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "formSettings"
-        Me.Opacity = 0.0R
+        Me.Opacity = 0R
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Backglass settings ..."
+        Me.TopMost = True
         Me.PanelSettings.ResumeLayout(False)
         Me.PanelSettings.PerformLayout()
         Me.grpPlugins.ResumeLayout(False)
@@ -780,6 +830,10 @@ Partial Class formSettings
     Friend WithEvents chkShowStartupError As System.Windows.Forms.CheckBox
     Friend WithEvents chkActivatePlugins As System.Windows.Forms.CheckBox
     Friend WithEvents btnPluginSettings As System.Windows.Forms.Button
-    Friend WithEvents lblFormFront As System.Windows.Forms.Label
-    Friend WithEvents cmbFormFront As System.Windows.Forms.ComboBox
+    Friend WithEvents chkSmall As Windows.Forms.CheckBox
+    Friend WithEvents lblFormFront As Windows.Forms.Label
+    Friend WithEvents cmbFormFront As Windows.Forms.ComboBox
+    Friend WithEvents chkDisableFuzzyMatching As Windows.Forms.CheckBox
+    Friend WithEvents chkFormNoFocus As Windows.Forms.CheckBox
+    Friend WithEvents btnEditScreenRes As Windows.Forms.Button
 End Class

@@ -86,7 +86,7 @@ Public Class B2SSettings
     Public Shared Property IsPaintingLogOn() As Boolean = True
     Public Shared Property IsStatisticsBackglassOn() As Boolean = True
 
-    Public Shared Property ShowStartupError() As Boolean = False
+    Public Shared Property ShowStartupError() As Boolean = False ' set to True to display errors
 
     Public Shared Property ArePluginsOn() As Boolean = False
 
@@ -170,8 +170,8 @@ Public Class B2SSettings
     Public Shared Property CurrentDualMode() As B2SSettings.eDualMode = eDualMode.NotSet
 
     Public Shared Property StartBackground() As Boolean = False
-
     Public Shared Property GlobalStartBackground() As Nullable(Of Boolean) = Nothing
+
 
     Public Shared ReadOnly Property IsROMControlled() As Boolean
         Get
@@ -219,6 +219,7 @@ Public Class B2SSettings
     Public Shared Sub Load(Optional ByVal resetLogs As Boolean = True,
                            Optional ByVal justLoadPluginSetting As Boolean = False)
         ClearAll()
+
         ' load settings
         If IO.File.Exists(SettingFilePath) Then
             Dim XML As Xml.XmlDocument = New Xml.XmlDocument
@@ -248,9 +249,8 @@ Public Class B2SSettings
                     If nodeHeader.SelectSingleNode("StartBackground") IsNot Nothing Then
                         GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
                         StartBackground = GlobalStartBackground
-                    End If
-
-                    If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
+                End If
+                If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
                     If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
                         FormToBack = (nodeHeader.SelectSingleNode("FormToBack").InnerText = "1")
                         If FormToBack Then FormToFront = False
@@ -360,7 +360,6 @@ Public Class B2SSettings
             If GlobalStartBackground.HasValue Then
                 AddNode(XML, nodeHeader, "StartBackground", If(GlobalStartBackground, "1", "0"))
             End If
-
             If Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName) Then
                 Dim nodeTable As Xml.XmlElement = AddHeader(XML, nodeHeader, If(Not String.IsNullOrEmpty(GameName), GameName, B2SName))
                 nodeTable.RemoveAll()
@@ -385,7 +384,6 @@ Public Class B2SSettings
                 If (Not GlobalStartBackground.HasValue) Or (GlobalStartBackground Xor StartBackground) Then
                     AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
                 End If
-
                 AddNode(XML, nodeTable, "FormToFront", If(FormToFront, "1", "0"))
                 AddNode(XML, nodeTable, "FormToBack", If(FormToBack, "1", "0"))
                 AddNode(XML, nodeTable, "FormNoFocus", If(FormNoFocus, "1", "0"))

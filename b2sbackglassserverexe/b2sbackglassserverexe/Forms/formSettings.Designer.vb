@@ -31,6 +31,7 @@ Partial Class formSettings
         Me.chkActivatePlugins = New System.Windows.Forms.CheckBox()
         Me.btnPluginSettings = New System.Windows.Forms.Button()
         Me.grpStartMode = New System.Windows.Forms.GroupBox()
+        Me.chkFormNoFocus = New System.Windows.Forms.CheckBox()
         Me.lblFormFront = New System.Windows.Forms.Label()
         Me.chkDisableFuzzyMatching = New System.Windows.Forms.CheckBox()
         Me.cmbFormFront = New System.Windows.Forms.ComboBox()
@@ -82,7 +83,7 @@ Partial Class formSettings
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
-        Me.chkFormNoFocus = New System.Windows.Forms.CheckBox()
+        Me.btnEditScreenRes = New System.Windows.Forms.Button()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -104,6 +105,7 @@ Partial Class formSettings
         '
         'PanelSettings
         '
+        Me.PanelSettings.Controls.Add(Me.btnEditScreenRes)
         Me.PanelSettings.Controls.Add(Me.grpPlugins)
         Me.PanelSettings.Controls.Add(Me.grpStartMode)
         Me.PanelSettings.Controls.Add(Me.btnMore)
@@ -183,6 +185,16 @@ Partial Class formSettings
         Me.grpStartMode.TabIndex = 2
         Me.grpStartMode.TabStop = False
         Me.grpStartMode.Text = "Backglass start mode"
+        '
+        'chkFormNoFocus
+        '
+        Me.chkFormNoFocus.AutoSize = True
+        Me.chkFormNoFocus.Location = New System.Drawing.Point(171, 49)
+        Me.chkFormNoFocus.Name = "chkFormNoFocus"
+        Me.chkFormNoFocus.Size = New System.Drawing.Size(97, 17)
+        Me.chkFormNoFocus.TabIndex = 42
+        Me.chkFormNoFocus.Text = "Form No Focus"
+        Me.chkFormNoFocus.UseVisualStyleBackColor = True
         '
         'lblFormFront
         '
@@ -447,10 +459,10 @@ Partial Class formSettings
         Me.lblCopyright.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCopyright.Location = New System.Drawing.Point(54, 4)
         Me.lblCopyright.Name = "lblCopyright"
-        Me.lblCopyright.Size = New System.Drawing.Size(407, 26)
+        Me.lblCopyright.Size = New System.Drawing.Size(392, 26)
         Me.lblCopyright.TabIndex = 23
-        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Stefan Wuehr (""Herweh"") && the B" &
-    "2S team. "
+        Me.lblCopyright.Text = "B2S Backglass Server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Herweh && B2S Team. All rights r" &
+    "eserved."
         '
         'grpVisibility
         '
@@ -529,9 +541,9 @@ Partial Class formSettings
         Me.btnSaveSettings.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSaveSettings.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveSettings.Location = New System.Drawing.Point(95, 586)
+        Me.btnSaveSettings.Location = New System.Drawing.Point(199, 586)
         Me.btnSaveSettings.Name = "btnSaveSettings"
-        Me.btnSaveSettings.Size = New System.Drawing.Size(311, 24)
+        Me.btnSaveSettings.Size = New System.Drawing.Size(207, 24)
         Me.btnSaveSettings.TabIndex = 34
         Me.btnSaveSettings.Text = "Save settings"
         Me.btnSaveSettings.UseVisualStyleBackColor = True
@@ -714,15 +726,15 @@ Partial Class formSettings
         Me.btnDonate.UseVisualStyleBackColor = True
         Me.btnDonate.Visible = False
         '
-        'chkFormNoFocus
+        'btnEditScreenRes
         '
-        Me.chkFormNoFocus.AutoSize = True
-        Me.chkFormNoFocus.Location = New System.Drawing.Point(171, 49)
-        Me.chkFormNoFocus.Name = "chkFormNoFocus"
-        Me.chkFormNoFocus.Size = New System.Drawing.Size(70, 17)
-        Me.chkFormNoFocus.TabIndex = 42
-        Me.chkFormNoFocus.Text = "Form No Focus"
-        Me.chkFormNoFocus.UseVisualStyleBackColor = True
+        Me.btnEditScreenRes.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnEditScreenRes.Location = New System.Drawing.Point(94, 586)
+        Me.btnEditScreenRes.Name = "btnEditScreenRes"
+        Me.btnEditScreenRes.Size = New System.Drawing.Size(99, 24)
+        Me.btnEditScreenRes.TabIndex = 39
+        Me.btnEditScreenRes.Text = "Edit ScreenRes..."
+        Me.btnEditScreenRes.UseVisualStyleBackColor = True
         '
         'formSettings
         '
@@ -739,6 +751,7 @@ Partial Class formSettings
         Me.Opacity = 0R
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Backglass settings ..."
+        Me.TopMost = True
         Me.PanelSettings.ResumeLayout(False)
         Me.PanelSettings.PerformLayout()
         Me.grpPlugins.ResumeLayout(False)
@@ -822,4 +835,5 @@ Partial Class formSettings
     Friend WithEvents cmbFormFront As Windows.Forms.ComboBox
     Friend WithEvents chkDisableFuzzyMatching As Windows.Forms.CheckBox
     Friend WithEvents chkFormNoFocus As Windows.Forms.CheckBox
+    Friend WithEvents btnEditScreenRes As Windows.Forms.Button
 End Class

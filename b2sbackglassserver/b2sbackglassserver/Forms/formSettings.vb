@@ -83,6 +83,7 @@ Public Class formSettings
         End If
         chkBulbs.Checked = B2SSettings.IsGlowBulbOn
         cmbFormFront.SelectedIndex = If(B2SSettings.FormToBack, 0, If(B2SSettings.FormToFront, 2, 1))
+        chkDisableFuzzyMatching.Checked = B2SSettings.DisableFuzzyMatching
 
         cmbGlowing.SelectedIndex = If(B2SSettings.GlowIndex <> -1, B2SSettings.GlowIndex, cmbGlowing.Items.Count - 1)
         activateMsgBoxAtSaving = False
@@ -111,6 +112,8 @@ Public Class formSettings
             lblFile.Visible = True
             cmbMatchingFileNames.Visible = True
         End If
+        chkSmall.Checked = B2SSettings.StartBackground
+        chkFormNoFocus.Checked = B2SSettings.FormNoFocus
         ' plugin stuff
         chkActivatePlugins.Checked = B2SSettings.ArePluginsOn
         chkShowStartupError.Checked = B2SSettings.ShowStartupError
@@ -276,6 +279,11 @@ Public Class formSettings
         activateMsgBoxAtSaving = True
         isSettingsScreenDirty = True
         B2SSettings.StartAsEXE = chkStartAsEXE.Checked
+    End Sub
+    Private Sub chkSmall_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSmall.CheckedChanged
+        activateMsgBoxAtSaving = True
+        isSettingsScreenDirty = True
+        B2SSettings.StartBackground = chkSmall.Checked
     End Sub
     Private Sub cmbDefaultStartMode_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cmbDefaultStartMode.SelectedIndexChanged
         isSettingsScreenDirty = True
@@ -448,6 +456,28 @@ Public Class formSettings
             B2SSettings.FormToBack = True
         ElseIf cmbFormFront.SelectedIndex = 2 Then
             B2SSettings.FormToFront = True
+        End If
+    End Sub
+
+    Private Sub chkDisableFuzzyMatching_CheckedChanged(sender As Object, e As EventArgs) Handles chkDisableFuzzyMatching.CheckedChanged
+        B2SSettings.DisableFuzzyMatching = chkDisableFuzzyMatching.Checked
+    End Sub
+
+    Private Sub chkFormNoFocus_CheckedChanged(sender As Object, e As EventArgs) Handles chkFormNoFocus.CheckedChanged
+        B2SSettings.FormNoFocus = chkFormNoFocus.Checked
+    End Sub
+
+    Private Sub btnEditScreenRes_Click(sender As Object, e As EventArgs) Handles btnEditScreenRes.Click
+        Dim p As Process = New Process()
+        Dim pi As ProcessStartInfo = New ProcessStartInfo()
+        Dim B2S_Identifier As String = IO.Path.Combine(Application.StartupPath, "B2S_ScreenResIdentifier.exe")
+
+        If IO.File.Exists(B2S_Identifier) Then
+            pi.Arguments = """" & B2SData.TableFileName & ".res" & """"
+            pi.FileName = B2S_Identifier
+
+            p.StartInfo = pi
+            p.Start()
         End If
     End Sub
 End Class

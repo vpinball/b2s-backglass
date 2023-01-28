@@ -6,6 +6,7 @@ Imports Microsoft.Win32
 Public Class B2SScreen
 
     Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
 
     Public formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
@@ -82,32 +83,47 @@ Public Class B2SScreen
 #Region "get backglass settings and show backglass"
 
     Private Sub ReadB2SSettingsFromFile()
+        Dim loadFileName As String = String.Empty
+        'Dim searchPathLog As Log = New Log("BackglassSearchPath")
+        'searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
 
-        Dim specialFileName As String = String.Empty
-        Dim specialDirFileName As String = String.Empty
-        Dim loadSpecialOne As Boolean = False
-        Dim loadSpecialDirOne As Boolean = False
+        'searchPathLog.WriteLogEntry("Start Search ScreenRes")
+
         Try
-            specialFileName = IO.Path.Combine(B2SData.TableFileName & ".res")
-            loadSpecialOne = IO.File.Exists(specialFileName)
-            specialDirFileName = IO.Path.Combine(B2SData.TableFileName, FileName)
-            loadSpecialDirOne = IO.File.Exists(specialDirFileName)
+            Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & ".res"),    ' .\TableName.res
+                                             IO.Path.Combine(B2SData.TableFileName, FileName),   ' .\TableName\ScreenRes.txt
+                                             FileName,                                           ' .\ScreenRes.txt
+                                             IO.Path.Combine(Application.StartupPath(), FileName)' B2SFolder\ScreenRes.txt
+                                            }
+
+            For Each testFileName As String In loadFileNames
+                'searchPathLog.WriteLogEntry("  Test " & testFileName)
+                If IO.File.Exists(testFileName) Then
+                    loadFileName = testFileName
+                    'searchPathLog.WriteLogEntry("Found ScreenRes " & loadFileName)
+                    Exit For
+                End If
+            Next
         Catch
         End Try
+        'searchPathLog.WriteLogEntry("Stop Search ScreenRes")
 
-        If loadSpecialOne OrElse loadSpecialDirOne OrElse IO.File.Exists(FileName) Then
+        If Not loadFileName = String.Empty Then
 
             ' open settings file
-            FileOpen(1, If(loadSpecialOne, specialFileName, If(loadSpecialDirOne, specialDirFileName, FileName)), OpenMode.Input)
+            FileOpen(1, loadFileName, OpenMode.Input)
 
             ' get all settings
             Dim line(50) As String
             Dim i As Integer = 0
-            Do Until EOF(1)
+            Do Until EOF(1) Or i > 20
                 line(i) = LineInput(1)
                 If (line(i).StartsWith("#")) Then Continue Do
                 i += 1
             Loop
+            ' close file handle
+            FileClose(1)
+
             line(i) = 0
             line(i + 1) = 0
             Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
@@ -118,8 +134,6 @@ Public Class B2SScreen
             Me.DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
             Me.DMDFlipY = (Trim(line(11)) = "1")
 
-            ' close file handle
-            FileClose(1)
 
         Else
 
@@ -155,7 +169,6 @@ Public Class B2SScreen
 
             ' maybe do some corrections since there is a small grill
             If _BackglassSmallGrillHeight > 0 AndAlso Me.formBackglass.DarkImage IsNot Nothing Then
-
                 If Me.DMDLocation.Y > 0 Then
                     Me.DMDLocation = New Point(Me.DMDLocation.X, Me.DMDLocation.Y - _BackglassSmallGrillHeight)
                 End If
@@ -246,6 +259,10 @@ Public Class B2SScreen
     End Sub
 
     Private Sub Show()
+        'Dim searchPathLog As Log = New Log("BackglassShow")
+        'searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
+
+        'searchPathLog.WriteLogEntry("Start Show")
 
         'On Error Resume Next
 
@@ -255,26 +272,31 @@ Public Class B2SScreen
              (Me.DMDViewMode = eDMDViewMode.ShowDMDOnlyAtDefaultLocation AndAlso Me.DMDAtDefaultLocation) OrElse
              (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
 
-        ' get the correct screen
         On Error Resume Next
-
-        Dim screen As Screen = Screen.AllScreens(0)
+        
+        ' get the correct screen
+        Dim screen As Screen = ScreensOrdered(0)
         Dim s As Screen
         Dim currentScreen = 0
 
-        For Each s In Screen.AllScreens
+        'searchPathLog.WriteLogEntry("BackglassMonitor " & BackglassMonitor)
+        For Each s In ScreensOrdered
             currentScreen += 1
+            'searchPathLog.WriteLogEntry("Screen: " & (s.DeviceName) & " Location " & s.Bounds.Location.X & " #" & currentScreen)
             If Left(BackglassMonitor, 1) = "@" Then
-                If s.Bounds.Left = CInt(Mid(BackglassMonitor, 2)) Then
+                If s.Bounds.Location.X = CInt(Mid(BackglassMonitor, 2)) Then
                     screen = s
+                    'searchPathLog.WriteLogEntry("Found: @" & (s.Bounds.Location.X))
                     Exit For
                 End If
             ElseIf Left(BackglassMonitor, 1) = "=" Then
                 If currentScreen = CInt(Mid(BackglassMonitor, 2)) Then
                     screen = s
+                    'searchPathLog.WriteLogEntry("Found: =" & currentScreen)
                     Exit For
                 End If
-            ElseIf Mid(s.DeviceName, 1, 12) = "\\.\DISPLAY" + BackglassMonitor Then
+            ElseIf s.DeviceName = "\\.\DISPLAY" + BackglassMonitor Then
+                'searchPathLog.WriteLogEntry("Found: " & (s.DeviceName))
                 screen = s
                 Exit For
             End If
