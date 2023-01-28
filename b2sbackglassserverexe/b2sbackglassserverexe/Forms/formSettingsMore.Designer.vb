@@ -224,6 +224,7 @@ Partial Class formSettingsMore
         Me.Name = "formSettingsMore"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "More backglass settings ..."
+        Me.TopMost = True
         Me.grpLogging.ResumeLayout(False)
         Me.grpLogging.PerformLayout()
         Me.grpPerfTests.ResumeLayout(False)

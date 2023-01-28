@@ -473,4 +473,18 @@ Public Class formSettings
     Private Sub chkFormNoFocus_CheckedChanged(sender As Object, e As EventArgs) Handles chkFormNoFocus.CheckedChanged
         B2SSettings.FormNoFocus = chkFormNoFocus.Checked
     End Sub
+
+    Private Sub btnEditScreenRes_Click(sender As Object, e As EventArgs) Handles btnEditScreenRes.Click
+        Dim p As Process = New Process()
+        Dim pi As ProcessStartInfo = New ProcessStartInfo()
+        Dim B2S_Identifier As String = IO.Path.Combine(Application.StartupPath, "B2S_ScreenResIdentifier.exe")
+
+        If IO.File.Exists(B2S_Identifier) Then
+            pi.Arguments = """" & B2SData.TableFileName & ".res" & """"
+            pi.FileName = B2S_Identifier
+
+            p.StartInfo = pi
+            p.Start()
+        End If
+    End Sub
 End Class

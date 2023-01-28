@@ -54,9 +54,10 @@ Partial Class formMode
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "formMode"
-        Me.Opacity = 0.0R
+        Me.Opacity = 0R
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Backglass dual mode ..."
+        Me.TopMost = True
         Me.ResumeLayout(False)
 
     End Sub
