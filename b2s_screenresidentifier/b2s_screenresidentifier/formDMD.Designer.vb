@@ -261,7 +261,9 @@ Partial Class formDMD
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "formDMD"
+        Me.Opacity = 0.75R
         Me.Text = "DMD - B2S Screen Resolution Identifier"
+        Me.TopMost = True
         Me.groupDMD.ResumeLayout(False)
         Me.groupDMD.PerformLayout()
         Me.ResumeLayout(False)

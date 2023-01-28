@@ -22,8 +22,9 @@ Partial Class formBackglass
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formPlayfield))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formBackglass))
         Me.groupBackglass = New System.Windows.Forms.GroupBox()
+        Me.BackgroundActiveCheckBox = New System.Windows.Forms.CheckBox()
         Me.txtBackglassScreenScale = New System.Windows.Forms.TextBox()
         Me.chkBackglassGrillVisible = New System.Windows.Forms.CheckBox()
         Me.lblBackglassLocationY = New System.Windows.Forms.Label()
@@ -47,6 +48,7 @@ Partial Class formBackglass
         '
         'groupBackglass
         '
+        Me.groupBackglass.Controls.Add(Me.BackgroundActiveCheckBox)
         Me.groupBackglass.Controls.Add(Me.txtBackglassScreenScale)
         Me.groupBackglass.Controls.Add(Me.chkBackglassGrillVisible)
         Me.groupBackglass.Controls.Add(Me.lblBackglassLocationY)
@@ -68,10 +70,21 @@ Partial Class formBackglass
         Me.groupBackglass.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.groupBackglass.Location = New System.Drawing.Point(12, 5)
         Me.groupBackglass.Name = "groupBackglass"
-        Me.groupBackglass.Size = New System.Drawing.Size(441, 282)
+        Me.groupBackglass.Size = New System.Drawing.Size(441, 321)
         Me.groupBackglass.TabIndex = 6
         Me.groupBackglass.TabStop = False
         Me.groupBackglass.Text = "Backglass"
+        '
+        'BackgroundActiveCheckBox
+        '
+        Me.BackgroundActiveCheckBox.AutoSize = True
+        Me.BackgroundActiveCheckBox.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.BackgroundActiveCheckBox.Location = New System.Drawing.Point(152, 295)
+        Me.BackgroundActiveCheckBox.Name = "BackgroundActiveCheckBox"
+        Me.BackgroundActiveCheckBox.Size = New System.Drawing.Size(141, 20)
+        Me.BackgroundActiveCheckBox.TabIndex = 26
+        Me.BackgroundActiveCheckBox.Text = "Activate background"
+        Me.BackgroundActiveCheckBox.UseVisualStyleBackColor = True
         '
         'txtBackglassScreenScale
         '
@@ -79,7 +92,7 @@ Partial Class formBackglass
         Me.txtBackglassScreenScale.Location = New System.Drawing.Point(287, 141)
         Me.txtBackglassScreenScale.Name = "txtBackglassScreenScale"
         Me.txtBackglassScreenScale.ReadOnly = True
-        Me.txtBackglassScreenScale.Size = New System.Drawing.Size(93, 27)
+        Me.txtBackglassScreenScale.Size = New System.Drawing.Size(93, 23)
         Me.txtBackglassScreenScale.TabIndex = 25
         '
         'chkBackglassGrillVisible
@@ -89,7 +102,7 @@ Partial Class formBackglass
         Me.chkBackglassGrillVisible.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkBackglassGrillVisible.Location = New System.Drawing.Point(152, 254)
         Me.chkBackglassGrillVisible.Name = "chkBackglassGrillVisible"
-        Me.chkBackglassGrillVisible.Size = New System.Drawing.Size(255, 20)
+        Me.chkBackglassGrillVisible.Size = New System.Drawing.Size(254, 20)
         Me.chkBackglassGrillVisible.TabIndex = 8
         Me.chkBackglassGrillVisible.Text = "Backglass grill is visible because of DMD"
         Me.chkBackglassGrillVisible.UseVisualStyleBackColor = True
@@ -100,7 +113,7 @@ Partial Class formBackglass
         Me.lblBackglassLocationY.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblBackglassLocationY.Location = New System.Drawing.Point(210, 174)
         Me.lblBackglassLocationY.Name = "lblBackglassLocationY"
-        Me.lblBackglassLocationY.Size = New System.Drawing.Size(12, 16)
+        Me.lblBackglassLocationY.Size = New System.Drawing.Size(11, 16)
         Me.lblBackglassLocationY.TabIndex = 22
         Me.lblBackglassLocationY.Text = ","
         Me.lblBackglassLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -137,7 +150,7 @@ Partial Class formBackglass
         Me.lblBackglassScreenSizeHeight.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblBackglassScreenSizeHeight.Location = New System.Drawing.Point(210, 145)
         Me.lblBackglassScreenSizeHeight.Name = "lblBackglassScreenSizeHeight"
-        Me.lblBackglassScreenSizeHeight.Size = New System.Drawing.Size(12, 16)
+        Me.lblBackglassScreenSizeHeight.Size = New System.Drawing.Size(11, 16)
         Me.lblBackglassScreenSizeHeight.TabIndex = 18
         Me.lblBackglassScreenSizeHeight.Text = ","
         Me.lblBackglassScreenSizeHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -176,7 +189,7 @@ Partial Class formBackglass
         Me.chkBackglassFullSize.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkBackglassFullSize.Location = New System.Drawing.Point(152, 228)
         Me.chkBackglassFullSize.Name = "chkBackglassFullSize"
-        Me.chkBackglassFullSize.Size = New System.Drawing.Size(145, 20)
+        Me.chkBackglassFullSize.Size = New System.Drawing.Size(144, 20)
         Me.chkBackglassFullSize.TabIndex = 7
         Me.chkBackglassFullSize.Text = "Backglass is fullsized"
         Me.chkBackglassFullSize.UseVisualStyleBackColor = True
@@ -187,7 +200,7 @@ Partial Class formBackglass
         Me.lblBackglassSizeHeight.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblBackglassSizeHeight.Location = New System.Drawing.Point(210, 203)
         Me.lblBackglassSizeHeight.Name = "lblBackglassSizeHeight"
-        Me.lblBackglassSizeHeight.Size = New System.Drawing.Size(12, 16)
+        Me.lblBackglassSizeHeight.Size = New System.Drawing.Size(11, 16)
         Me.lblBackglassSizeHeight.TabIndex = 13
         Me.lblBackglassSizeHeight.Text = ","
         Me.lblBackglassSizeHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -243,7 +256,7 @@ Partial Class formBackglass
         Me.lblBackglass.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblBackglass.Location = New System.Drawing.Point(14, 23)
         Me.lblBackglass.Name = "lblBackglass"
-        Me.lblBackglass.Size = New System.Drawing.Size(420, 80)
+        Me.lblBackglass.Size = New System.Drawing.Size(419, 80)
         Me.lblBackglass.TabIndex = 5
         Me.lblBackglass.Text = resources.GetString("lblBackglass.Text")
         '
@@ -252,15 +265,16 @@ Partial Class formBackglass
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(464, 300)
+        Me.ClientSize = New System.Drawing.Size(482, 338)
         Me.Controls.Add(Me.groupBackglass)
         Me.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MinimizeBox = False
         Me.Name = "formBackglass"
+        Me.Opacity = 0.8R
         Me.Text = "Backglass - B2S Screen Resolution Identifier"
+        Me.TopMost = True
         Me.groupBackglass.ResumeLayout(False)
         Me.groupBackglass.PerformLayout()
         Me.ResumeLayout(False)
@@ -285,4 +299,5 @@ Partial Class formBackglass
     Friend WithEvents lblBackglass As System.Windows.Forms.Label
     Friend WithEvents chkBackglassGrillVisible As System.Windows.Forms.CheckBox
     Friend WithEvents txtBackglassScreenScale As TextBox
+    Friend WithEvents BackgroundActiveCheckBox As CheckBox
 End Class
