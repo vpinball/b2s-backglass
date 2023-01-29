@@ -26,6 +26,7 @@ Partial Class formSettings
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formSettings))
         Me.TimerOpacity = New System.Windows.Forms.Timer(Me.components)
         Me.PanelSettings = New System.Windows.Forms.Panel()
+        Me.lblNonAvailableSettings = New System.Windows.Forms.Label()
         Me.btnEditScreenRes = New System.Windows.Forms.Button()
         Me.grpPlugins = New System.Windows.Forms.GroupBox()
         Me.chkShowStartupError = New System.Windows.Forms.CheckBox()
@@ -105,6 +106,7 @@ Partial Class formSettings
         '
         'PanelSettings
         '
+        Me.PanelSettings.Controls.Add(Me.lblNonAvailableSettings)
         Me.PanelSettings.Controls.Add(Me.btnEditScreenRes)
         Me.PanelSettings.Controls.Add(Me.grpPlugins)
         Me.PanelSettings.Controls.Add(Me.grpStartMode)
@@ -126,6 +128,16 @@ Partial Class formSettings
         Me.PanelSettings.Name = "PanelSettings"
         Me.PanelSettings.Size = New System.Drawing.Size(504, 619)
         Me.PanelSettings.TabIndex = 2
+        '
+        'lblNonAvailableSettings
+        '
+        Me.lblNonAvailableSettings.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNonAvailableSettings.Location = New System.Drawing.Point(3, 563)
+        Me.lblNonAvailableSettings.Name = "lblNonAvailableSettings"
+        Me.lblNonAvailableSettings.Size = New System.Drawing.Size(498, 20)
+        Me.lblNonAvailableSettings.TabIndex = 26
+        Me.lblNonAvailableSettings.Text = "All settings in Italic is only available when run in EXE mode!"
+        Me.lblNonAvailableSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'btnEditScreenRes
         '
@@ -219,6 +231,7 @@ Partial Class formSettings
         'chkDisableFuzzyMatching
         '
         Me.chkDisableFuzzyMatching.AutoSize = True
+        Me.chkDisableFuzzyMatching.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(313, 49)
         Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
         Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(159, 17)
@@ -838,4 +851,5 @@ Partial Class formSettings
     Friend WithEvents chkDisableFuzzyMatching As Windows.Forms.CheckBox
     Friend WithEvents chkFormNoFocus As Windows.Forms.CheckBox
     Friend WithEvents btnEditScreenRes As Windows.Forms.Button
+    Friend WithEvents lblNonAvailableSettings As Windows.Forms.Label
 End Class

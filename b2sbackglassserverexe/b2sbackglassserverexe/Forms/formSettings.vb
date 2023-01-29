@@ -484,7 +484,10 @@ Public Class formSettings
             pi.FileName = B2S_Identifier
 
             p.StartInfo = pi
+            Me.Visible = False
             p.Start()
+            p.WaitForExit()
+            Me.Visible = True
         End If
     End Sub
 End Class
