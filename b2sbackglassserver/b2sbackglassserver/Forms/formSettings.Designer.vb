@@ -486,7 +486,7 @@ Partial Class formSettings
         Me.lblCopyright.Name = "lblCopyright"
         Me.lblCopyright.Size = New System.Drawing.Size(392, 26)
         Me.lblCopyright.TabIndex = 23
-        Me.lblCopyright.Text = "B2S Backglass Server.dll" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2022 by Herweh && B2S Team. All righ" &
+        Me.lblCopyright.Text = "B2S Backglass Server.dll" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2023 by Herweh && B2S Team. All righ" &
     "ts reserved."
         '
         'grpVisibility

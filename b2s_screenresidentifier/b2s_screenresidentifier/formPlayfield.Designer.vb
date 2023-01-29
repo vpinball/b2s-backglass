@@ -438,7 +438,7 @@ Partial Class formPlayfield
         Me.lblCopyright.Name = "lblCopyright"
         Me.lblCopyright.Size = New System.Drawing.Size(178, 13)
         Me.lblCopyright.TabIndex = 5
-        Me.lblCopyright.Text = "(c) 2012-2022 by Herweh && B2S Team"
+        Me.lblCopyright.Text = "(c) 2012-2023 by Herweh && B2S Team"
         Me.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'formPlayfield
