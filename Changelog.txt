@@ -1,8 +1,12 @@
 2.0.0
-- The default for "Exact .directb2s match only" is now set to true, if not set already.
-- B2SBackglassServer will try to find B2STableSettings.xml in current directory and then installation directory.
-- B2SBackglassServer.dll: Add support for B2SInit.cmd to be called after Backglass is started.
+- B2S_ScreenResIdentifier can be started from the B2S settings window, and the the settings window is hidden while editing the ScreenRes file.
+- The B2S_ScreenResIdentifier can now save the filename it received when starting, or save the global name. (If started with a tablename.res file)
+- The default for "Exact .directb2s match only" is now set to true, if not already set.
+- B2SBackglassServer will try to find B2STableSettings.xml in current directory and then installation directory. (= if different from tables directory)
+- B2SBackglassServer.dll: Add support for B2SInit.cmd to be called after Backglass is started.  It always receives the table name + rom name as 2 parameters.
+   The included B2SInit.cmd calls B2SWindowPunch below.
 - Add B2SWindowPunch: General window punch routine to cut holes into B2S Backglass Form and make DMD and PuP Windows shine through.
+
 
   Usage: B2SWindowPunch "Destination regex" "Cutter Regex"
   
