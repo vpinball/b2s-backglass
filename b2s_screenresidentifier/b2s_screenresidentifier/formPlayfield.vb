@@ -247,34 +247,32 @@ Public Class formPlayfield
         Me.chkSaveComments.Checked = SaveComments
         If FileFound Then
             For Each scr As Screen In ScreensOrdered
-                'File.AppendAllText(filePath, Environment.NewLine & "BackglassMonitor: " + BackglassMonitorType + BackglassMonitor)
 
                 currentScreen += 1
                 ' set playfield
                 If scr.Primary Then
                     Me.Location = scr.Bounds.Location
+                    Me.Size = PlayfieldSize
                     If PlayfieldSize = scr.Bounds.Size Then
                         Me.chkPlayfieldFullSize.Checked = True
                     End If
                 End If
-                'File.AppendAllText(filePath, Environment.NewLine + "Comparing: " + scr.DeviceName)
-                'File.AppendAllText(filePath, Environment.NewLine + "Location.X: " + scr.Bounds.Location.X.ToString)
-                'File.AppendAllText(filePath, Environment.NewLine + "currentScreen: " + currentScreen.ToString)
 
-                ' set backglass and DMD
+                ' set backglass, background and DMD
                 If (scr.DeviceName.Substring(11) = BackglassMonitor) Or
                    (BackglassMonitorType = "@" AndAlso scr.Bounds.Location.X = CInt(BackglassMonitor)) Or
                    (BackglassMonitorType = "=" AndAlso currentScreen = CInt(BackglassMonitor)) Then
-                    formBackglass.Location = scr.Bounds.Location + BackglassLocation
-                    If BackglassSize = scr.Bounds.Size Then
-                        formBackglass.chkBackglassFullSize.Checked = True
-                    Else
-                        formBackglass.Size = BackglassSize
-                    End If
 
+                    ' Backglass
+                    formBackglass.Location = scr.Bounds.Location + BackglassLocation
+                    formBackglass.Size = BackglassSize
+                    If BackglassSize = scr.Bounds.Size Then formBackglass.chkBackglassFullSize.Checked = True
+
+                    ' DMD
                     formDMD.Location = scr.Bounds.Location + DMDLocation
                     formDMD.Size = DMDSize
 
+                    ' Background
                     formBackground.Location = scr.Bounds.Location + BackgroundLocation
 
                     If BackgroundSize.Height = 0 And BackgroundSize.Width = 0 Then
@@ -285,20 +283,20 @@ Public Class formPlayfield
                         BackgroundActive = True
                         formBackground.Visible = True
                     End If
-                End If
-                ' DMD default location
-                formDMD.chkDMDAtDefaultLocation.Checked = (DMDLocation = New Point(0, 0))
-                If formDMD.chkDMDAtDefaultLocation.Checked Then
-                    Dim width As Integer = Math.Max(CInt(If(formBackglass.chkBackglassFullSize.Checked, scr.Bounds.Size.Width, formBackglass.Size.Width) / 2), 425)
-                    Dim height As Integer = Math.Max(CInt(If(formBackglass.chkBackglassFullSize.Checked, scr.Bounds.Size.Height, formBackglass.Size.Height) / 3), 260)
-                    Dim x As Integer = If((scr IsNot Nothing), 0, formBackglass.Location.X) + width / 2
-                    Dim y As Integer = If((scr IsNot Nothing), 0, formBackglass.Location.Y) + 2 * If(formBackglass.chkBackglassFullSize.Checked, scr.Bounds.Size.Height, formBackglass.Size.Height) / 3
-                    formDMD.Location = If((scr IsNot Nothing), scr.Bounds.Location, New Point(0, 0)) + New Point(x, y)
-                    formDMD.Size = New Size(width, height)
+                    ' DMD default location
                     formDMD.chkDMDAtDefaultLocation.Checked = (DMDLocation = New Point(0, 0))
+                    If formDMD.chkDMDAtDefaultLocation.Checked Then
+                        Dim width As Integer = Math.Max(CInt(If(formBackglass.chkBackglassFullSize.Checked, scr.Bounds.Size.Width, formBackglass.Size.Width) / 2), 425)
+                        Dim height As Integer = Math.Max(CInt(If(formBackglass.chkBackglassFullSize.Checked, scr.Bounds.Size.Height, formBackglass.Size.Height) / 3), 260)
+                        Dim x As Integer = If((scr IsNot Nothing), 0, formBackglass.Location.X) + width / 2
+                        Dim y As Integer = If((scr IsNot Nothing), 0, formBackglass.Location.Y) + 2 * If(formBackglass.chkBackglassFullSize.Checked, scr.Bounds.Size.Height, formBackglass.Size.Height) / 3
+                        formDMD.Location = If((scr IsNot Nothing), scr.Bounds.Location, New Point(0, 0)) + New Point(x, y)
+                        formDMD.Size = New Size(width, height)
+                        formDMD.chkDMDAtDefaultLocation.Checked = (DMDLocation = New Point(0, 0))
+                    End If
+                    formBackglass.chkBackglassGrillVisible.Checked = (DMDLocation = New Point(0, 0))
+                    formDMD.chkDMDFlipY.Checked = DMDFlipY
                 End If
-                formBackglass.chkBackglassGrillVisible.Checked = (DMDLocation = New Point(0, 0))
-                formDMD.chkDMDFlipY.Checked = DMDFlipY
             Next
 
             If screenCount = 1 Then
