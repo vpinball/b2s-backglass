@@ -99,22 +99,42 @@ Public Class formBackglassServerRegApp
             If Not pinEditValue = "" And Directory.Exists("ScreenResTemplates") Then
                 Using sysFileKey As RegistryKey = rkReg.OpenSubKey("SystemFileAssociations", True)
                     Try
+
                         Dim openKey As RegistryKey = sysFileKey.CreateSubKey(".vpx\shell")
+
                         ' Clean old registry for the ScreenRes path and only if Yes is choosen it is regenerated.
                         Try
                             openKey.DeleteSubKeyTree("B2SServer")
                         Catch ex As ArgumentException
-
                         End Try
+                        Try
+                            rkReg.DeleteSubKeyTree(".directb2s")
+                            rkReg.DeleteSubKeyTree("b2sserver.directb2s")
+                        Catch ex As ArgumentException
+                        End Try
+                        Try
+                            'rkReg.DeleteSubKeyTree(".res") ' Do not delete this one?
+                            rkReg.DeleteSubKeyTree("b2sserver.res")
+                        Catch ex As ArgumentException
+                        End Try
+
                         If (dialogResult = DialogResult.Yes) Then
 
-                            'Add VPX Pov export 
-                            'Dim exportPOVKey As RegistryKey = openKey.CreateSubKey("export POV").CreateSubKey("command")
-                            'exportPOVKey.SetValue("", pinEditValue.Replace(" -edit ", " -Pov "))
+                            ' Add directb2s file context menu for double click and right click -> Edit ScreenRes file
+                            rkReg.CreateSubKey(".directb2s").SetValue("", "b2sserver.directb2s")
+                            Dim b2sReg As RegistryKey = rkReg.CreateSubKey("b2sserver.directb2s")
+                            b2sReg.SetValue("", "B2S Server backglass file")
+                            b2sReg.CreateSubKey("DefaultIcon").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """,0")
+                            b2sReg.CreateSubKey("shell\open\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """ ""%1""")
+                            b2sReg.CreateSubKey("shell\Edit ScreenRes file\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
 
-                            'Add VBS export 
-                            'Dim exportVBSKey As RegistryKey = openKey.CreateSubKey("export VBS").CreateSubKey("command")
-                            'exportVBSKey.SetValue("", pinEditValue.Replace(" -edit ", " -ExtractVBS "))
+                            ' Add res file context menu for double click and right click -> Edit ScreenRes file
+                            rkReg.CreateSubKey(".res").SetValue("", "b2sserver.res")
+                            b2sReg = rkReg.CreateSubKey("b2sserver.res")
+                            b2sReg.SetValue("", "B2S Server ScreenRes file")
+                            'b2sReg.CreateSubKey("DefaultIcon").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """,0") ' skip icon for res file?
+                            b2sReg.CreateSubKey("shell\open\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
+                            b2sReg.Close()
 
                             Dim sFiles() As String = Directory.GetFiles("ScreenResTemplates", "*.res")
                             'And then add it in a Label in the way you want
@@ -131,6 +151,7 @@ Public Class formBackglassServerRegApp
                                 vpxtoolstoplevel.Close()
                             End If
                         End If
+                        openKey.Close()
                     Catch ex As UnauthorizedAccessException
                         MessageBox.Show("UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
