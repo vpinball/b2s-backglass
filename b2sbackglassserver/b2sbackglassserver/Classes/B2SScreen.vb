@@ -2,6 +2,8 @@ Imports System
 Imports System.Windows.Forms
 Imports System.Drawing
 Imports Microsoft.Win32
+Imports System.IO
+Imports System.Reflection
 
 Public Class B2SScreen
 
@@ -93,7 +95,7 @@ Public Class B2SScreen
             Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & ".res"),    ' .\TableName.res
                                              IO.Path.Combine(B2SData.TableFileName, FileName),   ' .\TableName\ScreenRes.txt
                                              FileName,                                           ' .\ScreenRes.txt
-                                             IO.Path.Combine(Application.StartupPath(), FileName)' B2SFolder\ScreenRes.txt
+                                             IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), FileName)' B2SFolder\ScreenRes.txt
                                             }
 
             For Each testFileName As String In loadFileNames
