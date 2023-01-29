@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("worlds best segment display")> 
 <Assembly: AssemblyCompany("ToPS")> 
 <Assembly: AssemblyProduct("tops segment display")> 
-<Assembly: AssemblyCopyright("Copyright (c) 2012-2022")> 
+<Assembly: AssemblyCopyright("Copyright (c) 2012-2023")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
