@@ -1695,7 +1695,7 @@ Public Class formBackglass
         Dim shorthyperpinfilename As String = String.Empty
 
         ' check whether the table name can be found
-        If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+        If Not String.IsNullOrEmpty(B2SSettings.GameName) And Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
             'Westworld, check for gamename
             If IO.File.Exists(B2SSettings.GameName & ".directb2s") Then
                 filename = B2SSettings.GameName & ".directb2s"
