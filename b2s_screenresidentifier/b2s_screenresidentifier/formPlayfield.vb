@@ -51,7 +51,7 @@ Public Class formPlayfield
 
         formBackglass.BringToFront()
         formBackglass.Show()
-        formBackglass.BackgroundActiveCheckBox.Checked = BackgroundActive
+        formBackglass.chkBackgroundActive.Checked = BackgroundActive
 
         formDMD.BringToFront()
         formDMD.Show()
@@ -193,7 +193,7 @@ Public Class formPlayfield
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield ('Small' Button In the Options)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position of the background relative To upper left corner Of Playfield")
 
         If BackgroundActive Then
             WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
@@ -203,7 +203,7 @@ Public Class formPlayfield
             WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text))
         End If
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height Of the backglass When StartBackground Is active")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height of the background")
 
         If BackgroundActive Then
             WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
