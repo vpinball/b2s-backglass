@@ -4,13 +4,12 @@
 # Playfield Screen resolution width/height
 1920
 1080
-# If StartBackground is active ("Small" Button in the Options) the Backglass settings are for the background!
-# Backglass width/height (or background when StartBackground is active)
+# Backglass width/height
 800
 600
 # Backglass Display Devicename screen number (\\.\DISPLAY)x for the Playfield or screen on position (@x) or screen index (=x)
 1
-# X/Y position for the backglass relative to the upper left corner of the selected screen (background when StartBackground is active)
+# X/Y position for the backglass relative to the upper left corner of the selected screen
 0
 0
 # width/height of the DMD area in pixels - For 3 screen setup (DMD gets defaults when set to 0/0)
@@ -21,10 +20,10 @@
 300
 # Y-flip, flips the LED display upside down
 0
-# Backglass X/Y position when StartBackground is active, relative to upper left corner of the selected screen
+# Backglass X/Y position relative to upper left corner of the selected screen
 100
 0
-# Backglass width/height when StartBackground is active
+# Backglass width/height
 600
 600
 # C:\path\Frame = The path to the location where you have the background image or black if none selected.

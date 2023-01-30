@@ -113,6 +113,19 @@ Public Class formBackground
 
     End Sub
 
+    Public Sub ReValidate(posX As String, posY As String, width As String, height As String)
+
+        txtBackgroundLocationX.Text = posX
+        txtBackgroundLocationX_Validated(Me, New EventArgs)
+        txtBackgroundLocationY.Text = posY
+        txtBackgroundLocationY_Validated(Me, New EventArgs)
+        txtBackgroundSizeWidth.Text = width
+        txtBackgroundSizeWidth_Validated(Me, New EventArgs)
+        txtBackgroundSizeHeight.Text = height
+        txtBackgroundSizeHeight_Validated(Me, New EventArgs)
+
+
+    End Sub
     Public Sub OnValidate(ByVal scr As Screen, ByVal _BackgroundAtDefaultLocation As Boolean)
         IsDirty = True
         'If chkBackgroundAtDefaultLocation.Checked Then

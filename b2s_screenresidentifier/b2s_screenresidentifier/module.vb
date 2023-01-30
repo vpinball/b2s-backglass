@@ -5,6 +5,7 @@ Module Module1
     Private Const DESKTOPVERTRES As Integer = &H75
     Private Const DESKTOPHORZRES As Integer = &H76
     Public Property GlobalFileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Public Property B2SScreenSwitch As Boolean = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenSwitch", "0") = "1"
     Public Property FileName As String = GlobalFileName
     Public ReadOnly screenCount As Integer = Screen.AllScreens.Count
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
@@ -102,7 +103,7 @@ Module Module1
                 Dim TempBackglassLocation As New Point(CInt(line(12)), CInt(line(13)))
                 Dim TempBackglassize As New Size(CInt(line(14)), CInt(line(15)))
 
-                If Not TempBackglassize.IsEmpty Then
+                If B2SScreenSwitch And Not TempBackglassize.IsEmpty Then
                     BackgroundActive = False
                     BackgroundLocation = BackglassLocation
                     BackgroundSize = BackglassSize

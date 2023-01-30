@@ -6,6 +6,7 @@ Imports Microsoft.Win32
 Public Class B2SScreen
 
     Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Private ReadOnly B2SScreenSwitch As Boolean = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenSwitch", "0") = "1"
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
 
     Public formBackglass As formBackglass = Nothing
@@ -327,12 +328,14 @@ Public Class B2SScreen
         ' Westworld show background form, only if background is set and enabled in setting
         Dim OriginalOffset = Me.BackglassLocation
         If StartBackground Then
-            Dim swapSize = Me.BackgroundSize
-            Dim swapLocation = Me.BackgroundLocation
-            Me.BackgroundSize = Me.BackglassSize
-            Me.BackglassSize = swapSize
-            Me.BackgroundLocation = Me.BackglassLocation
-            Me.BackglassLocation = swapLocation
+            If B2SScreenSwitch Then
+                Dim swapSize = Me.BackgroundSize
+                Dim swapLocation = Me.BackgroundLocation
+                Me.BackgroundSize = Me.BackglassSize
+                Me.BackglassSize = swapSize
+                Me.BackgroundLocation = Me.BackglassLocation
+                Me.BackglassLocation = swapLocation
+            End If
 
             Me.formbackground.StartPosition = FormStartPosition.Manual
             Me.formbackground.BackgroundImageLayout = ImageLayout.Stretch
@@ -357,11 +360,11 @@ Public Class B2SScreen
                 If B2SSettings.FormNoFocus Then Me.formbackground.ShowInTaskbar = False
             Else
                 Me.formbackground.BringToFront()
+                End If
             End If
-        End If
 
-        ' set forms to background image size
-        If Me.formBackglass IsNot Nothing AndAlso Me.formBackglass.BackgroundImage IsNot Nothing Then
+            ' set forms to background image size
+            If Me.formBackglass IsNot Nothing AndAlso Me.formBackglass.BackgroundImage IsNot Nothing Then
             Me.formBackglass.Size = Me.formBackglass.BackgroundImage.Size
         End If
         If Me.formDMD IsNot Nothing AndAlso Me.formDMD.BackgroundImage IsNot Nothing Then

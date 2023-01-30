@@ -137,8 +137,36 @@ Public Class formBackglass
         Me.Size = New Size(width, height)
     End Sub
 
-    Private Sub BackgroundActiveCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles BackgroundActiveCheckBox.CheckedChanged
-        formBackground.Visible = BackgroundActiveCheckBox.Checked
-        BackgroundActive = BackgroundActiveCheckBox.Checked
+    Private Sub BackgroundActiveCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles chkBackgroundActive.CheckedChanged
+        formBackground.Visible = chkBackgroundActive.Checked
+        BackgroundActive = chkBackgroundActive.Checked
+    End Sub
+
+    Private Sub button_ScreenSwitch_Click(sender As Object, e As EventArgs) Handles button_ScreenSwitch.Click
+
+        Dim width As String = formBackground.txtBackgroundSizeWidth.Text
+        Dim height As String = formBackground.txtBackgroundSizeHeight.Text
+
+        Dim LocationX As String = formBackground.txtBackgroundLocationX.Text
+        Dim LocationY As String = formBackground.txtBackgroundLocationY.Text
+
+
+        If chkBackgroundActive.Checked Then
+            IsDirty = True
+
+
+            formBackground.ReValidate(txtBackglassLocationX.Text, txtBackglassLocationY.Text, txtBackglassSizeWidth.Text, txtBackglassSizeHeight.Text)
+
+            txtBackglassSizeWidth.Text = width
+            txtBackglassSizeWidth_Validated(Me, New EventArgs)
+            txtBackglassSizeHeight.Text = height
+            txtBackglassSizeHeight_Validated(Me, New EventArgs)
+
+            txtBackglassLocationX.Text = LocationX
+            txtBackglassLocationX_Validated(Me, New EventArgs)
+            txtBackglassLocationY.Text = LocationY
+            txtBackglassLocationY_Validated(Me, New EventArgs)
+        End If
+
     End Sub
 End Class
