@@ -144,9 +144,11 @@ Public Class formPlayfield
         WriteLine(1, CInt(Me.txtPlayfieldSizeWidth.Text))
         WriteLine(1, CInt(Me.txtPlayfieldSizeHeight.Text))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# Backglass Screen resolution width/height")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height of the Backglass")
 
-        If BackgroundActive Then
+        If B2SScreenSwitch And BackgroundActive Then
+            ' Totally confusing, depending on background active, switch the values
+
             WriteLine(1, CInt(formBackground.txtBackgroundSizeWidth.Text))
             WriteLine(1, CInt(formBackground.txtBackgroundSizeHeight.Text))
         Else
@@ -168,17 +170,15 @@ Public Class formPlayfield
             WriteLine(1, formBackglass.BackglassScreenNo)
         End If
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# x position for the backglass relative To the upper left corner Of the screen selected")
-        If BackgroundActive Then
-            WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text))
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# x/y position for the backglass relative to the upper left corner Of the screen selected")
+
+        If B2SScreenSwitch And BackgroundActive Then
+            ' Totally confusing, depending on background active, switch the values
+
+            WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
+            WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
         Else
             WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
-        End If
-
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# y position for the backglass On the selected display (Normally left at 0)")
-        If BackgroundActive Then
-            WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text))
-        Else
             WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
         End If
 
@@ -193,27 +193,41 @@ Public Class formPlayfield
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position of the background relative To upper left corner Of Playfield")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position of the background relative to upper left corner of the backglass")
 
         If BackgroundActive Then
-            WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
-            WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
+            If B2SScreenSwitch Then
+                ' Totally confusing, depending on background active, switch the values
+
+                WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
+                WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
+            Else
+                WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
+                WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
+            End If
         Else
-            WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text))
-            WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text))
+            PrintLine(1, "0")
+            PrintLine(1, "0")
         End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height of the background")
 
         If BackgroundActive Then
-            WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
-            WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
+            If B2SScreenSwitch Then
+                ' Totally confusing, depending on background active, switch the values
+
+                WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
+                WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
+            Else
+                WriteLine(1, CInt(formBackground.txtBackgroundSizeWidth.Text))
+                WriteLine(1, CInt(formBackground.txtBackgroundSizeHeight.Text))
+            End If
         Else
             PrintLine(1, "0")
             PrintLine(1, "0")
         End If
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# C:\path\Frame (The path To the location where you have the background image)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# path to the background image (C:\path\Frame)")
         PrintLine(1, formBackground.TxtBackgroundPath.Text)
 
         ' close file handle
@@ -226,7 +240,6 @@ Public Class formPlayfield
 
     Private Sub StartupPlayfield()
         Dim currentScreen = 0
-        'Dim filePath = Path.Combine(Application.StartupPath, "Test.txt")
 
         IsInStartup = True
         Me.ResFileLabel.Text = Path.GetFileName(FileName)
@@ -268,10 +281,6 @@ Public Class formPlayfield
                     formBackglass.Size = BackglassSize
                     If BackglassSize = scr.Bounds.Size Then formBackglass.chkBackglassFullSize.Checked = True
 
-                    ' DMD
-                    formDMD.Location = scr.Bounds.Location + DMDLocation
-                    formDMD.Size = DMDSize
-
                     ' Background
                     formBackground.Location = scr.Bounds.Location + BackgroundLocation
 
@@ -283,6 +292,11 @@ Public Class formPlayfield
                         BackgroundActive = True
                         formBackground.Visible = True
                     End If
+
+                    ' DMD
+                    formDMD.Location = scr.Bounds.Location + DMDLocation
+                    formDMD.Size = DMDSize
+
                     ' DMD default location
                     formDMD.chkDMDAtDefaultLocation.Checked = (DMDLocation = New Point(0, 0))
                     If formDMD.chkDMDAtDefaultLocation.Checked Then
@@ -294,6 +308,7 @@ Public Class formPlayfield
                         formDMD.Size = New Size(width, height)
                         formDMD.chkDMDAtDefaultLocation.Checked = (DMDLocation = New Point(0, 0))
                     End If
+
                     formBackglass.chkBackglassGrillVisible.Checked = (DMDLocation = New Point(0, 0))
                     formDMD.chkDMDFlipY.Checked = DMDFlipY
                 End If

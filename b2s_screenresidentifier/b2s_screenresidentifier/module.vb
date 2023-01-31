@@ -100,20 +100,21 @@ Module Module1
             DMDFlipY = (Trim(line(11)) = "1")
 
             If (i > 15) Then
-                Dim TempBackglassLocation As New Point(CInt(line(12)), CInt(line(13)))
-                Dim TempBackglassize As New Size(CInt(line(14)), CInt(line(15)))
+                Dim TempBackgroundLocation As New Point(CInt(line(12)), CInt(line(13)))
+                Dim TempBackgroundSize As New Size(CInt(line(14)), CInt(line(15)))
 
-                If B2SScreenSwitch And Not TempBackglassize.IsEmpty Then
+                If B2SScreenSwitch And Not TempBackgroundSize.IsEmpty Then
+                    ' Totally confusing, depending on background active, switch the values
                     BackgroundActive = False
                     BackgroundLocation = BackglassLocation
                     BackgroundSize = BackglassSize
 
-                    BackglassLocation = TempBackglassLocation
-                    BackglassSize = TempBackglassize
+                    BackglassLocation = TempBackgroundLocation
+                    BackglassSize = TempBackgroundSize
                 Else
                     BackgroundActive = True
-                    BackgroundLocation = TempBackglassLocation
-                    BackgroundSize = TempBackglassize
+                    BackgroundLocation = TempBackgroundLocation
+                    BackgroundSize = TempBackgroundSize
                 End If
 
                 BackgroundPath = line(16)

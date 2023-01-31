@@ -36,6 +36,11 @@ Public Class formBackground
         BackgroundInfo(Me)
     End Sub
 
+    Private Sub chkBackgroundFullSize_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkBackgroundFullSize.CheckedChanged
+        IsDirty = True
+        Me.WindowState = If(chkBackgroundFullSize.Checked, FormWindowState.Maximized, FormWindowState.Normal)
+    End Sub
+
     Private Sub formBackground_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         If e.KeyCode = Keys.Down OrElse e.KeyCode = Keys.Up OrElse e.KeyCode = Keys.Left OrElse e.KeyCode = Keys.Right Then
             If e.Shift Then
@@ -75,11 +80,6 @@ Public Class formBackground
         End If
     End Sub
 
-    Private Sub chkBackgroundAtDefaultLocation_CheckedChanged(sender As System.Object, e As System.EventArgs)
-        BackgroundInfo(Me)
-        'If formBackglass IsNot Nothing Then formBackglass.chkBackglassGrillVisible.Checked = chkBackgroundAtDefaultLocation.Checked
-    End Sub
-
     Private Sub BackgroundInfo(ByRef form As formBackground)
         IsDirty = True
 
@@ -98,34 +98,43 @@ Public Class formBackground
 
             txtBackgroundScreenScale.Text = dpi & "%"
             If dpi <> 100 Then
-                txtBackgroundScreenScale.BackColor = Color.Red
+                txtBackgroundScreenScale.BackColor = System.Drawing.Color.Red
             Else
                 txtBackgroundScreenScale.BackColor = txtBackgroundScreenSizeHeight.BackColor
             End If
-        End If
 
+        End If
         txtBackgroundScreen.Text = ShortDevice(currentScreen.DeviceName)
 
-        txtBackgroundLocationX.Text = form.Location.X - currentScreen.Bounds.Location.X
-        txtBackgroundLocationY.Text = form.Location.Y - currentScreen.Bounds.Location.Y
-        txtBackgroundSizeWidth.Text = form.Size.Width
-        txtBackgroundSizeHeight.Text = form.Size.Height
-
+        chkBackgroundFullSize.Checked = (form.WindowState = FormWindowState.Maximized)
+        If form.WindowState = FormWindowState.Maximized Then
+            txtBackgroundLocationX.Text = "0"
+            txtBackgroundLocationY.Text = "0"
+            txtBackgroundSizeWidth.Text = txtBackgroundScreenSizeWidth.Text
+            txtBackgroundSizeHeight.Text = txtBackgroundScreenSizeHeight.Text
+            txtBackgroundLocationX.ReadOnly = True
+            txtBackgroundLocationY.ReadOnly = True
+            txtBackgroundSizeWidth.ReadOnly = True
+            txtBackgroundSizeHeight.ReadOnly = True
+        Else
+            txtBackgroundLocationX.Text = form.Location.X - currentScreen.Bounds.Location.X
+            txtBackgroundLocationY.Text = form.Location.Y - currentScreen.Bounds.Location.Y
+            txtBackgroundSizeWidth.Text = form.Size.Width
+            txtBackgroundSizeHeight.Text = form.Size.Height
+            txtBackgroundLocationX.ReadOnly = False
+            txtBackgroundLocationY.ReadOnly = False
+            txtBackgroundSizeWidth.ReadOnly = False
+            txtBackgroundSizeHeight.ReadOnly = False
+        End If
     End Sub
 
-    Public Sub ReValidate(posX As String, posY As String, width As String, height As String)
+    Public Sub ReValidate(newLocation As Point, newSize As Size)
+        IsDirty = True
 
-        txtBackgroundLocationX.Text = posX
-        txtBackgroundLocationX_Validated(Me, New EventArgs)
-        txtBackgroundLocationY.Text = posY
-        txtBackgroundLocationY_Validated(Me, New EventArgs)
-        txtBackgroundSizeWidth.Text = width
-        txtBackgroundSizeWidth_Validated(Me, New EventArgs)
-        txtBackgroundSizeHeight.Text = height
-        txtBackgroundSizeHeight_Validated(Me, New EventArgs)
-
-
+        Me.Size = newSize
+        Me.Location = newLocation
     End Sub
+
     Public Sub OnValidate(ByVal scr As Screen, ByVal _BackgroundAtDefaultLocation As Boolean)
         IsDirty = True
         'If chkBackgroundAtDefaultLocation.Checked Then
