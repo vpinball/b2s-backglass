@@ -9,6 +9,7 @@ Public Class B2SScreen
 
     Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
+    Public Property VersionTwoFile() = False
 
     Public formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
@@ -32,6 +33,10 @@ Public Class B2SScreen
     Public Property DMDFlipY() As Boolean = False
     Public Property DMDAtDefaultLocation() As Boolean = True
     Public Property DMDViewMode() As eDMDViewMode = eDMDViewMode.NotDefined
+
+    Public Property BackgroundSize() As Size = New Size(0, 0)
+    Public Property BackgroundLocation() As Point = New Point(0, 0)
+    Public Property BackgroundPath() As String = String.Empty
 
     Public Property BackglassCutOff() As Rectangle = Nothing
 
@@ -120,7 +125,10 @@ Public Class B2SScreen
             Dim i As Integer = 0
             Do Until EOF(1) Or i > 20
                 line(i) = LineInput(1)
-                If (line(i).StartsWith("#")) Then Continue Do
+                If (line(i).StartsWith("#")) Then
+                    If (line(i).Replace(" ", "").StartsWith("#V2")) Then VersionTwoFile = True
+                    Continue Do
+                End If
                 i += 1
             Loop
             ' close file handle
@@ -136,6 +144,15 @@ Public Class B2SScreen
             Me.DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
             Me.DMDFlipY = (Trim(line(11)) = "1")
 
+            If (i > 15) Then
+                Me.BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
+                Me.BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
+                Me.BackgroundPath = line(16)
+            Else
+                Me.BackgroundLocation = New Point(0, 0)
+                Me.BackgroundSize = New Point(0, 0)
+                Me.BackgroundPath = ""
+            End If
 
         Else
 

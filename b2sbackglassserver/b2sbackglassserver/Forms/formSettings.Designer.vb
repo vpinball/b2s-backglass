@@ -26,7 +26,6 @@ Partial Class formSettings
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formSettings))
         Me.TimerOpacity = New System.Windows.Forms.Timer(Me.components)
         Me.PanelSettings = New System.Windows.Forms.Panel()
-        Me.lblNonAvailableSettings = New System.Windows.Forms.Label()
         Me.btnEditScreenRes = New System.Windows.Forms.Button()
         Me.grpPlugins = New System.Windows.Forms.GroupBox()
         Me.chkShowStartupError = New System.Windows.Forms.CheckBox()
@@ -37,7 +36,6 @@ Partial Class formSettings
         Me.lblFormFront = New System.Windows.Forms.Label()
         Me.chkDisableFuzzyMatching = New System.Windows.Forms.CheckBox()
         Me.cmbFormFront = New System.Windows.Forms.ComboBox()
-        Me.chkSmall = New System.Windows.Forms.CheckBox()
         Me.lblDefaultStartMode = New System.Windows.Forms.Label()
         Me.chkStartAsEXE = New System.Windows.Forms.CheckBox()
         Me.cmbDefaultStartMode = New System.Windows.Forms.ComboBox()
@@ -61,6 +59,8 @@ Partial Class formSettings
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.lblCopyright = New System.Windows.Forms.Label()
         Me.grpVisibility = New System.Windows.Forms.GroupBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.cmbSmall = New System.Windows.Forms.ComboBox()
         Me.cmbB2SDMD = New System.Windows.Forms.ComboBox()
         Me.lblB2SDMD = New System.Windows.Forms.Label()
         Me.cmbDMD = New System.Windows.Forms.ComboBox()
@@ -85,6 +85,7 @@ Partial Class formSettings
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
         Me.btnDonate = New System.Windows.Forms.Button()
+        Me.lblNonAvailableSettings = New System.Windows.Forms.Label()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -128,16 +129,6 @@ Partial Class formSettings
         Me.PanelSettings.Name = "PanelSettings"
         Me.PanelSettings.Size = New System.Drawing.Size(504, 619)
         Me.PanelSettings.TabIndex = 2
-        '
-        'lblNonAvailableSettings
-        '
-        Me.lblNonAvailableSettings.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNonAvailableSettings.Location = New System.Drawing.Point(3, 563)
-        Me.lblNonAvailableSettings.Name = "lblNonAvailableSettings"
-        Me.lblNonAvailableSettings.Size = New System.Drawing.Size(498, 20)
-        Me.lblNonAvailableSettings.TabIndex = 26
-        Me.lblNonAvailableSettings.Text = "All settings in Italic is only available when run in EXE mode!"
-        Me.lblNonAvailableSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'btnEditScreenRes
         '
@@ -193,17 +184,13 @@ Partial Class formSettings
         '
         'grpStartMode
         '
-        Me.grpStartMode.Controls.Add(Me.chkFormNoFocus)
-        Me.grpStartMode.Controls.Add(Me.lblFormFront)
         Me.grpStartMode.Controls.Add(Me.chkDisableFuzzyMatching)
-        Me.grpStartMode.Controls.Add(Me.cmbFormFront)
-        Me.grpStartMode.Controls.Add(Me.chkSmall)
         Me.grpStartMode.Controls.Add(Me.lblDefaultStartMode)
         Me.grpStartMode.Controls.Add(Me.chkStartAsEXE)
         Me.grpStartMode.Controls.Add(Me.cmbDefaultStartMode)
-        Me.grpStartMode.Location = New System.Drawing.Point(15, 161)
+        Me.grpStartMode.Location = New System.Drawing.Point(15, 189)
         Me.grpStartMode.Name = "grpStartMode"
-        Me.grpStartMode.Size = New System.Drawing.Size(474, 74)
+        Me.grpStartMode.Size = New System.Drawing.Size(474, 49)
         Me.grpStartMode.TabIndex = 2
         Me.grpStartMode.TabStop = False
         Me.grpStartMode.Text = "Backglass start mode"
@@ -212,7 +199,7 @@ Partial Class formSettings
         '
         Me.chkFormNoFocus.AutoSize = True
         Me.chkFormNoFocus.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkFormNoFocus.Location = New System.Drawing.Point(171, 49)
+        Me.chkFormNoFocus.Location = New System.Drawing.Point(186, 50)
         Me.chkFormNoFocus.Name = "chkFormNoFocus"
         Me.chkFormNoFocus.Size = New System.Drawing.Size(97, 17)
         Me.chkFormNoFocus.TabIndex = 42
@@ -222,21 +209,21 @@ Partial Class formSettings
         'lblFormFront
         '
         Me.lblFormFront.AutoSize = True
-        Me.lblFormFront.Location = New System.Drawing.Point(10, 49)
+        Me.lblFormFront.Location = New System.Drawing.Point(12, 51)
         Me.lblFormFront.Name = "lblFormFront"
-        Me.lblFormFront.Size = New System.Drawing.Size(47, 13)
+        Me.lblFormFront.Size = New System.Drawing.Size(63, 13)
         Me.lblFormFront.TabIndex = 41
-        Me.lblFormFront.Text = "Bring BG"
+        Me.lblFormFront.Text = "Bring Forms"
         '
         'chkDisableFuzzyMatching
         '
         Me.chkDisableFuzzyMatching.AutoSize = True
         Me.chkDisableFuzzyMatching.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(313, 49)
+        Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(327, 23)
         Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
-        Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(159, 17)
+        Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(136, 17)
         Me.chkDisableFuzzyMatching.TabIndex = 40
-        Me.chkDisableFuzzyMatching.Text = "Exact .directb2s match only"
+        Me.chkDisableFuzzyMatching.Text = "Exact .directb2s match"
         Me.chkDisableFuzzyMatching.UseVisualStyleBackColor = True
         '
         'cmbFormFront
@@ -244,40 +231,28 @@ Partial Class formSettings
         Me.cmbFormFront.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbFormFront.FormattingEnabled = True
         Me.cmbFormFront.Items.AddRange(New Object() {"Form to Back", "Standard", "Form to Top"})
-        Me.cmbFormFront.Location = New System.Drawing.Point(61, 46)
+        Me.cmbFormFront.Location = New System.Drawing.Point(80, 48)
         Me.cmbFormFront.Name = "cmbFormFront"
-        Me.cmbFormFront.Size = New System.Drawing.Size(100, 21)
+        Me.cmbFormFront.Size = New System.Drawing.Size(90, 21)
         Me.cmbFormFront.TabIndex = 27
-        '
-        'chkSmall
-        '
-        Me.chkSmall.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkSmall.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkSmall.Location = New System.Drawing.Point(6, 20)
-        Me.chkSmall.Name = "chkSmall"
-        Me.chkSmall.Size = New System.Drawing.Size(101, 24)
-        Me.chkSmall.TabIndex = 38
-        Me.chkSmall.Text = "Background/Small"
-        Me.chkSmall.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.chkSmall.UseVisualStyleBackColor = True
         '
         'lblDefaultStartMode
         '
         Me.lblDefaultStartMode.AutoSize = True
-        Me.lblDefaultStartMode.Location = New System.Drawing.Point(284, 24)
+        Me.lblDefaultStartMode.Location = New System.Drawing.Point(162, 23)
         Me.lblDefaultStartMode.Name = "lblDefaultStartMode"
-        Me.lblDefaultStartMode.Size = New System.Drawing.Size(101, 13)
+        Me.lblDefaultStartMode.Size = New System.Drawing.Size(75, 13)
         Me.lblDefaultStartMode.TabIndex = 26
-        Me.lblDefaultStartMode.Text = "Default start mode:"
+        Me.lblDefaultStartMode.Text = "Default mode:"
         '
         'chkStartAsEXE
         '
         Me.chkStartAsEXE.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkStartAsEXE.Location = New System.Drawing.Point(111, 20)
+        Me.chkStartAsEXE.Location = New System.Drawing.Point(6, 20)
         Me.chkStartAsEXE.Name = "chkStartAsEXE"
-        Me.chkStartAsEXE.Size = New System.Drawing.Size(171, 24)
+        Me.chkStartAsEXE.Size = New System.Drawing.Size(151, 21)
         Me.chkStartAsEXE.TabIndex = 6
-        Me.chkStartAsEXE.Text = "Start this backglass in EXE mode"
+        Me.chkStartAsEXE.Text = "Start this backglass as EXE"
         Me.chkStartAsEXE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.chkStartAsEXE.UseVisualStyleBackColor = True
         '
@@ -286,7 +261,7 @@ Partial Class formSettings
         Me.cmbDefaultStartMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDefaultStartMode.FormattingEnabled = True
         Me.cmbDefaultStartMode.Items.AddRange(New Object() {"Standard", "In EXE"})
-        Me.cmbDefaultStartMode.Location = New System.Drawing.Point(391, 21)
+        Me.cmbDefaultStartMode.Location = New System.Drawing.Point(242, 20)
         Me.cmbDefaultStartMode.Name = "cmbDefaultStartMode"
         Me.cmbDefaultStartMode.Size = New System.Drawing.Size(76, 21)
         Me.cmbDefaultStartMode.TabIndex = 7
@@ -484,40 +459,65 @@ Partial Class formSettings
         Me.lblCopyright.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCopyright.Location = New System.Drawing.Point(54, 4)
         Me.lblCopyright.Name = "lblCopyright"
-        Me.lblCopyright.Size = New System.Drawing.Size(392, 26)
+        Me.lblCopyright.Size = New System.Drawing.Size(275, 26)
         Me.lblCopyright.TabIndex = 23
-        Me.lblCopyright.Text = "B2S Backglass Server.dll" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright (c) 2012-2023 by Herweh && B2S Team. All righ" &
-    "ts reserved."
+        Me.lblCopyright.Text = "{0}" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "{1} by Herweh && B2S Team. All rights reserved."
         '
         'grpVisibility
         '
+        Me.grpVisibility.Controls.Add(Me.chkFormNoFocus)
+        Me.grpVisibility.Controls.Add(Me.Label1)
+        Me.grpVisibility.Controls.Add(Me.lblFormFront)
+        Me.grpVisibility.Controls.Add(Me.cmbFormFront)
+        Me.grpVisibility.Controls.Add(Me.cmbSmall)
         Me.grpVisibility.Controls.Add(Me.cmbB2SDMD)
         Me.grpVisibility.Controls.Add(Me.lblB2SDMD)
         Me.grpVisibility.Controls.Add(Me.cmbDMD)
         Me.grpVisibility.Controls.Add(Me.lblDMD)
         Me.grpVisibility.Controls.Add(Me.cmbGrill)
         Me.grpVisibility.Controls.Add(Me.lblGrill)
-        Me.grpVisibility.Location = New System.Drawing.Point(15, 106)
+        Me.grpVisibility.Location = New System.Drawing.Point(15, 104)
         Me.grpVisibility.Name = "grpVisibility"
-        Me.grpVisibility.Size = New System.Drawing.Size(474, 53)
+        Me.grpVisibility.Size = New System.Drawing.Size(474, 79)
         Me.grpVisibility.TabIndex = 1
         Me.grpVisibility.TabStop = False
         Me.grpVisibility.Text = "Visibility"
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic)
+        Me.Label1.Location = New System.Drawing.Point(302, 51)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(67, 13)
+        Me.Label1.TabIndex = 17
+        Me.Label1.Text = "Background:"
+        '
+        'cmbSmall
+        '
+        Me.cmbSmall.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbSmall.FormattingEnabled = True
+        Me.cmbSmall.Items.AddRange(New Object() {"Visible", "Hidden"})
+        Me.cmbSmall.Location = New System.Drawing.Point(380, 48)
+        Me.cmbSmall.Name = "cmbSmall"
+        Me.cmbSmall.Size = New System.Drawing.Size(80, 21)
+        Me.cmbSmall.TabIndex = 16
         '
         'cmbB2SDMD
         '
         Me.cmbB2SDMD.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbB2SDMD.FormattingEnabled = True
         Me.cmbB2SDMD.Items.AddRange(New Object() {"Visible", "Hidden"})
-        Me.cmbB2SDMD.Location = New System.Drawing.Point(370, 21)
+        Me.cmbB2SDMD.Location = New System.Drawing.Point(352, 16)
         Me.cmbB2SDMD.Name = "cmbB2SDMD"
-        Me.cmbB2SDMD.Size = New System.Drawing.Size(98, 21)
+        Me.cmbB2SDMD.Size = New System.Drawing.Size(80, 21)
         Me.cmbB2SDMD.TabIndex = 5
         '
         'lblB2SDMD
         '
         Me.lblB2SDMD.AutoSize = True
-        Me.lblB2SDMD.Location = New System.Drawing.Point(310, 24)
+        Me.lblB2SDMD.Font = New System.Drawing.Font("Tahoma", 8.25!)
+        Me.lblB2SDMD.Location = New System.Drawing.Point(293, 19)
         Me.lblB2SDMD.Name = "lblB2SDMD"
         Me.lblB2SDMD.Size = New System.Drawing.Size(54, 13)
         Me.lblB2SDMD.TabIndex = 15
@@ -528,15 +528,16 @@ Partial Class formSettings
         Me.cmbDMD.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDMD.FormattingEnabled = True
         Me.cmbDMD.Items.AddRange(New Object() {"Visible", "Hidden", "Standard"})
-        Me.cmbDMD.Location = New System.Drawing.Point(195, 21)
+        Me.cmbDMD.Location = New System.Drawing.Point(182, 16)
         Me.cmbDMD.Name = "cmbDMD"
-        Me.cmbDMD.Size = New System.Drawing.Size(98, 21)
+        Me.cmbDMD.Size = New System.Drawing.Size(80, 21)
         Me.cmbDMD.TabIndex = 4
         '
         'lblDMD
         '
         Me.lblDMD.AutoSize = True
-        Me.lblDMD.Location = New System.Drawing.Point(156, 24)
+        Me.lblDMD.Font = New System.Drawing.Font("Tahoma", 8.25!)
+        Me.lblDMD.Location = New System.Drawing.Point(147, 19)
         Me.lblDMD.Name = "lblDMD"
         Me.lblDMD.Size = New System.Drawing.Size(33, 13)
         Me.lblDMD.TabIndex = 13
@@ -547,15 +548,16 @@ Partial Class formSettings
         Me.cmbGrill.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbGrill.FormattingEnabled = True
         Me.cmbGrill.Items.AddRange(New Object() {"Visible", "Hidden", "Standard"})
-        Me.cmbGrill.Location = New System.Drawing.Point(46, 21)
+        Me.cmbGrill.Location = New System.Drawing.Point(45, 16)
         Me.cmbGrill.Name = "cmbGrill"
-        Me.cmbGrill.Size = New System.Drawing.Size(98, 21)
+        Me.cmbGrill.Size = New System.Drawing.Size(80, 21)
         Me.cmbGrill.TabIndex = 3
         '
         'lblGrill
         '
         Me.lblGrill.AutoSize = True
-        Me.lblGrill.Location = New System.Drawing.Point(13, 24)
+        Me.lblGrill.Font = New System.Drawing.Font("Tahoma", 8.25!)
+        Me.lblGrill.Location = New System.Drawing.Point(13, 19)
         Me.lblGrill.Name = "lblGrill"
         Me.lblGrill.Size = New System.Drawing.Size(28, 13)
         Me.lblGrill.TabIndex = 11
@@ -751,6 +753,15 @@ Partial Class formSettings
         Me.btnDonate.UseVisualStyleBackColor = True
         Me.btnDonate.Visible = False
         '
+        'lblNonAvailableSettings
+        '
+        Me.lblNonAvailableSettings.AutoSize = True
+        Me.lblNonAvailableSettings.Location = New System.Drawing.Point(189, 566)
+        Me.lblNonAvailableSettings.Name = "lblNonAvailableSettings"
+        Me.lblNonAvailableSettings.Size = New System.Drawing.Size(295, 13)
+        Me.lblNonAvailableSettings.TabIndex = 40
+        Me.lblNonAvailableSettings.Text = "* all settings in Italic is only available when run in EXE mode!"
+        '
         'formSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -845,11 +856,12 @@ Partial Class formSettings
     Friend WithEvents chkShowStartupError As System.Windows.Forms.CheckBox
     Friend WithEvents chkActivatePlugins As System.Windows.Forms.CheckBox
     Friend WithEvents btnPluginSettings As System.Windows.Forms.Button
-    Friend WithEvents chkSmall As Windows.Forms.CheckBox
     Friend WithEvents lblFormFront As Windows.Forms.Label
     Friend WithEvents cmbFormFront As Windows.Forms.ComboBox
     Friend WithEvents chkDisableFuzzyMatching As Windows.Forms.CheckBox
     Friend WithEvents chkFormNoFocus As Windows.Forms.CheckBox
     Friend WithEvents btnEditScreenRes As Windows.Forms.Button
+    Friend WithEvents Label1 As Windows.Forms.Label
+    Friend WithEvents cmbSmall As Windows.Forms.ComboBox
     Friend WithEvents lblNonAvailableSettings As Windows.Forms.Label
 End Class

@@ -39,7 +39,8 @@ Public Class formSettings
         ' load data
         Dim _isdirty As Boolean = isSettingsScreenDirty
         ' set version info
-        lblVersion.Text = String.Format("Server version {0}, backglass file version {1}", B2SSettings.DirectB2SVersion, B2SSettings.BackglassFileVersion)
+        lblCopyright.Text = String.Format(lblCopyright.Text, My.Application.Info.ProductName.ToString, My.Application.Info.Copyright.ToString)
+        lblVersion.Text = String.Format("Server version {0}, backglass file version {1}", My.Application.Info.Version, B2SSettings.BackglassFileVersion)
         ' get more data
         formSettingsMore.btnLogPath.Text = "Log path: " & B2SSettings.LogPath
         formSettingsMore.chkLogLamps.Checked = B2SSettings.IsLampsStateLogOn
@@ -113,7 +114,7 @@ Public Class formSettings
             lblFile.Visible = True
             cmbMatchingFileNames.Visible = True
         End If
-        chkSmall.Checked = B2SSettings.StartBackground
+        cmbSmall.SelectedIndex = If(B2SSettings.StartBackground, 0, 1)
         chkFormNoFocus.Checked = B2SSettings.FormNoFocus
         ' plugin stuff
         chkActivatePlugins.Checked = B2SSettings.ArePluginsOn
@@ -281,11 +282,6 @@ Public Class formSettings
         activateMsgBoxAtSaving = True
         isSettingsScreenDirty = True
         B2SSettings.StartAsEXE = chkStartAsEXE.Checked
-    End Sub
-    Private Sub chkSmall_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSmall.CheckedChanged
-        activateMsgBoxAtSaving = True
-        isSettingsScreenDirty = True
-        B2SSettings.StartBackground = chkSmall.Checked
     End Sub
     Private Sub cmbDefaultStartMode_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cmbDefaultStartMode.SelectedIndexChanged
         isSettingsScreenDirty = True
@@ -489,5 +485,11 @@ Public Class formSettings
             p.WaitForExit()
             Me.Visible = True
         End If
+    End Sub
+
+    Private Sub cmbSmall_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSmall.SelectedIndexChanged
+        activateMsgBoxAtSaving = True
+        isSettingsScreenDirty = True
+        B2SSettings.StartBackground = cmbSmall.SelectedIndex
     End Sub
 End Class

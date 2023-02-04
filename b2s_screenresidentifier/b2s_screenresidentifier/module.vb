@@ -5,7 +5,6 @@ Module Module1
     Private Const DESKTOPVERTRES As Integer = &H75
     Private Const DESKTOPHORZRES As Integer = &H76
     Public Property GlobalFileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
-    Public Property B2SScreenSwitch As Boolean = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenSwitch", "0") = "1"
     Public Property FileName As String = GlobalFileName
     Public ReadOnly screenCount As Integer = Screen.AllScreens.Count
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
@@ -27,6 +26,8 @@ Module Module1
     Public Property BackgroundLocation() As Point = New Point(0, 0)
     Public Property BackgroundPath() As String = String.Empty
     Public Property SaveComments() As Boolean = False
+    Public Property VersionTwoFile() As Boolean = False
+
     Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hdc As IntPtr, ByVal nIndex As Integer) As Integer
     Private Declare Function CreateDCA Lib "gdi32" (lpszDriver As String, lpszDevice As String, lpszOutput As String, lpInitData As IntPtr) As Integer
     Private Declare Function DeleteDC Lib "gdi32" (ByVal hdc As IntPtr) As Boolean
@@ -75,6 +76,7 @@ Module Module1
             Do Until EOF(1) Or i > 30
                 line(i) = LineInput(1)
                 If (line(i).StartsWith("#")) Then
+                    If (line(i).Replace(" ", "").StartsWith("#V2")) Then VersionTwoFile = True
                     SaveComments = True
                     Continue Do
                 End If
@@ -103,7 +105,7 @@ Module Module1
                 Dim TempBackgroundLocation As New Point(CInt(line(12)), CInt(line(13)))
                 Dim TempBackgroundSize As New Size(CInt(line(14)), CInt(line(15)))
 
-                If B2SScreenSwitch And Not TempBackgroundSize.IsEmpty Then
+                If Not VersionTwoFile And Not TempBackgroundSize.IsEmpty Then
                     ' Totally confusing, depending on background active, switch the values
                     BackgroundActive = False
                     BackgroundLocation = BackglassLocation
