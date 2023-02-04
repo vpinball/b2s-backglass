@@ -57,6 +57,7 @@ Partial Class formPlayfield
         Me.ResFileLabel = New System.Windows.Forms.TextBox()
         Me.chkSaveComments = New System.Windows.Forms.CheckBox()
         Me.lblCopyright = New System.Windows.Forms.Label()
+        Me.chkSaveEnhanced = New System.Windows.Forms.CheckBox()
         Me.groupPlayfield.SuspendLayout()
         Me.panelChooseSetup.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -374,6 +375,7 @@ Partial Class formPlayfield
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.chkSaveEnhanced)
         Me.Panel2.Controls.Add(Me.FlowLayoutPanel1)
         Me.Panel2.Controls.Add(Me.chkSaveComments)
         Me.Panel2.Controls.Add(Me.lblCopyright)
@@ -438,8 +440,20 @@ Partial Class formPlayfield
         Me.lblCopyright.Name = "lblCopyright"
         Me.lblCopyright.Size = New System.Drawing.Size(178, 13)
         Me.lblCopyright.TabIndex = 5
-        Me.lblCopyright.Text = "(c) 2012-2023 by Herweh && B2S Team"
+        Me.lblCopyright.Text = My.Application.Info.Copyright.ToString & " by Herweh && B2S Team"
         Me.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'chkSaveEnhanced
+        '
+        Me.chkSaveEnhanced.AccessibleDescription = "Save Comments"
+        Me.chkSaveEnhanced.AccessibleName = "chk_save_enhanced"
+        Me.chkSaveEnhanced.AutoSize = True
+        Me.chkSaveEnhanced.Location = New System.Drawing.Point(176, 61)
+        Me.chkSaveEnhanced.Name = "chkSaveEnhanced"
+        Me.chkSaveEnhanced.Size = New System.Drawing.Size(408, 23)
+        Me.chkSaveEnhanced.TabIndex = 10
+        Me.chkSaveEnhanced.Text = "Enhanced res file (no Backglass && Background switch)"
+        Me.chkSaveEnhanced.UseVisualStyleBackColor = True
         '
         'formPlayfield
         '
@@ -508,4 +522,5 @@ Partial Class formPlayfield
     Friend WithEvents ResFileLabel As TextBox
     Friend WithEvents buttonSaveGlobal As Button
     Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
+    Friend WithEvents chkSaveEnhanced As CheckBox
 End Class

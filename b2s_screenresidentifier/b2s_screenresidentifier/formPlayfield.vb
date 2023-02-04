@@ -2,6 +2,7 @@
 Imports System.Drawing
 Imports System.Windows.Forms
 Imports System.IO
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 'Imports System.IO
 'Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
@@ -115,6 +116,14 @@ Public Class formPlayfield
 
     Private Sub buttonSave_Click(sender As System.Object, e As System.EventArgs) Handles buttonSave.Click
         SaveResFile(FileName)
+        If Me.chkSaveEnhanced.Checked Then
+            Me.chkSaveEnhanced.Font = New Font(Me.chkSaveEnhanced.Font, FontStyle.Bold)
+            Me.chkSaveEnhanced.ForeColor = Color.Black
+        Else
+            Me.chkSaveEnhanced.Font = New Font(Me.chkSaveEnhanced.Font, FontStyle.Regular)
+            Me.chkSaveEnhanced.ForeColor = Color.Red
+        End If
+
     End Sub
 
     Private Sub buttonSaveGlobal_Click(sender As Object, e As EventArgs) Handles buttonSaveGlobal.Click
@@ -140,21 +149,15 @@ Public Class formPlayfield
         ' open file
         FileOpen(1, ResFileName, OpenMode.Output)
 
+        If Me.chkSaveComments.Checked And Me.chkSaveEnhanced.Checked Then PrintLine(1, "# V" + Application.ProductVersion)
+
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Playfield Screen resolution width/height")
         WriteLine(1, CInt(Me.txtPlayfieldSizeWidth.Text))
         WriteLine(1, CInt(Me.txtPlayfieldSizeHeight.Text))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height of the Backglass")
-
-        If B2SScreenSwitch And BackgroundActive Then
-            ' Totally confusing, depending on background active, switch the values
-
-            WriteLine(1, CInt(formBackground.txtBackgroundSizeWidth.Text))
-            WriteLine(1, CInt(formBackground.txtBackgroundSizeHeight.Text))
-        Else
-            WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
-            WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
-        End If
+        WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
+        WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Define Backglass using Display Devicename screen number (\\.\DISPLAY)x or screen coordinates (@x) or screen index (=x)")
         If BackglassMonitorType.StartsWith("@") Then
@@ -170,65 +173,34 @@ Public Class formPlayfield
             WriteLine(1, formBackglass.BackglassScreenNo)
         End If
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# x/y position for the backglass relative to the upper left corner Of the screen selected")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Backglass x/y position relative to the upper left corner Of the screen selected")
+        WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
+        WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
 
-        If B2SScreenSwitch And BackgroundActive Then
-            ' Totally confusing, depending on background active, switch the values
-
-            WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
-            WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
-        Else
-            WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
-            WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
-        End If
-
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height Of the DMD area In pixels - For 3 screen setup")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height Of the B2S (or Full) DMD area In pixels")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Width, CInt(formDMD.txtDMDSizeWidth.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Height, CInt(formDMD.txtDMDSizeHeight.Text)))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position Of the DMD area relative To the upper left corner of the backglass screen - For 3 screen setup")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position Of the DMD area relative To the upper left corner of the backglass screen")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.X - Screen.FromControl(formBackglass).Bounds.X + CInt(formDMD.txtDMDLocationX.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.Y - Screen.FromControl(formBackglass).Bounds.Y + CInt(formDMD.txtDMDLocationY.Text)))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position of the background relative to upper left corner of the backglass")
-
-        If BackgroundActive Then
-            If B2SScreenSwitch Then
-                ' Totally confusing, depending on background active, switch the values
-
-                WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
-                WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
-            Else
-                WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
-                WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
-            End If
-        Else
-            PrintLine(1, "0")
-            PrintLine(1, "0")
-        End If
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield ('Small' Button In the Options)")
+        WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
+        WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height of the background")
 
-        If BackgroundActive Then
-            If B2SScreenSwitch Then
-                ' Totally confusing, depending on background active, switch the values
-
-                WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
-                WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
-            Else
-                WriteLine(1, CInt(formBackground.txtBackgroundSizeWidth.Text))
-                WriteLine(1, CInt(formBackground.txtBackgroundSizeHeight.Text))
-            End If
-        Else
-            PrintLine(1, "0")
-            PrintLine(1, "0")
-        End If
+        WriteLine(1, CInt(formBackground.txtBackgroundSizeWidth.Text))
+        WriteLine(1, CInt(formBackground.txtBackgroundSizeHeight.Text))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# path to the background image (C:\path\Frame)")
         PrintLine(1, formBackground.TxtBackgroundPath.Text)
+        ' If no comments are added but the enhanced format is active, this is needed!
+        If Not Me.chkSaveComments.Checked And Me.chkSaveEnhanced.Checked Then PrintLine(1, "# V" + Application.ProductVersion + " This is needed from B2S Server 2.0 even if comments are deactivated to mark the version 2 file format. It is ignored on older releases, but your bg screens might be switched.")
 
         ' close file handle
         FileClose(1)
@@ -258,6 +230,13 @@ Public Class formPlayfield
             radio2Screen.Enabled = False
         End If
         Me.chkSaveComments.Checked = SaveComments
+        Me.chkSaveEnhanced.Checked = True
+        If VersionTwoFile Then
+            Me.chkSaveEnhanced.Font = New Font(Me.chkSaveEnhanced.Font, FontStyle.Bold)
+        Else
+            Me.chkSaveEnhanced.ForeColor = Color.Red
+        End If
+
         If FileFound Then
             For Each scr As Screen In ScreensOrdered
 
