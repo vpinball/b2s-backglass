@@ -9,24 +9,24 @@
 600
 # Backglass Display Devicename screen number (\\.\DISPLAY)x for the Playfield or screen on position (@x) or screen index (=x)
 1
-# X/Y position for the backglass relative to the upper left corner of the selected screen
+# Backglass x/y position relative to the upper left corner of the screen selected
 0
 0
-# width/height of the DMD area in pixels - For 3 screen setup (DMD gets defaults when set to 0/0)
+# width/height of the B2S (or Full) DMD area
 600
 130
-# X/Y position of the DMD area relative to the upper left corner of the backglass screen - For 3 screen setup
+# DMD x/y position
 700
 300
 # Y-flip, flips the LED display upside down
 0
-# Backglass X/Y position relative to upper left corner of the selected screen
+# Background x/y position
 100
 0
-# Backglass width/height
+# Background width/height
 600
 600
-# C:\path\Frame = The path to the location where you have the background image or black if none selected.
+# path to the background image (C:\path\Frame) or black if none selected
 C:\path\my_bezel_for_EM_or_grill_for_dual_screen.png
 # This line would turn off B2SWindowPunch if activated
 #B2SWindowPunch=off

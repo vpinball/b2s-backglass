@@ -155,7 +155,7 @@ Public Class formPlayfield
         WriteLine(1, CInt(Me.txtPlayfieldSizeWidth.Text))
         WriteLine(1, CInt(Me.txtPlayfieldSizeHeight.Text))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height of the Backglass")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Backglass width/height")
         WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
         WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
 
@@ -173,36 +173,40 @@ Public Class formPlayfield
             WriteLine(1, formBackglass.BackglassScreenNo)
         End If
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# Backglass x/y position relative to the upper left corner Of the screen selected")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Backglass x/y position relative to the upper left corner of the screen selected")
         WriteLine(1, CInt(formBackglass.txtBackglassLocationX.Text))
         WriteLine(1, CInt(formBackglass.txtBackglassLocationY.Text))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height Of the B2S (or Full) DMD area In pixels")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height of the B2S (or Full) DMD area")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Width, CInt(formDMD.txtDMDSizeWidth.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Height, CInt(formDMD.txtDMDSizeHeight.Text)))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position Of the DMD area relative To the upper left corner of the backglass screen")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# DMD x/y position")
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.X - Screen.FromControl(formBackglass).Bounds.X + CInt(formDMD.txtDMDLocationX.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.Y - Screen.FromControl(formBackglass).Bounds.Y + CInt(formDMD.txtDMDLocationY.Text)))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Background x/y position")
         WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
         WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# width/height of the background")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Background width/height")
 
         WriteLine(1, CInt(formBackground.txtBackgroundSizeWidth.Text))
         WriteLine(1, CInt(formBackground.txtBackgroundSizeHeight.Text))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# path to the background image (C:\path\Frame)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# path to the background image (C:\path\Frame) or black if none selected")
         PrintLine(1, formBackground.TxtBackgroundPath.Text)
         ' If no comments are added but the enhanced format is active, this is needed!
-        If Not Me.chkSaveComments.Checked And Me.chkSaveEnhanced.Checked Then PrintLine(1, "# V" + Application.ProductVersion + " This is needed from B2S Server 2.0 even if comments are deactivated to mark the version 2 file format. It is ignored on older releases, but your bg screens might be switched.")
+        If Me.chkSaveComments.Checked Then
+            PrintLine(1, "# This line would turn off B2SWindowPunch if activated")
+            PrintLine(1, "#B2SWindowPunch=off")
+        End If
+        If Not Me.chkSaveComments.Checked And Me.chkSaveEnhanced.Checked Then PrintLine(1, "# V" + Application.ProductVersion + " This is needed from B2S Server 2.0 even if comments are deactivated to mark the version 2 file format. It is ignored on older releases, but your bg forms might be switched.")
 
-        ' close file handle
+
         FileClose(1)
 
         MessageBox.Show(My.Resources.SettingsAreSaved, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information)
