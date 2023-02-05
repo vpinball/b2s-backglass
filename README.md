@@ -58,25 +58,34 @@ In this settings dialog you're able to:
 - Tweak with the LED type. Try to use the `Simple LEDs`.
 - Don't forget to save your settings.
 
+### B2SInit.cmd & B2SWindowPunch
+
+B2SWindowPunch.exe is called through B2SInit.cmd from B2SBackglassServer (B2SBackglassServer.dll -> B2SInit.cmd -> B2SWindowPunch.exe)
+It punches holes in the Backglass and Background forms for any Virtual DMD, Virtual Alphanumeric Displays and PUP forms.
+This makes it not so important which form is on top anymore, since the other shines through.
+
 ### ScreenRes files
 
-The B2S Server uses [ScreenRes files](ScreenRes.txt) files. The default file name is ScreenRes.txt. 
-When the B2S Server loads a backglass, it tries to find them:
+The B2S Server uses [ScreenRes files](ScreenResTemplate.txt) files. The default file name is ScreenRes.txt or the same name as your table + ".res"
+
+The default filename ScreenRes.txt can be altered by setting the registry key Software\B2S\B2SScreenResFileNameOverride.
+
+When the B2S Server loads a backglass, it tries to find them in this order:
 
 1. tablename.res next to the tablename.vpx
 2. Screenres.txt ( or whatever you set in the registry) in the same folder as tablename.vpx
 3. Screenres.txt ( or whatever you set in the registry) as tablename/Screenres.txt
 4. Screenres.txt ( or whatever you set in the registry) in the folder where the B2SBackglassServerEXE.exe is located. ** NEW **
 
-The default filename ScreenRes.txt can be altered by setting the registry key Software\B2S\B2SScreenResFileNameOverride.
-
 The B2S Server uses the Backglass Screen value on the fifth line from top (excluding comments). There are 3 different ways possible to describe which screen the backglass sits on:
    1. "2" means the screen with the device name = \\.\DISPLAY2. This is the default way.
    2. "@1920" means the screen sitting on the x position 1920 measured from Point(0,0) on the playfield, in this example the screen right next to the HD playfield screen.
    3. "=2" means the screen sitting on index number 2 walking left to right.
 
-The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues for .vpx files (if wanted). You can run the register app again to update this menu.
-When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` -> each file present in the ScreenResTemplates folder will be available in the menu. The file.res file selected will be copied to tablename.res next to your tablename.vpx file.
+The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues for .res , .directb2s and .vpx files (if wanted). You can run the register app again to update this menu.
+- When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` -> each file present in the ScreenResTemplates folder will be available in the menu. The file.res file selected will be copied to tablename.res next to your tablename.vpx file.
+- When you select a tablename.directb2s file, press right mouse and select "Edit ScreenRes file"
+- When you select a tablename.res file, double click the file to edit it.
 
 It is also possible to change:
 - which windows to Punch holes by adding a line "B2SWindowPunch=^Full regular expression$"
