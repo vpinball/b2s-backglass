@@ -114,7 +114,7 @@ Public Class formSettings
             lblFile.Visible = True
             cmbMatchingFileNames.Visible = True
         End If
-        cmbSmall.SelectedIndex = If(B2SSettings.StartBackground, 0, 1)
+        cmbBackground.SelectedIndex = If(B2SSettings.StartBackground, 0, 1)
         chkFormNoFocus.Checked = B2SSettings.FormNoFocus
         ' plugin stuff
         chkActivatePlugins.Checked = B2SSettings.ArePluginsOn
@@ -487,9 +487,9 @@ Public Class formSettings
         End If
     End Sub
 
-    Private Sub cmbSmall_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSmall.SelectedIndexChanged
+    Private Sub cmbSmall_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbBackground.SelectedIndexChanged
         activateMsgBoxAtSaving = True
         isSettingsScreenDirty = True
-        B2SSettings.StartBackground = cmbSmall.SelectedIndex
+        B2SSettings.StartBackground = (cmbBackground.SelectedIndex = 0)
     End Sub
 End Class
