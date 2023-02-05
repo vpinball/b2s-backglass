@@ -79,9 +79,9 @@ The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues 
 When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` -> each file present in the ScreenResTemplates folder will be available in the menu. The file.res file selected will be copied to tablename.res next to your tablename.vpx file.
 
 It is also possible to change:
-	which windows to Punch holes by adding a line "B2SWindowPunch=^Full regular expression$"
-	which windows to use as cutter by adding a line "cutter=^Full regular expression$"
-	turn off the B2SWindowPunch feature completely by adding a line "B2SWindowPunch=off"
+- which windows to Punch holes by adding a line "B2SWindowPunch=^Full regular expression$"
+- which windows to use as cutter by adding a line "cutter=^Full regular expression$"
+- turn off the B2SWindowPunch feature completely by adding a line "B2SWindowPunch=off"
 
 all these has to be entered after the background filepath last in the file.
 

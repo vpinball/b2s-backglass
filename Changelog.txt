@@ -1,4 +1,5 @@
 2.0.0
+- B2SBackglassServerRegisterApp: Add file associations to res and directb2s files to start the B2S_ScreenResIdentifier
 - B2S_ScreenResIdentifier can be started from the B2S settings window, and the the settings window is hidden while editing the ScreenRes file.
 - The B2S_ScreenResIdentifier can now save the filename it received when starting, or save the global name. (If started with a tablename.res file)
 - The default for "Exact .directb2s match only" is now set to true, if not already set.
@@ -6,7 +7,7 @@
 - B2SBackglassServer.dll: Add support for B2SInit.cmd to be called after Backglass is started.  It always receives the table name + rom name as 2 parameters.
    The included B2SInit.cmd calls B2SWindowPunch below.
 - Add B2SWindowPunch: General window punch routine to cut holes into B2S Backglass Form and make DMD and PuP Windows shine through.
-
+- When running on 64 bit, Plugins64 will be used as plugins folder
 
   Usage: B2SWindowPunch "Destination regex" "Cutter Regex"
   
@@ -19,12 +20,12 @@
 
   The Tablename.res file is checked for lines after the background picture like:
 
-    destination=Other regular expression as destination(s)
+    B2SWindowPunch=Other regular expression as destination(s)
     cutter=Other regular expression as cutter(s)
 
   or:
 
-    destination=  -> no destination means B2SWindowPunch isn't called
+    B2SWindowPunch=off  -> B2SWindowPunch isn't called
 
 1.4.1
 
