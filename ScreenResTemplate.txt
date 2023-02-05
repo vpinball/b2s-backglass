@@ -28,3 +28,8 @@
 600
 # C:\path\Frame = The path to the location where you have the background image or black if none selected.
 C:\path\my_bezel_for_EM_or_grill_for_dual_screen.png
+# This line would turn off B2SWindowPunch if activated
+#B2SWindowPunch=off
+# These lines would change the B2SWindowPunch & cutter regular expressions
+#B2SWindowPunch=^different regular expression$
+#cutter=^another window$
