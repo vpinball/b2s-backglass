@@ -21,7 +21,7 @@ Public Class formPlayfield
         formBackground = New formBackground
 
         formBackglass.formBackground = formBackground
-
+        lblCopyright.Text = My.Application.Info.Copyright.ToString & " by Herweh && B2S Team"
         ' get all saved data
         If My.Application.CommandLineArgs.Count > 0 Then
             FileName = My.Application.CommandLineArgs.ElementAt(0)
@@ -115,15 +115,15 @@ Public Class formPlayfield
     End Sub
 
     Private Sub buttonSave_Click(sender As System.Object, e As System.EventArgs) Handles buttonSave.Click
-        SaveResFile(FileName)
         If Me.chkSaveEnhanced.Checked Then
             Me.chkSaveEnhanced.Font = New Font(Me.chkSaveEnhanced.Font, FontStyle.Bold)
             Me.chkSaveEnhanced.ForeColor = Color.Black
         Else
             Me.chkSaveEnhanced.Font = New Font(Me.chkSaveEnhanced.Font, FontStyle.Regular)
-            Me.chkSaveEnhanced.ForeColor = Color.Red
+            If formBackglass.chkBackgroundActive.Checked Then Me.chkSaveEnhanced.ForeColor = Color.Red
         End If
 
+        SaveResFile(FileName)
     End Sub
 
     Private Sub buttonSaveGlobal_Click(sender As Object, e As EventArgs) Handles buttonSaveGlobal.Click
@@ -188,7 +188,7 @@ Public Class formPlayfield
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield ('Small' Button In the Options)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# X/Y position pos When StartBackground Is active, relative To upper left corner Of Playfield")
         WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
         WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
 
@@ -230,12 +230,13 @@ Public Class formPlayfield
             radio2Screen.Enabled = False
         End If
         Me.chkSaveComments.Checked = SaveComments
-        Me.chkSaveEnhanced.Checked = True
         If VersionTwoFile Then
             Me.chkSaveEnhanced.Font = New Font(Me.chkSaveEnhanced.Font, FontStyle.Bold)
         Else
-            Me.chkSaveEnhanced.ForeColor = Color.Red
+            If BackgroundActive Then Me.chkSaveEnhanced.ForeColor = Color.Red
         End If
+        ' If background is active, we default to the new V2 res format
+        If VersionTwoFile Or BackgroundActive Then Me.chkSaveEnhanced.Checked = True
 
         If FileFound Then
             For Each scr As Screen In ScreensOrdered

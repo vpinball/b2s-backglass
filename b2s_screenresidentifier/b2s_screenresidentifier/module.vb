@@ -102,29 +102,15 @@ Module Module1
             DMDFlipY = (Trim(line(11)) = "1")
 
             If (i > 15) Then
-                Dim TempBackgroundLocation As New Point(CInt(line(12)), CInt(line(13)))
-                Dim TempBackgroundSize As New Size(CInt(line(14)), CInt(line(15)))
-
-                If Not VersionTwoFile And Not TempBackgroundSize.IsEmpty Then
-                    ' Totally confusing, depending on background active, switch the values
-                    BackgroundActive = False
-                    BackgroundLocation = BackglassLocation
-                    BackgroundSize = BackglassSize
-
-                    BackglassLocation = TempBackgroundLocation
-                    BackglassSize = TempBackgroundSize
-                Else
-                    BackgroundActive = True
-                    BackgroundLocation = TempBackgroundLocation
-                    BackgroundSize = TempBackgroundSize
-                End If
-
+                BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
+                BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
                 BackgroundPath = line(16)
             Else
                 BackgroundLocation = New Point(0, 0)
                 BackgroundSize = New Point(0, 0)
                 BackgroundPath = ""
             End If
+            BackgroundActive = Not BackgroundSize.IsEmpty
 
         End If
     End Sub
