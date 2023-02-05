@@ -63,7 +63,7 @@ Public Class PluginList
     ''' <param name="Data">The data received from Pinmame.</param>
     Public Sub DataReceive(TableElementTypeChar As Char, Data As Object)
         If TableElementTypeChar = "D" Then                                   ' *** Unsure Why Logic Below Doesn't Work for "D"igits, but this does work
-            If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 AndAlso Not Data Is Nothing Then
+            If Not Data Is Nothing Then
                 For i As Integer = 0 To Data.GetUpperBound(0)
                     For Each P As Plugin In Me
                         If P.Status = PluginStatusEnum.Active Then
@@ -147,9 +147,11 @@ Public Class PluginList
         Try
             'loop through all directories named plugin or plugins (case insensitive)
             Dim PluginDirectory As DirectoryInfo = Nothing
+            Dim String64on64BitProcess As String = If(Environment.Is64BitProcess, "64", "")
+
             For Each PluginDirectory In AssemblyDirectory.GetDirectories()
 
-                If PluginDirectory.Name.ToLower = "plugin" OrElse PluginDirectory.Name.ToLower = "plugins" Then
+                If PluginDirectory.Name.ToLower = "plugin" + String64on64BitProcess OrElse PluginDirectory.Name.ToLower = "plugins" + String64on64BitProcess Then
 
                     'Loop through all subdirectory directories and load plugins
                     For Each PluginSubDirectory As DirectoryInfo In PluginDirectory.GetDirectories()
