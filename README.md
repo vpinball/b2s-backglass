@@ -78,6 +78,14 @@ The B2S Server uses the Backglass Screen value on the fifth line from top (exclu
 The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues for .vpx files (if wanted). You can run the register app again to update this menu.
 When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` -> each file present in the ScreenResTemplates folder will be available in the menu. The file.res file selected will be copied to tablename.res next to your tablename.vpx file.
 
+It is also possible to change:
+	which windows to Punch holes by adding a line "B2SWindowPunch=^Full regular expression$"
+	which windows to use as cutter by adding a line "cutter=^Full regular expression$"
+	turn off the B2SWindowPunch feature completely by adding a line "B2SWindowPunch=off"
+
+all these has to be entered after the background filepath last in the file.
+
+
 **You will have to add your own res files of preference to the ScreenResTemplates folder**
 
 From release 1.3.1.1 comment lines starting with a "#" are supported. **If you use tools not supporting comments (or older releases), you need to remove these lines.**
