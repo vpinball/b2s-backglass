@@ -40,7 +40,7 @@ Public Class formSettings
         Dim _isdirty As Boolean = isSettingsScreenDirty
         ' set version info
         lblCopyright.Text = String.Format(lblCopyright.Text, My.Application.Info.ProductName.ToString, My.Application.Info.Copyright.ToString)
-        lblVersion.Text = String.Format("Server version {0}, backglass file version {1}", My.Application.Info.Version, B2SSettings.BackglassFileVersion)
+        lblVersion.Text = String.Format("Server version {0}, backglass file version {1}", Application.ProductVersion, B2SSettings.BackglassFileVersion)
         ' get more data
         formSettingsMore.btnLogPath.Text = "Log path: " & B2SSettings.LogPath
         formSettingsMore.chkLogLamps.Checked = B2SSettings.IsLampsStateLogOn

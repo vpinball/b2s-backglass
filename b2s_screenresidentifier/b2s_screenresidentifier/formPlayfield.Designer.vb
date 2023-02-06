@@ -448,11 +448,12 @@ Partial Class formPlayfield
         '
         Me.lblCopyright.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblCopyright.Font = New System.Drawing.Font("Tahoma", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCopyright.Location = New System.Drawing.Point(907, 68)
+        Me.lblCopyright.Location = New System.Drawing.Point(829, 68)
         Me.lblCopyright.Name = "lblCopyright"
-        Me.lblCopyright.Size = New System.Drawing.Size(178, 13)
+        Me.lblCopyright.Size = New System.Drawing.Size(256, 16)
         Me.lblCopyright.TabIndex = 5
-        Me.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblCopyright.Text = "Copyright"
+        Me.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'formPlayfield
         '

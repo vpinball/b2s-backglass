@@ -21,7 +21,7 @@ Public Class formPlayfield
         formBackground = New formBackground
 
         formBackglass.formBackground = formBackground
-        lblCopyright.Text = My.Application.Info.Copyright.ToString & " by Herweh && B2S Team"
+        lblCopyright.Text = "Version " & Application.ProductVersion & " " & My.Application.Info.Copyright.ToString & " by Herweh && B2S Team"
         ' get all saved data
         If My.Application.CommandLineArgs.Count > 0 Then
             FileName = My.Application.CommandLineArgs.ElementAt(0)
@@ -278,7 +278,7 @@ Public Class formPlayfield
                     End If
 
                     ' DMD
-                    formDMD.Location = scr.Bounds.Location + DMDLocation
+                    formDMD.Location = scr.Bounds.Location + BackglassLocation + DMDLocation
                     formDMD.Size = DMDSize
 
                     ' DMD default location
