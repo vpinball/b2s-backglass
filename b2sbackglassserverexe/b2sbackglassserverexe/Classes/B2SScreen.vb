@@ -329,6 +329,7 @@ Public Class B2SScreen
 
 
         ' Westworld show background form, only if background is set and enabled in setting
+        Dim DMDKeepBackglassLocation = Me.BackglassLocation
         If StartBackground Then
             If Not VersionTwoFile Then
                 Dim swapSize = Me.BackgroundSize
@@ -449,7 +450,7 @@ Public Class B2SScreen
             Me.formDMD.ControlBox = False
             Me.formDMD.MaximizeBox = False
             Me.formDMD.MinimizeBox = False
-            Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + Me.formBackglass.Location + Me.DMDLocation
+            Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + DMDKeepBackglassLocation + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
             Me.formDMD.Text = "B2S DMD"
 
