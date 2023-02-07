@@ -91,6 +91,8 @@ Module Module1
             BackglassSize = New Size(CInt(line(2)), CInt(line(3)))
             BackglassMonitor = line(4)
 
+            BackglassMonitorType = ""
+
             If BackglassMonitor.StartsWith("@") Or BackglassMonitor.StartsWith("=") Then
                 BackglassMonitorType = Mid(BackglassMonitor, 1, 1)
                 BackglassMonitor = BackglassMonitor.Substring(1)

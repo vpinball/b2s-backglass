@@ -3,8 +3,6 @@ Imports System.Drawing
 Imports System.Windows.Forms
 Imports System.IO
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
-'Imports System.IO
-'Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class formPlayfield
 
@@ -182,20 +180,20 @@ Public Class formPlayfield
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Height, CInt(formDMD.txtDMDSizeHeight.Text)))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# DMD x/y position")
-        WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.X - Screen.FromControl(formBackglass).Bounds.X + CInt(formDMD.txtDMDLocationX.Text)))
-        WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, Screen.FromControl(formDMD).Bounds.Y - Screen.FromControl(formBackglass).Bounds.Y + CInt(formDMD.txtDMDLocationY.Text)))
+        WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, CInt(formDMD.txtDMDLocationX.Text) - CInt(formBackglass.txtBackglassLocationX.Text)) + Screen.FromControl(formDMD).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
+        WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, CInt(formDMD.txtDMDLocationY.Text) - CInt(formBackglass.txtBackglassLocationY.Text)) + Screen.FromControl(formDMD).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Background x/y position")
-        WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
-        WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
+        WriteLine(1, If(Not formBackglass.chkBackgroundActive.Checked, 0, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X))
+        WriteLine(1, If(Not formBackglass.chkBackgroundActive.Checked, 0, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Background width/height")
 
-        WriteLine(1, CInt(formBackground.txtBackgroundSizeWidth.Text))
-        WriteLine(1, CInt(formBackground.txtBackgroundSizeHeight.Text))
+        WriteLine(1, If(Not formBackglass.chkBackgroundActive.Checked, 0, CInt(formBackground.txtBackgroundSizeWidth.Text)))
+        WriteLine(1, If(Not formBackglass.chkBackgroundActive.Checked, 0, CInt(formBackground.txtBackgroundSizeHeight.Text)))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# path to the background image (C:\path\Frame) or black if none selected")
         PrintLine(1, formBackground.TxtBackgroundPath.Text)
@@ -256,7 +254,7 @@ Public Class formPlayfield
                 End If
 
                 ' set backglass, background and DMD
-                If (scr.DeviceName.Substring(11) = BackglassMonitor) Or
+                If (BackglassMonitorType = "" AndAlso scr.DeviceName.Substring(11) = BackglassMonitor) Or
                    (BackglassMonitorType = "@" AndAlso scr.Bounds.Location.X = CInt(BackglassMonitor)) Or
                    (BackglassMonitorType = "=" AndAlso currentScreen = CInt(BackglassMonitor)) Then
 
