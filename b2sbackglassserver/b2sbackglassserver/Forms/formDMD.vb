@@ -2,6 +2,20 @@
 Imports System.Windows.Forms
 
 Public Class formDMD
+    Private Const MA_NOACTIVATE As System.Int32 = 3
+    Private Const WM_MOUSEACTIVATE As Integer = &H21
+#Region " Properties "
+
+
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        'Don't allow the window to be activated by swallowing the mouse event.
+        If B2SSettings.FormNoFocus And m.Msg = WM_MOUSEACTIVATE Then
+            m.Result = New IntPtr(MA_NOACTIVATE)
+            Return
+        End If
+        MyBase.WndProc(m)
+    End Sub
+#End Region 'Properties
 
 #Region "constructor"
 
@@ -53,6 +67,12 @@ Public Class formDMD
 
         End If
 
+    End Sub
+
+    Private Sub formDMD_MouseClick(sender As Object, e As MouseEventArgs) Handles MyBase.MouseClick
+        If e.Button = Windows.Forms.MouseButtons.Right Then
+            B2SScreen.formBackglass.formBackglass_MouseClick(sender, e)
+        End If
     End Sub
 
 #End Region

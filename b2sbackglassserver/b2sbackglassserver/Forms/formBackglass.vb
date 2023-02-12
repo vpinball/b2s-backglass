@@ -449,7 +449,7 @@ Public Class formBackglass
 
 #Region "settings action"
 
-    Private Sub formBackglass_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles Me.MouseClick
+    Public Sub formBackglass_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles Me.MouseClick
 
         If e.Button = Windows.Forms.MouseButtons.Right Then
             formBackglass_KeyUp(Me, New KeyEventArgs(Keys.S))

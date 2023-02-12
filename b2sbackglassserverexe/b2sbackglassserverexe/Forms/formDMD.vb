@@ -69,6 +69,12 @@ Public Class formDMD
 
     End Sub
 
+    Private Sub formDMD_MouseClick(sender As Object, e As MouseEventArgs) Handles MyBase.MouseClick
+        If e.Button = Windows.Forms.MouseButtons.Right Then
+            formBackglass.formBackglass_MouseClick(sender, e)
+        End If
+    End Sub
+
 #End Region
 
 End Class

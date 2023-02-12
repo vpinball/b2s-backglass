@@ -11,7 +11,7 @@ Public Class B2SScreen
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
     Public Property VersionTwoFile() = False
 
-    Public formBackglass As formBackglass = Nothing
+    Public Shared formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
 
     Public Enum eDMDViewMode
