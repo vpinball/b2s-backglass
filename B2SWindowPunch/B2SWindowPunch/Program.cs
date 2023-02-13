@@ -27,6 +27,7 @@ namespace B2SWindowPunch
                 {
                     if (hWnd == shellWindow) return true;
                     if (!IsWindowVisible(hWnd)) return true;
+                    if (IsIconic(hWnd)) return true;
 
                     int length = GetWindowTextLength(hWnd);
                     if (length == 0) return true;
@@ -54,6 +55,9 @@ namespace B2SWindowPunch
 
             [DllImport("USER32.DLL")]
             private static extern bool IsWindowVisible(HWND hWnd);
+
+            [DllImport("USER32.DLL")]
+            private static extern bool IsIconic(HWND hWnd);
 
             [DllImport("USER32.DLL")]
             private static extern IntPtr GetShellWindow();
@@ -86,7 +90,7 @@ namespace B2SWindowPunch
             Console.WriteLine("B2SWindowPunch");
             Console.WriteLine("©2023 Richard Ludwig (Jarr3) and the B2S Team\n");
             Console.WriteLine("Usage: B2SWindowPunch \"Destination regex\" \"Cutter Regex\" \n");
-            Console.WriteLine("Destination and the cutter window string has to be valid regular expressions.\n");
+            Console.WriteLine("Destination and Cutter window string has to be valid regular expressions.\n");
             Console.WriteLine("E.g. \n Cut holes in the \"B2S Backglass Server\" form using \"Virtual DMD\" and all \"PUPSCREEN\" forms as two regular expressions:");
             Console.WriteLine("B2SWindowPunch.exe \"^B2S Backglass Server$\" \"^Virtual DMD$|^PUPSCREEN[0-9]+$\"");
         }
@@ -96,58 +100,64 @@ namespace B2SWindowPunch
 
             Dictionary <HWND, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
 
-            Regex rxDest;
-            Regex rxCutter;
-            try
+            if (options.destination.Length > 0 && options.cutter.Length > 0)
             {
-                rxDest = new Regex(options.destination, RegexOptions.Compiled);
-                rxCutter = new Regex(options.cutter, RegexOptions.Compiled);
-            }
-            catch (ArgumentException)
-            {
-                PrintUsage();
-                return 1;
-            }
+                Regex rxDest;
+                Regex rxCutter;
+                try
+                {
+                    rxDest = new Regex(options.destination, RegexOptions.Compiled);
+                    rxCutter = new Regex(options.cutter, RegexOptions.Compiled);
+                }
+                catch (ArgumentException)
+                {
+                    PrintUsage();
+                    return 1;
+                }
 
-            Console.WriteLine($"Current destination: {options.destination}");
+                Console.WriteLine($"Current destination: {options.destination}");
 
-            foreach (KeyValuePair<IntPtr, string> window in windows)
-            {
-                IntPtr handle = window.Key;
-                string title = window.Value;
+                foreach (KeyValuePair<IntPtr, string> window in windows)
+                {
+                    IntPtr handle = window.Key;
+                    string title = window.Value;
 
-                if ( rxDest.IsMatch(title) ) {
-                    Console.WriteLine("Destination {0}: {1}", handle, title);
-                    GetWindowRect(handle, out RECT VPWR);
-
-                    IntPtr FRegion = CreateRectRgn(0, 0, VPWR.Right, VPWR.Bottom);
-
-                    foreach (KeyValuePair<IntPtr, string> cutwindow in windows)
+                    if (rxDest.IsMatch(title))
                     {
-                        IntPtr cuthandle = cutwindow.Key;
-                        string cuttitle = cutwindow.Value;
+                        Console.WriteLine("Destination {0}: {1}", handle, title);
+                        GetWindowRect(handle, out RECT VPWR);
 
-                        if ( cuthandle != handle && rxCutter.IsMatch(cuttitle) )
+                        IntPtr FRegion = CreateRectRgn(0, 0, VPWR.Right, VPWR.Bottom);
+
+                        foreach (KeyValuePair<IntPtr, string> cutwindow in windows)
                         {
-                            Console.WriteLine("   cutout {0}: {1}", cuthandle, cuttitle);
+                            IntPtr cuthandle = cutwindow.Key;
+                            string cuttitle = cutwindow.Value;
 
-                            GetWindowRect(cuthandle, out RECT PWR);
-                            HRGN Excl = CreateRectRgn(PWR.Left - VPWR.Left, PWR.Top - VPWR.Top, PWR.Right - VPWR.Left, PWR.Bottom - VPWR.Top);
-                            CombineRgn(FRegion, FRegion, Excl, RGN_DIFF);
-                            DeleteObject(Excl);
+                            if (cuthandle != handle && rxCutter.IsMatch(cuttitle))
+                            {
+                                Console.WriteLine($"   cutout {cuthandle}: {cuttitle}");
+
+                                GetWindowRect(cuthandle, out RECT PWR);
+                                HRGN Excl = CreateRectRgn(PWR.Left - VPWR.Left, PWR.Top - VPWR.Top, PWR.Right - VPWR.Left, PWR.Bottom - VPWR.Top);
+                                CombineRgn(FRegion, FRegion, Excl, RGN_DIFF);
+                                DeleteObject(Excl);
+                            }
+
                         }
-
+                        SetWindowRgn(handle, FRegion, true);
+                        DeleteObject(FRegion);
                     }
-                    SetWindowRgn(handle, FRegion, true);
-                    DeleteObject(FRegion);
                 }
             }
-
 
             Console.WriteLine("\nListing all available windows:\n");
             foreach (var window in windows.OrderBy(p => p.Value))
             {
-                Console.WriteLine($"{window.Value}");
+                IntPtr windowhandle = window.Key;
+                string windowtitle = window.Value;
+                GetWindowRect(windowhandle, out RECT PWR);
+                Console.WriteLine($"{windowtitle}: ({PWR.Left},{PWR.Top})-({PWR.Right},{PWR.Bottom})");
             }
 
             return 0;
