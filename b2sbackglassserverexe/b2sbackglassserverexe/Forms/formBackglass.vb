@@ -64,7 +64,7 @@ Public Class formBackglass
         If Registry.CurrentUser.OpenSubKey("Software\B2S\VPinMAME") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S\VPinMAME")
 
         ' get the table
-        'IO.Directory.SetCurrentDirectory("c:\games\visual pinball\tables")
+        'IO.Directory.SetCurrentDirectory("C:\Visual Pinball\Tables")
         'B2SData.TableFileName = "Big Guns (Williams 1987)_1.0"
         'B2SData.TableFileName = "ScaredStiff_FS_B2S_GI8"
         'B2SData.TableFileName = "ACDC_B2S" '"Baseball 1.0 FS" '"Elvira_and_the_Party_Monsters_VP91x_v1.2FS" '"Close_Encounters_FS"
@@ -74,7 +74,10 @@ Public Class formBackglass
         If My.Application.CommandLineArgs.Count > 0 Then
             B2SData.TableFileName = My.Application.CommandLineArgs(0).ToString
 
-            If B2SData.TableFileName.EndsWith(".directb2s") Then B2SData.TableFileName = System.IO.Path.GetFileNameWithoutExtension(B2SData.TableFileName)
+            If B2SData.TableFileName.EndsWith(".directb2s") Then
+                B2SData.TableFileName = System.IO.Path.GetFileNameWithoutExtension(B2SData.TableFileName)
+                B2SSettings.PureEXE = True
+            End If
 
             If My.Application.CommandLineArgs.Count > 1 Then
                 If My.Application.CommandLineArgs(1).ToString = "1" Then
@@ -91,8 +94,11 @@ Public Class formBackglass
         'B2SSettings.GameName = "bguns_l8"
         'B2SSettings.GameName = "closeenc"
         'B2SSettings.B2SName = "Baseball"
-        'B2SSettings.B2SName = "ACDC_B2S"
-        'B2SSettings.B2SName = "ss_15"
+        'B2SSettings.B2SName = "Spider-Man(Stern 2007) alt full dmdON127"
+        'B2SSettings.GameName = "smanve_101"
+        'B2SData.TableFileName = "Spider-Man(Stern 2007) alt full dmdON127"
+
+
         Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S")
             B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
             B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)

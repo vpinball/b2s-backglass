@@ -73,7 +73,7 @@ Public Class B2SScreen
     Public Sub Start(ByVal _formBackglass As Form, ByVal _formDMD As Form, ByVal _DefaultDMDLocation As Point, ByVal _DMDViewMode As eDMDViewMode, ByVal _BackglassGrillHeight As Integer, ByVal _BackglassSmallGrillHeight As Integer)
 
         ' here we go with one or two forms for the backglass and the DMD
-        Me.formBackglass = _formBackglass
+        formBackglass = _formBackglass
         Me.formDMD = _formDMD
 
         ' get all backglass settings
@@ -157,7 +157,7 @@ Public Class B2SScreen
         Else
 
             MessageBox.Show("There is no B2S screen resolution file '" & FileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
-                            "Please create this file with the tool 'B2S_ScreenResEditor.exe'.", _
+                            "Please create this file with the tool 'B2S_ScreenResIdentifier.exe'.", _
                             "B2S backglass error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Stop
 
@@ -187,42 +187,42 @@ Public Class B2SScreen
             End If
 
             ' maybe do some corrections since there is a small grill
-            If _BackglassSmallGrillHeight > 0 AndAlso Me.formBackglass.DarkImage IsNot Nothing Then
+            If _BackglassSmallGrillHeight > 0 AndAlso formBackglass.DarkImage IsNot Nothing Then
                 If Me.DMDLocation.Y > 0 Then
                     Me.DMDLocation = New Point(Me.DMDLocation.X, Me.DMDLocation.Y - _BackglassSmallGrillHeight)
                 End If
 
                 Me.BackglassSmallGrillHeight = _BackglassSmallGrillHeight
 
-                Me.BackglassCutOff = New Rectangle(0, Me.formBackglass.DarkImage.Height - _BackglassGrillHeight - _BackglassSmallGrillHeight, Me.formBackglass.DarkImage.Width, _BackglassSmallGrillHeight)
+                Me.BackglassCutOff = New Rectangle(0, formBackglass.DarkImage.Height - _BackglassGrillHeight - _BackglassSmallGrillHeight, formBackglass.DarkImage.Width, _BackglassSmallGrillHeight)
 
                 ' shrink some images to remove the small grill
-                Me.formBackglass.DarkImage4Authentic = CutOutImage(Me.formBackglass.DarkImage4Authentic, _BackglassGrillHeight, _BackglassSmallGrillHeight)
-                If Me.formBackglass.TopLightImage4Authentic IsNot Nothing Then
-                    Me.formBackglass.TopLightImage4Authentic = CutOutImage(Me.formBackglass.TopLightImage4Authentic, _BackglassGrillHeight, _BackglassSmallGrillHeight)
+                formBackglass.DarkImage4Authentic = CutOutImage(formBackglass.DarkImage4Authentic, _BackglassGrillHeight, _BackglassSmallGrillHeight)
+                If formBackglass.TopLightImage4Authentic IsNot Nothing Then
+                    formBackglass.TopLightImage4Authentic = CutOutImage(formBackglass.TopLightImage4Authentic, _BackglassGrillHeight, _BackglassSmallGrillHeight)
                 End If
-                If Me.formBackglass.SecondLightImage4Authentic IsNot Nothing Then
-                    Me.formBackglass.SecondLightImage4Authentic = CutOutImage(Me.formBackglass.SecondLightImage4Authentic, _BackglassGrillHeight, _BackglassSmallGrillHeight)
+                If formBackglass.SecondLightImage4Authentic IsNot Nothing Then
+                    formBackglass.SecondLightImage4Authentic = CutOutImage(formBackglass.SecondLightImage4Authentic, _BackglassGrillHeight, _BackglassSmallGrillHeight)
                 End If
-                If Me.formBackglass.TopAndSecondLightImage4Authentic IsNot Nothing Then
-                    Me.formBackglass.TopAndSecondLightImage4Authentic = CutOutImage(Me.formBackglass.TopAndSecondLightImage4Authentic, _BackglassGrillHeight, _BackglassSmallGrillHeight)
+                If formBackglass.TopAndSecondLightImage4Authentic IsNot Nothing Then
+                    formBackglass.TopAndSecondLightImage4Authentic = CutOutImage(formBackglass.TopAndSecondLightImage4Authentic, _BackglassGrillHeight, _BackglassSmallGrillHeight)
                 End If
-                If Me.formBackglass.DarkImage4Fantasy IsNot Nothing Then
-                    Me.formBackglass.DarkImage4Fantasy = CutOutImage(Me.formBackglass.DarkImage4Fantasy, _BackglassGrillHeight, _BackglassSmallGrillHeight)
+                If formBackglass.DarkImage4Fantasy IsNot Nothing Then
+                    formBackglass.DarkImage4Fantasy = CutOutImage(formBackglass.DarkImage4Fantasy, _BackglassGrillHeight, _BackglassSmallGrillHeight)
                 End If
-                If Me.formBackglass.TopLightImage4Fantasy IsNot Nothing Then
-                    Me.formBackglass.TopLightImage4Fantasy = CutOutImage(Me.formBackglass.TopLightImage4Fantasy, _BackglassGrillHeight, _BackglassSmallGrillHeight)
+                If formBackglass.TopLightImage4Fantasy IsNot Nothing Then
+                    formBackglass.TopLightImage4Fantasy = CutOutImage(formBackglass.TopLightImage4Fantasy, _BackglassGrillHeight, _BackglassSmallGrillHeight)
                 End If
-                If Me.formBackglass.SecondLightImage4Fantasy IsNot Nothing Then
-                    Me.formBackglass.SecondLightImage4Fantasy = CutOutImage(Me.formBackglass.SecondLightImage4Fantasy, _BackglassGrillHeight, _BackglassSmallGrillHeight)
+                If formBackglass.SecondLightImage4Fantasy IsNot Nothing Then
+                    formBackglass.SecondLightImage4Fantasy = CutOutImage(formBackglass.SecondLightImage4Fantasy, _BackglassGrillHeight, _BackglassSmallGrillHeight)
                 End If
-                If Me.formBackglass.TopAndSecondLightImage4Fantasy IsNot Nothing Then
-                    Me.formBackglass.TopAndSecondLightImage4Fantasy = CutOutImage(Me.formBackglass.TopAndSecondLightImage4Fantasy, _BackglassGrillHeight, _BackglassSmallGrillHeight)
+                If formBackglass.TopAndSecondLightImage4Fantasy IsNot Nothing Then
+                    formBackglass.TopAndSecondLightImage4Fantasy = CutOutImage(formBackglass.TopAndSecondLightImage4Fantasy, _BackglassGrillHeight, _BackglassSmallGrillHeight)
                 End If
 
                 ' set background image and new backglass form height (without grill)
-                Me.formBackglass.BackgroundImage = Me.formBackglass.DarkImage
-                Me.formBackglass.Size = Me.formBackglass.DarkImage.Size
+                formBackglass.BackgroundImage = formBackglass.DarkImage
+                formBackglass.Size = formBackglass.DarkImage.Size
 
             End If
 
@@ -232,40 +232,40 @@ Public Class B2SScreen
             Me.DMDAtDefaultLocation = False
 
             ' maybe hide grill
-            If _BackglassGrillHeight > 0 AndAlso Me.formBackglass.DarkImage IsNot Nothing Then
+            If _BackglassGrillHeight > 0 AndAlso formBackglass.DarkImage IsNot Nothing Then
 
                 Me.BackglassGrillHeight = _BackglassGrillHeight
                 Me.BackglassSmallGrillHeight = _BackglassSmallGrillHeight
 
-                Me.BackglassCutOff = New Rectangle(0, Me.formBackglass.DarkImage.Height - _BackglassGrillHeight, Me.formBackglass.DarkImage.Width, _BackglassGrillHeight)
+                Me.BackglassCutOff = New Rectangle(0, formBackglass.DarkImage.Height - _BackglassGrillHeight, formBackglass.DarkImage.Width, _BackglassGrillHeight)
 
                 ' shrink some images to remove the grill
-                Me.formBackglass.DarkImage4Authentic = ResizeImage(Me.formBackglass.DarkImage4Authentic, _BackglassGrillHeight)
-                If Me.formBackglass.TopLightImage4Authentic IsNot Nothing Then
-                    Me.formBackglass.TopLightImage4Authentic = ResizeImage(Me.formBackglass.TopLightImage4Authentic, _BackglassGrillHeight)
+                formBackglass.DarkImage4Authentic = ResizeImage(formBackglass.DarkImage4Authentic, _BackglassGrillHeight)
+                If formBackglass.TopLightImage4Authentic IsNot Nothing Then
+                    formBackglass.TopLightImage4Authentic = ResizeImage(formBackglass.TopLightImage4Authentic, _BackglassGrillHeight)
                 End If
-                If Me.formBackglass.SecondLightImage4Authentic IsNot Nothing Then
-                    Me.formBackglass.SecondLightImage4Authentic = ResizeImage(Me.formBackglass.SecondLightImage4Authentic, _BackglassGrillHeight)
+                If formBackglass.SecondLightImage4Authentic IsNot Nothing Then
+                    formBackglass.SecondLightImage4Authentic = ResizeImage(formBackglass.SecondLightImage4Authentic, _BackglassGrillHeight)
                 End If
-                If Me.formBackglass.TopAndSecondLightImage4Authentic IsNot Nothing Then
-                    Me.formBackglass.TopAndSecondLightImage4Authentic = ResizeImage(Me.formBackglass.TopAndSecondLightImage4Authentic, _BackglassGrillHeight)
+                If formBackglass.TopAndSecondLightImage4Authentic IsNot Nothing Then
+                    formBackglass.TopAndSecondLightImage4Authentic = ResizeImage(formBackglass.TopAndSecondLightImage4Authentic, _BackglassGrillHeight)
                 End If
-                If Me.formBackglass.DarkImage4Fantasy IsNot Nothing Then
-                    Me.formBackglass.DarkImage4Fantasy = ResizeImage(Me.formBackglass.DarkImage4Fantasy, _BackglassGrillHeight)
+                If formBackglass.DarkImage4Fantasy IsNot Nothing Then
+                    formBackglass.DarkImage4Fantasy = ResizeImage(formBackglass.DarkImage4Fantasy, _BackglassGrillHeight)
                 End If
-                If Me.formBackglass.TopLightImage4Fantasy IsNot Nothing Then
-                    Me.formBackglass.TopLightImage4Fantasy = ResizeImage(Me.formBackglass.TopLightImage4Fantasy, _BackglassGrillHeight)
+                If formBackglass.TopLightImage4Fantasy IsNot Nothing Then
+                    formBackglass.TopLightImage4Fantasy = ResizeImage(formBackglass.TopLightImage4Fantasy, _BackglassGrillHeight)
                 End If
-                If Me.formBackglass.SecondLightImage4Fantasy IsNot Nothing Then
-                    Me.formBackglass.SecondLightImage4Fantasy = ResizeImage(Me.formBackglass.SecondLightImage4Fantasy, _BackglassGrillHeight)
+                If formBackglass.SecondLightImage4Fantasy IsNot Nothing Then
+                    formBackglass.SecondLightImage4Fantasy = ResizeImage(formBackglass.SecondLightImage4Fantasy, _BackglassGrillHeight)
                 End If
-                If Me.formBackglass.TopAndSecondLightImage4Fantasy IsNot Nothing Then
-                    Me.formBackglass.TopAndSecondLightImage4Fantasy = ResizeImage(Me.formBackglass.TopAndSecondLightImage4Fantasy, _BackglassGrillHeight)
+                If formBackglass.TopAndSecondLightImage4Fantasy IsNot Nothing Then
+                    formBackglass.TopAndSecondLightImage4Fantasy = ResizeImage(formBackglass.TopAndSecondLightImage4Fantasy, _BackglassGrillHeight)
                 End If
 
                 ' set background image and new backglass form height (without grill)
-                Me.formBackglass.BackgroundImage = Me.formBackglass.DarkImage
-                Me.formBackglass.Size = Me.formBackglass.DarkImage.Size
+                formBackglass.BackgroundImage = formBackglass.DarkImage
+                formBackglass.Size = formBackglass.DarkImage.Size
 
             End If
 
@@ -292,7 +292,7 @@ Public Class B2SScreen
              (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
 
         On Error Resume Next
-        
+
         ' get the correct screen
         Dim screen As Screen = ScreensOrdered(0)
         Dim s As Screen
@@ -324,19 +324,19 @@ Public Class B2SScreen
         On Error GoTo 0
 
         ' set forms to background image size
-        If Me.formBackglass IsNot Nothing AndAlso Me.formBackglass.BackgroundImage IsNot Nothing Then
-            Me.formBackglass.Size = Me.formBackglass.BackgroundImage.Size
+        If formBackglass IsNot Nothing AndAlso formBackglass.BackgroundImage IsNot Nothing Then
+            formBackglass.Size = formBackglass.BackgroundImage.Size
         End If
         If Me.formDMD IsNot Nothing AndAlso Me.formDMD.BackgroundImage IsNot Nothing Then
             Me.formDMD.Size = Me.formDMD.BackgroundImage.Size
         End If
 
         ' calculate backglass rescale factors
-        Dim rescaleBackglassX As Single = Me.formBackglass.Width / Me.BackglassSize.Width
-        Dim rescaleBackglassY As Single = Me.formBackglass.Height / Me.BackglassSize.Height
-        If Me.formBackglass.BackgroundImage IsNot Nothing Then
-            rescaleBackglassX = Me.formBackglass.BackgroundImage.Width / Me.BackglassSize.Width
-            rescaleBackglassY = Me.formBackglass.BackgroundImage.Height / Me.BackglassSize.Height
+        Dim rescaleBackglassX As Single = formBackglass.Width / Me.BackglassSize.Width
+        Dim rescaleBackglassY As Single = formBackglass.Height / Me.BackglassSize.Height
+        If formBackglass.BackgroundImage IsNot Nothing Then
+            rescaleBackglassX = formBackglass.BackgroundImage.Width / Me.BackglassSize.Width
+            rescaleBackglassY = formBackglass.BackgroundImage.Height / Me.BackglassSize.Height
         End If
 
         ' maybe rescale the location and the size because this is the default and therefore it has to be done
@@ -362,22 +362,22 @@ Public Class B2SScreen
 
         ' move and scale all picked objects
         ScaleAllControls(rescaleBackglassX, rescaleBackglassY, rescaleDMDX, rescaleDMDY)
-        
+
         ' show the backglass form
-        Me.formBackglass.StartPosition = FormStartPosition.Manual
-        Me.formBackglass.BackgroundImageLayout = ImageLayout.Stretch
-        Me.formBackglass.FormBorderStyle = FormBorderStyle.None
-        Me.formBackglass.ControlBox = False
-        Me.formBackglass.MaximizeBox = False
-        Me.formBackglass.MinimizeBox = False
-        Me.formBackglass.Location = screen.Bounds.Location + Me.BackglassLocation
-        Me.formBackglass.Size = Me.BackglassSize
-        Me.formBackglass.Text = "B2S Backglass Server"
-        Me.formBackglass.Show()
-        
+        formBackglass.StartPosition = FormStartPosition.Manual
+        formBackglass.BackgroundImageLayout = ImageLayout.Stretch
+        formBackglass.FormBorderStyle = FormBorderStyle.None
+        formBackglass.ControlBox = False
+        formBackglass.MaximizeBox = False
+        formBackglass.MinimizeBox = False
+        formBackglass.Location = screen.Bounds.Location + Me.BackglassLocation
+        formBackglass.Size = Me.BackglassSize
+        formBackglass.Text = "B2S Backglass Server"
+        formBackglass.Show()
+
         ' bring backglass screen to the front
-        If B2SSettings.FormToFront Then Me.formBackglass.TopMost = True
-        Me.formBackglass.BringToFront()
+        If B2SSettings.FormToFront Then formBackglass.TopMost = True
+        formBackglass.BringToFront()
 
         ' maybe show DMD form
         If IsDMDToBeShown Then
@@ -388,7 +388,7 @@ Public Class B2SScreen
             Me.formDMD.ControlBox = False
             Me.formDMD.MaximizeBox = False
             Me.formDMD.MinimizeBox = False
-            Me.formDMD.Location = Me.formBackglass.Location + Me.DMDLocation
+            Me.formDMD.Location = formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
             Me.formDMD.Text = "B2S DMD"
             ' show the DMD form
@@ -459,7 +459,7 @@ Public Class B2SScreen
         Else
             _cntrl.RectangleF = New RectangleF(_cntrl.Left / _rescaleX, _cntrl.Top / _rescaleY, _cntrl.Width / _rescaleX, _cntrl.Height / _rescaleY)
         End If
-        
+
         ' scale not more than the LED and reel boxes
         If TypeOf _cntrl Is B2SLEDBox OrElse TypeOf _cntrl Is B2SReelBox Then
             _cntrl.Location = New Point(Point.Round(_cntrl.RectangleF.Location))
@@ -547,9 +547,9 @@ Public Class B2SScreen
                                    ByVal fileformat As Imaging.ImageFormat) As Boolean
 
         ' get screenshot
-        Dim screenshot As Bitmap = New Bitmap(Me.formBackglass.Width, Me.formBackglass.Height)
+        Dim screenshot As Bitmap = New Bitmap(formBackglass.Width, formBackglass.Height)
         Using gr As Graphics = Graphics.FromImage(screenshot)
-            gr.CopyFromScreen(Me.formBackglass.Location, Point.Empty, Me.formBackglass.Size)
+            gr.CopyFromScreen(formBackglass.Location, Point.Empty, formBackglass.Size)
         End Using
 
         ' save it

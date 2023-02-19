@@ -69,6 +69,7 @@ Public Class B2SSettings
     Public Shared Property GIStringsOff() As Boolean = False
     Public Shared Property LEDsOff() As Boolean = False
     Public Shared Property StartAsEXE() As Boolean = True
+    Public Shared Property PureEXE() As Boolean = False
     Public Shared Property DefaultStartMode() As eDefaultStartMode = eDefaultStartMode.EXE
     Public Shared Property DisableFuzzyMatching() As Boolean = False
 
@@ -96,7 +97,7 @@ Public Class B2SSettings
 
     Public Shared Property CurrentDualMode() As B2SSettings.eDualMode = eDualMode.NotSet
 
-    Public Shared Property StartBackground() As Boolean = False
+    Public Shared Property StartBackground() As Nullable(Of Boolean) = Nothing
     Public Shared Property GlobalStartBackground() As Nullable(Of Boolean) = Nothing
 
 
@@ -172,16 +173,18 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
                 If nodeHeader.SelectSingleNode("StartBackground") IsNot Nothing Then
                     GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
-                    StartBackground = GlobalStartBackground
                 End If
-                If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
-                If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
-                    FormToBack = (nodeHeader.SelectSingleNode("FormToBack").InnerText = "1")
-                    If FormToBack Then FormToFront = False
-                    FormNoFocus = True
-                End If
-                If nodeHeader.SelectSingleNode("FormNoFocus") IsNot Nothing Then
-                    FormNoFocus = (nodeHeader.SelectSingleNode("FormNoFocus").InnerText = "1")
+                If Not PureEXE Then
+                    ' When not started as test from explorer
+                    If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
+                    If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
+                        FormToBack = (nodeHeader.SelectSingleNode("FormToBack").InnerText = "1")
+                        If FormToBack Then FormToFront = False
+                        FormNoFocus = True
+                    End If
+                    If nodeHeader.SelectSingleNode("FormNoFocus") IsNot Nothing Then
+                        FormNoFocus = (nodeHeader.SelectSingleNode("FormNoFocus").InnerText = "1")
+                    End If
                 End If
                 If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
                     ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
@@ -225,13 +228,16 @@ Public Class B2SSettings
                         If nodeTable.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (nodeTable.SelectSingleNode("StartAsEXE").InnerText = "1")
                         If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
                         If nodeTable.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (nodeTable.SelectSingleNode("StartBackground").InnerText = "1")
-                        If nodeTable.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeTable.SelectSingleNode("FormToFront").InnerText = "1")
-                        If nodeTable.SelectSingleNode("FormToBack") IsNot Nothing Then
-                            FormToBack = (nodeTable.SelectSingleNode("FormToBack").InnerText = "1")
-                            If FormToBack Then FormToFront = False
-                            FormNoFocus = True
+                        If Not PureEXE Then
+                            If nodeTable.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeTable.SelectSingleNode("FormToFront").InnerText = "1")
+                            If nodeTable.SelectSingleNode("FormToBack") IsNot Nothing Then
+                                FormToBack = (nodeTable.SelectSingleNode("FormToBack").InnerText = "1")
+                                If FormToBack Then FormToFront = False
+                                FormNoFocus = True
+                            End If
+
+                            If nodeTable.SelectSingleNode("FormNoFocus") IsNot Nothing Then FormNoFocus = (nodeTable.SelectSingleNode("FormNoFocus").InnerText = "1")
                         End If
-                        If nodeTable.SelectSingleNode("FormNoFocus") IsNot Nothing Then FormNoFocus = (nodeTable.SelectSingleNode("FormNoFocus").InnerText = "1")
 
                         Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
                         If nodeAnimations IsNot Nothing Then
@@ -300,8 +306,8 @@ Public Class B2SSettings
                 End If
                 AddNode(XML, nodeTable, "StartAsEXE", If(StartAsEXE, "1", "0"))
 
-                ' Only save the StartBackground setting on table level if different from GlobalStartBackground or non existent
-                If (Not GlobalStartBackground.HasValue) Or (GlobalStartBackground Xor StartBackground) Then
+                ' Only save the StartBackground setting on table level if not set to standard
+                If StartBackground.HasValue Then
                     AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
                 End If
                 AddNode(XML, nodeTable, "FormToFront", If(FormToFront, "1", "0"))

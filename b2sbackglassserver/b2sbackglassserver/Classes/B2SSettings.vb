@@ -169,7 +169,7 @@ Public Class B2SSettings
 
     Public Shared Property CurrentDualMode() As B2SSettings.eDualMode = eDualMode.NotSet
 
-    Public Shared Property StartBackground() As Boolean = False
+    Public Shared Property StartBackground() As Nullable(Of Boolean) = Nothing
     Public Shared Property GlobalStartBackground() As Nullable(Of Boolean) = Nothing
 
 
@@ -248,7 +248,6 @@ Public Class B2SSettings
                     If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
                     If nodeHeader.SelectSingleNode("StartBackground") IsNot Nothing Then
                         GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
-                        StartBackground = GlobalStartBackground
                 End If
                 If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
                     If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
@@ -380,8 +379,8 @@ Public Class B2SSettings
                 End If
                 AddNode(XML, nodeTable, "StartAsEXE", If(StartAsEXE, "1", "0"))
 
-                ' Only save the StartBackground setting on table level if different from GlobalStartBackground or non existent
-                If (Not GlobalStartBackground.HasValue) Or (GlobalStartBackground Xor StartBackground) Then
+                ' Only save the StartBackground setting on table level if not set to standard
+                If StartBackground.HasValue Then
                     AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
                 End If
                 AddNode(XML, nodeTable, "FormToFront", If(FormToFront, "1", "0"))

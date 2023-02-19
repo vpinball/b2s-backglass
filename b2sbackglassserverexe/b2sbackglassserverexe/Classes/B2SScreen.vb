@@ -161,7 +161,7 @@ Public Class B2SScreen
         Else
 
             MessageBox.Show("There is no B2S screen resolution file '" & FileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
-                             "Please create this file with the tool 'B2S_ScreenResEditor.exe'.", _
+                             "Please create this file with the tool 'B2S_ScreenResIdentifier.exe'.", _
                              "B2S backglass error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End
 
@@ -288,7 +288,8 @@ Public Class B2SScreen
         'searchPathLog.WriteLogEntry("Start Show")
 
         'On Error Resume Next
-        If ((Not (Me.BackgroundSize.IsEmpty)) And B2SSettings.StartBackground) Then
+        If (Not Me.BackgroundSize.IsEmpty) And ((B2SSettings.StartBackground.HasValue And B2SSettings.StartBackground) Or
+                                                (Not B2SSettings.StartBackground.HasValue And B2SSettings.GlobalStartBackground.HasValue And B2SSettings.GlobalStartBackground)) Then
             StartBackground = True
         End If
 

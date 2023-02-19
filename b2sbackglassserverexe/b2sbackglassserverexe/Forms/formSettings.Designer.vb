@@ -506,7 +506,7 @@ Partial Class formSettings
         '
         Me.cmbBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbBackground.FormattingEnabled = True
-        Me.cmbBackground.Items.AddRange(New Object() {"Visible", "Hidden"})
+        Me.cmbBackground.Items.AddRange(New Object() {"Visible", "Hidden", "Standard"})
         Me.cmbBackground.Location = New System.Drawing.Point(380, 48)
         Me.cmbBackground.Name = "cmbBackground"
         Me.cmbBackground.Size = New System.Drawing.Size(80, 21)
