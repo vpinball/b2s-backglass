@@ -6,7 +6,7 @@ set resfile=%cd%\%~1.res
 set GameName=%~2
 
 REM Cut holes in the destination "B2S Backglass Server" & "B2S DMD" forms
-set "B2SWindowPunch=^B2S Backglass|^B2S DMD$"
+set "B2SWindowPunch=^B2S Backglass$|^B2S Backglass Server$|^B2S DMD$"
 
 REM using "Virtual DMD", "Virtual Alphanumeric" and all "PUPSCREEN" forms as regular expressions
 set "cutter=^Virtual DMD$|^Virtual Alphanumeric Display$|^PUPSCREEN[0-9]+$"
