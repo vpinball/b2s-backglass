@@ -161,15 +161,6 @@ Public Class formSettings
 
     End Sub
 
-    Private Sub btnDonate_Click(sender As System.Object, e As System.EventArgs) Handles btnDonate.Click
-
-        MessageBox.Show("You can show your appreciation for 'B2S Backglass Designer' and 'B2S Backglass Server' and support future development by donating. " & vbCrLf &
-                      "I strongly feel that 'B2S Backglass Designer' and 'B2S Backglass Server' should remain free of charge as my gift to the online community. " & vbCrLf &
-                      "Please note that donations to 'B2S Backglass Designer' and 'B2S Backglass Server' are not tax-deductible for income tax purposes." & vbCrLf & vbCrLf &
-                      "Send whatever amount you want to send to my PayPal address 'stefan.wuehr@freenet.de'." & vbCrLf & vbCrLf &
-                      "Thank you very much.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-    End Sub
     Private Sub btnMore_Click(sender As System.Object, e As System.EventArgs) Handles btnMore.Click
 
         formSettingsMore.ShowDialog(Me, formBackglass)

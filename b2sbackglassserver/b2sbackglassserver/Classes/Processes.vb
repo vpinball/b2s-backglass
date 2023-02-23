@@ -61,7 +61,7 @@ Public Class Processes
                 If proc.Name.StartsWith("Visual Pinball Player", StringComparison.CurrentCultureIgnoreCase) Then
                     _tablehandle = proc.Handle
                 End If
-                If proc.Name.Equals("Form1") Then
+                If proc.Name.StartsWith("B2S Backglass", StringComparison.CurrentCultureIgnoreCase) Then
                     _backglassformhandle = proc.Handle
                 End If
                 If proc.Name.Equals("HyperPin", StringComparison.CurrentCultureIgnoreCase) Then

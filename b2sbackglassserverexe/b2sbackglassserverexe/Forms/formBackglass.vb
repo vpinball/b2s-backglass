@@ -1748,7 +1748,7 @@ Public Class formBackglass
             If Not String.IsNullOrEmpty(hyperpinfilename) AndAlso Not filename.Equals(hyperpinfilename, StringComparison.CurrentCultureIgnoreCase) Then
                 text &= " and file '" & IO.Path.Combine(IO.Directory.GetCurrentDirectory(), hyperpinfilename) & "'"
             End If
-            text &= " not found. Please rename or download the matching directb2s backglass files."
+            text &= " not found. Please rename or download the matching directb2s backglass file."
             Throw New Exception(text)
         End If
 

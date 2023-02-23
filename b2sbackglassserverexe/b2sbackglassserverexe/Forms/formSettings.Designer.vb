@@ -85,7 +85,6 @@ Partial Class formSettings
         Me.lblSolenoidBlackTurns = New System.Windows.Forms.Label()
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
-        Me.btnDonate = New System.Windows.Forms.Button()
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
@@ -123,7 +122,6 @@ Partial Class formSettings
         Me.PanelSettings.Controls.Add(Me.btnSaveSettings)
         Me.PanelSettings.Controls.Add(Me.grpLEDs)
         Me.PanelSettings.Controls.Add(Me.grpPerfTuning)
-        Me.PanelSettings.Controls.Add(Me.btnDonate)
         Me.PanelSettings.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelSettings.Location = New System.Drawing.Point(0, 0)
         Me.PanelSettings.Name = "PanelSettings"
@@ -749,19 +747,6 @@ Partial Class formSettings
         Me.lblGIBlackTurns.TabIndex = 19
         Me.lblGIBlackTurns.Text = "Skip GI frames:"
         '
-        'btnDonate
-        '
-        Me.btnDonate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDonate.Image = CType(resources.GetObject("btnDonate.Image"), System.Drawing.Image)
-        Me.btnDonate.Location = New System.Drawing.Point(57, 49)
-        Me.btnDonate.Name = "btnDonate"
-        Me.btnDonate.Size = New System.Drawing.Size(435, 32)
-        Me.btnDonate.TabIndex = 36
-        Me.btnDonate.Text = "   If you want to donate, click here for infos ..."
-        Me.btnDonate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnDonate.UseVisualStyleBackColor = True
-        Me.btnDonate.Visible = False
-        '
         'formSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -851,7 +836,6 @@ Partial Class formSettings
     Friend WithEvents lblDefaultStartMode As System.Windows.Forms.Label
     Friend WithEvents cmbDefaultStartMode As System.Windows.Forms.ComboBox
     Friend WithEvents grpStartMode As System.Windows.Forms.GroupBox
-    Friend WithEvents btnDonate As System.Windows.Forms.Button
     Friend WithEvents grpPlugins As System.Windows.Forms.GroupBox
     Friend WithEvents chkShowStartupError As System.Windows.Forms.CheckBox
     Friend WithEvents chkActivatePlugins As System.Windows.Forms.CheckBox
