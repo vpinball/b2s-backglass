@@ -38,6 +38,8 @@ Public Class formSettings
 
         ' load data
         Dim _isdirty As Boolean = isSettingsScreenDirty
+        Me.Text = "Backglass settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")"
+
         ' set version info
         lblCopyright.Text = String.Format(lblCopyright.Text, My.Application.Info.ProductName.ToString, My.Application.Info.Copyright.ToString)
         lblVersion.Text = String.Format("Server version {0}, backglass file version {1}", System.Windows.Forms.Application.ProductVersion, B2SSettings.BackglassFileVersion)

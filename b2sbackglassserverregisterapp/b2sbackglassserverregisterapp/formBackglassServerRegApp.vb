@@ -23,16 +23,18 @@ Public Class formBackglassServerRegApp
                             clsID = openKey.GetValue("")
                         End If
                     End Using
-                    Using openKey As RegistryKey = regRoot.OpenSubKey(IO.Path.Combine("CLSID", clsID, "InprocServer32"), False)
-                        If openKey IsNot Nothing Then
-                            dllURI = openKey.GetValue("CodeBase")
-                        End If
-                    End Using
+                    If clsID IsNot String.Empty Then
+                        Using openKey As RegistryKey = regRoot.OpenSubKey(IO.Path.Combine("CLSID", clsID, "InprocServer32"), False)
+                            If openKey IsNot Nothing Then
+                                dllURI = openKey.GetValue("CodeBase")
+                            End If
+                        End Using
+                    End If
                 End Using
             Catch
             End Try
             Dim filepath As String = New Uri(dllURI).LocalPath
-            dialogResult = MessageBox.Show("The 'B2S Server' is already registered here:" & vbCrLf & vbCrLf & filepath & vbCrLf & vbCrLf & "Do you REALLY want to (try to) reregister it???", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+            dialogResult = MessageBox.Show("The 'B2S Server' is already registered here:" & vbCrLf & vbCrLf & filepath & vbCrLf & vbCrLf & "Do you want to (try to) re-register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
         Else
             dialogResult = MessageBox.Show("The 'B2S Server' is not registered yet." & vbCrLf & vbCrLf & "Do you want to register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
         End If
@@ -91,7 +93,7 @@ Public Class formBackglassServerRegApp
                     Try
                         pinEditValue = openKey.GetValue("")
                     Catch ex As UnauthorizedAccessException
-                        MessageBox.Show("UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show("Could not read out registry for VPinballX:" & vbCrLf & "UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         End
                     End Try
                 End If
@@ -127,6 +129,7 @@ Public Class formBackglassServerRegApp
                             b2sReg.CreateSubKey("DefaultIcon").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """,0")
                             b2sReg.CreateSubKey("shell\open\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """ ""%1""")
                             b2sReg.CreateSubKey("shell\Edit ScreenRes file\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
+                            'b2sReg.CreateSubKey("shell\Edit ScreenRes file\DefaultIcon").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """,0")
 
                             ' Add res file context menu for double click and right click -> Edit ScreenRes file
                             rkReg.CreateSubKey(".res").SetValue("", "b2sserver.res")
