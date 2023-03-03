@@ -12,6 +12,7 @@ Module Module1
     Public Property IsInStartup() As Boolean = False
 
     Public Property FileFound() As Boolean = False
+    Public Property PureEXE() As Nullable(Of Boolean) = Nothing
     Public Property PlayfieldSize() As Size = New Size(0, 0)
     Public Property BackglassMonitor() As String = String.Empty
     Public Property BackglassMonitorType() As String = String.Empty
@@ -76,8 +77,11 @@ Module Module1
             Do Until EOF(1) Or i > 30
                 line(i) = LineInput(1)
                 If (line(i).StartsWith("#")) Then
-                    If (line(i).Replace(" ", "").StartsWith("#V2")) Then VersionTwoFile = True
-                    SaveComments = True
+                    If (line(i).Replace(" ", "").StartsWith("#V2")) Then
+                        VersionTwoFile = True
+                    Else
+                        SaveComments = True
+                    End If
                     Continue Do
                 End If
                 i += 1

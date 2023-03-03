@@ -22,7 +22,6 @@ Partial Class formDMD
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formPlayfield))
         Me.groupDMD = New System.Windows.Forms.GroupBox()
         Me.txtDMDScreenScale = New System.Windows.Forms.TextBox()
         Me.chkDMDFlipY = New System.Windows.Forms.CheckBox()
@@ -68,10 +67,10 @@ Partial Class formDMD
         Me.groupDMD.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.groupDMD.Location = New System.Drawing.Point(5, 4)
         Me.groupDMD.Name = "groupDMD"
-        Me.groupDMD.Size = New System.Drawing.Size(398, 239)
+        Me.groupDMD.Size = New System.Drawing.Size(391, 239)
         Me.groupDMD.TabIndex = 7
         Me.groupDMD.TabStop = False
-        Me.groupDMD.Text = "DMD"
+        Me.groupDMD.Text = "B2S DMD"
         '
         'txtDMDScreenScale
         '
@@ -79,7 +78,7 @@ Partial Class formDMD
         Me.txtDMDScreenScale.Location = New System.Drawing.Point(287, 94)
         Me.txtDMDScreenScale.Name = "txtDMDScreenScale"
         Me.txtDMDScreenScale.ReadOnly = True
-        Me.txtDMDScreenScale.Size = New System.Drawing.Size(93, 27)
+        Me.txtDMDScreenScale.Size = New System.Drawing.Size(82, 23)
         Me.txtDMDScreenScale.TabIndex = 25
         '
         'chkDMDFlipY
@@ -88,7 +87,7 @@ Partial Class formDMD
         Me.chkDMDFlipY.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkDMDFlipY.Location = New System.Drawing.Point(152, 207)
         Me.chkDMDFlipY.Name = "chkDMDFlipY"
-        Me.chkDMDFlipY.Size = New System.Drawing.Size(89, 20)
+        Me.chkDMDFlipY.Size = New System.Drawing.Size(88, 20)
         Me.chkDMDFlipY.TabIndex = 23
         Me.chkDMDFlipY.Text = "DMD Y-Flip"
         Me.chkDMDFlipY.UseVisualStyleBackColor = True
@@ -99,7 +98,7 @@ Partial Class formDMD
         Me.lblDMDLocationY.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblDMDLocationY.Location = New System.Drawing.Point(210, 127)
         Me.lblDMDLocationY.Name = "lblDMDLocationY"
-        Me.lblDMDLocationY.Size = New System.Drawing.Size(12, 16)
+        Me.lblDMDLocationY.Size = New System.Drawing.Size(11, 16)
         Me.lblDMDLocationY.TabIndex = 22
         Me.lblDMDLocationY.Text = ","
         Me.lblDMDLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -136,7 +135,7 @@ Partial Class formDMD
         Me.lblDMDScreenSizeHeight.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblDMDScreenSizeHeight.Location = New System.Drawing.Point(210, 98)
         Me.lblDMDScreenSizeHeight.Name = "lblDMDScreenSizeHeight"
-        Me.lblDMDScreenSizeHeight.Size = New System.Drawing.Size(12, 16)
+        Me.lblDMDScreenSizeHeight.Size = New System.Drawing.Size(11, 16)
         Me.lblDMDScreenSizeHeight.TabIndex = 18
         Me.lblDMDScreenSizeHeight.Text = ","
         Me.lblDMDScreenSizeHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -175,7 +174,7 @@ Partial Class formDMD
         Me.chkDMDAtDefaultLocation.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkDMDAtDefaultLocation.Location = New System.Drawing.Point(152, 181)
         Me.chkDMDAtDefaultLocation.Name = "chkDMDAtDefaultLocation"
-        Me.chkDMDAtDefaultLocation.Size = New System.Drawing.Size(227, 20)
+        Me.chkDMDAtDefaultLocation.Size = New System.Drawing.Size(226, 20)
         Me.chkDMDAtDefaultLocation.TabIndex = 7
         Me.chkDMDAtDefaultLocation.Text = "DMD is at default location (for grill)"
         Me.chkDMDAtDefaultLocation.UseVisualStyleBackColor = True
@@ -186,7 +185,7 @@ Partial Class formDMD
         Me.lblDMDSizeHeight.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblDMDSizeHeight.Location = New System.Drawing.Point(210, 156)
         Me.lblDMDSizeHeight.Name = "lblDMDSizeHeight"
-        Me.lblDMDSizeHeight.Size = New System.Drawing.Size(12, 16)
+        Me.lblDMDSizeHeight.Size = New System.Drawing.Size(11, 16)
         Me.lblDMDSizeHeight.TabIndex = 13
         Me.lblDMDSizeHeight.Text = ","
         Me.lblDMDSizeHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -238,31 +237,28 @@ Partial Class formDMD
         '
         'lblDMD
         '
-        Me.lblDMD.AutoSize = True
         Me.lblDMD.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDMD.Location = New System.Drawing.Point(14, 23)
+        Me.lblDMD.Location = New System.Drawing.Point(4, 23)
         Me.lblDMD.Name = "lblDMD"
-        Me.lblDMD.Size = New System.Drawing.Size(382, 32)
+        Me.lblDMD.Size = New System.Drawing.Size(320, 32)
         Me.lblDMD.TabIndex = 5
-        Me.lblDMD.Text = "This is the dummy window for the DMD. Drag and drop me" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "whereever you want to hav" &
-    "e me."
+        Me.lblDMD.Text = "This is the dummy window for the B2S DMD. Drag and drop me where you want me to be"
         '
         'formDMD
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(410, 255)
+        Me.ClientSize = New System.Drawing.Size(404, 255)
         Me.Controls.Add(Me.groupDMD)
         Me.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Icon = CType(Resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "formDMD"
         Me.Opacity = 0.75R
-        Me.Text = "DMD - B2S Screen Resolution Identifier"
+        Me.Text = "B2S DMD - B2S Screen Resolution Identifier"
         Me.TopMost = True
         Me.groupDMD.ResumeLayout(False)
         Me.groupDMD.PerformLayout()

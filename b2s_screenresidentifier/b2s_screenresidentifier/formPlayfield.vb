@@ -23,7 +23,8 @@ Public Class formPlayfield
         ' get all saved data
         If My.Application.CommandLineArgs.Count > 0 Then
             FileName = My.Application.CommandLineArgs.ElementAt(0)
-
+            ' If started from B2SBackglassServer either directly (PureEXE=true) or as backglass through VPX (false) or from explorer PureEXE = Nothing
+            If My.Application.CommandLineArgs.Count > 1 Then PureEXE = My.Application.CommandLineArgs.ElementAt(1).Equals("-pureexe=true")
             ' In case a Table or backglass file is thrown on the executable
             If Not Path.GetExtension(FileName).ToLower().Equals(".res") And Not Path.GetExtension(FileName).ToLower().Equals(".txt") And Not FileName.ToLower().Equals(GlobalFileName.ToLower()) Then
                 FileName = Path.ChangeExtension(FileName, ".res")
@@ -42,6 +43,13 @@ Public Class formPlayfield
 
         StartupPlayfield()
         ' create all other forms
+        If (PureEXE.HasValue And PureEXE) Or Not PureEXE.HasValue Then
+            Me.TopMost = False
+            formBackground.TopMost = False
+            formBackglass.TopMost = False
+            formDMD.TopMost = False
+        End If
+
         Me.BringToFront()
 
         formBackground.BringToFront()
@@ -149,7 +157,11 @@ Public Class formPlayfield
 
         If Me.chkSaveComments.Checked And Me.chkSaveEnhanced.Checked Then PrintLine(1, "# V" + Application.ProductVersion)
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# Playfield Screen resolution width/height")
+        If Me.chkSaveComments.Checked Then
+            PrintLine(1, "# This is a ScreenRes file for the B2SBackglassServer.")
+            PrintLine(1, "# From release 1.3.1.1 comment lines like this starting with a '#' are supported.")
+            PrintLine(1, "# Playfield Screen resolution width/height")
+        End If
         WriteLine(1, CInt(Me.txtPlayfieldSizeWidth.Text))
         WriteLine(1, CInt(Me.txtPlayfieldSizeHeight.Text))
 
@@ -157,7 +169,8 @@ Public Class formPlayfield
         WriteLine(1, CInt(formBackglass.txtBackglassSizeWidth.Text))
         WriteLine(1, CInt(formBackglass.txtBackglassSizeHeight.Text))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# Define Backglass using Display Devicename screen number (\\.\DISPLAY)x or screen coordinates (@x) or screen index (=x)")
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Define Backglass screen using Display Devicename screen number (\\.\DISPLAY)x or screen coordinates (@x) or screen index (=x)")
+
         If BackglassMonitorType.StartsWith("@") Then
             PrintLine(1, BackglassMonitorType & Me.txtPlayfieldSizeWidth.Text)
         ElseIf BackglassMonitorType.StartsWith("=") Then
@@ -179,29 +192,39 @@ Public Class formPlayfield
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Width, CInt(formDMD.txtDMDSizeWidth.Text)))
         WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, formDMD.Size.Height, CInt(formDMD.txtDMDSizeHeight.Text)))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# DMD x/y position")
-        WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, CInt(formDMD.txtDMDLocationX.Text) - CInt(formBackglass.txtBackglassLocationX.Text)) + Screen.FromControl(formDMD).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
-        WriteLine(1, If(formDMD.chkDMDAtDefaultLocation.Checked, 0, CInt(formDMD.txtDMDLocationY.Text) - CInt(formBackglass.txtBackglassLocationY.Text)) + Screen.FromControl(formDMD).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# x/y position of the B2S (or Full) DMD area - relative to the upper left corner of the backglass window")
+        If formDMD.chkDMDAtDefaultLocation.Checked Then
+            WriteLine(1, 0)
+            WriteLine(1, 0)
+        Else
+            WriteLine(1, CInt(formDMD.txtDMDLocationX.Text) - CInt(formBackglass.txtBackglassLocationX.Text) + Screen.FromControl(formDMD).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
+            WriteLine(1, CInt(formDMD.txtDMDLocationY.Text) - CInt(formBackglass.txtBackglassLocationY.Text) + Screen.FromControl(formDMD).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
+        End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Y-flip, flips the LED display upside down")
         WriteLine(1, If(formDMD.chkDMDFlipY.Checked, 1, 0))
 
-        If Me.chkSaveComments.Checked Then PrintLine(1, "# Background x/y position")
-        WriteLine(1, If(Not formBackglass.chkBackgroundActive.Checked, 0, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X))
-        WriteLine(1, If(Not formBackglass.chkBackgroundActive.Checked, 0, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y))
+        If Me.chkSaveComments.Checked Then PrintLine(1, "# Background x/y position - relative to the backglass screen - has to be activated in the settings")
+        If formBackglass.chkBackgroundActive.Checked Then
+            WriteLine(1, CInt(formBackground.txtBackgroundLocationX.Text) + Screen.FromControl(formBackground).Bounds.Location.X - Screen.FromControl(formBackglass).Bounds.Location.X)
+            WriteLine(1, CInt(formBackground.txtBackgroundLocationY.Text) + Screen.FromControl(formBackground).Bounds.Location.Y - Screen.FromControl(formBackglass).Bounds.Location.Y)
+        Else
+            WriteLine(1, 0)
+            WriteLine(1, 0)
+        End If
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# Background width/height")
-
         WriteLine(1, If(Not formBackglass.chkBackgroundActive.Checked, 0, CInt(formBackground.txtBackgroundSizeWidth.Text)))
         WriteLine(1, If(Not formBackglass.chkBackgroundActive.Checked, 0, CInt(formBackground.txtBackgroundSizeHeight.Text)))
 
         If Me.chkSaveComments.Checked Then PrintLine(1, "# path to the background image (C:\path\Frame) or black if none selected")
         PrintLine(1, formBackground.TxtBackgroundPath.Text)
-        ' If no comments are added but the enhanced format is active, this is needed!
+
         If Me.chkSaveComments.Checked Then
             PrintLine(1, "# This line would turn off B2SWindowPunch if activated")
             PrintLine(1, "#B2SWindowPunch=off")
         End If
+        ' If no comments are added but the enhanced format is active, this is needed!
         If Not Me.chkSaveComments.Checked And Me.chkSaveEnhanced.Checked Then PrintLine(1, "# V" + Application.ProductVersion + " This is needed from B2S Server 2.0 even if comments are deactivated to mark the version 2 file format. It is ignored on older releases, but your bg forms might be switched.")
 
 
