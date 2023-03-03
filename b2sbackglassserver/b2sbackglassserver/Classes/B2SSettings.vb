@@ -37,6 +37,7 @@ Public Class B2SSettings
     End Enum
 
     Private Const filename As String = "B2STableSettings.xml"
+    Public Shared Property B2STableSettingsExtendedPath() As Boolean = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2STableSettingsExtendedPath", "0") = "1"
     Public Shared Property SettingFilePath() As String = GetSettingFilename()
 
     Public Shared Property MatchingFileName() As String = String.Empty
@@ -210,7 +211,7 @@ Public Class B2SSettings
     Public Shared Function GetSettingFilename() As String
         If IO.File.Exists(filename) Then
             Return filename
-        ElseIf IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
+        ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
             Return IO.Path.Combine(Application.StartupPath(), filename)
         End If
         Return filename
