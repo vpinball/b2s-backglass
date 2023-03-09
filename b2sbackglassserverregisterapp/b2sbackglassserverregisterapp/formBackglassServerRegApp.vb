@@ -3,7 +3,7 @@ Imports System.IO
 
 Public Class formBackglassServerRegApp
 
-
+    Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
     Private Sub Form1_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
 
         Me.Visible = False
@@ -133,6 +133,8 @@ Public Class formBackglassServerRegApp
 
                             ' Add res file context menu for double click and right click -> Edit ScreenRes file
                             rkReg.CreateSubKey(".res").SetValue("", "b2sserver.res")
+                            ' Add New -> B2S Server ScreenRes file (new).res  Context menu
+                            rkReg.CreateSubKey(".res\b2sserver.res\ShellNew").SetValue("Command", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
                             b2sReg = rkReg.CreateSubKey("b2sserver.res")
                             b2sReg.SetValue("", "B2S Server ScreenRes file")
                             'b2sReg.CreateSubKey("DefaultIcon").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """,0") ' skip icon for res file?

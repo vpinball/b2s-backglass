@@ -1,5 +1,7 @@
 2.0.0
-- B2SBackglassServerRegisterApp: Add file associations to res and directb2s files to start the B2S_ScreenResIdentifier
+- The extended search path next to B2S install for B2STableSettings.xml is activated in the registry HKEY_CURRENT_USER\Software\B2S\B2STableSettingsExtendedPath set to String "1"
+- B2SBackglassServer: Show table name and cGameName in settings window.
+- B2SBackglassServerRegisterApp: Add file associations to res, directb2s files and file->New to start the B2S_ScreenResIdentifier.
 - B2S_ScreenResIdentifier can be started from the B2S settings window, and the the settings window is hidden while editing the ScreenRes file.
 - The B2S_ScreenResIdentifier can now save the filename it received when starting, or save the global name. (If started with a tablename.res file)
 - The default for "Exact .directb2s match only" is now set to true, if not already set.
