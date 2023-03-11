@@ -54,7 +54,7 @@ Partial Class formSettings
         Me.cmbScreenshotType = New System.Windows.Forms.ComboBox()
         Me.btnScreenshotPath = New System.Windows.Forms.Button()
         Me.btnCloseSettings = New System.Windows.Forms.Button()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.B2SLogo = New System.Windows.Forms.PictureBox()
         Me.lblCopyright = New System.Windows.Forms.Label()
         Me.grpVisibility = New System.Windows.Forms.GroupBox()
         Me.chkFormNoFocus = New System.Windows.Forms.CheckBox()
@@ -85,13 +85,14 @@ Partial Class formSettings
         Me.lblSolenoidBlackTurns = New System.Windows.Forms.Label()
         Me.numGISkipFrames = New System.Windows.Forms.NumericUpDown()
         Me.lblGIBlackTurns = New System.Windows.Forms.Label()
+        Me.B2SLogoToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.PanelSettings.SuspendLayout()
         Me.grpPlugins.SuspendLayout()
         Me.grpStartMode.SuspendLayout()
         Me.grpGeneral.SuspendLayout()
         Me.grpAnimationSettings.SuspendLayout()
         Me.grpScreenshot.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.B2SLogo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpVisibility.SuspendLayout()
         Me.grpLEDs.SuspendLayout()
         Me.grpPerfTuning.SuspendLayout()
@@ -116,7 +117,7 @@ Partial Class formSettings
         Me.PanelSettings.Controls.Add(Me.lblVersion)
         Me.PanelSettings.Controls.Add(Me.grpScreenshot)
         Me.PanelSettings.Controls.Add(Me.btnCloseSettings)
-        Me.PanelSettings.Controls.Add(Me.PictureBox1)
+        Me.PanelSettings.Controls.Add(Me.B2SLogo)
         Me.PanelSettings.Controls.Add(Me.lblCopyright)
         Me.PanelSettings.Controls.Add(Me.grpVisibility)
         Me.PanelSettings.Controls.Add(Me.btnSaveSettings)
@@ -131,6 +132,7 @@ Partial Class formSettings
         'lblNonAvailableSettings
         '
         Me.lblNonAvailableSettings.AutoSize = True
+        Me.lblNonAvailableSettings.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNonAvailableSettings.Location = New System.Drawing.Point(189, 566)
         Me.lblNonAvailableSettings.Name = "lblNonAvailableSettings"
         Me.lblNonAvailableSettings.Size = New System.Drawing.Size(295, 13)
@@ -421,15 +423,15 @@ Partial Class formSettings
         Me.btnCloseSettings.Text = "Close"
         Me.btnCloseSettings.UseVisualStyleBackColor = True
         '
-        'PictureBox1
+        'B2SLogo
         '
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(53, 43)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 2
-        Me.PictureBox1.TabStop = False
+        Me.B2SLogo.Image = CType(resources.GetObject("B2SLogo.Image"), System.Drawing.Image)
+        Me.B2SLogo.Location = New System.Drawing.Point(3, 3)
+        Me.B2SLogo.Name = "B2SLogo"
+        Me.B2SLogo.Size = New System.Drawing.Size(53, 43)
+        Me.B2SLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.B2SLogo.TabIndex = 2
+        Me.B2SLogo.TabStop = False
         '
         'lblCopyright
         '
@@ -748,6 +750,9 @@ Partial Class formSettings
         Me.lblGIBlackTurns.TabIndex = 19
         Me.lblGIBlackTurns.Text = "Skip GI frames:"
         '
+        'B2SLogoToolTip
+        '
+        '
         'formSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -762,7 +767,7 @@ Partial Class formSettings
         Me.Name = "formSettings"
         Me.Opacity = 0R
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Backglass settings ..."
+        Me.Text = "Settings..."
         Me.TopMost = True
         Me.PanelSettings.ResumeLayout(False)
         Me.PanelSettings.PerformLayout()
@@ -775,7 +780,7 @@ Partial Class formSettings
         Me.grpAnimationSettings.ResumeLayout(False)
         Me.grpScreenshot.ResumeLayout(False)
         Me.grpScreenshot.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.B2SLogo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpVisibility.ResumeLayout(False)
         Me.grpVisibility.PerformLayout()
         Me.grpLEDs.ResumeLayout(False)
@@ -799,7 +804,7 @@ Partial Class formSettings
     Friend WithEvents cmbScreenshotType As System.Windows.Forms.ComboBox
     Friend WithEvents btnScreenshotPath As System.Windows.Forms.Button
     Friend WithEvents btnCloseSettings As System.Windows.Forms.Button
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+    Friend WithEvents B2SLogo As System.Windows.Forms.PictureBox
     Friend WithEvents lblCopyright As System.Windows.Forms.Label
     Friend WithEvents grpVisibility As System.Windows.Forms.GroupBox
     Friend WithEvents cmbB2SDMD As System.Windows.Forms.ComboBox
@@ -849,4 +854,5 @@ Partial Class formSettings
     Friend WithEvents lblBackgound As Windows.Forms.Label
     Friend WithEvents cmbBackground As Windows.Forms.ComboBox
     Friend WithEvents lblNonAvailableSettings As Windows.Forms.Label
+    Friend WithEvents B2SLogoToolTip As Windows.Forms.ToolTip
 End Class

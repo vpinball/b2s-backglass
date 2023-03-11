@@ -3,6 +3,7 @@ Imports System.Drawing
 Imports System.Windows.Forms
 Imports Microsoft.Win32
 Imports System.IO
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class formSettings
 
@@ -38,7 +39,7 @@ Public Class formSettings
 
         ' load data
         Dim _isdirty As Boolean = isSettingsScreenDirty
-        Me.Text = "Backglass settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")"
+        Me.Text = "Settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")"
 
         ' set version info
         lblCopyright.Text = String.Format(lblCopyright.Text, My.Application.Info.ProductName.ToString, My.Application.Info.Copyright.ToString)
@@ -490,4 +491,7 @@ Public Class formSettings
         End If
     End Sub
 
+    Private Sub B2SLogo_Click(sender As Object, e As EventArgs) Handles B2SLogo.Click
+        B2SLogoToolTip.SetToolTip(B2SLogo, B2SSettings.SettingFilePath & vbCrLf & B2SSettings.LoadedResFilePath)
+    End Sub
 End Class

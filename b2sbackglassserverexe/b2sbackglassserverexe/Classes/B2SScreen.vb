@@ -2,6 +2,7 @@ Imports System
 Imports System.Windows.Forms
 Imports System.Drawing
 Imports Microsoft.Win32
+Imports System.IO
 
 Public Class B2SScreen
 
@@ -111,6 +112,7 @@ Public Class B2SScreen
                 'searchPathLog.WriteLogEntry("  Test " & testFileName)
                 If IO.File.Exists(testFileName) Then
                     loadFileName = testFileName
+                    B2SSettings.LoadedResFilePath = Path.GetFullPath(loadFileName)
                     'searchPathLog.WriteLogEntry("Found ScreenRes " & loadFileName)
                     Exit For
                 End If

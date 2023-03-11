@@ -38,11 +38,12 @@ Public Class B2SSettings
 
     Private Const filename As String = "B2STableSettings.xml"
     Public Shared Property B2STableSettingsExtendedPath() As Boolean = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2STableSettingsExtendedPath", "0") = "1"
-    Public Shared Property SettingFilePath() As String = GetSettingFilename()
+    Public Shared Property SettingFilePath() As String = Path.GetFullPath(GetSettingFilename())
 
     Public Shared Property MatchingFileName() As String = String.Empty
     Public Shared Property MatchingFileNames() As String() = Nothing
 
+    Public Shared Property LoadedResFilePath() As String = String.Empty
     Public Shared Property LogPath() As String = String.Empty
     Private Shared Property _IsLampsStateLogOn() As Boolean = False
     Public Shared Property IsLampsStateLogOn() As Boolean
