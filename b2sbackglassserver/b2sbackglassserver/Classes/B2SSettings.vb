@@ -1,5 +1,6 @@
 ﻿Imports System
 Imports System.IO
+Imports System.Reflection
 Imports System.Windows.Forms
 
 Public Class B2SSettings
@@ -43,6 +44,7 @@ Public Class B2SSettings
     Public Shared Property MatchingFileName() As String = String.Empty
     Public Shared Property MatchingFileNames() As String() = Nothing
 
+    Public Shared Property PluginsFilePath() As String = String.Empty
     Public Shared Property LoadedResFilePath() As String = String.Empty
     Public Shared Property LogPath() As String = String.Empty
     Private Shared Property _IsLampsStateLogOn() As Boolean = False
@@ -212,8 +214,8 @@ Public Class B2SSettings
     Public Shared Function GetSettingFilename() As String
         If IO.File.Exists(filename) Then
             Return filename
-        ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
-            Return IO.Path.Combine(Application.StartupPath(), filename)
+        ElseIf B2STableSettingsExtendedPath And IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename) Then
+            Return IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)
         End If
         Return filename
     End Function
@@ -250,8 +252,8 @@ Public Class B2SSettings
                     If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
                     If nodeHeader.SelectSingleNode("StartBackground") IsNot Nothing Then
                         GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
-                End If
-                If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
+                    End If
+                    If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
                     If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
                         FormToBack = (nodeHeader.SelectSingleNode("FormToBack").InnerText = "1")
                         If FormToBack Then FormToFront = False

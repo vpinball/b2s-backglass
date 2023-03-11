@@ -148,6 +148,7 @@ Public Class PluginList
             'loop through all directories named plugin or plugins (case insensitive)
             Dim PluginDirectory As DirectoryInfo = Nothing
             Dim String64on64BitProcess As String = If(Environment.Is64BitProcess, "64", "")
+            B2SSettings.PluginsFilePath = AssemblyDirectory.FullName
 
             For Each PluginDirectory In AssemblyDirectory.GetDirectories()
 
