@@ -13,7 +13,7 @@ Public Class B2SSettings
         Standard = 1
         EXE = 2
     End Enum
-    
+
     Public Enum eDMDTypes
         Standard = 0
         TwoMonitorSetup = 1
@@ -214,7 +214,7 @@ Public Class B2SSettings
     Public Shared Function GetSettingFilename() As String
         If IO.File.Exists(filename) Then
             Return filename
-        ElseIf B2STableSettingsExtendedPath And IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename) Then
+        ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)) Then
             Return IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)
         End If
         Return filename
