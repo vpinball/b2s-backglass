@@ -141,7 +141,7 @@ Public Class formPlayfield
             saveFilename = IO.Path.Combine(Application.StartupPath(), GlobalFileName)
         End If
 
-        If MessageBox.Show($"Do You want to save these settings globally?{vbCrLf}filename: {saveFilename}", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If MessageBox.Show($"Do you really want to save these settings globally?{vbCrLf}filename: {saveFilename}", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes Then
             SaveResFile(saveFilename)
         End If
     End Sub
