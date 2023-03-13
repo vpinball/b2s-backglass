@@ -43,11 +43,7 @@ Public Class formSettings
 
         ' set version info
         lblCopyright.Text = String.Format(lblCopyright.Text, My.Application.Info.ProductName.ToString, My.Application.Info.Copyright.ToString)
-#If Win64 Then
-        lblVersion.Text = String.Format("Server version {0} (x64), backglass file version {1}", System.Windows.Forms.Application.ProductVersion, B2SSettings.BackglassFileVersion)
-#Else
-        lblVersion.Text = String.Format("Server version {0} (x86), backglass file version {1}", System.Windows.Forms.Application.ProductVersion, B2SSettings.BackglassFileVersion)
-#End If
+        lblVersion.Text = String.Format("Server version {0} {1}, backglass file version {2}", Application.ProductVersion, If(Environment.Is64BitProcess, "x64", "x86"), B2SSettings.BackglassFileVersion)
 
         ' get more data
         formSettingsMore.btnLogPath.Text = "Log path: " & B2SSettings.LogPath
