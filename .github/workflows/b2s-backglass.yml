@@ -94,6 +94,8 @@ jobs:
              cp B2SWindowPunch/B2SWindowPunch/bin/${{ matrix.config }}/B2SWindowPunch.pdb tmp
           fi
           mkdir tmp/Plugins tmp/Plugins64
+          cp Plugins.txt tmp/Plugins
+          cp Plugins.txt tmp/Plugins64
           cp Changelog.txt tmp
           cp license.txt tmp
           cp README.md tmp
