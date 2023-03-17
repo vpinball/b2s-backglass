@@ -45,7 +45,7 @@ Public Class formSettings
 
         Dim Assembly As Assembly = Assembly.GetExecutingAssembly()
         Dim FileVersionInfo As FileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.Location)
-        'String Version = FileVersionInfo.ProductVersion;
+
         lblVersion.Text = String.Format("Server version {0} {1}, backglass file version {2}", FileVersionInfo.ProductVersion, If(Environment.Is64BitProcess, "x64", "x86"), B2SSettings.BackglassFileVersion)
         ' get more data
         formSettingsMore.btnLogPath.Text = "Log path: " & B2SSettings.LogPath
