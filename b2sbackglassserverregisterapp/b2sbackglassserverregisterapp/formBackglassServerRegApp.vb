@@ -3,7 +3,7 @@ Imports System.IO
 
 Public Class formBackglassServerRegApp
 
-    Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
     Private Sub Form1_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
 
         Me.Visible = False
