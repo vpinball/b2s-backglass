@@ -120,6 +120,16 @@ Public Class formPlayfield
         If radio3Screen.Checked Then MaybeDoRecommendation()
     End Sub
 
+
+    Private Sub radio1deviceNo_CheckedChanged(sender As Object, e As EventArgs) Handles Radio1deviceNo.CheckedChanged
+        BackglassMonitorType = ""
+    End Sub
+    Private Sub radio2pixelCoord_CheckedChanged(sender As Object, e As EventArgs) Handles Radio2pixelCoord.CheckedChanged
+        BackglassMonitorType = "@"
+    End Sub
+    Private Sub radio3screenIndex_CheckedChanged(sender As Object, e As EventArgs) Handles Radio3screenIndex.CheckedChanged
+        BackglassMonitorType = "="
+    End Sub
     Private Sub buttonSave_Click(sender As System.Object, e As System.EventArgs) Handles buttonSave.Click
         If Me.chkSaveEnhanced.Checked Then
             Me.chkSaveEnhanced.Font = New Font(Me.chkSaveEnhanced.Font, FontStyle.Bold)
@@ -328,6 +338,14 @@ Public Class formPlayfield
             End If
         End If
 
+        If BackglassMonitorType = "@" Then
+            Radio2pixelCoord.Checked = True
+        ElseIf BackglassMonitorType = "=" Then
+            Radio3screenIndex.Checked = True
+        Else
+            Radio1deviceNo.Checked = True
+        End If
+
         IsInStartup = False
     End Sub
 
@@ -446,4 +464,5 @@ Public Class formPlayfield
         If ret AndAlso radio3Screen.Checked Then ret = False
         Return ret
     End Function
+
 End Class

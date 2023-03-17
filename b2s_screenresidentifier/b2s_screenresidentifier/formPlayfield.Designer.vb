@@ -30,6 +30,10 @@ Partial Class formPlayfield
         Me.buttonBringMeTheOtherWindows = New System.Windows.Forms.Button()
         Me.lblInfo = New System.Windows.Forms.Label()
         Me.groupPlayfield = New System.Windows.Forms.GroupBox()
+        Me.Radio3screenIndex = New System.Windows.Forms.RadioButton()
+        Me.Radio2pixelCoord = New System.Windows.Forms.RadioButton()
+        Me.LabelStoreBackglassScreen = New System.Windows.Forms.Label()
+        Me.Radio1deviceNo = New System.Windows.Forms.RadioButton()
         Me.lblPlayfieldScreenScale = New System.Windows.Forms.Label()
         Me.txtPlayfieldScreenScale = New System.Windows.Forms.TextBox()
         Me.lblPlayfieldLocationY = New System.Windows.Forms.Label()
@@ -137,6 +141,10 @@ Partial Class formPlayfield
         '
         'groupPlayfield
         '
+        Me.groupPlayfield.Controls.Add(Me.Radio3screenIndex)
+        Me.groupPlayfield.Controls.Add(Me.Radio2pixelCoord)
+        Me.groupPlayfield.Controls.Add(Me.LabelStoreBackglassScreen)
+        Me.groupPlayfield.Controls.Add(Me.Radio1deviceNo)
         Me.groupPlayfield.Controls.Add(Me.lblPlayfieldScreenScale)
         Me.groupPlayfield.Controls.Add(Me.txtPlayfieldScreenScale)
         Me.groupPlayfield.Controls.Add(Me.lblPlayfieldLocationY)
@@ -162,6 +170,52 @@ Partial Class formPlayfield
         Me.groupPlayfield.TabIndex = 5
         Me.groupPlayfield.TabStop = False
         Me.groupPlayfield.Text = "Playfield"
+        '
+        'Radio3screenIndex
+        '
+        Me.Radio3screenIndex.AutoSize = True
+        Me.Radio3screenIndex.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.Radio3screenIndex.Location = New System.Drawing.Point(861, 53)
+        Me.Radio3screenIndex.Name = "Radio3screenIndex"
+        Me.Radio3screenIndex.Size = New System.Drawing.Size(144, 20)
+        Me.Radio3screenIndex.TabIndex = 30
+        Me.Radio3screenIndex.TabStop = True
+        Me.Radio3screenIndex.Text = "Screen index (=#)"
+        Me.Radio3screenIndex.UseVisualStyleBackColor = True
+        '
+        'Radio2pixelCoord
+        '
+        Me.Radio2pixelCoord.AutoSize = True
+        Me.Radio2pixelCoord.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.Radio2pixelCoord.Location = New System.Drawing.Point(712, 52)
+        Me.Radio2pixelCoord.Name = "Radio2pixelCoord"
+        Me.Radio2pixelCoord.Size = New System.Drawing.Size(141, 20)
+        Me.Radio2pixelCoord.TabIndex = 29
+        Me.Radio2pixelCoord.TabStop = True
+        Me.Radio2pixelCoord.Text = "Pixel x coord (@#)"
+        Me.Radio2pixelCoord.UseVisualStyleBackColor = True
+        '
+        'LabelStoreBackglassScreen
+        '
+        Me.LabelStoreBackglassScreen.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelStoreBackglassScreen.Location = New System.Drawing.Point(413, 53)
+        Me.LabelStoreBackglassScreen.Name = "LabelStoreBackglassScreen"
+        Me.LabelStoreBackglassScreen.Size = New System.Drawing.Size(191, 20)
+        Me.LabelStoreBackglassScreen.TabIndex = 28
+        Me.LabelStoreBackglassScreen.Text = "Store backglass screen as:"
+        Me.LabelStoreBackglassScreen.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Radio1deviceNo
+        '
+        Me.Radio1deviceNo.AutoSize = True
+        Me.Radio1deviceNo.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.Radio1deviceNo.Location = New System.Drawing.Point(616, 53)
+        Me.Radio1deviceNo.Name = "Radio1deviceNo"
+        Me.Radio1deviceNo.Size = New System.Drawing.Size(88, 20)
+        Me.Radio1deviceNo.TabIndex = 27
+        Me.Radio1deviceNo.TabStop = True
+        Me.Radio1deviceNo.Text = "Device No"
+        Me.Radio1deviceNo.UseVisualStyleBackColor = True
         '
         'lblPlayfieldScreenScale
         '
@@ -393,9 +447,9 @@ Partial Class formPlayfield
         Me.chkSaveEnhanced.AutoSize = True
         Me.chkSaveEnhanced.Location = New System.Drawing.Point(176, 61)
         Me.chkSaveEnhanced.Name = "chkSaveEnhanced"
-        Me.chkSaveEnhanced.Size = New System.Drawing.Size(408, 23)
+        Me.chkSaveEnhanced.Size = New System.Drawing.Size(460, 23)
         Me.chkSaveEnhanced.TabIndex = 10
-        Me.chkSaveEnhanced.Text = "Enhanced res file (no Backglass && Background switch)"
+        Me.chkSaveEnhanced.Text = "Enhanced res file (no Backglass && Background switch) V2.0.0"
         Me.chkSaveEnhanced.UseVisualStyleBackColor = True
         '
         'FlowLayoutPanel1
@@ -523,4 +577,8 @@ Partial Class formPlayfield
     Friend WithEvents buttonSaveGlobal As Button
     Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
     Friend WithEvents chkSaveEnhanced As CheckBox
+    Friend WithEvents Radio3screenIndex As RadioButton
+    Friend WithEvents Radio2pixelCoord As RadioButton
+    Friend WithEvents LabelStoreBackglassScreen As Label
+    Friend WithEvents Radio1deviceNo As RadioButton
 End Class

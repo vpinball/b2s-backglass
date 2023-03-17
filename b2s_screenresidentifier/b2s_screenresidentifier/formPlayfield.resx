@@ -120,8 +120,8 @@
   <data name="lblInfo.Text" xml:space="preserve">
     <value>Hello, I'm your B2S screen resolution identifier. Please let me help you setup your B2S settings. 
 
-I have opened three windows for you. These three windows are dummy windows for the playfield, the backglass and the DMD screen. Use these three windows, drag and drop them
-whereever you want to have them. But maybe the easiest way is to choose your type of setup at first so you get a recommendation for your setup from me.
+I have opened three windows for you. These windows are dummy windows for the playfield, the backglass, the background (has to be activated) and the DMD screen. 
+Use these windows, drag and drop them whereever you want to have them. But maybe the easiest way is to choose your type of setup at first so you get a recommendation for your setup.
 
 So, first of all you have to choose between a 1-, 2- or 3-screen setup. I have found {0} screen(s) on your system, so it's up to you now:
  - in a 1-screen setup everything happens on the primary screen.
