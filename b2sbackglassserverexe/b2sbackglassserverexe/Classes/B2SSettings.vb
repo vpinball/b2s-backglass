@@ -37,7 +37,7 @@ Public Class B2SSettings
     End Enum
 
     Private Const filename As String = "B2STableSettings.xml"
-    Public Shared Property B2STableSettingsExtendedPath() As Boolean = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2STableSettingsExtendedPath", "0") = "1"
+    Public Shared Property B2STableSettingsExtendedPath() As Boolean = B2SScreen.SafeReadRegistry("Software\B2S", "B2STableSettingsExtendedPath", "0") = "1"
     Public Shared Property SettingFilePath() As String = Path.GetFullPath(GetSettingFilename())
 
     Public Shared Property MatchingFileName() As String = String.Empty

@@ -1,10 +1,11 @@
-﻿Imports System.Text
+﻿Imports System.Runtime.InteropServices
+Imports System.Text
 Imports Microsoft.Win32
 
 Module Module1
     Private Const DESKTOPVERTRES As Integer = &H75
     Private Const DESKTOPHORZRES As Integer = &H76
-    Public Property GlobalFileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Public Property GlobalFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
     Public Property FileName As String = GlobalFileName
     Public ReadOnly screenCount As Integer = Screen.AllScreens.Count
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
@@ -35,6 +36,18 @@ Module Module1
     Public Function ShortDevice(ByVal device As String) As String
         Return device.Replace("\\", "").Replace(".\", "")
     End Function
+
+    Public Function SafeReadRegistry(ByVal keyname As String, ByVal valuename As String, ByVal defaultvalue As String) As String
+        '    Public Property GlobalFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
+
+        Try
+            Return Registry.CurrentUser.OpenSubKey(keyname).GetValue(valuename, defaultvalue)
+        Catch ex As Exception
+            Return defaultvalue
+        End Try
+    End Function
+
+
     Public Function TrueResolution(ByVal hwnd As IntPtr)
         Using g As Graphics = Graphics.FromHwnd(hwnd)
             Dim hdc As IntPtr = g.GetHdc

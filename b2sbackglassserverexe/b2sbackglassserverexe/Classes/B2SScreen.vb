@@ -6,7 +6,8 @@ Imports System.IO
 
 Public Class B2SScreen
 
-    Private ReadOnly FileName As String = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Public Property FileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
+
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
     Public Property VersionTwoFile() = False
 
@@ -21,6 +22,16 @@ Public Class B2SScreen
         ShowDMDOnlyAtDefaultLocation = 3
         DoNotShowDMDAtDefaultLocation = 4
     End Enum
+
+    Public Shared Function SafeReadRegistry(ByVal keyname As String, ByVal valuename As String, ByVal defaultvalue As String) As String
+        '    Public Property GlobalFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
+
+        Try
+            Return Registry.CurrentUser.OpenSubKey(keyname).GetValue(valuename, defaultvalue)
+        Catch ex As Exception
+            Return defaultvalue
+        End Try
+    End Function
 
     Public Property PlayfieldSize() As Size = New Size(0, 0)
     Public Property BackglassMonitor() As String = String.Empty
