@@ -6,6 +6,11 @@ Public Class formBackglassServerRegApp
 
     Private Sub Form1_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
 
+        Dim CommandSilent As Boolean = False
+
+        If My.Application.CommandLineArgs.Count > 0 Then
+            CommandSilent = InStr(My.Application.CommandLineArgs(0).ToString().ToLower(), "silent", CompareMethod.Text) > 0
+        End If
         Me.Visible = False
 
         Dim basepath As String = String.Empty
@@ -13,34 +18,36 @@ Public Class formBackglassServerRegApp
         Dim version As String = String.Empty
         Dim dialogResult As DialogResult
 
-        If CheckB2SServer(False) Then
-            Dim dllURI As String = "file://Unknown"
-            Try
-                Using regRoot As RegistryKey = Registry.ClassesRoot
-                    Dim clsID As String = String.Empty
-                    Using openKey As RegistryKey = regRoot.OpenSubKey("B2S.Server\CLSID", False)
-                        If openKey IsNot Nothing Then
-                            clsID = openKey.GetValue("")
-                        End If
-                    End Using
-                    If clsID IsNot String.Empty Then
-                        Using openKey As RegistryKey = regRoot.OpenSubKey(IO.Path.Combine("CLSID", clsID, "InprocServer32"), False)
+        If Not CommandSilent Then
+            If CheckB2SServer(False) Then
+                Dim dllURI As String = "file://Unknown"
+                Try
+                    Using regRoot As RegistryKey = Registry.ClassesRoot
+                        Dim clsID As String = String.Empty
+                        Using openKey As RegistryKey = regRoot.OpenSubKey("B2S.Server\CLSID", False)
                             If openKey IsNot Nothing Then
-                                dllURI = openKey.GetValue("CodeBase")
+                                clsID = openKey.GetValue("")
                             End If
                         End Using
-                    End If
-                End Using
-            Catch
-            End Try
-            Dim filepath As String = New Uri(dllURI).LocalPath
-            dialogResult = MessageBox.Show("The 'B2S Server' is already registered here:" & vbCrLf & vbCrLf & filepath & vbCrLf & vbCrLf & "Do you want to (try to) re-register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
-        Else
-            dialogResult = MessageBox.Show("The 'B2S Server' is not registered yet." & vbCrLf & vbCrLf & "Do you want to register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+                        If clsID IsNot String.Empty Then
+                            Using openKey As RegistryKey = regRoot.OpenSubKey(IO.Path.Combine("CLSID", clsID, "InprocServer32"), False)
+                                If openKey IsNot Nothing Then
+                                    dllURI = openKey.GetValue("CodeBase")
+                                End If
+                            End Using
+                        End If
+                    End Using
+                Catch
+                End Try
+                Dim filepath As String = New Uri(dllURI).LocalPath
+                dialogResult = MessageBox.Show("The 'B2S Server' is already registered here:" & vbCrLf & vbCrLf & filepath & vbCrLf & vbCrLf & "Do you want to (try to) re-register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+            Else
+                dialogResult = MessageBox.Show("The 'B2S Server' is not registered yet." & vbCrLf & vbCrLf & "Do you want to register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+            End If
         End If
 
         ' get .NET framework base directoy
-        If dialogResult = DialogResult.Yes Then
+        If CommandSilent Or dialogResult = DialogResult.Yes Then
             Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NetFramework", False)
                 If regkey IsNot Nothing Then
                     basepath = regkey.GetValue("InstallRoot")
@@ -74,31 +81,24 @@ Public Class formBackglassServerRegApp
                 MessageBox.Show("Error, no regasmpath found.")
             Else
                 ' do the register operation
-                ShellAndWait(regasmpath)
-                ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"))
+                ShellAndWait(regasmpath, "B2SBackglassServer.DLL")
+                If IO.File.Exists("B2SBackglassServer64.DLL") Then
+                    ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer64.DLL")
+                Else
+                    ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer.DLL")
+                End If
             End If
             CheckB2SServer(True)
         End If
 
-        dialogResult = MessageBox.Show("Do you want to (re-)register the context menu (Yes)" & vbCrLf & vbCrLf & "Unregister the context menu (No)" & vbCrLf & vbCrLf & "Or please just press cancel", My.Application.Info.AssemblyName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+        If Not CommandSilent Then
+            dialogResult = MessageBox.Show("Do you want to (re-)register the context menu (Yes)" & vbCrLf & vbCrLf & "Unregister the context menu (No)" & vbCrLf & vbCrLf & "Or please just press cancel", My.Application.Info.AssemblyName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+        End If
 
-        If (dialogResult = DialogResult.Yes) Or (dialogResult = DialogResult.No) Then
+        If CommandSilent Or (dialogResult = DialogResult.Yes) Or (dialogResult = DialogResult.No) Then
             Dim rkReg As RegistryKey = Registry.ClassesRoot
-            Dim strKey As String = "Applications\VPinballX.exe\shell"
 
-            Dim pinEditValue As String = ""
-
-            Using openKey As RegistryKey = rkReg.OpenSubKey(strKey + "\edit\command", False)
-                If openKey IsNot Nothing Then
-                    Try
-                        pinEditValue = openKey.GetValue("")
-                    Catch ex As UnauthorizedAccessException
-                        MessageBox.Show("Could not read out registry for VPinballX:" & vbCrLf & "UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        End
-                    End Try
-                End If
-            End Using
-            If Not pinEditValue = "" And Directory.Exists("ScreenResTemplates") Then
+            If Directory.Exists("ScreenResTemplates") Then
                 Using sysFileKey As RegistryKey = rkReg.OpenSubKey("SystemFileAssociations", True)
                     Try
 
@@ -120,7 +120,7 @@ Public Class formBackglassServerRegApp
                         Catch ex As ArgumentException
                         End Try
 
-                        If (dialogResult = DialogResult.Yes) Then
+                        If CommandSilent Or (dialogResult = DialogResult.Yes) Then
 
                             ' Add directb2s file context menu for double click and right click -> Edit ScreenRes file
                             rkReg.CreateSubKey(".directb2s").SetValue("", "b2sserver.directb2s")
@@ -197,14 +197,14 @@ Public Class formBackglassServerRegApp
 
     End Function
 
-    Private Sub ShellAndWait(ByVal regasmpath As String)
+    Private Sub ShellAndWait(ByVal regasmpath As String, ByVal dllpath As String)
 
         If IO.File.Exists(IO.Path.Combine(regasmpath, "regasm.exe")) Then
 
             ' do the register operation
             Dim process As New System.Diagnostics.Process()
             process.StartInfo.FileName = IO.Path.Combine(regasmpath, "regasm.exe")
-            process.StartInfo.Arguments = """B2SBackglassServer.DLL"" /codebase" ' /silent"
+            process.StartInfo.Arguments = dllpath + " /codebase"
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal
             process.Start()
 
