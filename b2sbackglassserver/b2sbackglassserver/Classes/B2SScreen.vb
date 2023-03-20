@@ -9,7 +9,7 @@ Public Class B2SScreen
 
     Public Property FileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
-    Public Property VersionTwoFile() = False
+    Public Property VersionTwoFile() As Boolean = False
 
     Public Shared formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
