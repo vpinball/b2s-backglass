@@ -82,7 +82,7 @@ Module Module1
             FileFound = True
 
             ' open settings file
-            FileOpen(1, ResFileName, OpenMode.Input)
+            FileOpen(1, ResFileName, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
 
             ' get all settings
             Dim line(50) As String
@@ -126,7 +126,7 @@ Module Module1
                 BackgroundPath = line(16)
             Else
                 BackgroundLocation = New Point(0, 0)
-                BackgroundSize = New Point(0, 0)
+                BackgroundSize = New Size(0, 0)
                 BackgroundPath = ""
             End If
             BackgroundActive = Not BackgroundSize.IsEmpty

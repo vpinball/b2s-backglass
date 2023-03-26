@@ -128,7 +128,7 @@ Public Class B2SScreen
         If Not loadFileName = String.Empty Then
 
             ' open settings file
-            FileOpen(1, loadFileName, OpenMode.Input)
+            FileOpen(1, loadFileName, OpenMode.Input, OpenAccess.Read, OpenShare.Shared)
 
             ' get all settings
             Dim line(50) As String
@@ -160,7 +160,7 @@ Public Class B2SScreen
                 Me.BackgroundPath = line(16)
             Else
                 Me.BackgroundLocation = New Point(0, 0)
-                Me.BackgroundSize = New Point(0, 0)
+                Me.BackgroundSize = New Size(0, 0)
                 Me.BackgroundPath = ""
             End If
 
