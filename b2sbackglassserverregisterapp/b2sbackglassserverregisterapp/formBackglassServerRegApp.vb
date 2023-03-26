@@ -182,6 +182,8 @@ Public Class formBackglassServerRegApp
         Dim errmessage As String = String.Empty
         Try
             Dim obj As Object = CreateObject("B2S.Server")
+            'obj.Stop()
+            obj = Nothing
         Catch ex As Exception
             errmessage = ex.Message
             err = True

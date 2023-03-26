@@ -90,7 +90,6 @@ Public Class Server
     Public Sub New()
 
         ' mabye create the base registry key
-        If Registry.CurrentUser.OpenSubKey("Software") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software")
         If Registry.CurrentUser.OpenSubKey("Software\B2S") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S")
         If Registry.CurrentUser.OpenSubKey("Software\B2S\VPinMAME") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S\VPinMAME")
 
