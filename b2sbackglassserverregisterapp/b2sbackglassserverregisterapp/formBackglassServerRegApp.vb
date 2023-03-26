@@ -88,7 +88,7 @@ Public Class formBackglassServerRegApp
                     ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer.DLL")
                 End If
             End If
-            CheckB2SServer(True)
+            If Not CommandSilent Then CheckB2SServer(True) 'Make sure no window is opened on silent option
         End If
 
         If Not CommandSilent Then
