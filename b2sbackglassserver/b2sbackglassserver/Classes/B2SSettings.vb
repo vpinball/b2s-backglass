@@ -2,6 +2,7 @@
 Imports System.IO
 Imports System.Reflection
 Imports System.Windows.Forms
+Imports Microsoft.Win32
 
 Public Class B2SSettings
 
@@ -38,7 +39,9 @@ Public Class B2SSettings
     End Enum
 
     Private Const filename As String = "B2STableSettings.xml"
-    Public Shared Property B2STableSettingsExtendedPath() As Boolean = B2SScreen.SafeReadRegistry("Software\B2S", "B2STableSettingsExtendedPath", "0") = "1"
+    Public Shared Property B2SScreenResFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Public Shared Property B2STableSettingsExtendedPath() As Boolean = SafeReadRegistry("Software\B2S", "B2STableSettingsExtendedPath", "0") = "1"
+    Public Shared Property B2SWindowPunchActive() As Boolean = SafeReadRegistry("Software\B2S", "B2SWindowPunchActive", "0") = "1"
     Public Shared Property SettingFilePath() As String = Path.GetFullPath(GetSettingFilename())
 
     Public Shared Property MatchingFileName() As String = String.Empty
@@ -211,6 +214,17 @@ Public Class B2SSettings
             Load(False)
         End Set
     End Property
+
+    Public Shared Function SafeReadRegistry(ByVal keyname As String, ByVal valuename As String, ByVal defaultvalue As String) As String
+        '    Public Property GlobalFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
+
+        Try
+            Return CStr(Registry.CurrentUser.OpenSubKey(keyname).GetValue(valuename, defaultvalue))
+        Catch ex As Exception
+            Return defaultvalue
+        End Try
+    End Function
+
     Public Shared Function GetSettingFilename() As String
         If IO.File.Exists(filename) Then
             Return filename

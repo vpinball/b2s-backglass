@@ -37,8 +37,14 @@ Partial Class formSettingsMore
         Me.chkGIStringsOff = New System.Windows.Forms.CheckBox()
         Me.chkLEDsOff = New System.Windows.Forms.CheckBox()
         Me.btnCloseSettings = New System.Windows.Forms.Button()
+        Me.GroupRegistrySettings = New System.Windows.Forms.GroupBox()
+        Me.ChkB2STableSettingsExtendedPath = New System.Windows.Forms.CheckBox()
+        Me.lblB2SScreenResFileNameOverride = New System.Windows.Forms.Label()
+        Me.TxtB2SScreenResFileNameOverride = New System.Windows.Forms.TextBox()
+        Me.ChkB2SWindowPunchActive = New System.Windows.Forms.CheckBox()
         Me.grpLogging.SuspendLayout()
         Me.grpPerfTests.SuspendLayout()
+        Me.GroupRegistrySettings.SuspendLayout()
         Me.SuspendLayout()
         '
         'grpLogging
@@ -201,18 +207,70 @@ Partial Class formSettingsMore
         Me.btnCloseSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCloseSettings.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnCloseSettings.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCloseSettings.Location = New System.Drawing.Point(390, 175)
+        Me.btnCloseSettings.Location = New System.Drawing.Point(390, 261)
         Me.btnCloseSettings.Name = "btnCloseSettings"
         Me.btnCloseSettings.Size = New System.Drawing.Size(92, 24)
         Me.btnCloseSettings.TabIndex = 35
         Me.btnCloseSettings.Text = "Close"
         Me.btnCloseSettings.UseVisualStyleBackColor = True
         '
+        'GroupRegistrySettings
+        '
+        Me.GroupRegistrySettings.Controls.Add(Me.ChkB2STableSettingsExtendedPath)
+        Me.GroupRegistrySettings.Controls.Add(Me.lblB2SScreenResFileNameOverride)
+        Me.GroupRegistrySettings.Controls.Add(Me.TxtB2SScreenResFileNameOverride)
+        Me.GroupRegistrySettings.Controls.Add(Me.ChkB2SWindowPunchActive)
+        Me.GroupRegistrySettings.Location = New System.Drawing.Point(8, 175)
+        Me.GroupRegistrySettings.Name = "GroupRegistrySettings"
+        Me.GroupRegistrySettings.Size = New System.Drawing.Size(474, 79)
+        Me.GroupRegistrySettings.TabIndex = 32
+        Me.GroupRegistrySettings.TabStop = False
+        Me.GroupRegistrySettings.Text = "Registry settings (HKCU\Software\B2S)"
+        '
+        'ChkB2STableSettingsExtendedPath
+        '
+        Me.ChkB2STableSettingsExtendedPath.AutoSize = True
+        Me.ChkB2STableSettingsExtendedPath.Location = New System.Drawing.Point(240, 20)
+        Me.ChkB2STableSettingsExtendedPath.Name = "ChkB2STableSettingsExtendedPath"
+        Me.ChkB2STableSettingsExtendedPath.Size = New System.Drawing.Size(177, 17)
+        Me.ChkB2STableSettingsExtendedPath.TabIndex = 35
+        Me.ChkB2STableSettingsExtendedPath.Text = "B2STableSettingsExtendedPath"
+        Me.ChkB2STableSettingsExtendedPath.UseVisualStyleBackColor = True
+        '
+        'lblB2SScreenResFileNameOverride
+        '
+        Me.lblB2SScreenResFileNameOverride.AutoSize = True
+        Me.lblB2SScreenResFileNameOverride.Location = New System.Drawing.Point(8, 48)
+        Me.lblB2SScreenResFileNameOverride.Name = "lblB2SScreenResFileNameOverride"
+        Me.lblB2SScreenResFileNameOverride.Size = New System.Drawing.Size(161, 13)
+        Me.lblB2SScreenResFileNameOverride.TabIndex = 34
+        Me.lblB2SScreenResFileNameOverride.Text = "B2SScreenResFileNameOverride"
+        '
+        'TxtB2SScreenResFileNameOverride
+        '
+        Me.TxtB2SScreenResFileNameOverride.Location = New System.Drawing.Point(187, 45)
+        Me.TxtB2SScreenResFileNameOverride.Name = "TxtB2SScreenResFileNameOverride"
+        Me.TxtB2SScreenResFileNameOverride.Size = New System.Drawing.Size(230, 21)
+        Me.TxtB2SScreenResFileNameOverride.TabIndex = 33
+        Me.TxtB2SScreenResFileNameOverride.TabStop = False
+        Me.TxtB2SScreenResFileNameOverride.WordWrap = False
+        '
+        'ChkB2SWindowPunchActive
+        '
+        Me.ChkB2SWindowPunchActive.AutoSize = True
+        Me.ChkB2SWindowPunchActive.Location = New System.Drawing.Point(8, 20)
+        Me.ChkB2SWindowPunchActive.Name = "ChkB2SWindowPunchActive"
+        Me.ChkB2SWindowPunchActive.Size = New System.Drawing.Size(141, 17)
+        Me.ChkB2SWindowPunchActive.TabIndex = 32
+        Me.ChkB2SWindowPunchActive.Text = "B2SWindowPunchActive"
+        Me.ChkB2SWindowPunchActive.UseVisualStyleBackColor = True
+        '
         'formSettingsMore
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(489, 207)
+        Me.ClientSize = New System.Drawing.Size(489, 293)
+        Me.Controls.Add(Me.GroupRegistrySettings)
         Me.Controls.Add(Me.btnCloseSettings)
         Me.Controls.Add(Me.grpLogging)
         Me.Controls.Add(Me.grpPerfTests)
@@ -228,6 +286,8 @@ Partial Class formSettingsMore
         Me.grpLogging.ResumeLayout(False)
         Me.grpLogging.PerformLayout()
         Me.grpPerfTests.ResumeLayout(False)
+        Me.GroupRegistrySettings.ResumeLayout(False)
+        Me.GroupRegistrySettings.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -246,4 +306,9 @@ Partial Class formSettingsMore
     Friend WithEvents chkGIStringsOff As System.Windows.Forms.CheckBox
     Friend WithEvents chkLEDsOff As System.Windows.Forms.CheckBox
     Friend WithEvents btnCloseSettings As System.Windows.Forms.Button
+    Friend WithEvents GroupRegistrySettings As Windows.Forms.GroupBox
+    Friend WithEvents ChkB2SWindowPunchActive As Windows.Forms.CheckBox
+    Friend WithEvents TxtB2SScreenResFileNameOverride As Windows.Forms.TextBox
+    Friend WithEvents lblB2SScreenResFileNameOverride As Windows.Forms.Label
+    Friend WithEvents ChkB2STableSettingsExtendedPath As Windows.Forms.CheckBox
 End Class

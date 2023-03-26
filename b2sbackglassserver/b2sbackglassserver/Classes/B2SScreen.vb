@@ -7,7 +7,6 @@ Imports System.Reflection
 
 Public Class B2SScreen
 
-    Public Property FileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
     Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
     Public Property VersionTwoFile() As Boolean = False
 
@@ -21,15 +20,6 @@ Public Class B2SScreen
         ShowDMDOnlyAtDefaultLocation = 3
         DoNotShowDMDAtDefaultLocation = 4
     End Enum
-    Public Shared Function SafeReadRegistry(ByVal keyname As String, ByVal valuename As String, ByVal defaultvalue As String) As String
-        '    Public Property GlobalFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
-
-        Try
-            Return Registry.CurrentUser.OpenSubKey(keyname).GetValue(valuename, defaultvalue)
-        Catch ex As Exception
-            Return defaultvalue
-        End Try
-    End Function
 
     Public Property PlayfieldSize() As Size = New Size(0, 0)
     Public Property BackglassMonitor() As String = String.Empty
@@ -107,9 +97,9 @@ Public Class B2SScreen
 
         Try
             Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & ".res"),    ' .\TableName.res
-                                             IO.Path.Combine(B2SData.TableFileName, FileName),   ' .\TableName\ScreenRes.txt
-                                             FileName,                                           ' .\ScreenRes.txt
-                                             IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), FileName)' B2SFolder\ScreenRes.txt
+                                             IO.Path.Combine(B2SData.TableFileName, B2SSettings.B2SScreenResFileName),   ' .\TableName\ScreenRes.txt
+                                             B2SSettings.B2SScreenResFileName,                                           ' .\ScreenRes.txt
+                                             IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), B2SSettings.B2SScreenResFileName)' B2SFolder\ScreenRes.txt
                                             }
 
             For Each testFileName As String In loadFileNames
@@ -166,8 +156,8 @@ Public Class B2SScreen
 
         Else
 
-            MessageBox.Show("There is no B2S screen resolution file '" & FileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
-                            "Please create this file with the tool 'B2S_ScreenResIdentifier.exe'.", _
+            MessageBox.Show("There is no B2S screen resolution file '" & B2SSettings.B2SScreenResFileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
+                            "Please create this file with the tool 'B2S_ScreenResIdentifier.exe'.",
                             "B2S backglass error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Stop
 

@@ -1,3 +1,9 @@
+2.0.1
+- The B2SWindowPunch feature can be controlled through a registry setting "Software\B2S\B2SWindowPunchActive" = "1"/"0"
+- All registry settings are available under Settings->More...
+- B2SBackglassServerRegisterApp can be run from CMD and have a parameter /Silent added, to hide ALL window prompts.
+- The "BackglassMonitorType" can be controlled through b2s_screenresidentifier. (##, =## or @##)
+- "Empty" Plugins folders added to the distribution zip
 2.0.0
 - Added full wiki documentation to the new version.
 - B2SBackglassServer will try to find B2STableSettings.xml in current directory and then installation directory. (= if different from tables directory)

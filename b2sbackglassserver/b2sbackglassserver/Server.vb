@@ -2872,7 +2872,7 @@ Public Class Server
 
         End If
 
-        If True Then
+        If B2SSettings.B2SWindowPunchActive() Then
             Dim exePath As String = String.Empty
             Dim B2SinitCmd As String = "B2SInit.cmd"
             Dim B2SinitFound As Boolean = False

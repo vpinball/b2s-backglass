@@ -1,5 +1,6 @@
 ﻿Imports System
 Imports System.Windows.Forms
+Imports Microsoft.Win32
 
 Public Class formSettingsMore
 
@@ -14,7 +15,9 @@ Public Class formSettingsMore
         ' Add any initialization after the InitializeComponent() call.
         Me.formSettings = _formSettings
         Me.formBackglass = _formbackglass
-
+        TxtB2SScreenResFileNameOverride.Text = B2SSettings.SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", B2SSettings.B2SScreenResFileName)
+        ChkB2STableSettingsExtendedPath.Checked = B2SSettings.B2STableSettingsExtendedPath
+        ChkB2SWindowPunchActive.Checked = B2SSettings.B2SWindowPunchActive
     End Sub
 
     Public Shadows Function ShowDialog(ByVal owner As IWin32Window,
@@ -102,4 +105,23 @@ Public Class formSettingsMore
         B2SSettings.IsStatisticsBackglassOn = chkStatisticBackglass.Checked
     End Sub
 
+    Private Sub TxtB2SScreenResFileNameOverride_TextChanged(sender As Object, e As EventArgs) Handles TxtB2SScreenResFileNameOverride.TextChanged
+        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+            regkey.SetValue("B2SScreenResFileNameOverride", TxtB2SScreenResFileNameOverride.Text)
+        End Using
+    End Sub
+
+    Private Sub ChkB2STableSettingsExtendedPath_CheckedChanged(sender As Object, e As EventArgs) Handles ChkB2STableSettingsExtendedPath.CheckedChanged
+        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+            regkey.SetValue("B2STableSettingsExtendedPath", If(ChkB2STableSettingsExtendedPath.Checked, "1", "0"))
+            B2SSettings.B2STableSettingsExtendedPath = ChkB2STableSettingsExtendedPath.Checked
+        End Using
+    End Sub
+
+    Private Sub chkB2SWindowPunchActive_CheckedChanged(sender As Object, e As EventArgs) Handles ChkB2SWindowPunchActive.CheckedChanged
+        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+            regkey.SetValue("B2SWindowPunchActive", If(ChkB2SWindowPunchActive.Checked, "1", "0"))
+            B2SSettings.B2SWindowPunchActive = ChkB2SWindowPunchActive.Checked
+        End Using
+    End Sub
 End Class
