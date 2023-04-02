@@ -124,4 +124,11 @@ Public Class formSettingsMore
             B2SSettings.B2SWindowPunchActive = ChkB2SWindowPunchActive.Checked
         End Using
     End Sub
+
+    Private Sub ChkB2SDebugLog_CheckedChanged(sender As Object, e As EventArgs) Handles ChkB2SDebugLog.CheckedChanged
+        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+            regkey.SetValue("B2SDebugLog", If(ChkB2SDebugLog.Checked, "1", "0"))
+            B2SSettings.B2SDebugLog = ChkB2SDebugLog.Checked
+        End Using
+    End Sub
 End Class

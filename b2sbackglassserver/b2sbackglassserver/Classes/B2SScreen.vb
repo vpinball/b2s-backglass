@@ -12,6 +12,7 @@ Public Class B2SScreen
 
     Public Shared formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
+    Public debugLog As Log = New Log("B2SDebugLog")
 
     Public Enum eDMDViewMode
         NotDefined = 0
@@ -45,6 +46,11 @@ Public Class B2SScreen
 #Region "constructor and startup"
 
     Public Sub New()
+        debugLog.IsLogOn = B2SSettings.B2SDebugLog
+        debugLog.WriteLogEntry("B2SScreen.New")
+
+        'searchPathLog.WriteLogEntry("Start Search ScreenRes")
+
 
         ' read settings file
         ReadB2SSettingsFromFile()
@@ -94,7 +100,7 @@ Public Class B2SScreen
         'searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
 
         'searchPathLog.WriteLogEntry("Start Search ScreenRes")
-
+        debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Start Search ScreenRes")
         Try
             Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & ".res"),    ' .\TableName.res
                                              IO.Path.Combine(B2SData.TableFileName, B2SSettings.B2SScreenResFileName),   ' .\TableName\ScreenRes.txt
@@ -103,16 +109,19 @@ Public Class B2SScreen
                                             }
 
             For Each testFileName As String In loadFileNames
+                debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Test " & testFileName)
                 'searchPathLog.WriteLogEntry("  Test " & testFileName)
                 If IO.File.Exists(testFileName) Then
                     loadFileName = testFileName
                     B2SSettings.LoadedResFilePath = Path.GetFullPath(loadFileName)
+                    debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Found ScreenRes " & loadFileName)
                     'searchPathLog.WriteLogEntry("Found ScreenRes " & loadFileName)
                     Exit For
                 End If
             Next
         Catch
         End Try
+        debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Stop Search ScreenRes")
         'searchPathLog.WriteLogEntry("Stop Search ScreenRes")
 
         If Not loadFileName = String.Empty Then
@@ -155,6 +164,7 @@ Public Class B2SScreen
             End If
 
         Else
+            debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile no B2S screen resolution file found")
 
             MessageBox.Show("There is no B2S screen resolution file '" & B2SSettings.B2SScreenResFileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
                             "Please create this file with the tool 'B2S_ScreenResIdentifier.exe'.",

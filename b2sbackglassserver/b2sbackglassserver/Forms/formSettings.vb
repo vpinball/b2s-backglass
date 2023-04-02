@@ -491,6 +491,6 @@ Public Class formSettings
     End Sub
 
     Private Sub B2SLogo_Click(sender As Object, e As EventArgs) Handles B2SLogo.Click
-        B2SLogoToolTip.SetToolTip(B2SLogo, B2SSettings.SettingFilePath & vbCrLf & vbCrLf & B2SSettings.LoadedResFilePath & vbCrLf & vbCrLf & B2SSettings.PluginsFilePath)
+        B2SLogoToolTip.SetToolTip(B2SLogo, B2SSettings.SettingFilePath & vbCrLf & B2SSettings.LoadedResFilePath & vbCrLf & B2SSettings.PluginsFilePath)
     End Sub
 End Class

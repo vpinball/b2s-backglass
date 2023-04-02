@@ -42,6 +42,7 @@ Public Class B2SSettings
     Public Shared Property B2SScreenResFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
     Public Shared Property B2STableSettingsExtendedPath() As Boolean = SafeReadRegistry("Software\B2S", "B2STableSettingsExtendedPath", "0") = "1"
     Public Shared Property B2SWindowPunchActive() As Boolean = SafeReadRegistry("Software\B2S", "B2SWindowPunchActive", "0") = "1"
+    Public Shared Property B2SDebugLog() As Boolean = SafeReadRegistry("Software\B2S", "B2SDebugLog", "0") = "1"
     Public Shared Property SettingFilePath() As String = Path.GetFullPath(GetSettingFilename())
 
     Public Shared Property MatchingFileName() As String = String.Empty
@@ -166,7 +167,13 @@ Public Class B2SSettings
         ' load settings
         If IO.File.Exists(SettingFilePath) Then
             Dim XML As Xml.XmlDocument = New Xml.XmlDocument
-            XML.Load(SettingFilePath)
+            Try
+                XML.Load(SettingFilePath)
+            Catch ex As Exception
+                MessageBox.Show("The following error occurred opening the file '" & Path.GetFileName(SettingFilePath) & "':" & vbCrLf & vbCrLf & ex.Message, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                Throw
+            End Try
+
             If XML IsNot Nothing AndAlso XML.SelectSingleNode("B2STableSettings") IsNot Nothing Then
                 Dim nodeHeader As Xml.XmlNode = XML.SelectSingleNode("B2STableSettings")
                 ' get plugin status

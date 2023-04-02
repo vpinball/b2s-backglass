@@ -742,7 +742,11 @@ Public Class formBackglass
         End If
         ' maybe load XML file
         If Not String.IsNullOrEmpty(B2SData.BackglassFileName) Then
-            XML.Load(B2SData.BackglassFileName)
+            Try
+                XML.Load(B2SData.BackglassFileName)
+            Catch ex As Exception
+                MessageBox.Show("The following error occurred opening the file '" & IO.Path.GetFileName(B2SData.BackglassFileName) & "':" & vbCrLf & vbCrLf & ex.Message, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            End Try
         End If
 
         ' try to get into the file and read some XML

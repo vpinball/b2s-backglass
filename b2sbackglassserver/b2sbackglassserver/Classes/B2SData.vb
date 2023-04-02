@@ -637,7 +637,8 @@ Public Class B2SData
         If Not String.IsNullOrEmpty(ret) AndAlso InStr(ret, Chr(0)) > 0 Then
             Return ret.Substring(0, InStr(ret, Chr(0)) - 1)
         Else
-            Return String.Empty
+            ' Do not return an empty string as Short File Name
+            Return longFileName
         End If
 
     End Function

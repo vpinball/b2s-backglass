@@ -102,7 +102,7 @@ Public Class Server
         ' prepare error log
         errorlog = New Log("B2SServerErrorLog")
         errorlog.LogPath = My.Application.Info.DirectoryPath
-        errorlog.IsLogOn = True
+        errorlog.IsLogOn = B2SSettings.B2SDebugLog
 
         ' maybe prepare plugins
         B2SSettings.Load(, True)

@@ -42,6 +42,7 @@ Partial Class formSettingsMore
         Me.lblB2SScreenResFileNameOverride = New System.Windows.Forms.Label()
         Me.TxtB2SScreenResFileNameOverride = New System.Windows.Forms.TextBox()
         Me.ChkB2SWindowPunchActive = New System.Windows.Forms.CheckBox()
+        Me.ChkB2SDebugLog = New System.Windows.Forms.CheckBox()
         Me.grpLogging.SuspendLayout()
         Me.grpPerfTests.SuspendLayout()
         Me.GroupRegistrySettings.SuspendLayout()
@@ -216,6 +217,7 @@ Partial Class formSettingsMore
         '
         'GroupRegistrySettings
         '
+        Me.GroupRegistrySettings.Controls.Add(Me.ChkB2SDebugLog)
         Me.GroupRegistrySettings.Controls.Add(Me.ChkB2STableSettingsExtendedPath)
         Me.GroupRegistrySettings.Controls.Add(Me.lblB2SScreenResFileNameOverride)
         Me.GroupRegistrySettings.Controls.Add(Me.TxtB2SScreenResFileNameOverride)
@@ -230,7 +232,7 @@ Partial Class formSettingsMore
         'ChkB2STableSettingsExtendedPath
         '
         Me.ChkB2STableSettingsExtendedPath.AutoSize = True
-        Me.ChkB2STableSettingsExtendedPath.Location = New System.Drawing.Point(240, 20)
+        Me.ChkB2STableSettingsExtendedPath.Location = New System.Drawing.Point(165, 20)
         Me.ChkB2STableSettingsExtendedPath.Name = "ChkB2STableSettingsExtendedPath"
         Me.ChkB2STableSettingsExtendedPath.Size = New System.Drawing.Size(177, 17)
         Me.ChkB2STableSettingsExtendedPath.TabIndex = 35
@@ -264,6 +266,16 @@ Partial Class formSettingsMore
         Me.ChkB2SWindowPunchActive.TabIndex = 32
         Me.ChkB2SWindowPunchActive.Text = "B2SWindowPunchActive"
         Me.ChkB2SWindowPunchActive.UseVisualStyleBackColor = True
+        '
+        'ChkB2SDebugLog
+        '
+        Me.ChkB2SDebugLog.AutoSize = True
+        Me.ChkB2SDebugLog.Location = New System.Drawing.Point(357, 20)
+        Me.ChkB2SDebugLog.Name = "ChkB2SDebugLog"
+        Me.ChkB2SDebugLog.Size = New System.Drawing.Size(92, 17)
+        Me.ChkB2SDebugLog.TabIndex = 36
+        Me.ChkB2SDebugLog.Text = "B2SDebugLog"
+        Me.ChkB2SDebugLog.UseVisualStyleBackColor = True
         '
         'formSettingsMore
         '
@@ -311,4 +323,5 @@ Partial Class formSettingsMore
     Friend WithEvents TxtB2SScreenResFileNameOverride As Windows.Forms.TextBox
     Friend WithEvents lblB2SScreenResFileNameOverride As Windows.Forms.Label
     Friend WithEvents ChkB2STableSettingsExtendedPath As Windows.Forms.CheckBox
+    Friend WithEvents ChkB2SDebugLog As Windows.Forms.CheckBox
 End Class
