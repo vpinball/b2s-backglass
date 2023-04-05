@@ -41,6 +41,8 @@ Public Class formSettings
         Dim _isdirty As Boolean = isSettingsScreenDirty
         Me.Text = "Settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")"
 
+        If B2SSettings.PureEXE Then btnSaveSettings.Enabled = False
+
         ' set version info
         lblCopyright.Text = String.Format(lblCopyright.Text, My.Application.Info.ProductName.ToString, My.Application.Info.Copyright.ToString)
         lblVersion.Text = String.Format("Server version {0} {1}, backglass file version {2}", Application.ProductVersion, If(Environment.Is64BitProcess, "x64", "x86"), B2SSettings.BackglassFileVersion)
