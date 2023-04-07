@@ -1,10 +1,17 @@
+2.0.2
+
+- When the B2SBackglassServerEXE is started from explorer by doubleclicking a directb2s file, the save settings button is deactivated.
+
 2.0.1
+
 - The B2SWindowPunch feature can be controlled through a registry setting "Software\B2S\B2SWindowPunchActive" = "1"/"0"
 - All registry settings are available under Settings->More...
 - B2SBackglassServerRegisterApp can be run from CMD and have a parameter /Silent added, to hide ALL window prompts.
 - The "BackglassMonitorType" can be controlled through b2s_screenresidentifier. (##, =## or @##)
 - "Empty" Plugins folders added to the distribution zip
+
 2.0.0
+
 - Added full wiki documentation to the new version.
 - B2SBackglassServer will try to find B2STableSettings.xml in current directory and then installation directory. (= if different from tables directory)
   This extended search is activated in the registry using HKEY_CURRENT_USER\Software\B2S\B2STableSettingsExtendedPath set to String "1"
@@ -17,24 +24,6 @@
    The included B2SInit.cmd calls B2SWindowPunch below.
 - When running on 64 bit, Plugins64 will be used as plugins folder.
 - Add B2SWindowPunch: General window punch routine to cut holes into B2S Backglass Form and make DMD and PuP Windows shine through.
-
-  Usage: B2SWindowPunch "Destination regex" "Cutter Regex"
-  
-  Destination and the cutter window string has to be valid regular expressions
-
-  E.g.
-      Cut holes in the "B2S Backglass Server" form using "Virtual DMD" and all "PUPSCREEN" forms as two regular expressions:
-
-      B2SWindowPunch.exe "^B2S Backglass Server$" "^Virtual DMD$|^PUPSCREEN[0-9]+$"
-
-  The Tablename.res file is checked for lines after the background picture like:
-
-    B2SWindowPunch=Other regular expression as destination(s)
-    cutter=Other regular expression as cutter(s)
-
-  or:
-
-    B2SWindowPunch=off  -> B2SWindowPunch isn't called
 
 1.4.1
 
