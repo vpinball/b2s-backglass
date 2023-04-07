@@ -10,6 +10,6 @@ Full documentation including instruction videos is available in the [Wiki](https
 
 ## B2S.Backglass Designer
 
-The **B2SBackglassDesigner** is also available as a separate download here. It allows you to edit and create directB2S backglasses using a "WYSIWYG" editor.
+The **B2SBackglassDesigner** is also available as a separate [download here](https://github.com/vpinball/b2s-backglass/releases?q=Designer&expanded=true). It allows you to edit and create directB2S backglasses using a "WYSIWYG" editor.
 
-Documentation is available in the package as htmlhelp but can also be watched [online here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/vpinball/b2s-backglass/master/b2sbackglassdesigner/b2sbackglassdesigner/htmlhelp/Introduction.htm).
+Documentation is available in the package as html-help but can also be watched [online here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/vpinball/b2s-backglass/master/b2sbackglassdesigner/b2sbackglassdesigner/htmlhelp/Introduction.htm).
