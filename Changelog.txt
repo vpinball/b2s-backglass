@@ -1,3 +1,10 @@
+2.0.3
+
+- B2SBackglassServerEXE For activated background pictures, it is possible to enter a path with placeholders for "keys" in the table name.
+  The keys are extracted using regular expressions e.g. From a table name "Blood Machines (VPW 2022) V1.21" it extracts as "{name} ({manufactor} {year}) {extra}"
+  So if the background picture path is entered like "c:\vPinball\B2SServer\backgrounds\Grill{manufactor}.png" in the res file, it will be replaced with "c:\vPinball\B2SServer\backgrounds\GrillVPW.png"
+  If no keys can be extracted from the table name, all combinations {name}, {year}... are replaced with an empty string and would become "c:\vPinball\B2SServer\backgrounds\Grill.png" in the example.
+
 2.0.2
 
 - When the B2SBackglassServerEXE is started from explorer by doubleclicking a directb2s file, the save settings button is deactivated.

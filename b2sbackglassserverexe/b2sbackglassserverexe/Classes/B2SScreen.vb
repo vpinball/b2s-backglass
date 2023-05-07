@@ -4,6 +4,7 @@ Imports System.Drawing
 Imports Microsoft.Win32
 Imports System.IO
 Imports System.Reflection
+Imports System.Text.RegularExpressions
 
 Public Class B2SScreen
 
@@ -163,6 +164,8 @@ Public Class B2SScreen
                 Me.BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
                 Me.BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
                 Me.BackgroundPath = line(16)
+                If Me.BackgroundPath.Contains("{") Then UpdateBackgroundPath(B2SData.TableFileName)
+
             Else
                 Me.BackgroundLocation = New Point(0, 0)
                 Me.BackgroundSize = New Size(0, 0)
@@ -177,6 +180,31 @@ Public Class B2SScreen
                              "B2S backglass error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End
 
+        End If
+    End Sub
+    Private Sub UpdateBackgroundPath(ByVal TableFileName As String)
+        Dim pattern As String = "^(?'name'[\w \-\!']+)(\((?'manufactor'[A-Za-z ]+)? (?'year'[\d{4}]+)\))?(?'extra'.*)?$"
+        Dim regex As New Regex(pattern)
+
+        Dim newPath As String = Me.BackgroundPath
+        newPath = newPath.Replace("{gamename}", B2SSettings.GameName)
+        newPath = newPath.Replace("{tablename}", TableFileName)
+
+        If regex.IsMatch(TableFileName) Then
+            For Each match As Match In regex.Matches(TableFileName)
+                If match.Success Then
+                    For Each groupName As String In regex.GetGroupNames()
+                        If Not groupName = "0" Then
+                            Dim group As Group = match.Groups(groupName)
+                            newPath = newPath.Replace("{" + groupName + "}", group.Value.Trim())
+                        End If
+                    Next
+                End If
+            Next
+            'newPath = newPath.Replace("{manufactor}", "").Replace("{name}", "").Replace("{year}", "").Replace("{extra}", "")
+            If Not String.IsNullOrEmpty(newPath) Then
+                Me.BackgroundPath = newPath
+            End If
         End If
     End Sub
 
