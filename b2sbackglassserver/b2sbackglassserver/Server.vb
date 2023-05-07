@@ -2885,15 +2885,16 @@ Public Class Server
                 exePath = My.Application.Info.DirectoryPath
             End If
 
-            Dim p As Process = New Process()
-            Dim pi As ProcessStartInfo = New ProcessStartInfo()
-            Dim cmdGameName As String = ""
-
-            If Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName) Then
-                cmdGameName = If(Not String.IsNullOrEmpty(GameName), GameName, B2SName)
-            End If
-
             If B2SinitFound Then
+
+                Dim p As Process = New Process()
+                Dim pi As ProcessStartInfo = New ProcessStartInfo()
+                Dim cmdGameName As String = ""
+
+                If Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName) Then
+                    cmdGameName = If(Not String.IsNullOrEmpty(GameName), GameName, B2SName)
+                End If
+
                 pi.CreateNoWindow = True
                 pi.WindowStyle = ProcessWindowStyle.Hidden
 
@@ -2904,6 +2905,7 @@ Public Class Server
             End If
         End If
     End Sub
+
     Private Sub HideBackglassForm()
 
         If B2SData.IsBackglassStartedAsEXE Then
