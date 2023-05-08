@@ -164,8 +164,12 @@ Public Class B2SScreen
                 Me.BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
                 Me.BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
                 Me.BackgroundPath = line(16)
-                If Me.BackgroundPath.Contains("{") Then UpdateBackgroundPath(B2SData.TableFileName)
-
+                If Me.BackgroundPath.Contains("{") Then
+                    UpdateBackgroundPath(B2SData.TableFileName)
+                    If Not File.Exists(Me.BackgroundPath) Then
+                        Me.BackgroundPath = line(16).Replace("{manufactor}", "").Replace("{name}", "").Replace("{year}", "").Replace("{extra}", "").Replace("{gamename}", "").Replace("{tablename}", "")
+                    End If
+                End If
             Else
                 Me.BackgroundLocation = New Point(0, 0)
                 Me.BackgroundSize = New Size(0, 0)
