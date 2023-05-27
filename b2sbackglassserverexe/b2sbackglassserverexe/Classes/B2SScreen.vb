@@ -165,10 +165,8 @@ Public Class B2SScreen
                 Me.BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
                 Me.BackgroundPath = line(16)
                 If Me.BackgroundPath.Contains("{") Then
-                    UpdateBackgroundPath(B2SData.TableFileName)
-                    If Not File.Exists(Me.BackgroundPath) Then
-                        Me.BackgroundPath = line(16).Replace("{manufactor}", "").Replace("{name}", "").Replace("{year}", "").Replace("{extra}", "").Replace("{gamename}", "").Replace("{tablename}", "")
-                    End If
+                    ' We will try to replace the placeholders with the real values
+                    Me.BackgroundPath = GetBackgroundPath(Me.BackgroundPath, B2SData.TableFileName, B2SSettings.GameName)
                 End If
             Else
                 Me.BackgroundLocation = New Point(0, 0)
@@ -186,31 +184,42 @@ Public Class B2SScreen
 
         End If
     End Sub
-    Private Sub UpdateBackgroundPath(ByVal TableFileName As String)
+    Private Function GetBackgroundPath(BackgroundPath As String, ByVal TableFileName As String, ByVal GameName As String) As String
         Dim pattern As String = "^(?'name'[\w \-\!']+)(\((?'manufactor'[A-Za-z ]+)? (?'year'[\d{4}]+)\))?(?'extra'.*)?$"
         Dim regex As New Regex(pattern)
+        Dim replacedSomething As Boolean = False
 
-        Dim newPath As String = Me.BackgroundPath
-        newPath = newPath.Replace("{gamename}", B2SSettings.GameName)
-        newPath = newPath.Replace("{tablename}", TableFileName)
+        Dim newPath As String = BackgroundPath
+
+        Dim allGroupNames As List(Of String) = New List(Of String) From {"tablename", "gamename"}
+
+        allGroupNames.AddRange(regex.GetGroupNames())
 
         If regex.IsMatch(TableFileName) Then
-            For Each match As Match In regex.Matches(TableFileName)
-                If match.Success Then
-                    For Each groupName As String In regex.GetGroupNames()
-                        If Not groupName = "0" Then
-                            Dim group As Group = match.Groups(groupName)
-                            newPath = newPath.Replace("{" + groupName + "}", group.Value.Trim())
+            For Each groupName As String In allGroupNames
+                For Each replaceName As String In allGroupNames
+                    If Not groupName = "0" Then
+                        If groupName = replaceName Then
+                            If newPath.Contains("{" + replaceName + "}") Then replacedSomething = True
+                            newPath = newPath.Replace("{" + replaceName + "}", regex.Match(TableFileName).Groups(replaceName).Value.Trim())
+                        Else
+                            newPath = newPath.Replace("{" + replaceName + "}", "")
                         End If
-                    Next
+                    End If
+                Next
+                If File.Exists(newPath) And replacedSomething Then
+                    Return newPath
+                Else
+                    newPath = BackgroundPath
                 End If
             Next
-            'newPath = newPath.Replace("{manufactor}", "").Replace("{name}", "").Replace("{year}", "").Replace("{extra}", "")
-            If Not String.IsNullOrEmpty(newPath) Then
-                Me.BackgroundPath = newPath
-            End If
         End If
-    End Sub
+        For Each replaceName As String In allGroupNames
+            newPath = newPath.Replace("{" + replaceName + "}", "")
+        Next
+        Return newPath
+
+    End Function
 
     Private Sub GetB2SSettings(ByVal _DefaultDMDLocation As Point, ByVal _DMDViewMode As eDMDViewMode, ByVal _BackglassGrillHeight As Integer, ByVal _BackglassSmallGrillHeight As Integer)
 
