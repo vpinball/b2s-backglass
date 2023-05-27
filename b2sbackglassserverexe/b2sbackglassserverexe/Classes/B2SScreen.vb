@@ -194,23 +194,35 @@ Public Class B2SScreen
         Dim allGroupNames As List(Of String) = New List(Of String) From {"tablename", "gamename"}
 
         allGroupNames.AddRange(regex.GetGroupNames())
+        allGroupNames.RemoveAll(Function(s) s.Length = 1)
 
         If regex.IsMatch(TableFileName) Then
             For Each groupName As String In allGroupNames
                 For Each replaceName As String In allGroupNames
-                    If Not groupName = "0" Then
-                        If groupName = replaceName Then
-                            If newPath.Contains("{" + replaceName + "}") Then replacedSomething = True
-                            newPath = newPath.Replace("{" + replaceName + "}", regex.Match(TableFileName).Groups(replaceName).Value.Trim())
-                        Else
-                            newPath = newPath.Replace("{" + replaceName + "}", "")
-                        End If
+                    If groupName = replaceName And newPath.Contains("{" + replaceName + "}") Then
+                        Select Case replaceName
+                            Case "tablename"
+                                newPath = newPath.Replace("{" + replaceName + "}", TableFileName)
+                                replacedSomething = True
+                            Case "gamename"
+                                newPath = newPath.Replace("{" + replaceName + "}", GameName)
+                                replacedSomething = True
+                            Case Else
+                                Dim replaceValue As String = regex.Match(TableFileName).Groups(replaceName).Value.Trim()
+                                If Not String.IsNullOrEmpty(replaceValue) Then
+                                    replacedSomething = True
+                                    newPath = newPath.Replace("{" + replaceName + "}", replaceValue)
+                                End If
+                        End Select
+                    Else
+                        newPath = newPath.Replace("{" + replaceName + "}", "")
                     End If
                 Next
                 If File.Exists(newPath) And replacedSomething Then
                     Return newPath
                 Else
                     newPath = BackgroundPath
+                    replacedSomething = False
                 End If
             Next
         End If
