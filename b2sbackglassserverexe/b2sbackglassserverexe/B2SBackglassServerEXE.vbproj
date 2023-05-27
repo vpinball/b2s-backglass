@@ -211,6 +211,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\Background.resx">
       <DependentUpon>Background.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formBackglass.resx">
       <DependentUpon>formBackglass.vb</DependentUpon>
