@@ -2,8 +2,8 @@
 echo %0 %* > "%~dp0B2SWindowPunch.log"
 setlocal EnableDelayedExpansion
 
-set resfile="%cd%\%~1.res"
-set GameName=%~2
+set "resfile=%cd%\%~1.res"
+set "GameName=%~2"
 
 REM Cut holes in the destination "B2S Backglass Server" & "B2S DMD" forms
 set "B2SWindowPunch=^B2S Backglass$|^B2S Backglass Server$|^B2S DMD$"
@@ -15,7 +15,7 @@ REM If started from explorer, remove all Windowpunch by searching for something 
 if ["%GameName%"] == [""] set "cutter=^B2SWindowPunchDeactivated$"
 
 REM Check if there is any table specific settings for B2SWindowPunch
-if exist "%resfile:~1,-1%" for /f "usebackq eol=# tokens=1,2 delims==" %%G in (`findstr "=" "%resfile:~1,-1%"`) do set "%%G=%%H"
+if exist "%resfile%" for /f "usebackq eol=# tokens=1,2 delims==" %%G in (`findstr /R "^[A-Za-z][A-Za-z]*=" "%resfile%"`) do set "%%G=%%H"
 
 echo B2SWindowPunch = "!B2SWindowPunch!" >> "%~dp0B2SWindowPunch.log"
 echo cutter = "!cutter!" >> "%~dp0B2SWindowPunch.log"
