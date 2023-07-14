@@ -8,7 +8,7 @@ defaults:
 
 jobs:
   build-server:
-    name: Build B2SBackglassServer-${{ matrix.config }}-win-${{ matrix.platform }}
+    name: Build B2SServer-${{ matrix.config }}-win-${{ matrix.platform }}
     runs-on: windows-2019
     strategy:
       fail-fast: false
@@ -104,7 +104,7 @@ jobs:
           cp b2sbackglassserverregisterapp/ScreenResTemplates.cmd tmp
       - uses: actions/upload-artifact@v3
         with:
-         name: B2SBackglassServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
+         name: B2SServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
          path: tmp
 
   build-designer:
