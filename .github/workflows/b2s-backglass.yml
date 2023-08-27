@@ -101,6 +101,7 @@ jobs:
           cp README.md tmp
           cp ScreenResTemplate.txt tmp
           cp -r ScreenResTemplates tmp
+          cp -r B2STools tmp
           cp b2sbackglassserverregisterapp/ScreenResTemplates.cmd tmp
       - uses: actions/upload-artifact@v3
         with:
