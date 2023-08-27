@@ -2,7 +2,7 @@
 REM directb2sReelSoundsONOFF.cmd call xslt transformation to add or remove empty attributes for directb2s files
 setlocal
 
-set "xsltFilePath=%~n0.xsl"
+set "xsltFilePath=%~dpn0.xsl"
 
 :loop
 call :transform "%~1"
