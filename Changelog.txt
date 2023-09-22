@@ -1,3 +1,10 @@
+2.1.0
+
+- B2STools\directb2sReelSoundsONOFF: A small cmd and xsl transformation routine to add/remove Sound tags in directb2s files.
+  The directb2s files can be dropped on the cmd file and it will create a copy of the file with the change applied.
+  When the empty Sound3-6 attributes are available, the reel sound is deactivated.
+- Make DisableFuzzyMatching default true (was already, but not everywhere)
+
 2.0.3
 
 - B2SBackglassServerEXE: For activated background pictures, it is possible to enter a path with placeholders for "keys" in the table name.
@@ -9,7 +16,7 @@
 
 2.0.2
 
-- When the B2SBackglassServerEXE is started from the explorer by doubleclicking a directb2s file, the save settings button is deactivated.
+- When the B2SBackglassServerEXE is started from windows explorer by doubleclicking a directb2s file, the save settings button is deactivated.
 
 2.0.1
 

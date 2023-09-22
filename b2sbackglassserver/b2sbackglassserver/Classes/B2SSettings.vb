@@ -151,7 +151,7 @@ Public Class B2SSettings
     Public Shared Property LEDsOff() As Boolean = False
     Public Shared Property StartAsEXE() As Boolean = True
     Public Shared Property DefaultStartMode() As eDefaultStartMode = eDefaultStartMode.EXE
-    Public Shared Property DisableFuzzyMatching() As Boolean = False
+    Public Shared Property DisableFuzzyMatching() As Boolean = True
 
     Public Shared Property LampsSkipFrames() As Integer = 0
     Public Shared Property SolenoidsSkipFrames() As Integer = 0
