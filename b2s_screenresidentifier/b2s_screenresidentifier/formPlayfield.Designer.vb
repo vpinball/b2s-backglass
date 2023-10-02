@@ -317,12 +317,13 @@ Partial Class formPlayfield
         'chkPlayfieldFullSize
         '
         Me.chkPlayfieldFullSize.AutoSize = True
+        Me.chkPlayfieldFullSize.CheckAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.chkPlayfieldFullSize.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkPlayfieldFullSize.Location = New System.Drawing.Point(152, 166)
+        Me.chkPlayfieldFullSize.Location = New System.Drawing.Point(29, 169)
         Me.chkPlayfieldFullSize.Name = "chkPlayfieldFullSize"
-        Me.chkPlayfieldFullSize.Size = New System.Drawing.Size(150, 20)
+        Me.chkPlayfieldFullSize.Size = New System.Drawing.Size(141, 20)
         Me.chkPlayfieldFullSize.TabIndex = 13
-        Me.chkPlayfieldFullSize.Text = "Playfield is fullsized"
+        Me.chkPlayfieldFullSize.Text = "Playfield fullsized:"
         Me.chkPlayfieldFullSize.UseVisualStyleBackColor = True
         '
         'lblPlayfieldSizeHeight
@@ -521,6 +522,7 @@ Partial Class formPlayfield
         Me.Controls.Add(Me.groupPlayfield)
         Me.Controls.Add(Me.lblInfo)
         Me.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)

@@ -79,7 +79,9 @@ jobs:
         run: |
           mkdir tmp  
           cp b2s_screenresidentifier/b2s_screenresidentifier/bin/${{ matrix.platform }}/${{ matrix.config }}/B2S_ScreenResIdentifier.exe tmp
+          cp b2s_screenresidentifier/b2s_screenresidentifier/bin/${{ matrix.platform }}/${{ matrix.config }}/B2S_ScreenResIdentifier.exe.config tmp
           cp b2sbackglassserverexe/b2sbackglassserverexe/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SBackglassServerEXE.exe tmp
+          cp b2sbackglassserverexe/b2sbackglassserverexe/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SBackglassServerEXE.exe.config tmp
           cp b2sbackglassserverregisterapp/b2sbackglassserverregisterapp/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SBackglassServerRegisterApp.exe tmp
           cp b2sbackglassserver/b2sbackglassserver/bin/${{ matrix.config }}/B2SServerPluginInterface.dll tmp
           cp b2sbackglassserver/b2sbackglassserver/bin/${{ matrix.config }}/B2SBackglassServer.dll tmp

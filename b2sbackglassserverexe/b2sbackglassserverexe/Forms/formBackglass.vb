@@ -49,6 +49,7 @@ Public Class formBackglass
 
     Public Sub New()
 
+
         InitializeComponent()
 
         ' set some styles
