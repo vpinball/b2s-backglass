@@ -1,5 +1,7 @@
 2.1.0
 
+- b2s_screenresidentifier, b2sbackglassserverexe & B2SWindowPunch is now high DPI aware. It means it should be compatible with 
+  scaling factors other than 100%. The settings Forms might not be the must pretty, but it works!
 - B2STools\directb2sReelSoundsONOFF: A small cmd and xsl transformation routine to add/remove Sound tags in directb2s files.
   The directb2s files can be dropped on the cmd file and it will create a copy of the file with the change applied.
   When the empty Sound3-6 attributes are available, the reel sound is deactivated.

@@ -149,7 +149,7 @@ Public Class B2SScreen
             Loop
             ' close file handle
             FileClose(1)
-
+            debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile A version #2 file " & Me.BackgroundPath)
             line(i) = 0
             line(i + 1) = 0
             Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
@@ -167,6 +167,7 @@ Public Class B2SScreen
                 If Me.BackgroundPath.Contains("{") Then
                     ' We will try to replace the placeholders with the real values
                     Me.BackgroundPath = GetBackgroundPath(Me.BackgroundPath, B2SData.TableFileName, B2SSettings.GameName)
+                    debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile GetBackgroundPath called and returned " & Me.BackgroundPath)
                 End If
             Else
                 Me.BackgroundLocation = New Point(0, 0)

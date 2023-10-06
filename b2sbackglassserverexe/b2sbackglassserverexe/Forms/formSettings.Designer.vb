@@ -61,7 +61,7 @@ Partial Class formSettings
         Me.btnScreenshotPath = New System.Windows.Forms.Button()
         Me.grpVisibility = New System.Windows.Forms.GroupBox()
         Me.chkFormNoFocus = New System.Windows.Forms.CheckBox()
-        Me.lblBackgound = New System.Windows.Forms.Label()
+        Me.lblBackground = New System.Windows.Forms.Label()
         Me.lblFormFront = New System.Windows.Forms.Label()
         Me.cmbFormFront = New System.Windows.Forms.ComboBox()
         Me.cmbBackground = New System.Windows.Forms.ComboBox()
@@ -476,7 +476,7 @@ Partial Class formSettings
         'grpVisibility
         '
         Me.grpVisibility.Controls.Add(Me.chkFormNoFocus)
-        Me.grpVisibility.Controls.Add(Me.lblBackgound)
+        Me.grpVisibility.Controls.Add(Me.lblBackground)
         Me.grpVisibility.Controls.Add(Me.lblFormFront)
         Me.grpVisibility.Controls.Add(Me.cmbFormFront)
         Me.grpVisibility.Controls.Add(Me.cmbBackground)
@@ -504,14 +504,14 @@ Partial Class formSettings
         Me.chkFormNoFocus.Text = "Form No Focus"
         Me.chkFormNoFocus.UseVisualStyleBackColor = True
         '
-        'lblBackgound
+        'lblBackground
         '
-        Me.lblBackgound.AutoSize = True
-        Me.lblBackgound.Location = New System.Drawing.Point(313, 51)
-        Me.lblBackgound.Name = "lblBackgound"
-        Me.lblBackgound.Size = New System.Drawing.Size(68, 13)
-        Me.lblBackgound.TabIndex = 17
-        Me.lblBackgound.Text = "Background:"
+        Me.lblBackground.AutoSize = True
+        Me.lblBackground.Location = New System.Drawing.Point(313, 51)
+        Me.lblBackground.Name = "lblBackground"
+        Me.lblBackground.Size = New System.Drawing.Size(68, 13)
+        Me.lblBackground.TabIndex = 17
+        Me.lblBackground.Text = "Background:"
         '
         'lblFormFront
         '
@@ -864,7 +864,7 @@ Partial Class formSettings
     Friend WithEvents chkDisableFuzzyMatching As Windows.Forms.CheckBox
     Friend WithEvents chkFormNoFocus As Windows.Forms.CheckBox
     Friend WithEvents btnEditScreenRes As Windows.Forms.Button
-    Friend WithEvents lblBackgound As Windows.Forms.Label
+    Friend WithEvents lblBackground As Windows.Forms.Label
     Friend WithEvents cmbBackground As Windows.Forms.ComboBox
     Friend WithEvents lblNonAvailableSettings As Windows.Forms.Label
     Friend WithEvents B2SLogoToolTip As Windows.Forms.ToolTip
