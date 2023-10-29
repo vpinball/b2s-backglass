@@ -1,3 +1,5 @@
+B2S.Designer the B2S (Backglass 2nd Screen) Designer has moved to its own repository https://github.com/vpinball/b2s-designer
+
 2.0.3
 
 - B2SBackglassServerEXE: For activated background pictures, it is possible to enter a path with placeholders for "keys" in the table name.

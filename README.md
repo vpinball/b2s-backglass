@@ -1,6 +1,6 @@
-# B2S (Backglass 2nd Screen) Server & Designer
+# B2S (Backglass 2nd Screen) Server
 
-*System files to run and edit `directB2S` backglasses.*
+*System files to run `directB2S` backglasses.*
 
 See the [Changelog.txt](Changelog.txt) for recent changes.
 
@@ -10,6 +10,4 @@ Full documentation including instruction videos is available in the [Wiki](https
 
 ## B2S.Backglass Designer
 
-The **B2SBackglassDesigner** is also available as a separate [download here](https://github.com/vpinball/b2s-backglass/releases?q=Designer&expanded=true). It allows you to edit and create directB2S backglasses using a "WYSIWYG" editor.
-
-Documentation is available in the package as html-help but can also be read [online here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/vpinball/b2s-backglass/master/b2sbackglassdesigner/b2sbackglassdesigner/htmlhelp/Introduction.htm).
+The **B2SBackglassDesigner** has moved away to it's own repository here [B2S.Designer](https://github.com/vpinball/b2s-designer)
