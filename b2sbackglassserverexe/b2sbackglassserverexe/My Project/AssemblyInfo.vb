@@ -8,8 +8,8 @@ Imports System.Runtime.InteropServices
 
 ' Die Werte der Assemblyattribute überprüfen
 
-<Assembly: AssemblyTitle("B2S Backglass Server EXE")> 
-<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyTitle("B2S Backglass Server EXE")>
+<Assembly: AssemblyDescription("Display directb2s Backglass files for Visual Pinball")>
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("B2S Backglass Server EXE")> 
 <Assembly: AssemblyCopyright("Copyright (c) 2012-2023")> 
@@ -31,6 +31,6 @@ Imports System.Runtime.InteropServices
 ' übernehmen, indem Sie "*" eingeben:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.0.3")>
-<Assembly: AssemblyFileVersion("2.0.3")>
-<Assembly: AssemblyInformationalVersion("2.0.3")>
+<Assembly: AssemblyVersion("2.0.4")>
+<Assembly: AssemblyFileVersion("2.0.4")>
+<Assembly: AssemblyInformationalVersion("2.0.4")>

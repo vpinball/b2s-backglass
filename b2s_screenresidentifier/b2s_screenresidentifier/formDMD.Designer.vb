@@ -26,17 +26,17 @@ Partial Class formDMD
         Me.txtDMDScreenScale = New System.Windows.Forms.TextBox()
         Me.chkDMDFlipY = New System.Windows.Forms.CheckBox()
         Me.lblDMDLocationY = New System.Windows.Forms.Label()
-        Me.txtDMDLocationY = New WindowsApplication1.Module1.B2STextBox()
-        Me.txtDMDLocationX = New WindowsApplication1.Module1.B2STextBox()
+        Me.txtDMDLocationY = New B2S.Module1.B2STextBox()
+        Me.txtDMDLocationX = New B2S.Module1.B2STextBox()
         Me.lblDMDLocationX = New System.Windows.Forms.Label()
         Me.lblDMDScreenSizeHeight = New System.Windows.Forms.Label()
-        Me.txtDMDScreenSizeHeight = New WindowsApplication1.Module1.B2STextBox()
-        Me.txtDMDScreenSizeWidth = New WindowsApplication1.Module1.B2STextBox()
+        Me.txtDMDScreenSizeHeight = New B2S.Module1.B2STextBox()
+        Me.txtDMDScreenSizeWidth = New B2S.Module1.B2STextBox()
         Me.lblDMDScreenSizeWidth = New System.Windows.Forms.Label()
         Me.chkDMDAtDefaultLocation = New System.Windows.Forms.CheckBox()
         Me.lblDMDSizeHeight = New System.Windows.Forms.Label()
-        Me.txtDMDSizeHeight = New WindowsApplication1.Module1.B2STextBox()
-        Me.txtDMDSizeWidth = New WindowsApplication1.Module1.B2STextBox()
+        Me.txtDMDSizeHeight = New B2S.Module1.B2STextBox()
+        Me.txtDMDSizeWidth = New B2S.Module1.B2STextBox()
         Me.lblDMDSize = New System.Windows.Forms.Label()
         Me.txtDMDScreen = New System.Windows.Forms.TextBox()
         Me.lblDMDScreen = New System.Windows.Forms.Label()
@@ -67,7 +67,7 @@ Partial Class formDMD
         Me.groupDMD.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.groupDMD.Location = New System.Drawing.Point(5, 4)
         Me.groupDMD.Name = "groupDMD"
-        Me.groupDMD.Size = New System.Drawing.Size(391, 239)
+        Me.groupDMD.Size = New System.Drawing.Size(443, 290)
         Me.groupDMD.TabIndex = 7
         Me.groupDMD.TabStop = False
         Me.groupDMD.Text = "B2S DMD"
@@ -84,12 +84,13 @@ Partial Class formDMD
         'chkDMDFlipY
         '
         Me.chkDMDFlipY.AutoSize = True
+        Me.chkDMDFlipY.CheckAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.chkDMDFlipY.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkDMDFlipY.Location = New System.Drawing.Point(152, 207)
+        Me.chkDMDFlipY.Location = New System.Drawing.Point(77, 213)
         Me.chkDMDFlipY.Name = "chkDMDFlipY"
-        Me.chkDMDFlipY.Size = New System.Drawing.Size(88, 20)
+        Me.chkDMDFlipY.Size = New System.Drawing.Size(93, 20)
         Me.chkDMDFlipY.TabIndex = 23
-        Me.chkDMDFlipY.Text = "DMD Y-Flip"
+        Me.chkDMDFlipY.Text = "DMD Y-Flip:"
         Me.chkDMDFlipY.UseVisualStyleBackColor = True
         '
         'lblDMDLocationY
@@ -171,12 +172,13 @@ Partial Class formDMD
         'chkDMDAtDefaultLocation
         '
         Me.chkDMDAtDefaultLocation.AutoSize = True
+        Me.chkDMDAtDefaultLocation.CheckAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.chkDMDAtDefaultLocation.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkDMDAtDefaultLocation.Location = New System.Drawing.Point(152, 181)
+        Me.chkDMDAtDefaultLocation.Location = New System.Drawing.Point(8, 185)
         Me.chkDMDAtDefaultLocation.Name = "chkDMDAtDefaultLocation"
-        Me.chkDMDAtDefaultLocation.Size = New System.Drawing.Size(226, 20)
+        Me.chkDMDAtDefaultLocation.Size = New System.Drawing.Size(191, 20)
         Me.chkDMDAtDefaultLocation.TabIndex = 7
-        Me.chkDMDAtDefaultLocation.Text = "DMD is at default location (for grill)"
+        Me.chkDMDAtDefaultLocation.Text = "DMD default location on grill:"
         Me.chkDMDAtDefaultLocation.UseVisualStyleBackColor = True
         '
         'lblDMDSizeHeight
@@ -242,16 +244,19 @@ Partial Class formDMD
         Me.lblDMD.Name = "lblDMD"
         Me.lblDMD.Size = New System.Drawing.Size(320, 32)
         Me.lblDMD.TabIndex = 5
-        Me.lblDMD.Text = "This is the dummy window for the B2S DMD. Drag and drop me where you want me to be"
+        Me.lblDMD.Text = "This is the dummy window for the B2S DMD. Drag and drop me where you want me to b" &
+    "e"
         '
         'formDMD
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(404, 255)
+        Me.ClientSize = New System.Drawing.Size(460, 306)
+        Me.ControlBox = False
         Me.Controls.Add(Me.groupDMD)
         Me.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MaximizeBox = False

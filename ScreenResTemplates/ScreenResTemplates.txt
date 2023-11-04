@@ -1,3 +1,9 @@
+  ___ ___ ___   _____               _      _          
+ | _ )_  ) __| |_   _|__ _ __  _ __| |__ _| |_ ___ ___
+ | _ \/ /\__ \   | |/ -_) '  \| '_ \ / _` |  _/ -_|_-<
+ |___/___|___/   |_|\___|_|_|_| .__/_\__,_|\__\___/__/
+                              |_|                     
+
 The `B2SBackglassServerRegisterApp.exe` now also "registers" right click menues for .vpx files (if wanted):
 
 When you select a tablename.vpx file, press right mouse and select `B2S Server copy Screenres template` 

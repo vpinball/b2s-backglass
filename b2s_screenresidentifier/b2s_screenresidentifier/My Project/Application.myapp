@@ -1,10 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-16"?>
-<MyApplicationData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <MySubMain>true</MySubMain>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MyApplicationData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <MySubMain>false</MySubMain>
   <MainForm>formPlayfield</MainForm>
   <SingleInstance>false</SingleInstance>
   <ShutdownMode>0</ShutdownMode>
-  <EnableVisualStyles>true</EnableVisualStyles>
+  <EnableVisualStyles>false</EnableVisualStyles>
   <AuthenticationMode>0</AuthenticationMode>
+  <MinimumSplashScreenDisplayTime>0</MinimumSplashScreenDisplayTime>
   <SaveMySettingsOnExit>true</SaveMySettingsOnExit>
+  <HighDpiMpde>false</HighDpiMpde>
 </MyApplicationData>

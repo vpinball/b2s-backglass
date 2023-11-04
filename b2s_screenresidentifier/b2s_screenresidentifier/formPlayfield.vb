@@ -11,7 +11,6 @@ Public Class formPlayfield
     Private formDMD As formDMD = Nothing
 
     Private Sub formPlayfield_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
-
         formDMD = New formDMD
         formDMD.formBackglass = formBackglass
 

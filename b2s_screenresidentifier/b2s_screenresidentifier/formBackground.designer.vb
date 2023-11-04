@@ -24,25 +24,25 @@ Partial Class formBackground
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formBackground))
         Me.groupBackground = New System.Windows.Forms.GroupBox()
+        Me.chkBackgroundFullSize = New System.Windows.Forms.CheckBox()
         Me.TxtBackgroundPath = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtBackgroundScreenScale = New System.Windows.Forms.TextBox()
         Me.lblBackgroundLocationY = New System.Windows.Forms.Label()
-        Me.txtBackgroundLocationY = New WindowsApplication1.Module1.B2STextBox()
-        Me.txtBackgroundLocationX = New WindowsApplication1.Module1.B2STextBox()
+        Me.txtBackgroundLocationY = New B2S.Module1.B2STextBox()
+        Me.txtBackgroundLocationX = New B2S.Module1.B2STextBox()
         Me.lblBackgroundLocationX = New System.Windows.Forms.Label()
         Me.lblBackgroundScreenSizeHeight = New System.Windows.Forms.Label()
-        Me.txtBackgroundScreenSizeHeight = New WindowsApplication1.Module1.B2STextBox()
-        Me.txtBackgroundScreenSizeWidth = New WindowsApplication1.Module1.B2STextBox()
+        Me.txtBackgroundScreenSizeHeight = New B2S.Module1.B2STextBox()
+        Me.txtBackgroundScreenSizeWidth = New B2S.Module1.B2STextBox()
         Me.lblBackgroundScreenSizeWidth = New System.Windows.Forms.Label()
         Me.lblBackgroundSizeHeight = New System.Windows.Forms.Label()
-        Me.txtBackgroundSizeHeight = New WindowsApplication1.Module1.B2STextBox()
-        Me.txtBackgroundSizeWidth = New WindowsApplication1.Module1.B2STextBox()
+        Me.txtBackgroundSizeHeight = New B2S.Module1.B2STextBox()
+        Me.txtBackgroundSizeWidth = New B2S.Module1.B2STextBox()
         Me.lblBackgroundSize = New System.Windows.Forms.Label()
         Me.txtBackgroundScreen = New System.Windows.Forms.TextBox()
         Me.lblBackgroundScreen = New System.Windows.Forms.Label()
         Me.lblBackground = New System.Windows.Forms.Label()
-        Me.chkBackgroundFullSize = New System.Windows.Forms.CheckBox()
         Me.groupBackground.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -75,6 +75,18 @@ Partial Class formBackground
         Me.groupBackground.TabIndex = 7
         Me.groupBackground.TabStop = False
         Me.groupBackground.Text = "Background"
+        '
+        'chkBackgroundFullSize
+        '
+        Me.chkBackgroundFullSize.AutoSize = True
+        Me.chkBackgroundFullSize.CheckAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.chkBackgroundFullSize.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkBackgroundFullSize.Location = New System.Drawing.Point(17, 226)
+        Me.chkBackgroundFullSize.Name = "chkBackgroundFullSize"
+        Me.chkBackgroundFullSize.Size = New System.Drawing.Size(147, 20)
+        Me.chkBackgroundFullSize.TabIndex = 28
+        Me.chkBackgroundFullSize.Text = "Background fullsized:"
+        Me.chkBackgroundFullSize.UseVisualStyleBackColor = True
         '
         'TxtBackgroundPath
         '
@@ -246,17 +258,6 @@ Partial Class formBackground
         Me.lblBackground.Text = "This is the dummy window for the Background. Drag and drop me" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "whereever you want" &
     " to have me."
         '
-        'chkBackgroundFullSize
-        '
-        Me.chkBackgroundFullSize.AutoSize = True
-        Me.chkBackgroundFullSize.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkBackgroundFullSize.Location = New System.Drawing.Point(152, 228)
-        Me.chkBackgroundFullSize.Name = "chkBackgroundFullSize"
-        Me.chkBackgroundFullSize.Size = New System.Drawing.Size(155, 20)
-        Me.chkBackgroundFullSize.TabIndex = 28
-        Me.chkBackgroundFullSize.Text = "Background is fullsized"
-        Me.chkBackgroundFullSize.UseVisualStyleBackColor = True
-        '
         'formBackground
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 19.0!)
@@ -264,9 +265,11 @@ Partial Class formBackground
         Me.AutoScroll = True
         Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(468, 329)
+        Me.ControlBox = False
         Me.Controls.Add(Me.groupBackground)
         Me.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ForeColor = System.Drawing.Color.White
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)

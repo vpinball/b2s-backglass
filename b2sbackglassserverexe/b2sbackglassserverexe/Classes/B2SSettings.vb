@@ -6,7 +6,7 @@ Imports Microsoft.Win32
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "2.0.3"
+    Public Const DirectB2SVersion As String = "2.0.4"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
@@ -78,7 +78,7 @@ Public Class B2SSettings
     Public Shared Property StartAsEXE() As Boolean = True
     Public Shared Property PureEXE() As Boolean = False
     Public Shared Property DefaultStartMode() As eDefaultStartMode = eDefaultStartMode.EXE
-    Public Shared Property DisableFuzzyMatching() As Boolean = False
+    Public Shared Property DisableFuzzyMatching() As Boolean = True
 
     Public Shared Property LampsSkipFrames() As Integer = 0
     Public Shared Property SolenoidsSkipFrames() As Integer = 0
@@ -90,6 +90,7 @@ Public Class B2SSettings
     Public Shared Property IsGlowBulbOn() As Boolean = False
     Public Shared Property GlowIndex() As Integer = -1
     Public Shared Property DefaultGlow() As Integer = -1
+    Public Shared Property DisableBuiltInEMReelSound() As Nullable(Of Boolean) = Nothing
     Public Shared Property FormToFront() As Boolean = True
     Public Shared Property FormToBack() As Boolean = False
     Public Shared Property FormNoFocus() As Boolean = False
@@ -185,6 +186,7 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
                 ' get overall settings
+                If nodeHeader.SelectSingleNode("DisableBuiltInEMReelSound") IsNot Nothing Then DisableBuiltInEMReelSound = (nodeHeader.SelectSingleNode("DisableBuiltInEMReelSound").InnerText = "1")
                 If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)
                 If nodeHeader.SelectSingleNode("LogPath") IsNot Nothing Then LogPath = nodeHeader.SelectSingleNode("LogPath").InnerText
                 If nodeHeader.SelectSingleNode("IsLampsStateLogOn") IsNot Nothing Then IsLampsStateLogOn = (nodeHeader.SelectSingleNode("IsLampsStateLogOn").InnerText = "1")
@@ -234,6 +236,7 @@ Public Class B2SSettings
                     Dim nodeTable As Xml.XmlElement = nodeHeader.SelectSingleNode(If(Not String.IsNullOrEmpty(GameName), GameName, B2SName))
                     If nodeTable IsNot Nothing Then
                         _IsGameNameFound = True
+                        If nodeTable.SelectSingleNode("DisableBuiltInEMReelSound") IsNot Nothing Then DisableBuiltInEMReelSound = (nodeTable.SelectSingleNode("DisableBuiltInEMReelSound").InnerText = "1")
                         If nodeTable.SelectSingleNode("HideGrill") IsNot Nothing Then HideGrill = CInt(nodeTable.SelectSingleNode("HideGrill").InnerText)
                         If nodeTable.SelectSingleNode("HideB2SDMD") IsNot Nothing Then HideB2SDMD = (nodeTable.SelectSingleNode("HideB2SDMD").InnerText = "1")
                         If nodeTable.SelectSingleNode("HideDMD") IsNot Nothing Then HideDMD = CInt(nodeTable.SelectSingleNode("HideDMD").InnerText)
@@ -334,6 +337,10 @@ Public Class B2SSettings
                 If StartBackground.HasValue Then
                     AddNode(XML, nodeTable, "StartBackground", If(StartBackground, "1", "0"))
                 End If
+                If DisableBuiltInEMReelSound.HasValue Then
+                    AddNode(XML, nodeTable, "DisableBuiltInEMReelSound", If(DisableBuiltInEMReelSound, "1", "0"))
+                End If
+
                 AddNode(XML, nodeTable, "FormToFront", If(FormToFront, "1", "0"))
                 AddNode(XML, nodeTable, "FormToBack", If(FormToBack, "1", "0"))
                 AddNode(XML, nodeTable, "FormNoFocus", If(FormNoFocus, "1", "0"))

@@ -4,6 +4,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace B2SWindowPunch
 {
@@ -119,34 +123,42 @@ namespace B2SWindowPunch
 
                 foreach (KeyValuePair<IntPtr, string> window in windows)
                 {
-                    IntPtr handle = window.Key;
-                    string title = window.Value;
+                    IntPtr destHandle = window.Key;
+                    string destTitle = window.Value;
 
-                    if (rxDest.IsMatch(title))
+                    if (rxDest.IsMatch(destTitle))
                     {
-                        Console.WriteLine("Destination {0}: {1}", handle, title);
-                        GetWindowRect(handle, out RECT VPWR);
+                        Screen destScreen = Screen.FromHandle(destHandle);
+                        Size destScreenSize = TrueResolution(destScreen.DeviceName);
+                        Single destFactor = (float) destScreenSize.Height / destScreen.Bounds.Height;
 
-                        IntPtr FRegion = CreateRectRgn(0, 0, VPWR.Right, VPWR.Bottom);
+                        Console.WriteLine($"Destination: {destTitle} on '{destScreen.DeviceName}' ({destFactor * 100 } %)");
+                        GetWindowRect(destHandle, out RECT destRect);
+
+                        IntPtr destRegion = CreateRectRgn(0, 0, UseFactor(destRect.Right, destFactor), UseFactor(destRect.Bottom, destFactor));
 
                         foreach (KeyValuePair<IntPtr, string> cutwindow in windows)
                         {
-                            IntPtr cuthandle = cutwindow.Key;
-                            string cuttitle = cutwindow.Value;
+                            IntPtr cutHandle = cutwindow.Key;
+                            string cutTitle = cutwindow.Value;
 
-                            if (cuthandle != handle && rxCutter.IsMatch(cuttitle))
+                            if (cutHandle != destHandle && rxCutter.IsMatch(cutTitle))
                             {
-                                Console.WriteLine($"   cutout {cuthandle}: {cuttitle}");
+                                Screen cutScreen = Screen.FromHandle(cutHandle);
+                                // Make sure both are on the same screen
+                                if (destScreen.DeviceName == cutScreen.DeviceName)
+                                {
+                                    Console.WriteLine($"   cutout: {cutTitle}");
 
-                                GetWindowRect(cuthandle, out RECT PWR);
-                                HRGN Excl = CreateRectRgn(PWR.Left - VPWR.Left, PWR.Top - VPWR.Top, PWR.Right - VPWR.Left, PWR.Bottom - VPWR.Top);
-                                CombineRgn(FRegion, FRegion, Excl, RGN_DIFF);
-                                DeleteObject(Excl);
+                                    GetWindowRect(cutHandle, out RECT cutRect);
+                                    HRGN cutRegion = CreateRectRgn(UseFactor(cutRect.Left - destRect.Left, destFactor), UseFactor(cutRect.Top - destRect.Top, destFactor), UseFactor(cutRect.Right - destRect.Left, destFactor), UseFactor(cutRect.Bottom - destRect.Top, destFactor) );
+                                    CombineRgn(destRegion, destRegion, cutRegion, RGN_DIFF);
+                                    DeleteObject(cutRegion);
+                                }
                             }
-
                         }
-                        SetWindowRgn(handle, FRegion, true);
-                        DeleteObject(FRegion);
+                        SetWindowRgn(destHandle, destRegion, true);
+                        DeleteObject(destRegion);
                     }
                 }
             }
@@ -233,5 +245,59 @@ namespace B2SWindowPunch
         [DllImport("USER32.DLL")]
         private static extern IntPtr GetShellWindow();
 
+        private const int DESKTOPHORZRES = 118;
+        private const int DESKTOPVERTRES = 117;
+
+        [DllImport("gdi32.dll")]
+        private static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+
+        [DllImport("gdi32.dll")]
+        private static extern IntPtr CreateDCA(string lpszDriver, string lpszDevice, string lpszOutput, IntPtr lpInitData);
+
+        [DllImport("gdi32.dll")]
+        private static extern bool DeleteDC(IntPtr hdc);
+
+        public string ShortDevice(string device)
+        {
+            return device.Replace("\\", "").Replace(".\\", "");
+        }
+
+        private static string SafeReadRegistry(string keyname, string valuename, string defaultvalue)
+        {
+            try
+            {
+                return (string)Registry.CurrentUser.OpenSubKey(keyname)?.GetValue(valuename, defaultvalue) ?? defaultvalue;
+            }
+            catch (Exception)
+            {
+                return defaultvalue;
+            }
+        }
+
+        private static Size TrueResolution(IntPtr hwnd)
+        {
+            using (Graphics g = Graphics.FromHwnd(hwnd))
+            {
+                IntPtr hdc = g.GetHdc();
+                Size TrueScreenSize = new Size(GetDeviceCaps(hdc, DESKTOPHORZRES), GetDeviceCaps(hdc, DESKTOPVERTRES));
+                g.ReleaseHdc(hdc);
+
+                return TrueScreenSize;
+            }
+        }
+
+        private static Size TrueResolution(string deviceName)
+        {
+            IntPtr screen = CreateDCA(deviceName, null, null, IntPtr.Zero);
+            Size TrueScreenSize = new Size(GetDeviceCaps(screen, DESKTOPHORZRES), GetDeviceCaps(screen, DESKTOPVERTRES));
+            DeleteDC(screen);
+
+            return TrueScreenSize;
+        }
+        private static int UseFactor(int value, Single factor)
+        {
+            return (int)(value * factor);
+        }
     }
+
 }

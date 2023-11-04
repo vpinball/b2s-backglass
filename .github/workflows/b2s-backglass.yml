@@ -8,7 +8,7 @@ defaults:
 
 jobs:
   build-server:
-    name: Build B2SBackglassServer-${{ matrix.config }}-win-${{ matrix.platform }}
+    name: Build B2SServer-${{ matrix.config }}-win-${{ matrix.platform }}
     runs-on: windows-2019
     strategy:
       fail-fast: false
@@ -79,7 +79,9 @@ jobs:
         run: |
           mkdir tmp  
           cp b2s_screenresidentifier/b2s_screenresidentifier/bin/${{ matrix.platform }}/${{ matrix.config }}/B2S_ScreenResIdentifier.exe tmp
+          cp b2s_screenresidentifier/b2s_screenresidentifier/bin/${{ matrix.platform }}/${{ matrix.config }}/B2S_ScreenResIdentifier.exe.config tmp
           cp b2sbackglassserverexe/b2sbackglassserverexe/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SBackglassServerEXE.exe tmp
+          cp b2sbackglassserverexe/b2sbackglassserverexe/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SBackglassServerEXE.exe.config tmp
           cp b2sbackglassserverregisterapp/b2sbackglassserverregisterapp/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SBackglassServerRegisterApp.exe tmp
           cp b2sbackglassserver/b2sbackglassserver/bin/${{ matrix.config }}/B2SServerPluginInterface.dll tmp
           cp b2sbackglassserver/b2sbackglassserver/bin/${{ matrix.config }}/B2SBackglassServer.dll tmp
@@ -98,13 +100,14 @@ jobs:
           cp Plugins.txt tmp/Plugins64
           cp Changelog.txt tmp
           cp license.txt tmp
-          cp README.md tmp
+          cp README.md tmp/README.txt
           cp ScreenResTemplate.txt tmp
           cp -r ScreenResTemplates tmp
+          cp -r B2STools tmp
           cp b2sbackglassserverregisterapp/ScreenResTemplates.cmd tmp
       - uses: actions/upload-artifact@v3
         with:
-         name: B2SBackglassServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
+         name: B2SServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
          path: tmp
 
   build-designer:

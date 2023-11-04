@@ -37,6 +37,15 @@ Public Class formSettings
 
         formSettingsMore = New formSettingsMore(Me, formBackglass)
 
+        ' Set labels Bold/Italic
+        'Me.lblVersion.Font = New Font(Me.lblVersion.Font, FontStyle.Bold)
+        'Me.lblCopyright.Font = New Font(Me.lblCopyright.Font, FontStyle.Bold)
+
+        'Me.lblNonAvailableSettings.Font = New Font(Me.lblNonAvailableSettings.Font, FontStyle.Italic)
+        'Me.lblBackgound.Font = New Font(Me.lblBackgound.Font, FontStyle.Italic)
+        'Me.chkDisableFuzzyMatching.Font = New Font(Me.chkDisableFuzzyMatching.Font, FontStyle.Italic)
+        'Me.chkFormNoFocus.Font = New Font(Me.chkFormNoFocus.Font, FontStyle.Italic)
+
         ' load data
         Dim _isdirty As Boolean = isSettingsScreenDirty
         Me.Text = "Settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")"
@@ -497,4 +506,5 @@ Public Class formSettings
     Private Sub B2SLogo_Click(sender As Object, e As EventArgs) Handles B2SLogo.Click
         B2SLogoToolTip.SetToolTip(B2SLogo, B2SSettings.SettingFilePath & vbCrLf & B2SSettings.LoadedResFilePath) ' & vbCrLf & B2SSettings.PluginsFilePath)
     End Sub
+
 End Class
