@@ -420,18 +420,19 @@ Public Class B2SScreen
                 Me.formbackground.BackgroundImage = Image.FromFile(Me.BackgroundPath) ' ("C:\backglass.png")
             End If
             Me.formbackground.Show()
-            If B2SSettings.FormToBack Then
-                Me.formbackground.SendToBack()
-                Me.formbackground.ShowInTaskbar = False
-            ElseIf B2SSettings.FormToFront Then
-                Me.formbackground.BringToFront()
-                Me.formbackground.TopMost = True
-                If B2SSettings.FormNoFocus Then Me.formbackground.ShowInTaskbar = False
-            Else
-                Me.formbackground.BringToFront()
+            If Not B2SSettings.PureEXE Then
+                If B2SSettings.FormToBack Then
+                    Me.formbackground.SendToBack()
+                    Me.formbackground.ShowInTaskbar = False
+                ElseIf B2SSettings.FormToFront Then
+                    Me.formbackground.BringToFront()
+                    Me.formbackground.TopMost = True
+                    If B2SSettings.FormNoFocus Then Me.formbackground.ShowInTaskbar = False
+                Else
+                    Me.formbackground.BringToFront()
+                End If
             End If
         End If
-
         ' set forms to background image size
         If formBackglass IsNot Nothing AndAlso formBackglass.BackgroundImage IsNot Nothing Then
             formBackglass.Size = formBackglass.BackgroundImage.Size
@@ -483,17 +484,19 @@ Public Class B2SScreen
         formBackglass.Location = Me.BackglassScreen.Bounds.Location + Me.BackglassLocation
         formBackglass.Size = Me.BackglassSize
 
-        If B2SSettings.FormToFront Then
-            ' bring backglass screen to the front and force it to stay
-            formBackglass.TopMost = True
-            formBackglass.BringToFront()
-            If B2SSettings.FormNoFocus Then formBackglass.ShowInTaskbar = False
-        ElseIf B2SSettings.FormToBack Then
-            ' bring backglass screen to the back and force it to stay
-            formBackglass.SendToBack()
-            formBackglass.ShowInTaskbar = False
-        Else
-            formBackglass.BringToFront()
+        If Not B2SSettings.PureEXE Then
+            If B2SSettings.FormToFront Then
+                ' bring backglass screen to the front and force it to stay
+                formBackglass.TopMost = True
+                formBackglass.BringToFront()
+                If B2SSettings.FormNoFocus Then formBackglass.ShowInTaskbar = False
+            ElseIf B2SSettings.FormToBack Then
+                ' bring backglass screen to the back and force it to stay
+                formBackglass.SendToBack()
+                formBackglass.ShowInTaskbar = False
+            Else
+                formBackglass.BringToFront()
+            End If
         End If
 
         If StartBackground Then
