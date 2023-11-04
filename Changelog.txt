@@ -1,3 +1,8 @@
+2.1.0
+- There was a problem that certain rollover lights built using text all go on at the same time. 
+  Thanks to jejevpuniverse at VPU we have hopefully solved this issue this quick.
+- Small issue with B2SWindowPunch solved (B2SInit.bat had problems)
+
 B2S.Designer the B2S (Backglass 2nd Screen) Designer has moved to its own repository https://github.com/vpinball/b2s-designer
 
 2.0.3
