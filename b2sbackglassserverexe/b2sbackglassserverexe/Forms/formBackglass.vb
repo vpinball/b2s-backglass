@@ -1851,6 +1851,7 @@ Public Class formBackglass
                         Dim id As Integer = CInt(innerNode.Attributes("ID").InnerText)
                         Dim romid As Integer = 0
                         Dim romidtype As Integer = 0
+                        Dim b2sidtype As Integer = 0
                         Dim romidvalue As Integer = 0
                         Dim rominverted As Boolean = False
                         If innerNode.Attributes("B2SID") IsNot Nothing Then
@@ -1859,6 +1860,9 @@ Public Class formBackglass
                                 romidvalue = CInt(innerNode.Attributes("B2SValue").InnerText)
                             End If
                             romidtype = 1
+                            If innerNode.Attributes("B2SIDType") IsNot Nothing Then
+                                b2sidtype = CInt(innerNode.Attributes("B2SIDType").InnerText)
+                            End If
                         Else
                             romid = CInt(innerNode.Attributes("RomID").InnerText)
                             romidtype = CInt(innerNode.Attributes("RomIDType").InnerText)
@@ -1946,7 +1950,7 @@ Public Class formBackglass
                             End If
                             ' add info to rom collection
                             If romid > 0 AndAlso picboxtype = B2SPictureBox.ePictureBoxType.StandardImage AndAlso romidtype <> B2SBaseBox.eRomIDType.Mech Then
-                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & romidvalue.ToString()
+                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & If(b2sidtype = 1, romidvalue.ToString(), "")
                                 If picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = B2SData.eDualMode.Authentic Then
                                     If roms4Authentic.ContainsKey(key) Then roms4Authentic(key) += size.Width * size.Height Else roms4Authentic.Add(key, size.Width * size.Height)
                                 End If
