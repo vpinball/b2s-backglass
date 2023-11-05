@@ -18,10 +18,6 @@ jobs:
             config: Debug
           - platform: x86
             config: Release
-          - platform: x64
-            config: Debug
-          - platform: x64
-            config: Release
     steps:
       - uses: actions/checkout@v3
       - uses: actions/checkout@v3
@@ -57,7 +53,7 @@ jobs:
           VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
           TAG="${VERSION}-${SHA7}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
-      - uses: microsoft/setup-msbuild@v1.1
+      - uses: microsoft/setup-msbuild@v1.3
       - name: Build B2SServerPluginInterface
         run: |
           msbuild B2SServerPluginInterface/B2SServerPluginInterface.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
@@ -67,7 +63,7 @@ jobs:
           if [[ "${{ matrix.config }}" == "Debug" ]]; then
              cp B2SServerPluginInterface/B2SServerPluginInterface/bin/${{ matrix.config }}/B2SServerPluginInterface.pdb b2sbackglassserver/b2sbackglassserver/Plugin
           fi
-      - name: Build
+      - name: Build Server
         run: |
           msbuild b2s_screenresidentifier/B2S_ScreenResIdentifier.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
           msbuild b2sbackglassserverexe/B2SBackglassServerEXE.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
@@ -108,63 +104,6 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
          name: B2SServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
-         path: tmp
-
-  build-designer:
-    if: ${{ false }}  # disable for now
-    name: Build B2SBackglassDesigner-${{ matrix.config }}-win-${{ matrix.platform }}
-    runs-on: windows-2019
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: x86
-            config: Debug
-          - platform: x86
-            config: Release
-          - platform: x64
-            config: Debug
-          - platform: x64
-            config: Release
-    steps:
-      - uses: actions/checkout@v3
-      - id: version
-        name: Update AssemblyInformationalVersion
-        run: |
-          SHA7="${GITHUB_SHA::7}"
-          ASSEMBLY_INFO="B2SVPinMAMEStarter/AssemblyInfo.vb"
-          VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
-          TAG="${VERSION}-${SHA7}"
-          perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
-          ASSEMBLY_INFO="b2sbackglassdesigner/b2sbackglassdesigner/My Project/AssemblyInfo.vb"
-          VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
-          TAG="${VERSION}-${SHA7}"
-          perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
-          echo "tag=${TAG}" >> $GITHUB_OUTPUT
-      - uses: microsoft/setup-msbuild@v1.1
-      - name: Build
-        run: |
-          msbuild B2SVPinMAMEStarter/B2SVPinMAMEStarter.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
-          msbuild b2sbackglassdesigner/B2SBackglassDesigner.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
-        shell: cmd
-      - name: Help
-        run: |
-          choco install html-help-workshop
-          "/c/Program Files (x86)/HTML Help Workshop/hhc.exe" "b2sbackglassdesigner/b2sbackglassdesigner/htmlhelp/B2SBackglassDesigner.hhp" || true
-      - name: Bundle 
-        run: |
-          mkdir tmp  
-          cp B2SVPinMAMEStarter/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SVPinMAMEStarter.exe tmp
-          cp b2sbackglassdesigner/b2sbackglassdesigner/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SBackglassDesigner.exe tmp
-          if [[ "${{ matrix.config }}" == "Debug" ]]; then
-             cp B2SVPinMAMEStarter/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SVPinMAMEStarter.pdb tmp
-             cp b2sbackglassdesigner/b2sbackglassdesigner/bin/${{ matrix.platform }}/${{ matrix.config }}/B2SBackglassDesigner.pdb tmp
-          fi
-          cp b2sbackglassdesigner/b2sbackglassdesigner/htmlhelp/B2SBackglassDesigner.chm tmp
-          cp license.txt tmp
-      - uses: actions/upload-artifact@v3
-        with:
-         name: B2SBackglassDesigner-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
          path: tmp
 
   build-betterled:
