@@ -1946,7 +1946,7 @@ Public Class formBackglass
                             End If
                             ' add info to rom collection
                             If romid > 0 AndAlso picboxtype = B2SPictureBox.ePictureBoxType.StandardImage AndAlso romidtype <> B2SBaseBox.eRomIDType.Mech Then
-                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & romidvalue.ToString()
+                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & If(romidvalue > 0, romidvalue.ToString(), "")
                                 If picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = B2SData.eDualMode.Authentic Then
                                     If roms4Authentic.ContainsKey(key) Then roms4Authentic(key) += size.Width * size.Height Else roms4Authentic.Add(key, size.Width * size.Height)
                                 End If
