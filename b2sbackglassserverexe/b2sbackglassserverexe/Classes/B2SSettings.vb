@@ -2,6 +2,7 @@
 Imports System.IO
 Imports System.Reflection
 Imports System.Windows.Forms
+Imports System.Xml
 Imports Microsoft.Win32
 
 Public Class B2SSettings
@@ -162,6 +163,38 @@ Public Class B2SSettings
         End If
         Return filename
     End Function
+
+    Public Shared Sub LoadGlobalAndTableSettings(xmlNode As Xml.XmlNode)
+        If xmlNode.SelectSingleNode("DisableBuiltInEMReelSound") IsNot Nothing Then DisableBuiltInEMReelSound = (xmlNode.SelectSingleNode("DisableBuiltInEMReelSound").InnerText = "1")
+        If xmlNode.SelectSingleNode("HideGrill") IsNot Nothing Then HideGrill = CInt(xmlNode.SelectSingleNode("HideGrill").InnerText)
+        If xmlNode.SelectSingleNode("HideB2SDMD") IsNot Nothing Then HideB2SDMD = (xmlNode.SelectSingleNode("HideB2SDMD").InnerText = "1")
+        If xmlNode.SelectSingleNode("HideDMD") IsNot Nothing Then HideDMD = CInt(xmlNode.SelectSingleNode("HideDMD").InnerText)
+        If xmlNode.SelectSingleNode("LampsBlackTurns") IsNot Nothing Then LampsSkipFrames = CInt(xmlNode.SelectSingleNode("LampsBlackTurns").InnerText)
+        If xmlNode.SelectSingleNode("SolenoidsBlackTurns") IsNot Nothing Then SolenoidsSkipFrames = CInt(xmlNode.SelectSingleNode("SolenoidsBlackTurns").InnerText)
+        If xmlNode.SelectSingleNode("GIStringsBlackTurns") IsNot Nothing Then GIStringsSkipFrames = CInt(xmlNode.SelectSingleNode("GIStringsBlackTurns").InnerText)
+        If xmlNode.SelectSingleNode("LEDsBlackTurns") IsNot Nothing Then LEDsSkipFrames = CInt(xmlNode.SelectSingleNode("LEDsBlackTurns").InnerText)
+        If xmlNode.SelectSingleNode("LampsSkipFrames") IsNot Nothing Then LampsSkipFrames = CInt(xmlNode.SelectSingleNode("LampsSkipFrames").InnerText)
+        If xmlNode.SelectSingleNode("SolenoidsSkipFrames") IsNot Nothing Then SolenoidsSkipFrames = CInt(xmlNode.SelectSingleNode("SolenoidsSkipFrames").InnerText)
+        If xmlNode.SelectSingleNode("GIStringsSkipFrames") IsNot Nothing Then GIStringsSkipFrames = CInt(xmlNode.SelectSingleNode("GIStringsSkipFrames").InnerText)
+        If xmlNode.SelectSingleNode("LEDsSkipFrames") IsNot Nothing Then LEDsSkipFrames = CInt(xmlNode.SelectSingleNode("LEDsSkipFrames").InnerText)
+        If xmlNode.SelectSingleNode("UsedLEDType") IsNot Nothing Then UsedLEDType = CInt(xmlNode.SelectSingleNode("UsedLEDType").InnerText)
+        If xmlNode.SelectSingleNode("IsGlowBulbOn") IsNot Nothing Then IsGlowBulbOn = (xmlNode.SelectSingleNode("IsGlowBulbOn").InnerText = "1")
+        If xmlNode.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(xmlNode.SelectSingleNode("GlowIndex").InnerText)
+        If xmlNode.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (xmlNode.SelectSingleNode("StartAsEXE").InnerText = "1")
+
+        If Not PureEXE Then
+            If xmlNode.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (xmlNode.SelectSingleNode("FormToFront").InnerText = "1")
+            If xmlNode.SelectSingleNode("FormToBack") IsNot Nothing Then
+                FormToBack = (xmlNode.SelectSingleNode("FormToBack").InnerText = "1")
+                If FormToBack Then FormToFront = False
+                FormNoFocus = True
+            End If
+            If xmlNode.SelectSingleNode("FormNoFocus") IsNot Nothing Then
+                FormNoFocus = (xmlNode.SelectSingleNode("FormNoFocus").InnerText = "1")
+            End If
+        End If
+    End Sub
+
     Public Shared Sub Load(Optional ByVal resetLogs As Boolean = True)
         ClearAll()
 
@@ -186,7 +219,6 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
                 ' get overall settings
-                If nodeHeader.SelectSingleNode("DisableBuiltInEMReelSound") IsNot Nothing Then DisableBuiltInEMReelSound = (nodeHeader.SelectSingleNode("DisableBuiltInEMReelSound").InnerText = "1")
                 If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)
                 If nodeHeader.SelectSingleNode("LogPath") IsNot Nothing Then LogPath = nodeHeader.SelectSingleNode("LogPath").InnerText
                 If nodeHeader.SelectSingleNode("IsLampsStateLogOn") IsNot Nothing Then IsLampsStateLogOn = (nodeHeader.SelectSingleNode("IsLampsStateLogOn").InnerText = "1")
@@ -200,18 +232,8 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("StartBackground") IsNot Nothing Then
                     GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
                 End If
-                If Not PureEXE Then
-                    ' When not started as test from explorer
-                    If nodeHeader.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeHeader.SelectSingleNode("FormToFront").InnerText = "1")
-                    If nodeHeader.SelectSingleNode("FormToBack") IsNot Nothing Then
-                        FormToBack = (nodeHeader.SelectSingleNode("FormToBack").InnerText = "1")
-                        If FormToBack Then FormToFront = False
-                        FormNoFocus = True
-                    End If
-                    If nodeHeader.SelectSingleNode("FormNoFocus") IsNot Nothing Then
-                        FormNoFocus = (nodeHeader.SelectSingleNode("FormNoFocus").InnerText = "1")
-                    End If
-                End If
+                LoadGlobalAndTableSettings(nodeHeader)
+
                 If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
                     ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
                     ScreenshotFileType = CInt(nodeHeader.SelectSingleNode("ScreenshotFileType").InnerText)
@@ -236,35 +258,9 @@ Public Class B2SSettings
                     Dim nodeTable As Xml.XmlElement = nodeHeader.SelectSingleNode(If(Not String.IsNullOrEmpty(GameName), GameName, B2SName))
                     If nodeTable IsNot Nothing Then
                         _IsGameNameFound = True
-                        If nodeTable.SelectSingleNode("DisableBuiltInEMReelSound") IsNot Nothing Then DisableBuiltInEMReelSound = (nodeTable.SelectSingleNode("DisableBuiltInEMReelSound").InnerText = "1")
-                        If nodeTable.SelectSingleNode("HideGrill") IsNot Nothing Then HideGrill = CInt(nodeTable.SelectSingleNode("HideGrill").InnerText)
-                        If nodeTable.SelectSingleNode("HideB2SDMD") IsNot Nothing Then HideB2SDMD = (nodeTable.SelectSingleNode("HideB2SDMD").InnerText = "1")
-                        If nodeTable.SelectSingleNode("HideDMD") IsNot Nothing Then HideDMD = CInt(nodeTable.SelectSingleNode("HideDMD").InnerText)
-                        If nodeTable.SelectSingleNode("MatchingFileName") IsNot Nothing Then MatchingFileName = nodeTable.SelectSingleNode("MatchingFileName").InnerText
-                        If nodeTable.SelectSingleNode("LampsBlackTurns") IsNot Nothing Then LampsSkipFrames = CInt(nodeTable.SelectSingleNode("LampsBlackTurns").InnerText)
-                        If nodeTable.SelectSingleNode("SolenoidsBlackTurns") IsNot Nothing Then SolenoidsSkipFrames = CInt(nodeTable.SelectSingleNode("SolenoidsBlackTurns").InnerText)
-                        If nodeTable.SelectSingleNode("GIStringsBlackTurns") IsNot Nothing Then GIStringsSkipFrames = CInt(nodeTable.SelectSingleNode("GIStringsBlackTurns").InnerText)
-                        If nodeTable.SelectSingleNode("LEDsBlackTurns") IsNot Nothing Then LEDsSkipFrames = CInt(nodeTable.SelectSingleNode("LEDsBlackTurns").InnerText)
-                        If nodeTable.SelectSingleNode("LampsSkipFrames") IsNot Nothing Then LampsSkipFrames = CInt(nodeTable.SelectSingleNode("LampsSkipFrames").InnerText)
-                        If nodeTable.SelectSingleNode("SolenoidsSkipFrames") IsNot Nothing Then SolenoidsSkipFrames = CInt(nodeTable.SelectSingleNode("SolenoidsSkipFrames").InnerText)
-                        If nodeTable.SelectSingleNode("GIStringsSkipFrames") IsNot Nothing Then GIStringsSkipFrames = CInt(nodeTable.SelectSingleNode("GIStringsSkipFrames").InnerText)
-                        If nodeTable.SelectSingleNode("LEDsSkipFrames") IsNot Nothing Then LEDsSkipFrames = CInt(nodeTable.SelectSingleNode("LEDsSkipFrames").InnerText)
-                        If nodeTable.SelectSingleNode("UsedLEDType") IsNot Nothing Then UsedLEDType = CInt(nodeTable.SelectSingleNode("UsedLEDType").InnerText)
-                        If nodeTable.SelectSingleNode("IsGlowBulbOn") IsNot Nothing Then IsGlowBulbOn = (nodeTable.SelectSingleNode("IsGlowBulbOn").InnerText = "1")
-                        If nodeTable.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(nodeTable.SelectSingleNode("GlowIndex").InnerText)
-                        If nodeTable.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (nodeTable.SelectSingleNode("StartAsEXE").InnerText = "1")
-                        If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
+                        LoadGlobalAndTableSettings(nodeTable)
                         If nodeTable.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (nodeTable.SelectSingleNode("StartBackground").InnerText = "1")
-                        If Not PureEXE Then
-                            If nodeTable.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeTable.SelectSingleNode("FormToFront").InnerText = "1")
-                            If nodeTable.SelectSingleNode("FormToBack") IsNot Nothing Then
-                                FormToBack = (nodeTable.SelectSingleNode("FormToBack").InnerText = "1")
-                                If FormToBack Then FormToFront = False
-                                FormNoFocus = True
-                            End If
-
-                            If nodeTable.SelectSingleNode("FormNoFocus") IsNot Nothing Then FormNoFocus = (nodeTable.SelectSingleNode("FormNoFocus").InnerText = "1")
-                        End If
+                        If nodeTable.SelectSingleNode("MatchingFileName") IsNot Nothing Then MatchingFileName = nodeTable.SelectSingleNode("MatchingFileName").InnerText
 
                         Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
                         If nodeAnimations IsNot Nothing Then
