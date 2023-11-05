@@ -14,9 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: AnyCPU
+          - platform: x86
             config: Debug
-          - platform: AnyCPU
+          - platform: x86
             config: Release
     steps:
       - uses: actions/checkout@v3
@@ -54,6 +54,8 @@ jobs:
           TAG="${VERSION}-${SHA7}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
       - uses: microsoft/setup-msbuild@v1.1
+        with:
+           vs-version: '[17.7,)'
       - name: Build B2SServerPluginInterface
         run: |
           msbuild B2SServerPluginInterface/B2SServerPluginInterface.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
