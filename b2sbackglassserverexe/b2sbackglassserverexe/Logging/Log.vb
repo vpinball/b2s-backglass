@@ -7,7 +7,7 @@ Public Class Log
     Private filename As String = String.Empty
 
     Public Sub New(ByVal _filename As String)
-        filename = _filename & ".txt"
+        filename = _filename & ".log"
     End Sub
 
     Public Property IsLogOn() As Boolean

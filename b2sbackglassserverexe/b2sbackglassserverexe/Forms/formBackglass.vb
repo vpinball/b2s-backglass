@@ -665,7 +665,7 @@ Public Class formBackglass
         Dim b2sSetsData As String = String.Empty
 
         If B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps Then
-            b2sSetsData = regkey.GetValue("B2SSetData", New String(Chr(0), 401))
+            b2sSetsData = regkey.GetValue("B2SSetData", New String(Chr(0), 251))
             'If B2SSettings.IsROMControlled AndAlso b2sSetsData.Contains("2") Then
             '    regkey.SetValue("B2SSetData", b2sSetsData.Replace("2", "0"))
             'End If
@@ -773,6 +773,7 @@ Public Class formBackglass
         Dim topVisible As Boolean = currentTopVisible
 
         If B2SData.UseRomLamps AndAlso TopRomIDType = B2SBaseBox.eRomIDType.Lamp Then
+            B2SScreen.debugLog.WriteLogEntry("GetB2SSetsTopVisible b2sSetsData.Length:" & b2sSetsData.Length & " b2ssetid: " & TopRomID)
             Dim b2ssetid As Integer = TopRomID
             Dim currentvalue As Integer = Asc(b2sSetsData.Substring(b2ssetid, 1))
             If b2sSets(b2ssetid) <> currentvalue Then
@@ -1946,7 +1947,7 @@ Public Class formBackglass
                             End If
                             ' add info to rom collection
                             If romid > 0 AndAlso picboxtype = B2SPictureBox.ePictureBoxType.StandardImage AndAlso romidtype <> B2SBaseBox.eRomIDType.Mech Then
-                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & romidvalue.ToString()
+                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & If(romidvalue > 0, romidvalue.ToString(), "")
                                 If picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = B2SData.eDualMode.Authentic Then
                                     If roms4Authentic.ContainsKey(key) Then roms4Authentic(key) += size.Width * size.Height Else roms4Authentic.Add(key, size.Width * size.Height)
                                 End If
