@@ -54,8 +54,6 @@ jobs:
           TAG="${VERSION}-${SHA7}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
       - uses: microsoft/setup-msbuild@v1.3
-        with:
-           vs-version: '[17.7,)'
       - name: Build B2SServerPluginInterface
         run: |
           msbuild B2SServerPluginInterface/B2SServerPluginInterface.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
