@@ -142,7 +142,7 @@ Public Class PluginHost
     ''' <summary>
     ''' Initializes a new instance of the <see cref="PluginHost"/> class.
     ''' </summary>
-    ''' <param name="LoadPlugins">if set to <c>true</c> the plugins are loaded after the class is instanciated.</param>
+    ''' <param name="LoadPlugins">if set to <c>true</c> the plugins are loaded after the class is instantiated.</param>
     Public Sub New(Optional LoadPlugins As Boolean = False)
         Plugins = New PluginList(LoadPlugins)
     End Sub

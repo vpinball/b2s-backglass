@@ -103,7 +103,7 @@ Public Class formBackglass
             B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
             B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)
         End Using
-        
+
         ' Westworld 2016-18-11 - TableFileName is empty in some cases when launched via PinballX, we use GameName as alternativ
         If String.IsNullOrEmpty(B2SData.TableFileName) Then
             B2SData.TableFileName = B2SSettings.GameName
@@ -703,7 +703,7 @@ Public Class formBackglass
         Dim rotationsdata As String = String.Empty
 
         rotationsdata = regkey.GetValue("B2SRotations", String.Empty)
-        
+
         Return rotationsdata
 
     End Function
@@ -1787,8 +1787,8 @@ Public Class formBackglass
             ' current backglass version is not allowed to be larger than server version and to be smaller minimum B2S version
             If B2SSettings.BackglassFileVersion > B2SSettings.DirectB2SVersion Then
 
-                Throw New Exception("B2S backglass server version (" & B2SSettings.DirectB2SVersion & ") doesn't match 'directb2s' file version (" & B2SSettings.BackglassFileVersion & "). " & vbCrLf & vbCrLf &
-                                    "Please update the B2S backglass server.")
+                Throw New Exception("B2S.Server version (" & B2SSettings.DirectB2SVersion & ") doesn't match 'directb2s' file version (" & B2SSettings.BackglassFileVersion & "). " & vbCrLf & vbCrLf &
+                                    "Please update the B2S.Server.")
 
             ElseIf B2SSettings.BackglassFileVersion < B2SSettings.MinimumDirectB2SVersion Then
 
@@ -1946,7 +1946,7 @@ Public Class formBackglass
                             End If
                             ' add info to rom collection
                             If romid > 0 AndAlso picboxtype = B2SPictureBox.ePictureBoxType.StandardImage AndAlso romidtype <> B2SBaseBox.eRomIDType.Mech Then
-                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & If(romidvalue > 0, romidvalue.ToString(), "")
+                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & "|" & romidvalue.ToString()
                                 If picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = B2SData.eDualMode.Authentic Then
                                     If roms4Authentic.ContainsKey(key) Then roms4Authentic(key) += size.Width * size.Height Else roms4Authentic.Add(key, size.Width * size.Height)
                                 End If
@@ -2523,13 +2523,13 @@ Public Class formBackglass
                     For Each romsize As KeyValuePair(Of String, Integer) In roms4Authentic
                         If romsize.Value > second4Authentic Then
                             second4Authentic = romsize.Value
-                            secondkey4Authentic = romsize.Key
+                            secondkey4Authentic = romsize.Key.Split("|")(0)
                         End If
                         If romsize.Value > top4Authentic Then
                             second4Authentic = top4Authentic
                             secondkey4Authentic = topkey4Authentic
                             top4Authentic = romsize.Value
-                            topkey4Authentic = romsize.Key
+                            topkey4Authentic = romsize.Key.Split("|")(0)
                         End If
                     Next
                     Dim top4Fantasy As Integer = 0
@@ -2540,13 +2540,13 @@ Public Class formBackglass
                         For Each romsize As KeyValuePair(Of String, Integer) In roms4Fantasy
                             If romsize.Value > second4Fantasy Then
                                 second4Fantasy = romsize.Value
-                                secondkey4Fantasy = romsize.Key
+                                secondkey4Fantasy = romsize.Key.Split("|")(0)
                             End If
                             If romsize.Value > top4Fantasy Then
                                 second4Fantasy = top4Fantasy
                                 secondkey4Fantasy = topkey4Fantasy
                                 top4Fantasy = romsize.Value
-                                topkey4Fantasy = romsize.Key
+                                topkey4Fantasy = romsize.Key.Split("|")(0)
                             End If
                         Next
                     End If
