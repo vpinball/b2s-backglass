@@ -1,12 +1,12 @@
 2.1.0
-- There was a problem that certain rollover lights built using text all go on at the same time. 
-  Thanks to jejevpuniverse at VPU we have hopefully solved this issue this quick.
-- Small issue with B2SWindowPunch solved (B2SInit.bat had problems)
+- There was an issue with certain rollover lights all turning on at the same time. 
+  Thanks to jejevpuniverse, Hauntfreaks and Cliffy we solved solved this problem.
+- Small problem with B2SWindowPunch fixed (B2SInit.bat had problems)
 - b2s_screenresidentifier, b2sbackglassserverexe & B2SWindowPunch is now high DPI aware. It means it should be compatible with 
-  scaling factors other than 100%. The settings Forms might not be the must pretty, but it works!
-- B2STools\directb2sReelSoundsONOFF: A small cmd and xsl transformation routine to add/remove Sound tags in directb2s files.
+  scaling factors other than 100%. The settings forms may not be the most beautiful, but it works!
+- B2STools\directb2sReelSoundsONOFF: A small cmd and xsl transformation routine to add/remove sound tags in directb2s files.
   The directb2s files can be dropped on the cmd file and it will create a copy of the file with the change applied.
-  When the empty Sound3-6 attributes are available, the reel sound is deactivated.
+  If the empty Sound3-6 attributes are present, the reel sound will be disabled.
 - Make DisableFuzzyMatching default true (was already, but not everywhere)
 
 B2S.Designer the B2S (Backglass 2nd Screen) Designer has moved to its own repository https://github.com/vpinball/b2s-designer
