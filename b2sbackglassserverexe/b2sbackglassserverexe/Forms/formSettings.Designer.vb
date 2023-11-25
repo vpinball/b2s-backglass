@@ -289,6 +289,7 @@ Partial Class formSettings
         'chkDisableFuzzyMatching
         '
         Me.chkDisableFuzzyMatching.AutoSize = True
+        Me.chkDisableFuzzyMatching.Enabled = False
         Me.chkDisableFuzzyMatching.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(327, 23)
         Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
@@ -309,6 +310,7 @@ Partial Class formSettings
         'chkStartAsEXE
         '
         Me.chkStartAsEXE.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkStartAsEXE.Enabled = False
         Me.chkStartAsEXE.Location = New System.Drawing.Point(6, 20)
         Me.chkStartAsEXE.Name = "chkStartAsEXE"
         Me.chkStartAsEXE.Size = New System.Drawing.Size(151, 21)
@@ -320,6 +322,7 @@ Partial Class formSettings
         'cmbDefaultStartMode
         '
         Me.cmbDefaultStartMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbDefaultStartMode.Enabled = False
         Me.cmbDefaultStartMode.FormattingEnabled = True
         Me.cmbDefaultStartMode.Items.AddRange(New Object() {"Standard", "In EXE"})
         Me.cmbDefaultStartMode.Location = New System.Drawing.Point(242, 20)
