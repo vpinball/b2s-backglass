@@ -1,13 +1,16 @@
 ﻿Imports Microsoft.Win32
 Imports System.IO
+Imports System.Security.Principal
 
 Public Class formBackglassServerRegApp
 
 
     Private Sub Form1_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
+        If Not IsAdmin() Then
+            MessageBox.Show("You have to start this app as Administrator!", My.Application.Info.AssemblyName, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+        End If
 
         Dim CommandSilent As Boolean = False
-
         If My.Application.CommandLineArgs.Count > 0 Then
             CommandSilent = InStr(My.Application.CommandLineArgs(0).ToString().ToLower(), "silent", CompareMethod.Text) > 0
         End If
@@ -168,7 +171,11 @@ Public Class formBackglassServerRegApp
         End
 
     End Sub
-
+    Private Function IsAdmin() As Boolean
+        Dim identity As WindowsIdentity = WindowsIdentity.GetCurrent()
+        Dim principal As New WindowsPrincipal(identity)
+        Return principal.IsInRole(WindowsBuiltInRole.Administrator)
+    End Function
     Private Function CheckB2SServer(ByVal showmessages As Boolean) As Boolean
 
         'Dim identity = WindowsIdentity.GetCurrent()
