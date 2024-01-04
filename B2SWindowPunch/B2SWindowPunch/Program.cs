@@ -104,7 +104,7 @@ namespace B2SWindowPunch
         private static void PrintUsage()
         {
             Console.WriteLine("B2SWindowPunch");
-            Console.WriteLine("©2023 Richard Ludwig (Jarr3) and the B2S Team\n");
+            Console.WriteLine("© 2023-2024 Richard Ludwig (Jarr3) and the B2S Team\n");
             Console.WriteLine("Usage: B2SWindowPunch \"Destination regex\" \"Cutter Regex\" \n");
             Console.WriteLine("Destination and Cutter window string has to be valid regular expressions.\n");
             Console.WriteLine("E.g. \n Cut holes in the \"B2S Backglass Server\" form using \"Virtual DMD\" and all \"PUPSCREEN\" forms as two regular expressions:");

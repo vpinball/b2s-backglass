@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Visual Pinball B2S Team")]
 [assembly: AssemblyProduct("B2SWindowPunch")]
-[assembly: AssemblyCopyright("Copyright © 2023")]
+[assembly: AssemblyCopyright("Copyright © 2023-2024")]
 [assembly: AssemblyTrademark("A B2S Team production")]
 [assembly: AssemblyCulture("")]
 
