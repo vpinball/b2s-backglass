@@ -7,10 +7,10 @@ Imports Microsoft.Win32
 
 Module B2SBackglassServerEXE
     Sub Main()
-        If IsAdmin() Then
-            MessageBox.Show("You should not start this as Administrator!", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Stop)
-            Exit Sub
-        End If
+        'If IsAdmin() Then
+        '    MessageBox.Show("You should not start this as Administrator!", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+        '    Exit Sub
+        'End If
         Application.EnableVisualStyles()
         Application.SetCompatibleTextRenderingDefault(False)
         Application.Run(New formBackglass())
