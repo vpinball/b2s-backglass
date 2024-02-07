@@ -121,7 +121,7 @@ Partial Class formPlayfield
         '
         Me.buttonBringMeTheOtherWindows.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.buttonBringMeTheOtherWindows.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.buttonBringMeTheOtherWindows.Location = New System.Drawing.Point(897, 5)
+        Me.buttonBringMeTheOtherWindows.Location = New System.Drawing.Point(1105, 5)
         Me.buttonBringMeTheOtherWindows.Name = "buttonBringMeTheOtherWindows"
         Me.buttonBringMeTheOtherWindows.Size = New System.Drawing.Size(188, 43)
         Me.buttonBringMeTheOtherWindows.TabIndex = 4
@@ -404,7 +404,7 @@ Partial Class formPlayfield
         Me.panelChooseSetup.Dock = System.Windows.Forms.DockStyle.Top
         Me.panelChooseSetup.Location = New System.Drawing.Point(15, 159)
         Me.panelChooseSetup.Name = "panelChooseSetup"
-        Me.panelChooseSetup.Size = New System.Drawing.Size(1088, 61)
+        Me.panelChooseSetup.Size = New System.Drawing.Size(1296, 61)
         Me.panelChooseSetup.TabIndex = 6
         '
         'lblChooseSetup
@@ -436,9 +436,9 @@ Partial Class formPlayfield
         Me.Panel2.Controls.Add(Me.lblCopyright)
         Me.Panel2.Controls.Add(Me.buttonBringMeTheOtherWindows)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(15, 483)
+        Me.Panel2.Location = New System.Drawing.Point(15, 554)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1088, 87)
+        Me.Panel2.Size = New System.Drawing.Size(1296, 119)
         Me.Panel2.TabIndex = 8
         '
         'chkSaveEnhanced
@@ -503,7 +503,7 @@ Partial Class formPlayfield
         '
         Me.lblCopyright.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblCopyright.Font = New System.Drawing.Font("Tahoma", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCopyright.Location = New System.Drawing.Point(661, 68)
+        Me.lblCopyright.Location = New System.Drawing.Point(869, 65)
         Me.lblCopyright.Name = "lblCopyright"
         Me.lblCopyright.Size = New System.Drawing.Size(424, 19)
         Me.lblCopyright.TabIndex = 5
@@ -515,7 +515,7 @@ Partial Class formPlayfield
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(1118, 585)
+        Me.ClientSize = New System.Drawing.Size(1326, 688)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.lblInfo2)
         Me.Controls.Add(Me.panelChooseSetup)
