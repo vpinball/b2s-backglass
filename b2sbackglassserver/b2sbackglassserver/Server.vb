@@ -3,7 +3,7 @@ Imports System.Text
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
 
-<ProgId("B2S.Server"), ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)> _
+<ProgId("B2S.Server"), ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)>
 Public Class Server
 
     Implements IDisposable
@@ -31,8 +31,8 @@ Public Class Server
     Private isChangedGIStringsCalled As Boolean = False
     Private isChangedLEDsCalled As Boolean = False
 
-    Private errorlog As Log = Nothing
-
+    Public Shared errorlog As Log = Nothing
+    'Public debugLog As Log = New Log("B2SDebugLog")
 
 #Region "COM GUIDs"
     ' GUIDs provide the COM identity for this class 
@@ -89,7 +89,7 @@ Public Class Server
 
     Public Sub New()
 
-        ' mabye create the base registry key
+        ' maybe create the base registry key
         If Registry.CurrentUser.OpenSubKey("Software\B2S") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S")
         If Registry.CurrentUser.OpenSubKey("Software\B2S\VPinMAME") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S\VPinMAME")
 
@@ -99,13 +99,16 @@ Public Class Server
             regkey.DeleteValue("B2SB2SName", False)
         End Using
 
-        ' prepare error log
-        errorlog = New Log("B2SServerErrorLog")
-        errorlog.LogPath = My.Application.Info.DirectoryPath
-        errorlog.IsLogOn = B2SSettings.B2SDebugLog
 
         ' maybe prepare plugins
         B2SSettings.Load(, True)
+        ' prepare error log
+        errorlog = New Log("B2SServerErrorLog") With {
+            .LogPath = My.Application.Info.DirectoryPath,
+            .IsLogOn = B2SSettings.B2SDebugLog
+        }
+
+        errorlog.IsLogOn = B2SSettings.B2SDebugLog
         If B2SSettings.ArePluginsOn Then
             B2SSettings.PluginHost = New PluginHost(True)
         End If
@@ -233,7 +236,7 @@ Public Class Server
                 tableReset = False
             End If
 
-            End If
+        End If
 
     End Sub
 
@@ -1044,8 +1047,8 @@ Public Class Server
 
                     Else
 
-                            ' illumination stuff
-                            If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 OrElse (datatypes And B2SCollectData.eCollectedDataType.SecondImage) <> 0 Then
+                        ' illumination stuff
+                        If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 OrElse (datatypes And B2SCollectData.eCollectedDataType.SecondImage) <> 0 Then
                             Dim topvisible As Boolean = lastTopVisible
                             Dim secondvisible As Boolean = lastSecondVisible
                             If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 Then
@@ -1672,7 +1675,7 @@ Public Class Server
                 MyB2SSetData(CInt(idORname), CInt(value))
             End If
         End If
-      
+
     End Sub
     ' pulse the set data
     Public Sub B2SPulseData(ByVal idORname As Object)
@@ -2745,7 +2748,7 @@ Public Class Server
 
         If Not B2SData.LaunchBackglass Then Return
 
-        ' remove a lot registry stuff for initialisation
+        ' remove a lot registry stuff for initialization
         Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
             regkey.SetValue("B2SGameName", B2SSettings.GameName)
             regkey.SetValue("B2SB2SName", B2SSettings.B2SName)
