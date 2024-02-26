@@ -3,6 +3,7 @@ Imports System.Drawing
 Imports System.Windows.Forms
 Imports System.IO
 Imports System.Reflection
+Imports System.Security.Principal
 
 Public Class formSettings
 
@@ -17,6 +18,11 @@ Public Class formSettings
 
     Private fadeIn As Boolean = True
     Private Const fadeStep As Single = 0.2
+    Private Function IsAdmin() As Boolean
+        Dim identity As WindowsIdentity = WindowsIdentity.GetCurrent()
+        Dim principal As New WindowsPrincipal(identity)
+        Return principal.IsInRole(WindowsBuiltInRole.Administrator)
+    End Function
 
     Private Class Animations4Settings
         Public Name As String = String.Empty
@@ -38,7 +44,7 @@ Public Class formSettings
 
         ' load data
         Dim _isdirty As Boolean = isSettingsScreenDirty
-        Me.Text = "Settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")"
+        Me.Text = "Settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")" & If(IsAdmin(), " (Administrator)", "")
 
         ' set version info
         lblCopyright.Text = String.Format(lblCopyright.Text, My.Application.Info.ProductName.ToString, My.Application.Info.Copyright.ToString)
