@@ -149,7 +149,7 @@ Public Class B2SSettings
         End Set
     End Property
     Public Shared Property LEDsOff() As Boolean = False
-    Public Shared Property StartAsEXE() As Boolean = True
+    Public Shared Property StartAsEXE() As Boolean = False
     Public Shared Property DefaultStartMode() As eDefaultStartMode = eDefaultStartMode.EXE
     Public Shared Property DisableFuzzyMatching() As Boolean = True
 
@@ -256,9 +256,9 @@ Public Class B2SSettings
                     If nodeHeader.SelectSingleNode("ArePluginsOn") IsNot Nothing Then ArePluginsOn = (nodeHeader.SelectSingleNode("ArePluginsOn").InnerText = "1")
                 Else
                     ' get default start mode
-                    'If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
-                    'If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
-                    'If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
+                    If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
+                    If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
+                    If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
                     'If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
                     ' get overall settings
@@ -322,7 +322,7 @@ Public Class B2SSettings
                             If nodeTable.SelectSingleNode("UsedLEDType") IsNot Nothing Then UsedLEDType = CInt(nodeTable.SelectSingleNode("UsedLEDType").InnerText)
                             If nodeTable.SelectSingleNode("IsGlowBulbOn") IsNot Nothing Then IsGlowBulbOn = (nodeTable.SelectSingleNode("IsGlowBulbOn").InnerText = "1")
                             If nodeTable.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(nodeTable.SelectSingleNode("GlowIndex").InnerText)
-                            'If nodeTable.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (nodeTable.SelectSingleNode("StartAsEXE").InnerText = "1")
+                            If nodeTable.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (nodeTable.SelectSingleNode("StartAsEXE").InnerText = "1")
                             If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
                             If nodeTable.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (nodeTable.SelectSingleNode("StartBackground").InnerText = "1")
                             If nodeTable.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (nodeTable.SelectSingleNode("FormToFront").InnerText = "1")
@@ -455,7 +455,7 @@ Public Class B2SSettings
         SolenoidsOff = False
         GIStringsOff = False
         LEDsOff = False
-        StartAsEXE = True
+        StartAsEXE = False
         LampsSkipFrames = 0
         SolenoidsSkipFrames = 0
         GIStringsSkipFrames = 0

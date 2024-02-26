@@ -9,7 +9,6 @@ Imports B2SServerPluginInterface
 Public Class PluginList
     Inherits BindingList(Of Plugin)
 
-
     Sub PluginInit(TableName As String, RomName As String)
         For Each P As Plugin In Me
             P.PluginInit(TableName, RomName)
@@ -112,17 +111,17 @@ Public Class PluginList
     ''' <summary>
     ''' Loads the plugins in the specified directory.
     ''' </summary>
-    ''' <param name="Directory">The directory containg the plugins.</param>
+    ''' <param name="Directory">The directory containing the plugins.</param>
     Private Sub LoadDirectoryPlugins(Directory As DirectoryInfo)
 
         ImportedPlugins = New List(Of IDirectPlugin)
         Try
-            Dim Catalog As DirectoryCatalog = New DirectoryCatalog(Directory.FullName)
-            Dim Container As CompositionContainer = New CompositionContainer(Catalog)
+            Dim Catalog As New DirectoryCatalog(Directory.FullName)
+            Dim Container As New CompositionContainer(Catalog)
 
             Container.ComposeParts(Me)
         Catch ex As Exception
-
+            Server.errorlog.WriteLogEntry("LoadDirectoryPlugins: Failed loading plugin (" & Directory.FullName & ") Exception: " & ex.Message)
         End Try
         If Not ImportedPlugins Is Nothing Then
             Add(ImportedPlugins)
@@ -132,17 +131,18 @@ Public Class PluginList
 
     ''' <summary>
     ''' Loads the plugins from the plugins directory.<br/>
-    ''' The plugins directory must be a subdirectory of the directory containing the B2SServer dll. This directory can have any number of subdirectories containing plugins.<br/>
+    ''' The plugins directory must be a sub-directory of the directory containing the B2SServer dll. This directory can have any number of subdirectories containing plugins.<br/>
     ''' Plugins in directories having a name start with "-" are not loaded.<br/>
     ''' Plugins must be class libraries implementing the IDirectPlugin interface found in the B2SServerPluginInterface.dll and exporting this type for composition (see MEF docu for more info).
     ''' </summary>
     Sub LoadPlugins()
+        Server.errorlog.WriteLogEntry("PluginList.LoadPlugins")
 
-        Dim LoadedDirectories As List(Of String) = New List(Of String)
+        Dim LoadedDirectories As New List(Of String)
         'Clear the PluginList
         Me.Clear()
 
-        Dim AssemblyDirectory As DirectoryInfo = New DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+        Dim AssemblyDirectory As New DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
 
         Try
             'loop through all directories named plugin or plugins (case insensitive)
@@ -153,12 +153,13 @@ Public Class PluginList
             For Each PluginDirectory In AssemblyDirectory.GetDirectories()
 
                 If PluginDirectory.Name.ToLower = "plugin" + String64on64BitProcess OrElse PluginDirectory.Name.ToLower = "plugins" + String64on64BitProcess Then
-
+                    Server.errorlog.WriteLogEntry("PluginList.LoadPlugins Directory: " & PluginDirectory.Name)
                     'Loop through all subdirectory directories and load plugins
                     For Each PluginSubDirectory As DirectoryInfo In PluginDirectory.GetDirectories()
                         If Not PluginSubDirectory.Name.StartsWith("-") Then
                             'Skip if directory have already been loaded
                             If Not LoadedDirectories.Contains(PluginSubDirectory.FullName.ToLower()) Then
+                                Server.errorlog.WriteLogEntry("PluginList.LoadPlugins.LoadDirectory: " & PluginSubDirectory.Name)
                                 LoadDirectoryPlugins(PluginSubDirectory)
                                 LoadedDirectories.Add(PluginSubDirectory.FullName.ToLower())
                             End If
@@ -189,9 +190,10 @@ Public Class PluginList
                                 Shortcut = WScriptShell.CreateShortcut(LnkFile.FullName)
                                 If Directory.Exists(Shortcut.TargetPath) Then
                                     'It's a folder path
-                                    Dim LnkDirectory As DirectoryInfo = New DirectoryInfo(Shortcut.TargetPath)
+                                    Dim LnkDirectory As New DirectoryInfo(Shortcut.TargetPath)
                                     'Skip if directory has already been loaded
                                     If Not LoadedDirectories.Contains(LnkDirectory.FullName.ToLower()) Then
+                                        Server.errorlog.WriteLogEntry("PluginList.LoadPlugins.LoadShortcut: " & LnkDirectory.Name)
                                         LoadDirectoryPlugins(LnkDirectory)
                                         LoadedDirectories.Add(LnkDirectory.FullName.ToLower())
                                     End If
@@ -200,7 +202,7 @@ Public Class PluginList
                                     'Do nothing
                                 End If
                             Catch ex As Exception
-                                'Dont do anything if a error occurs
+                                Server.errorlog.WriteLogEntry("PluginList.LoadPlugins.LoadShortcut Exception: " & ex.Message)
                             End Try
 
                         End If
@@ -208,8 +210,9 @@ Public Class PluginList
                 End If
             Next
         Catch ex As Exception
-
+            Server.errorlog.WriteLogEntry("PluginList.LoadPlugins Exception: " & ex.Message)
         End Try
+        Server.errorlog.WriteLogEntry("PluginList.LoadPlugins END")
     End Sub
 
     Public Sub New(Optional LoadPlugins As Boolean = False)
