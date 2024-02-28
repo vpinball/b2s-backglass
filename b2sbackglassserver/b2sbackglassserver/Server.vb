@@ -1566,7 +1566,7 @@ Public Class Server
         End Get
         Set(ByVal value As Integer)
             VPinMAME.SolMask(number) = value
-            If number = 2 Then lamplighted = If(value = 2, 128, 0)
+            If number = 2 Then lamplighted = If(value = 2, 64, 0)
         End Set
     End Property
 
