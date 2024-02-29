@@ -1566,6 +1566,12 @@ Public Class Server
         End Get
         Set(ByVal value As Integer)
             VPinMAME.SolMask(number) = value
+
+            'There is a new setting for VPinMame.SolMask(2) to set the output mode:
+            ' 0 = default
+            ' 1 = modulated (PWM) solenoid (exist for some years already)
+            ' 2 = new PWM mode (all solenoids but also lamps, and value if physic meaning, not smoothed out binary state)
+            ' For this new mode, we now hardcode a value 64, if the lamp intensity exceed this value, it is binary 1
             If number = 2 Then lamplighted = If(value = 2, 64, 0)
         End Set
     End Property
