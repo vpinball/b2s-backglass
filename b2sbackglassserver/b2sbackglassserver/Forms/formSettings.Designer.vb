@@ -312,6 +312,7 @@ Partial Class formSettings
         'chkStartAsEXE
         '
         Me.chkStartAsEXE.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkStartAsEXE.Enabled = True
         Me.chkStartAsEXE.Location = New System.Drawing.Point(6, 20)
         Me.chkStartAsEXE.Name = "chkStartAsEXE"
         Me.chkStartAsEXE.Size = New System.Drawing.Size(151, 21)
@@ -323,6 +324,7 @@ Partial Class formSettings
         'cmbDefaultStartMode
         '
         Me.cmbDefaultStartMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbDefaultStartMode.Enabled = True
         Me.cmbDefaultStartMode.FormattingEnabled = True
         Me.cmbDefaultStartMode.Items.AddRange(New Object() {"Standard", "In EXE"})
         Me.cmbDefaultStartMode.Location = New System.Drawing.Point(242, 20)

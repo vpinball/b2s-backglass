@@ -251,26 +251,6 @@ Public Class formSettings
                 End If
             End Using
         End If
-        'If MessageBox.Show("To locate 'Hyperpin' correctly please select the 'Hyperpin' folder.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.OK Then
-        '    Using fbd As FolderBrowserDialog = New FolderBrowserDialog
-        '        If fbd.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
-        '            If IO.File.Exists(IO.Path.Combine(fbd.SelectedPath, "hyperpin.exe")) Then
-        '                If IO.File.Exists(IO.Path.Combine(fbd.SelectedPath, "Databases", "Visual Pinball", "Visual Pinball.xml")) Then
-        '                    B2SSettings.HyperpinXMLFile = IO.Path.Combine(fbd.SelectedPath, "Databases", "Visual Pinball", "Visual Pinball.xml")
-        '                    B2SSettings.Save(, , True)
-        '                    MessageBox.Show("'Hyperpin' could be located correctly.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '                Else
-        '                    MessageBox.Show("'Visual Pinball.xml' could not be found in folder '" & IO.Path.Combine(fbd.SelectedPath, "Databases", "Visual Pinball") & "'.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-        '                End If
-        '            Else
-        '                MessageBox.Show("'Hyperpin.exe' could not be found in folder '" & fbd.SelectedPath & "'.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-        '            End If
-        '        End If
-        '    End Using
-        'End If
-        'Else
-        'MessageBox.Show("'Hyperpin' could be found in '" & IO.Directory.GetParent(B2SSettings.HyperpinXMLFile).FullName & "'.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information)
-        'End If
     End Sub
     Private Sub cmbMatchingFileNames_SelectedIndexChanged(sender As Object, e As System.EventArgs) Handles cmbMatchingFileNames.SelectedIndexChanged
         isSettingsScreenDirty = True
@@ -499,10 +479,12 @@ Public Class formSettings
             pi.FileName = B2S_Identifier
 
             p.StartInfo = pi
+
             Me.Visible = False
             p.Start()
             p.WaitForExit()
             Me.Visible = True
+
         End If
     End Sub
 
@@ -517,7 +499,7 @@ Public Class formSettings
     End Sub
 
     Private Sub B2SLogo_Click(sender As Object, e As EventArgs) Handles B2SLogo.Click
-        B2SLogoToolTip.SetToolTip(B2SLogo, B2SSettings.SettingFilePath & vbCrLf & B2SSettings.LoadedResFilePath) ' & vbCrLf & B2SSettings.PluginsFilePath)
+        B2SLogoToolTip.SetToolTip(B2SLogo, "Settings: " & B2SSettings.SettingFilePath & vbCrLf & "ScreenRes: " & B2SSettings.LoadedResFilePath & vbCrLf & "PluginPath: " & B2SSettings.PluginsFilePath)
     End Sub
 
 End Class

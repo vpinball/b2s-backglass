@@ -19,11 +19,13 @@ Public Class Log
         End Set
     End Property
 
+    Public Property LogPath() As String = B2SSettings.LogPath
+
     Public Sub WriteLogEntry(ByVal text As String)
-        If writeLog AndAlso Not String.IsNullOrEmpty(B2SSettings.LogPath) Then
+        If writeLog AndAlso Not String.IsNullOrEmpty(LogPath) Then
             ' write to log file
             On Error Resume Next
-            Dim log As IO.StreamWriter = New IO.StreamWriter(IO.Path.Combine(B2SSettings.LogPath, filename), True)
+            Dim log As IO.StreamWriter = New IO.StreamWriter(IO.Path.Combine(LogPath, filename), True)
             log.WriteLine(text)
             log.Flush()
             log.Close()

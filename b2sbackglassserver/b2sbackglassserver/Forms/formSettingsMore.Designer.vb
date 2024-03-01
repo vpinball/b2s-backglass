@@ -38,11 +38,11 @@ Partial Class formSettingsMore
         Me.chkLEDsOff = New System.Windows.Forms.CheckBox()
         Me.btnCloseSettings = New System.Windows.Forms.Button()
         Me.GroupRegistrySettings = New System.Windows.Forms.GroupBox()
+        Me.ChkB2SDebugLog = New System.Windows.Forms.CheckBox()
         Me.ChkB2STableSettingsExtendedPath = New System.Windows.Forms.CheckBox()
         Me.lblB2SScreenResFileNameOverride = New System.Windows.Forms.Label()
         Me.TxtB2SScreenResFileNameOverride = New System.Windows.Forms.TextBox()
         Me.ChkB2SWindowPunchActive = New System.Windows.Forms.CheckBox()
-        Me.ChkB2SDebugLog = New System.Windows.Forms.CheckBox()
         Me.grpLogging.SuspendLayout()
         Me.grpPerfTests.SuspendLayout()
         Me.GroupRegistrySettings.SuspendLayout()
@@ -58,7 +58,7 @@ Partial Class formSettingsMore
         Me.grpLogging.Controls.Add(Me.chkLogLamps)
         Me.grpLogging.Location = New System.Drawing.Point(8, 95)
         Me.grpLogging.Name = "grpLogging"
-        Me.grpLogging.Size = New System.Drawing.Size(474, 74)
+        Me.grpLogging.Size = New System.Drawing.Size(524, 84)
         Me.grpLogging.TabIndex = 10
         Me.grpLogging.TabStop = False
         Me.grpLogging.Text = "Logging"
@@ -66,9 +66,9 @@ Partial Class formSettingsMore
         'chkStatisticBackglass
         '
         Me.chkStatisticBackglass.AutoSize = True
-        Me.chkStatisticBackglass.Location = New System.Drawing.Point(240, 25)
+        Me.chkStatisticBackglass.Location = New System.Drawing.Point(217, 25)
         Me.chkStatisticBackglass.Name = "chkStatisticBackglass"
-        Me.chkStatisticBackglass.Size = New System.Drawing.Size(209, 17)
+        Me.chkStatisticBackglass.Size = New System.Drawing.Size(203, 17)
         Me.chkStatisticBackglass.TabIndex = 27
         Me.chkStatisticBackglass.Text = "Show statistics backglass after restart"
         Me.chkStatisticBackglass.UseVisualStyleBackColor = True
@@ -76,9 +76,9 @@ Partial Class formSettingsMore
         'chkLogLEDs
         '
         Me.chkLogLEDs.AutoSize = True
-        Me.chkLogLEDs.Location = New System.Drawing.Point(357, 50)
+        Me.chkLogLEDs.Location = New System.Drawing.Point(411, 54)
         Me.chkLogLEDs.Name = "chkLogLEDs"
-        Me.chkLogLEDs.Size = New System.Drawing.Size(69, 17)
+        Me.chkLogLEDs.Size = New System.Drawing.Size(73, 17)
         Me.chkLogLEDs.TabIndex = 31
         Me.chkLogLEDs.Text = "Log LEDs"
         Me.chkLogLEDs.UseVisualStyleBackColor = True
@@ -87,7 +87,7 @@ Partial Class formSettingsMore
         '
         Me.btnLogPath.Location = New System.Drawing.Point(8, 20)
         Me.btnLogPath.Name = "btnLogPath"
-        Me.btnLogPath.Size = New System.Drawing.Size(226, 24)
+        Me.btnLogPath.Size = New System.Drawing.Size(150, 24)
         Me.btnLogPath.TabIndex = 26
         Me.btnLogPath.Text = "Log path"
         Me.btnLogPath.UseVisualStyleBackColor = True
@@ -95,9 +95,9 @@ Partial Class formSettingsMore
         'chkLogSolenoids
         '
         Me.chkLogSolenoids.AutoSize = True
-        Me.chkLogSolenoids.Location = New System.Drawing.Point(124, 50)
+        Me.chkLogSolenoids.Location = New System.Drawing.Point(131, 54)
         Me.chkLogSolenoids.Name = "chkLogSolenoids"
-        Me.chkLogSolenoids.Size = New System.Drawing.Size(90, 17)
+        Me.chkLogSolenoids.Size = New System.Drawing.Size(91, 17)
         Me.chkLogSolenoids.TabIndex = 29
         Me.chkLogSolenoids.Text = "Log solenoids"
         Me.chkLogSolenoids.UseVisualStyleBackColor = True
@@ -105,9 +105,9 @@ Partial Class formSettingsMore
         'chkLogGIStrings
         '
         Me.chkLogGIStrings.AutoSize = True
-        Me.chkLogGIStrings.Location = New System.Drawing.Point(240, 50)
+        Me.chkLogGIStrings.Location = New System.Drawing.Point(271, 54)
         Me.chkLogGIStrings.Name = "chkLogGIStrings"
-        Me.chkLogGIStrings.Size = New System.Drawing.Size(92, 17)
+        Me.chkLogGIStrings.Size = New System.Drawing.Size(91, 17)
         Me.chkLogGIStrings.TabIndex = 30
         Me.chkLogGIStrings.Text = "Log GI strings"
         Me.chkLogGIStrings.UseVisualStyleBackColor = True
@@ -115,9 +115,9 @@ Partial Class formSettingsMore
         'chkLogLamps
         '
         Me.chkLogLamps.AutoSize = True
-        Me.chkLogLamps.Location = New System.Drawing.Point(8, 50)
+        Me.chkLogLamps.Location = New System.Drawing.Point(8, 54)
         Me.chkLogLamps.Name = "chkLogLamps"
-        Me.chkLogLamps.Size = New System.Drawing.Size(73, 17)
+        Me.chkLogLamps.Size = New System.Drawing.Size(74, 17)
         Me.chkLogLamps.TabIndex = 28
         Me.chkLogLamps.Text = "Log lamps"
         Me.chkLogLamps.UseVisualStyleBackColor = True
@@ -132,7 +132,7 @@ Partial Class formSettingsMore
         Me.grpPerfTests.Controls.Add(Me.chkLEDsOff)
         Me.grpPerfTests.Location = New System.Drawing.Point(8, 7)
         Me.grpPerfTests.Name = "grpPerfTests"
-        Me.grpPerfTests.Size = New System.Drawing.Size(474, 85)
+        Me.grpPerfTests.Size = New System.Drawing.Size(524, 85)
         Me.grpPerfTests.TabIndex = 9
         Me.grpPerfTests.TabStop = False
         Me.grpPerfTests.Text = "Performance tests"
@@ -151,7 +151,7 @@ Partial Class formSettingsMore
         'chkAllOff
         '
         Me.chkAllOff.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkAllOff.Location = New System.Drawing.Point(305, 20)
+        Me.chkAllOff.Location = New System.Drawing.Point(353, 19)
         Me.chkAllOff.Name = "chkAllOff"
         Me.chkAllOff.Size = New System.Drawing.Size(163, 24)
         Me.chkAllOff.TabIndex = 21
@@ -173,7 +173,7 @@ Partial Class formSettingsMore
         'chkSolenoidsOff
         '
         Me.chkSolenoidsOff.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkSolenoidsOff.Location = New System.Drawing.Point(123, 50)
+        Me.chkSolenoidsOff.Location = New System.Drawing.Point(139, 50)
         Me.chkSolenoidsOff.Name = "chkSolenoidsOff"
         Me.chkSolenoidsOff.Size = New System.Drawing.Size(111, 24)
         Me.chkSolenoidsOff.TabIndex = 23
@@ -184,7 +184,7 @@ Partial Class formSettingsMore
         'chkGIStringsOff
         '
         Me.chkGIStringsOff.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkGIStringsOff.Location = New System.Drawing.Point(240, 50)
+        Me.chkGIStringsOff.Location = New System.Drawing.Point(272, 50)
         Me.chkGIStringsOff.Name = "chkGIStringsOff"
         Me.chkGIStringsOff.Size = New System.Drawing.Size(111, 24)
         Me.chkGIStringsOff.TabIndex = 24
@@ -195,7 +195,7 @@ Partial Class formSettingsMore
         'chkLEDsOff
         '
         Me.chkLEDsOff.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkLEDsOff.Location = New System.Drawing.Point(357, 50)
+        Me.chkLEDsOff.Location = New System.Drawing.Point(405, 50)
         Me.chkLEDsOff.Name = "chkLEDsOff"
         Me.chkLEDsOff.Size = New System.Drawing.Size(111, 24)
         Me.chkLEDsOff.TabIndex = 25
@@ -207,8 +207,7 @@ Partial Class formSettingsMore
         '
         Me.btnCloseSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCloseSettings.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCloseSettings.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCloseSettings.Location = New System.Drawing.Point(390, 261)
+        Me.btnCloseSettings.Location = New System.Drawing.Point(440, 299)
         Me.btnCloseSettings.Name = "btnCloseSettings"
         Me.btnCloseSettings.Size = New System.Drawing.Size(92, 24)
         Me.btnCloseSettings.TabIndex = 35
@@ -222,19 +221,29 @@ Partial Class formSettingsMore
         Me.GroupRegistrySettings.Controls.Add(Me.lblB2SScreenResFileNameOverride)
         Me.GroupRegistrySettings.Controls.Add(Me.TxtB2SScreenResFileNameOverride)
         Me.GroupRegistrySettings.Controls.Add(Me.ChkB2SWindowPunchActive)
-        Me.GroupRegistrySettings.Location = New System.Drawing.Point(8, 175)
+        Me.GroupRegistrySettings.Location = New System.Drawing.Point(8, 185)
         Me.GroupRegistrySettings.Name = "GroupRegistrySettings"
-        Me.GroupRegistrySettings.Size = New System.Drawing.Size(474, 79)
+        Me.GroupRegistrySettings.Size = New System.Drawing.Size(524, 110)
         Me.GroupRegistrySettings.TabIndex = 32
         Me.GroupRegistrySettings.TabStop = False
         Me.GroupRegistrySettings.Text = "Registry settings (HKCU\Software\B2S)"
         '
+        'ChkB2SDebugLog
+        '
+        Me.ChkB2SDebugLog.AutoSize = True
+        Me.ChkB2SDebugLog.Location = New System.Drawing.Point(392, 31)
+        Me.ChkB2SDebugLog.Name = "ChkB2SDebugLog"
+        Me.ChkB2SDebugLog.Size = New System.Drawing.Size(96, 17)
+        Me.ChkB2SDebugLog.TabIndex = 36
+        Me.ChkB2SDebugLog.Text = "B2SDebugLog"
+        Me.ChkB2SDebugLog.UseVisualStyleBackColor = True
+                '
         'ChkB2STableSettingsExtendedPath
         '
         Me.ChkB2STableSettingsExtendedPath.AutoSize = True
-        Me.ChkB2STableSettingsExtendedPath.Location = New System.Drawing.Point(165, 20)
+        Me.ChkB2STableSettingsExtendedPath.Location = New System.Drawing.Point(186, 31)
         Me.ChkB2STableSettingsExtendedPath.Name = "ChkB2STableSettingsExtendedPath"
-        Me.ChkB2STableSettingsExtendedPath.Size = New System.Drawing.Size(177, 17)
+        Me.ChkB2STableSettingsExtendedPath.Size = New System.Drawing.Size(178, 17)
         Me.ChkB2STableSettingsExtendedPath.TabIndex = 35
         Me.ChkB2STableSettingsExtendedPath.Text = "B2STableSettingsExtendedPath"
         Me.ChkB2STableSettingsExtendedPath.UseVisualStyleBackColor = True
@@ -242,17 +251,17 @@ Partial Class formSettingsMore
         'lblB2SScreenResFileNameOverride
         '
         Me.lblB2SScreenResFileNameOverride.AutoSize = True
-        Me.lblB2SScreenResFileNameOverride.Location = New System.Drawing.Point(8, 48)
+        Me.lblB2SScreenResFileNameOverride.Location = New System.Drawing.Point(8, 63)
         Me.lblB2SScreenResFileNameOverride.Name = "lblB2SScreenResFileNameOverride"
-        Me.lblB2SScreenResFileNameOverride.Size = New System.Drawing.Size(161, 13)
+        Me.lblB2SScreenResFileNameOverride.Size = New System.Drawing.Size(164, 13)
         Me.lblB2SScreenResFileNameOverride.TabIndex = 34
         Me.lblB2SScreenResFileNameOverride.Text = "B2SScreenResFileNameOverride"
         '
         'TxtB2SScreenResFileNameOverride
         '
-        Me.TxtB2SScreenResFileNameOverride.Location = New System.Drawing.Point(187, 45)
+        Me.TxtB2SScreenResFileNameOverride.Location = New System.Drawing.Point(187, 60)
         Me.TxtB2SScreenResFileNameOverride.Name = "TxtB2SScreenResFileNameOverride"
-        Me.TxtB2SScreenResFileNameOverride.Size = New System.Drawing.Size(230, 21)
+        Me.TxtB2SScreenResFileNameOverride.Size = New System.Drawing.Size(93, 20)
         Me.TxtB2SScreenResFileNameOverride.TabIndex = 33
         Me.TxtB2SScreenResFileNameOverride.TabStop = False
         Me.TxtB2SScreenResFileNameOverride.WordWrap = False
@@ -260,33 +269,22 @@ Partial Class formSettingsMore
         'ChkB2SWindowPunchActive
         '
         Me.ChkB2SWindowPunchActive.AutoSize = True
-        Me.ChkB2SWindowPunchActive.Location = New System.Drawing.Point(8, 20)
+        Me.ChkB2SWindowPunchActive.Location = New System.Drawing.Point(12, 31)
         Me.ChkB2SWindowPunchActive.Name = "ChkB2SWindowPunchActive"
-        Me.ChkB2SWindowPunchActive.Size = New System.Drawing.Size(141, 17)
+        Me.ChkB2SWindowPunchActive.Size = New System.Drawing.Size(146, 17)
         Me.ChkB2SWindowPunchActive.TabIndex = 32
         Me.ChkB2SWindowPunchActive.Text = "B2SWindowPunchActive"
         Me.ChkB2SWindowPunchActive.UseVisualStyleBackColor = True
         '
-        'ChkB2SDebugLog
-        '
-        Me.ChkB2SDebugLog.AutoSize = True
-        Me.ChkB2SDebugLog.Location = New System.Drawing.Point(357, 20)
-        Me.ChkB2SDebugLog.Name = "ChkB2SDebugLog"
-        Me.ChkB2SDebugLog.Size = New System.Drawing.Size(92, 17)
-        Me.ChkB2SDebugLog.TabIndex = 36
-        Me.ChkB2SDebugLog.Text = "B2SDebugLog"
-        Me.ChkB2SDebugLog.UseVisualStyleBackColor = True
-        '
         'formSettingsMore
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(489, 293)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.ClientSize = New System.Drawing.Size(539, 331)
         Me.Controls.Add(Me.GroupRegistrySettings)
         Me.Controls.Add(Me.btnCloseSettings)
         Me.Controls.Add(Me.grpLogging)
         Me.Controls.Add(Me.grpPerfTests)
-        Me.Font = New System.Drawing.Font("Tahoma", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.KeyPreview = True
         Me.MaximizeBox = False
