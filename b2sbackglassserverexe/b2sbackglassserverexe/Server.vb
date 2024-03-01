@@ -1,7 +1,7 @@
 ﻿Imports System
+Imports System.Text
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
-Imports System.Text
 
 <ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)> _
 Public Class Server

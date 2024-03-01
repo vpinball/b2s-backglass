@@ -443,6 +443,18 @@ Public Class B2SData
         End Get
     End Property
 
+    Private Shared _ScoreMaxDigit As Integer = 0
+    Public Shared Property ScoreMaxDigit() As Integer
+        Get
+            Return _ScoreMaxDigit
+        End Get
+        Set(value As Integer)
+            If _ScoreMaxDigit < value Then
+                _ScoreMaxDigit = value
+            End If
+        End Set
+    End Property
+
     Public Shared Property Players() As B2SPlayer = New B2SPlayer()
     Public Shared Property IsAPlayerAdded() As Boolean = False
 

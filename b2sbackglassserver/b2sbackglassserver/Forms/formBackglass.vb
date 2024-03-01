@@ -39,11 +39,10 @@ Public Class formBackglass
         InitializeComponent()
 
         ' set some styles
-        'Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint, True)
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.OptimizedDoubleBuffer, True)
         Me.DoubleBuffered = True
 
-        ' set key peview to allow some key reaction
+        ' set key preview to allow some key action
         Me.KeyPreview = True
 
         ' load settings
@@ -68,7 +67,7 @@ Public Class formBackglass
         startupTimer.Start()
 
         ' create rotation timer
-        rotateTimer = New Timer()
+        rotateTimer = New Timer
         If rotateTimerInterval > 0 Then
             rotateTimer.Interval = rotateTimerInterval
         End If
@@ -688,35 +687,44 @@ Public Class formBackglass
         Dim shorthyperpinfilename As String = String.Empty
 
         ' check whether the table name can be found
-        If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
-            If B2SSettings.LocateHyperpinXMLFile() Then
-                hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"
-                shorthyperpinfilename = B2SData.ShortFileName(hyperpinfilename)
+        If Not String.IsNullOrEmpty(B2SSettings.GameName) And Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+            'Westworld, check for gamename
+            If IO.File.Exists(B2SSettings.GameName & ".directb2s") Then
+                filename = B2SSettings.GameName & ".directb2s"
             End If
-            ' check whether the hyperpin description can be found
-            If Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
-                If filename.Length >= 8 Then
-                    ' look for short name
-                    B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6) & "*.directb2s")
-                    If B2SSettings.MatchingFileNames Is Nothing OrElse Not IsArray(B2SSettings.MatchingFileNames) OrElse B2SSettings.MatchingFileNames.Length <= 0 Then
-                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6).Replace(" ", "") & "*.directb2s")
-                    End If
-                    If B2SSettings.MatchingFileNames IsNot Nothing Then
-                        For i As Integer = 0 To B2SSettings.MatchingFileNames.Length - 1
-                            Dim fileinfo As IO.FileInfo = New IO.FileInfo(B2SSettings.MatchingFileNames(i))
-                            B2SSettings.MatchingFileNames(i) = fileinfo.Name
+        End If
+
+        If Not B2SSettings.DisableFuzzyMatching Then
+            If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+                If B2SSettings.LocateHyperpinXMLFile() Then
+                    hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"
+                    shorthyperpinfilename = B2SData.ShortFileName(hyperpinfilename)
+                End If
+                ' check whether the hyperpin description can be found
+                If Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
+                    If filename.Length >= 8 Then
+                        ' look for short name
+                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6) & "*.directb2s")
+                        If B2SSettings.MatchingFileNames Is Nothing OrElse Not IsArray(B2SSettings.MatchingFileNames) OrElse B2SSettings.MatchingFileNames.Length <= 0 Then
+                            B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6).Replace(" ", "") & "*.directb2s")
+                        End If
+                        If B2SSettings.MatchingFileNames IsNot Nothing Then
+                            For i As Integer = 0 To B2SSettings.MatchingFileNames.Length - 1
+                                Dim fileinfo As IO.FileInfo = New IO.FileInfo(B2SSettings.MatchingFileNames(i))
+                                B2SSettings.MatchingFileNames(i) = fileinfo.Name
+                            Next
+                        End If
+                        shortfilename = String.Empty
+                        For Each file As String In B2SSettings.MatchingFileNames
+                            If String.IsNullOrEmpty(shortfilename) Then
+                                shortfilename = file
+                            End If
+                            If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) AndAlso file.Equals(B2SSettings.MatchingFileName, StringComparison.CurrentCultureIgnoreCase) Then
+                                shortfilename = file
+                                Exit For
+                            End If
                         Next
                     End If
-                    shortfilename = String.Empty
-                    For Each file As String In B2SSettings.MatchingFileNames
-                        If String.IsNullOrEmpty(shortfilename) Then
-                            shortfilename = file
-                        End If
-                        If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) AndAlso file.Equals(B2SSettings.MatchingFileName, StringComparison.CurrentCultureIgnoreCase) Then
-                            shortfilename = file
-                            Exit For
-                        End If
-                    Next
                 End If
             End If
         End If
@@ -761,8 +769,8 @@ Public Class formBackglass
             ' current backglass version is not allowed to be larger than server version and to be smaller minimum B2S version
             If B2SSettings.BackglassFileVersion > B2SSettings.DirectB2SVersion Then
 
-                Throw New Exception("B2S backglass server version (" & B2SSettings.DirectB2SVersion & ") doesn't match 'directb2s' file version (" & B2SSettings.BackglassFileVersion & "). " & vbCrLf & vbCrLf &
-                                    "Please update the B2S backglass server.")
+                Throw New Exception("B2S.Server version (" & B2SSettings.DirectB2SVersion & ") doesn't match 'directb2s' file version (" & B2SSettings.BackglassFileVersion & "). " & vbCrLf & vbCrLf &
+                                    "Please update the B2S.Server.")
 
             ElseIf B2SSettings.BackglassFileVersion < B2SSettings.MinimumDirectB2SVersion Then
 
@@ -921,7 +929,7 @@ Public Class formBackglass
                             End If
                             ' add info to rom collection
                             If romid > 0 AndAlso picboxtype = B2SPictureBox.ePictureBoxType.StandardImage AndAlso romidtype <> B2SBaseBox.eRomIDType.Mech Then
-                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString()
+                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & "|" & romidvalue.ToString()
                                 If picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = B2SData.eDualMode.Authentic Then
                                     If roms4Authentic.ContainsKey(key) Then roms4Authentic(key) += size.Width * size.Height Else roms4Authentic.Add(key, size.Width * size.Height)
                                 End If
@@ -1141,7 +1149,9 @@ Public Class formBackglass
                             ' add digit location info
                             For i = 0 To digits - 1
                                 If isOnBackglass OrElse Not B2SSettings.HideB2SDMD Then
-                                    B2SData.LEDDisplayDigits.Add(If(dream7b2sstartdigit > 0, dream7b2sstartdigit, dream7index) - 1, New B2SData.LEDDisplayDigitLocation(led, i, id))
+                                    Dim leddisplayid As Integer = If(dream7b2sstartdigit > 0, dream7b2sstartdigit, dream7index)
+                                    B2SData.LEDDisplayDigits.Add(leddisplayid - 1, New B2SData.LEDDisplayDigitLocation(led, i, id))
+                                    B2SData.ScoreMaxDigit = leddisplayid
                                 End If
                                 dream7index += 1
                                 If dream7b2sstartdigit > 0 Then dream7b2sstartdigit += 1
@@ -1200,6 +1210,7 @@ Public Class formBackglass
                                         B2SData.LEDs.Add(led.Name, led)
                                     End If
                                 End If
+                                B2SData.ScoreMaxDigit = led.ID
                                 led.BringToFront()
                                 led.Visible = isRenderedLEDs AndAlso Not hidden
                                 ' add LED area
@@ -1247,6 +1258,7 @@ Public Class formBackglass
                                         B2SData.Reels.Add(reel)
                                     End If
                                 End If
+                                B2SData.ScoreMaxDigit = reel.ID
                                 reel.BringToFront()
                                 reel.Visible = Not hidden
                                 ' add or update reel display
@@ -1463,13 +1475,13 @@ Public Class formBackglass
                     For Each romsize As KeyValuePair(Of String, Integer) In roms4Authentic
                         If romsize.Value > second4Authentic Then
                             second4Authentic = romsize.Value
-                            secondkey4Authentic = romsize.Key
+                            secondkey4Authentic = romsize.Key.Split("|")(0)
                         End If
                         If romsize.Value > top4Authentic Then
                             second4Authentic = top4Authentic
                             secondkey4Authentic = topkey4Authentic
                             top4Authentic = romsize.Value
-                            topkey4Authentic = romsize.Key
+                            topkey4Authentic = romsize.Key.Split("|")(0)
                         End If
                     Next
                     Dim top4Fantasy As Integer = 0
@@ -1480,13 +1492,13 @@ Public Class formBackglass
                         For Each romsize As KeyValuePair(Of String, Integer) In roms4Fantasy
                             If romsize.Value > second4Fantasy Then
                                 second4Fantasy = romsize.Value
-                                secondkey4Fantasy = romsize.Key
+                                secondkey4Fantasy = romsize.Key.Split("|")(0)
                             End If
                             If romsize.Value > top4Fantasy Then
                                 second4Fantasy = top4Fantasy
                                 secondkey4Fantasy = topkey4Fantasy
                                 top4Fantasy = romsize.Value
-                                topkey4Fantasy = romsize.Key
+                                topkey4Fantasy = romsize.Key.Split("|")(0)
                             End If
                         Next
                     End If
@@ -1536,6 +1548,7 @@ Public Class formBackglass
                 End If
 
                 ' get all animation info
+                Dim animationpulseswitch As Boolean = False
                 If topnode.SelectSingleNode("Animations") IsNot Nothing AndAlso topnode.SelectNodes("Animations/Animation") IsNot Nothing Then
                     For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Animations/Animation")
                         Dim name As String = innerNode.Attributes("Name").InnerText
@@ -1596,6 +1609,7 @@ Public Class formBackglass
                             Dim pulseswitch As Integer = 0
                             If stepnode.Attributes("PulseSwitch") IsNot Nothing Then
                                 pulseswitch = CInt(stepnode.Attributes("PulseSwitch").InnerText)
+                                If pulseswitch > 0 Then animationpulseswitch = True
                             End If
                             Dim entry As B2SAnimation.PictureBoxAnimationEntry = New B2SAnimation.PictureBoxAnimationEntry([on], waitLoopsAfterOn, off, waitLoopsAfterOff, , , , , pulseswitch)
                             If entries Is Nothing Then
@@ -1672,11 +1686,6 @@ Public Class formBackglass
                         End If
                     Next
                 End If
-
-                ' set backglass to topmost window
-                Me.TopMost = True
-                Me.BringToFront()
-                Me.TopMost = False
 
                 End If
 
@@ -1813,24 +1822,28 @@ Public Class formBackglass
     End Sub
     Private Sub ShowStartupImages()
 
-        ' maybe show some 'startup on' images
-        Dim topIsOn As Boolean = False
-        For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
-            If picbox.Value.InitialState = 1 AndAlso Not picbox.Value.IsImageSnippit Then
-                If TopRomID > 0 AndAlso picbox.Value.RomID = TopRomID AndAlso picbox.Value.RomIDType = TopRomIDType AndAlso picbox.Value.RomInverted = TopRomInverted Then
-                    topIsOn = True
-                    If TopLightImage IsNot Nothing AndAlso Not TopLightImage.Equals(Me.BackgroundImage) Then
-                        Me.BackgroundImage = TopLightImage
+        Static isdone As Boolean = False
+        If Not isdone Then
+            isdone = True
+            ' maybe show some 'startup on' images
+            Dim topIsOn As Boolean = False
+            For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                If picbox.Value.InitialState = 1 AndAlso Not picbox.Value.IsImageSnippit Then
+                    If TopRomID > 0 AndAlso picbox.Value.RomID = TopRomID AndAlso picbox.Value.RomIDType = TopRomIDType AndAlso picbox.Value.RomInverted = TopRomInverted Then
+                        topIsOn = True
+                        If TopLightImage IsNot Nothing AndAlso Not TopLightImage.Equals(Me.BackgroundImage) Then
+                            Me.BackgroundImage = TopLightImage
+                        End If
+                    ElseIf Not topIsOn AndAlso SecondRomID > 0 AndAlso picbox.Value.RomID = SecondRomID AndAlso picbox.Value.RomIDType = SecondRomIDType AndAlso picbox.Value.RomInverted = SecondRomInverted Then
+                        If SecondLightImage IsNot Nothing AndAlso Not SecondLightImage.Equals(Me.BackgroundImage) Then
+                            Me.BackgroundImage = SecondLightImage
+                        End If
+                    Else
+                        picbox.Value.Visible = True
                     End If
-                ElseIf Not topIsOn AndAlso SecondRomID > 0 AndAlso picbox.Value.RomID = SecondRomID AndAlso picbox.Value.RomIDType = SecondRomIDType AndAlso picbox.Value.RomInverted = SecondRomInverted Then
-                    If SecondLightImage IsNot Nothing AndAlso Not SecondLightImage.Equals(Me.BackgroundImage) Then
-                        Me.BackgroundImage = SecondLightImage
-                    End If
-                Else
-                    picbox.Value.Visible = True
                 End If
-            End If
-        Next
+            Next
+        End If
 
     End Sub
 
@@ -1994,17 +2007,6 @@ Public Class formBackglass
     Public Property SecondRomID4Fantasy() As Integer = 0
     Public Property SecondRomIDType4Fantasy() As B2SBaseBox.eRomIDType = B2SBaseBox.eRomIDType.NotDefined
     Public Property SecondRomInverted4Fantasy() As Boolean = False
-
-#End Region
-
-
-#Region "event handling for the created backglass controls"
-
-    Private Sub Reels_ReelRollOver(ByVal sender As Object, ByVal e As B2SReelBox.ReelRollOverEventArgs)
-
-        ' nothing to do for the moment so I removed the AddHandler at the reels
-
-    End Sub
 
 #End Region
 

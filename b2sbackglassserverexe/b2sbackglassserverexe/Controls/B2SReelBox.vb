@@ -39,9 +39,11 @@ Public Class B2SReelBox
         MyBase.Dispose(disposing)
         On Error Resume Next
         If disposing Then
-            timer.Stop()
-            RemoveHandler timer.Tick, AddressOf ReelAnimationTimer_Tick
-            timer.Dispose()
+            If timer IsNot Nothing Then
+                timer.Stop()
+                RemoveHandler timer.Tick, AddressOf ReelAnimationTimer_Tick
+                timer.Dispose()
+            End If
             timer = Nothing
         End If
     End Sub
