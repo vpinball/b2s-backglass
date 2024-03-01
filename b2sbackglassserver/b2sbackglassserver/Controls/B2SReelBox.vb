@@ -89,6 +89,7 @@ Public Class B2SReelBox
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.DoubleBuffer, True)
         'Me.SetStyle(ControlStyles.SupportsTransparentBackColor, True)
         Me.DoubleBuffered = True
+        Me.BringToFront()
 
         ' back color
         'Me.BackColor = Color.Transparent

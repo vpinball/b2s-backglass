@@ -2279,6 +2279,7 @@ Public Class formBackglass
                                 reel.ScoreType = b2sscoretype
                                 reel.SoundName = soundName
                                 If rollinginterval >= 10 Then reel.RollingInterval = rollinginterval
+                                'AddHandler reel.ReelRollOver, AddressOf Reels_ReelRollOver ' no need to add this right now; maybe later
                                 If isOnBackglass Then
                                     reel.Type = B2SBaseBox.eType.OnBackglass
                                     Me.Controls.Add(reel)
@@ -2359,6 +2360,7 @@ Public Class formBackglass
                 If topnode.SelectSingleNode("Reels") IsNot Nothing Then
 
                     If topnode.SelectNodes("Reels/Image") IsNot Nothing AndAlso topnode.SelectNodes("Reels/Image").Count > 0 Then
+
                         For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Reels/Image")
                             Dim name As String = innerNode.Attributes("Name").InnerText
                             Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
@@ -2758,6 +2760,9 @@ Public Class formBackglass
                 'Me.TopMost = False
 
             End If
+
+                ' set info flags to dirty to load them
+                ' B2SData.IsInfoDirty = True
 
         End If
 

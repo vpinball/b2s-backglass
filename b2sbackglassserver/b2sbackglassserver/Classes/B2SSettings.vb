@@ -6,7 +6,7 @@ Imports Microsoft.Win32
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "2.1.3"
+    Public Const DirectB2SVersion As String = "2.1.2"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
@@ -149,7 +149,8 @@ Public Class B2SSettings
         End Set
     End Property
     Public Shared Property LEDsOff() As Boolean = False
-    Public Shared Property StartAsEXE() As Boolean = True
+    Public Shared Property StartAsEXE() As Boolean = False
+    Public Shared Property PureEXE() As Boolean = False
     Public Shared Property DefaultStartMode() As eDefaultStartMode = eDefaultStartMode.EXE
     Public Shared Property DisableFuzzyMatching() As Boolean = True
 
@@ -236,6 +237,37 @@ Public Class B2SSettings
         Return filename
     End Function
 
+    Public Shared Sub LoadGlobalAndTableSettings(xmlNode As Xml.XmlNode)
+        'If xmlNode.SelectSingleNode("DisableBuiltInEMReelSound") IsNot Nothing Then DisableBuiltInEMReelSound = (xmlNode.SelectSingleNode("DisableBuiltInEMReelSound").InnerText = "1")
+        If xmlNode.SelectSingleNode("HideGrill") IsNot Nothing Then HideGrill = CInt(xmlNode.SelectSingleNode("HideGrill").InnerText)
+        If xmlNode.SelectSingleNode("HideB2SDMD") IsNot Nothing Then HideB2SDMD = (xmlNode.SelectSingleNode("HideB2SDMD").InnerText = "1")
+        If xmlNode.SelectSingleNode("HideDMD") IsNot Nothing Then HideDMD = CInt(xmlNode.SelectSingleNode("HideDMD").InnerText)
+        If xmlNode.SelectSingleNode("LampsBlackTurns") IsNot Nothing Then LampsSkipFrames = CInt(xmlNode.SelectSingleNode("LampsBlackTurns").InnerText)
+        If xmlNode.SelectSingleNode("SolenoidsBlackTurns") IsNot Nothing Then SolenoidsSkipFrames = CInt(xmlNode.SelectSingleNode("SolenoidsBlackTurns").InnerText)
+        If xmlNode.SelectSingleNode("GIStringsBlackTurns") IsNot Nothing Then GIStringsSkipFrames = CInt(xmlNode.SelectSingleNode("GIStringsBlackTurns").InnerText)
+        If xmlNode.SelectSingleNode("LEDsBlackTurns") IsNot Nothing Then LEDsSkipFrames = CInt(xmlNode.SelectSingleNode("LEDsBlackTurns").InnerText)
+        If xmlNode.SelectSingleNode("LampsSkipFrames") IsNot Nothing Then LampsSkipFrames = CInt(xmlNode.SelectSingleNode("LampsSkipFrames").InnerText)
+        If xmlNode.SelectSingleNode("SolenoidsSkipFrames") IsNot Nothing Then SolenoidsSkipFrames = CInt(xmlNode.SelectSingleNode("SolenoidsSkipFrames").InnerText)
+        If xmlNode.SelectSingleNode("GIStringsSkipFrames") IsNot Nothing Then GIStringsSkipFrames = CInt(xmlNode.SelectSingleNode("GIStringsSkipFrames").InnerText)
+        If xmlNode.SelectSingleNode("LEDsSkipFrames") IsNot Nothing Then LEDsSkipFrames = CInt(xmlNode.SelectSingleNode("LEDsSkipFrames").InnerText)
+        If xmlNode.SelectSingleNode("UsedLEDType") IsNot Nothing Then UsedLEDType = CInt(xmlNode.SelectSingleNode("UsedLEDType").InnerText)
+        If xmlNode.SelectSingleNode("IsGlowBulbOn") IsNot Nothing Then IsGlowBulbOn = (xmlNode.SelectSingleNode("IsGlowBulbOn").InnerText = "1")
+        If xmlNode.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(xmlNode.SelectSingleNode("GlowIndex").InnerText)
+        If xmlNode.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (xmlNode.SelectSingleNode("StartAsEXE").InnerText = "1")
+
+        If Not PureEXE Then
+            If xmlNode.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (xmlNode.SelectSingleNode("FormToFront").InnerText = "1")
+            If xmlNode.SelectSingleNode("FormToBack") IsNot Nothing Then
+                FormToBack = (xmlNode.SelectSingleNode("FormToBack").InnerText = "1")
+                If FormToBack Then FormToFront = False
+                FormNoFocus = True
+            End If
+            If xmlNode.SelectSingleNode("FormNoFocus") IsNot Nothing Then
+                FormNoFocus = (xmlNode.SelectSingleNode("FormNoFocus").InnerText = "1")
+            End If
+        End If
+    End Sub
+
     Public Shared Sub Load(Optional ByVal resetLogs As Boolean = True,
                            Optional ByVal justLoadPluginSetting As Boolean = False)
         ClearAll()
@@ -260,7 +292,8 @@ Public Class B2SSettings
                     If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
                     If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
                     If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
-                    If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
+
+                    'If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
                     ' get overall settings
                     If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)

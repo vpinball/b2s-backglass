@@ -7,7 +7,7 @@ Imports Microsoft.Win32
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "2.1.3"
+    Public Const DirectB2SVersion As String = "2.1.2"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
@@ -49,6 +49,7 @@ Public Class B2SSettings
     Public Shared Property MatchingFileName() As String = String.Empty
     Public Shared Property MatchingFileNames() As String() = Nothing
 
+    Public Shared Property PluginsFilePath() As String = String.Empty
     Public Shared Property LoadedResFilePath() As String = String.Empty
     Public Shared Property LogPath() As String = String.Empty
     Public Shared Property IsLampsStateLogOn() As Boolean = False

@@ -4,6 +4,7 @@ Imports System.Drawing
 Imports Microsoft.Win32
 Imports System.IO
 Imports System.Reflection
+Imports System.Text.RegularExpressions
 
 Public Class B2SScreen
 
@@ -12,6 +13,8 @@ Public Class B2SScreen
 
     Public Shared formBackglass As formBackglass = Nothing
     Public formDMD As formDMD = Nothing
+    Public formbackground As Background = Nothing
+    Public debugLog As Log = New Log("B2SDebugLog")
 
     Public Enum eDMDViewMode
         NotDefined = 0
@@ -23,6 +26,7 @@ Public Class B2SScreen
 
     Public Property PlayfieldSize() As Size = New Size(0, 0)
     Public Property BackglassMonitor() As String = String.Empty
+    Public Property BackglassScreen() As Screen = Nothing
     Public Property BackglassSize() As Size = New Size(0, 0)
     Public Property BackglassLocation() As Point = New Point(0, 0)
     Public Property BackglassGrillHeight() As Integer = 0
@@ -40,13 +44,15 @@ Public Class B2SScreen
     Public Property BackglassCutOff() As Rectangle = Nothing
 
     Public Property IsDMDToBeShown() As Boolean = False
+    Public Property StartBackground() As Boolean = False
 
     Public Property rescaleBackglass As SizeF = New SizeF(1, 1)
 
 #Region "constructor and startup"
 
     Public Sub New()
-        Server.errorlog.WriteLogEntry("B2SScreen.New")
+        debugLog.IsLogOn = B2SSettings.B2SDebugLog
+        debugLog.WriteLogEntry("B2SScreen.New")
 
 
 
@@ -79,6 +85,9 @@ Public Class B2SScreen
         ' here we go with one or two forms for the backglass and the DMD
         formBackglass = _formBackglass
         Me.formDMD = _formDMD
+
+        Me.formbackground = New Background
+
 
         ' get all backglass settings
         GetB2SSettings(_DefaultDMDLocation, _DMDViewMode, _BackglassGrillHeight, _BackglassSmallGrillHeight)
@@ -141,7 +150,7 @@ Public Class B2SScreen
             Loop
             ' close file handle
             FileClose(1)
-
+            Server.errorlog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile A version #2 file " & Me.BackgroundPath)
             line(i) = 0
             line(i + 1) = 0
             Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
@@ -156,6 +165,11 @@ Public Class B2SScreen
                 Me.BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
                 Me.BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
                 Me.BackgroundPath = line(16)
+                If Me.BackgroundPath.Contains("{") Then
+                    ' We will try to replace the placeholders with the real values
+                    Me.BackgroundPath = GetBackgroundPath(Me.BackgroundPath, B2SData.TableFileName, B2SSettings.GameName)
+                    debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile GetBackgroundPath called and returned " & Me.BackgroundPath)
+                End If
             Else
                 Me.BackgroundLocation = New Point(0, 0)
                 Me.BackgroundSize = New Size(0, 0)
@@ -172,6 +186,54 @@ Public Class B2SScreen
 
         End If
     End Sub
+    Private Function GetBackgroundPath(BackgroundPath As String, ByVal TableFileName As String, ByVal GameName As String) As String
+        Dim pattern As String = "^(?'name'[\w \-\!']+)(\((?'manufactor'[A-Za-z ]+)? (?'year'[\d{4}]+)\))?(?'extra'.*)?$"
+        Dim regex As New Regex(pattern)
+        Dim replacedSomething As Boolean = False
+
+        Dim newPath As String = BackgroundPath
+
+        Dim allGroupNames As List(Of String) = New List(Of String) From {"tablename", "gamename"}
+
+        allGroupNames.AddRange(regex.GetGroupNames())
+        allGroupNames.RemoveAll(Function(s) s.Length = 1)
+
+        If regex.IsMatch(TableFileName) Then
+            For Each groupName As String In allGroupNames
+                For Each replaceName As String In allGroupNames
+                    If groupName = replaceName And newPath.Contains("{" + replaceName + "}") Then
+                        Select Case replaceName
+                            Case "tablename"
+                                newPath = newPath.Replace("{" + replaceName + "}", TableFileName)
+                                replacedSomething = True
+                            Case "gamename"
+                                newPath = newPath.Replace("{" + replaceName + "}", GameName)
+                                replacedSomething = True
+                            Case Else
+                                Dim replaceValue As String = regex.Match(TableFileName).Groups(replaceName).Value.Trim()
+                                If Not String.IsNullOrEmpty(replaceValue) Then
+                                    replacedSomething = True
+                                    newPath = newPath.Replace("{" + replaceName + "}", replaceValue)
+                                End If
+                        End Select
+                    Else
+                        newPath = newPath.Replace("{" + replaceName + "}", "")
+                    End If
+                Next
+                If File.Exists(newPath) And replacedSomething Then
+                    Return newPath
+                Else
+                    newPath = BackgroundPath
+                    replacedSomething = False
+                End If
+            Next
+        End If
+        For Each replaceName As String In allGroupNames
+            newPath = newPath.Replace("{" + replaceName + "}", "")
+        Next
+        Return newPath
+
+    End Function
 
     Private Sub GetB2SSettings(ByVal _DefaultDMDLocation As Point, ByVal _DMDViewMode As eDMDViewMode, ByVal _BackglassGrillHeight As Integer, ByVal _BackglassSmallGrillHeight As Integer)
 
@@ -293,6 +355,10 @@ Public Class B2SScreen
         'searchPathLog.WriteLogEntry("Start Show")
 
         'On Error Resume Next
+        If (Not Me.BackgroundSize.IsEmpty) And ((B2SSettings.StartBackground.HasValue And B2SSettings.StartBackground) Or
+                                                (Not B2SSettings.StartBackground.HasValue And B2SSettings.GlobalStartBackground.HasValue And B2SSettings.GlobalStartBackground)) Then
+            StartBackground = True
+        End If
 
         ' first of all get the info whether the DMD is to be shown or not
         IsDMDToBeShown = (Me.formDMD IsNot Nothing AndAlso Not Point.Empty.Equals(Me.DMDLocation) AndAlso
@@ -303,7 +369,7 @@ Public Class B2SScreen
         On Error Resume Next
 
         ' get the correct screen
-        Dim screen As Screen = ScreensOrdered(0)
+        Me.BackglassScreen = ScreensOrdered(0)
         Dim s As Screen
         Dim currentScreen = 0
 
@@ -313,25 +379,64 @@ Public Class B2SScreen
             'searchPathLog.WriteLogEntry("Screen: " & (s.DeviceName) & " Location " & s.Bounds.Location.X & " #" & currentScreen)
             If Left(BackglassMonitor, 1) = "@" Then
                 If s.Bounds.Location.X = CInt(Mid(BackglassMonitor, 2)) Then
-                    screen = s
+                    Me.BackglassScreen = s
                     'searchPathLog.WriteLogEntry("Found: @" & (s.Bounds.Location.X))
                     Exit For
                 End If
             ElseIf Left(BackglassMonitor, 1) = "=" Then
                 If currentScreen = CInt(Mid(BackglassMonitor, 2)) Then
-                    screen = s
+                    Me.BackglassScreen = s
                     'searchPathLog.WriteLogEntry("Found: =" & currentScreen)
                     Exit For
                 End If
             ElseIf s.DeviceName = "\\.\DISPLAY" + BackglassMonitor Then
                 'searchPathLog.WriteLogEntry("Found: " & (s.DeviceName))
-                screen = s
+                Me.BackglassScreen = s
                 Exit For
             End If
         Next
-
         On Error GoTo 0
 
+
+        ' Westworld show background form, only if background is set and enabled in setting
+        Dim DMDKeepBackglassLocation = Me.BackglassLocation
+        If StartBackground Then
+            If Not VersionTwoFile Then
+                Dim swapSize = Me.BackgroundSize
+                Dim swapLocation = Me.BackgroundLocation
+                Me.BackgroundSize = Me.BackglassSize
+                Me.BackglassSize = swapSize
+                Me.BackgroundLocation = Me.BackglassLocation
+                Me.BackglassLocation = swapLocation
+            End If
+
+            Me.formbackground.StartPosition = FormStartPosition.Manual
+            Me.formbackground.BackgroundImageLayout = ImageLayout.Stretch
+            Me.formbackground.FormBorderStyle = FormBorderStyle.None
+            Me.formbackground.ControlBox = False
+            Me.formbackground.MaximizeBox = False
+            Me.formbackground.MinimizeBox = False
+            Me.formbackground.Location = Me.BackglassScreen.Bounds.Location + Me.BackgroundLocation
+            Me.formbackground.Size = Me.BackgroundSize
+            Me.formbackground.Text = "B2S Backglass Server"
+            Me.formbackground.BackColor = Color.Black
+            If (IO.File.Exists(Me.BackgroundPath)) Then
+                Me.formbackground.BackgroundImage = Image.FromFile(Me.BackgroundPath) ' ("C:\backglass.png")
+            End If
+            Me.formbackground.Show()
+            If Not B2SSettings.PureEXE Then
+                If B2SSettings.FormToBack Then
+                    Me.formbackground.SendToBack()
+                    Me.formbackground.ShowInTaskbar = False
+                ElseIf B2SSettings.FormToFront Then
+                    Me.formbackground.BringToFront()
+                    Me.formbackground.TopMost = True
+                    If B2SSettings.FormNoFocus Then Me.formbackground.ShowInTaskbar = False
+                Else
+                    Me.formbackground.BringToFront()
+                End If
+            End If
+        End If
         ' set forms to background image size
         If formBackglass IsNot Nothing AndAlso formBackglass.BackgroundImage IsNot Nothing Then
             formBackglass.Size = formBackglass.BackgroundImage.Size
@@ -379,14 +484,34 @@ Public Class B2SScreen
         formBackglass.ControlBox = False
         formBackglass.MaximizeBox = False
         formBackglass.MinimizeBox = False
-        formBackglass.Location = screen.Bounds.Location + Me.BackglassLocation
+        formBackglass.Location = Me.BackglassScreen.Bounds.Location + Me.BackglassLocation
         formBackglass.Size = Me.BackglassSize
+
+        If Not B2SSettings.PureEXE Then
+            If B2SSettings.FormToFront Then
+                ' bring backglass screen to the front and force it to stay
+                formBackglass.TopMost = True
+                formBackglass.BringToFront()
+                If B2SSettings.FormNoFocus Then formBackglass.ShowInTaskbar = False
+            ElseIf B2SSettings.FormToBack Then
+                ' bring backglass screen to the back and force it to stay
+                formBackglass.SendToBack()
+                formBackglass.ShowInTaskbar = False
+            Else
+                formBackglass.BringToFront()
+            End If
+        End If
+
+        If StartBackground Then
+            formBackglass.Text = "B2S Backglass"
+            formBackglass.ShowInTaskbar = False
+
+            formBackglass.Show(Me.formbackground)
+        Else
+            ' Without background picture the backglass is the main form
         formBackglass.Text = "B2S Backglass Server"
         formBackglass.Show()
-
-        ' bring backglass screen to the front
-        If B2SSettings.FormToFront Then formBackglass.TopMost = True
-        formBackglass.BringToFront()
+        End If
 
         ' maybe show DMD form
         If IsDMDToBeShown Then
@@ -400,10 +525,30 @@ Public Class B2SScreen
             Me.formDMD.Location = formBackglass.Location + Me.DMDLocation
             Me.formDMD.Size = Me.DMDSize
             Me.formDMD.Text = "B2S DMD"
-            ' show the DMD form
+
+            If B2SSettings.FormToFront Then
+                If B2SSettings.FormNoFocus Then Me.formDMD.ShowInTaskbar = False
+
+                Me.formDMD.BringToFront()
+                Me.formDMD.TopMost = True
+
+                If Me.DMDAtDefaultLocation Then
+                    ' DMD and Back Glass one unit, make sure they stay together
+                    Me.formDMD.Show(formBackglass)
+                Else
+                    ' DMD and Back Glass separate and accessed separately
             Me.formDMD.Show()
+                End If
+            ElseIf B2SSettings.FormToBack Then
+                ' DMD and Back Glass one unit, make sure they are together and also make sure it is impossible to activate
+                Me.formDMD.ShowInTaskbar = False
+                Me.formDMD.SendToBack()
+                Me.formDMD.Show(formBackglass)
+            Else
+                ' show the DMD form without grill
             Me.formDMD.BringToFront()
-            Me.formDMD.TopMost = True
+                Me.formDMD.Show()
+            End If
         End If
 
     End Sub

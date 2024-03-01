@@ -474,7 +474,6 @@ Public Class B2SScreen
         ' move and scale all picked objects
         ScaleAllControls(rescaleBackglassX, rescaleBackglassY, rescaleDMDX, rescaleDMDY)
 
-
         ' show the backglass form
         formBackglass.StartPosition = FormStartPosition.Manual
         formBackglass.BackgroundImageLayout = ImageLayout.Stretch
