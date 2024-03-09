@@ -125,119 +125,125 @@ Public Class Server
     End Sub
 
     Private Sub Timer_Tick()
+        Try
 
-        ' check whether the table is still running
-        If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
+            ' check whether the table is still running
+            If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
 
-            Try
-                Me.Stop()
-            Finally
-                Me.Dispose()
-            End Try
+                Try
+                    Me.Stop()
+                Finally
+                    Me.Dispose()
+                End Try
 
-        Else
-
-            ' maybe reload settings
-            If B2SData.IsBackglassStartedAsEXE Then
-                Static settingscounter As Integer = 0
-                settingscounter += 1
-
-                ' check for set switches
-                Static whatsupwithswitches As Boolean = True
-                Static look4switches As Boolean = False
-                If whatsupwithswitches Then
-                    Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
-                        Dim switch As Integer = 0
-                        If Not look4switches Then
-                            switch = CInt(regkey.GetValue("B2SSetSwitch", "-1"))
-                            If switch > -1 Then
-                                whatsupwithswitches = (switch = 1)
-                                look4switches = (switch = 1)
-                                regkey.DeleteValue("B2SSetSwitch", False)
-                            End If
-                        End If
-                        If look4switches Then
-                            For i As Integer = 1 To 2
-                                switch = CInt(regkey.GetValue("B2SSetSwitch" & i.ToString(), "0"))
-                                If switch > 0 Then
-                                    B2SAnimation.SetSwitch(switch)
-                                    regkey.DeleteValue("B2SSetSwitch" & i.ToString(), False)
-                                End If
-                            Next
-                        End If
-                    End Using
-                End If
+            Else
 
                 ' maybe reload settings
-                If settingscounter >= 200 Then
-                    settingscounter = 0
-                    Dim reloadSettings As Boolean = (Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SReloadSettings", 0) = 1)
-                    If reloadSettings Then
-                        Registry.CurrentUser.OpenSubKey("Software\B2S", True).SetValue("B2SReloadSettings", 0)
-                        B2SSettings.Load(False)
-                    End If
-                End If
+                If B2SData.IsBackglassStartedAsEXE Then
+                    Static settingscounter As Integer = 0
+                    settingscounter += 1
 
-                ' maybe open plugins window
-                If (settingscounter Mod 10) = 0 AndAlso B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost IsNot Nothing AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
-                    Dim openPluginWindow As Boolean = (Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("PluginsOpenDialog", 0) = 1)
-                    If openPluginWindow Then
-                        Dim pluginScreenBounds As System.Drawing.Rectangle = Nothing
+                    ' check for set switches
+                    Static whatsupwithswitches As Boolean = True
+                    Static look4switches As Boolean = False
+                    If whatsupwithswitches Then
                         Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
-                            Dim screensettings As String = regkey.GetValue("PluginsScreen").ToString
-                            If Not String.IsNullOrEmpty(screensettings) Then
-                                Dim tmp As String() = regkey.GetValue("PluginsScreen").ToString.Split(",")
-                                If tmp.Length >= 4 Then
-                                    pluginScreenBounds = New System.Drawing.Rectangle(CInt(tmp(0)), CInt(tmp(1)), CInt(tmp(2)), CInt(tmp(3)))
+                            Dim switch As Integer = 0
+                            If Not look4switches Then
+                                switch = CInt(regkey.GetValue("B2SSetSwitch", "-1"))
+                                If switch > -1 Then
+                                    whatsupwithswitches = (switch = 1)
+                                    look4switches = (switch = 1)
+                                    regkey.DeleteValue("B2SSetSwitch", False)
                                 End If
                             End If
-                            regkey.DeleteValue("PluginsScreen", False)
-                            regkey.DeleteValue("PluginsOpenDialog", False)
+                            If look4switches Then
+                                For i As Integer = 1 To 2
+                                    switch = CInt(regkey.GetValue("B2SSetSwitch" & i.ToString(), "0"))
+                                    If switch > 0 Then
+                                        B2SAnimation.SetSwitch(switch)
+                                        regkey.DeleteValue("B2SSetSwitch" & i.ToString(), False)
+                                    End If
+                                Next
+                            End If
                         End Using
-                        B2SSettings.PluginHost.ShowPluginWindow(, pluginScreenBounds)
+                    End If
+
+                    ' maybe reload settings
+                    If settingscounter >= 200 Then
+                        settingscounter = 0
+                        Dim reloadSettings As Boolean = (Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SReloadSettings", 0) = 1)
+                        If reloadSettings Then
+                            Registry.CurrentUser.OpenSubKey("Software\B2S", True).SetValue("B2SReloadSettings", 0)
+                            B2SSettings.Load(False)
+                        End If
+                    End If
+
+                    ' maybe open plugins window
+                    If (settingscounter Mod 10) = 0 AndAlso B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost IsNot Nothing AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
+                        Dim openPluginWindow As Boolean = (Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("PluginsOpenDialog", 0) = 1)
+                        If openPluginWindow Then
+                            Dim pluginScreenBounds As System.Drawing.Rectangle = Nothing
+                            Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                                Dim screensettings As String = regkey.GetValue("PluginsScreen").ToString
+                                If Not String.IsNullOrEmpty(screensettings) Then
+                                    Dim tmp As String() = regkey.GetValue("PluginsScreen").ToString.Split(",")
+                                    If tmp.Length >= 4 Then
+                                        pluginScreenBounds = New System.Drawing.Rectangle(CInt(tmp(0)), CInt(tmp(1)), CInt(tmp(2)), CInt(tmp(3)))
+                                    End If
+                                End If
+                                regkey.DeleteValue("PluginsScreen", False)
+                                regkey.DeleteValue("PluginsOpenDialog", False)
+                            End Using
+                            B2SSettings.PluginHost.ShowPluginWindow(, pluginScreenBounds)
+                        End If
                     End If
                 End If
-            End If
 
-            ' have a look for important pollings
-            Static counter As Integer = 0
-            Static callLamps As Boolean = False
-            Static callSolenoids As Boolean = False
-            Static callGIStrings As Boolean = False
-            Static callLEDs As Boolean = False
-            If counter <= 25 Then
-                counter += 1
-                callLamps = Not isChangedLampsCalled AndAlso (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps)
-                callSolenoids = Not isChangedSolenoidsCalled AndAlso (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomSolenoids OrElse B2SData.UseAnimationSolenoids)
-                callGIStrings = Not isChangedGIStringsCalled AndAlso (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomGIStrings OrElse B2SData.UseAnimationGIStrings)
-                callLEDs = Not isChangedLEDsCalled AndAlso (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseLEDs OrElse B2SData.UseLEDDisplays OrElse B2SData.UseReels)
-                CheckTableHandle()
-            Else
-                If B2SSettings.IsROMControlled Then
-                    If callLamps Then Dim chg As Object = ChangedLamps()
-                    If callSolenoids Then Dim chg As Object = ChangedSolenoids()
-                    If callGIStrings Then Dim chg As Object = ChangedGIStrings()
-                    If callLEDs Then Dim chg As Object = ChangedLEDs(&HFFFFFFFF, &HFFFFFFFF)
+                ' have a look for important pollings
+                Static counter As Integer = 0
+                Static callLamps As Boolean = False
+                Static callSolenoids As Boolean = False
+                Static callGIStrings As Boolean = False
+                Static callLEDs As Boolean = False
+                If counter <= 25 Then
+                    counter += 1
+                    callLamps = Not isChangedLampsCalled AndAlso (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps)
+                    callSolenoids = Not isChangedSolenoidsCalled AndAlso (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomSolenoids OrElse B2SData.UseAnimationSolenoids)
+                    callGIStrings = Not isChangedGIStringsCalled AndAlso (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomGIStrings OrElse B2SData.UseAnimationGIStrings)
+                    callLEDs = Not isChangedLEDsCalled AndAlso (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseLEDs OrElse B2SData.UseLEDDisplays OrElse B2SData.UseReels)
+                    CheckTableHandle()
+                Else
+                    If B2SSettings.IsROMControlled Then
+                        If callLamps Then Dim chg As Object = ChangedLamps()
+                        If callSolenoids Then Dim chg As Object = ChangedSolenoids()
+                        If callGIStrings Then Dim chg As Object = ChangedGIStrings()
+                        If callLEDs Then Dim chg As Object = ChangedLEDs(&HFFFFFFFF, &HFFFFFFFF)
+                    End If
                 End If
-            End If
 
-            ' maybe the table is reseted so reset some stuff
-            If tableReset Then
-                tableCount = 0
-                counter = 0
-                callLamps = False
-                callSolenoids = False
-                callGIStrings = False
-                callLEDs = False
-                isChangedLampsCalled = False
-                isChangedSolenoidsCalled = False
-                isChangedGIStringsCalled = False
-                isChangedLEDsCalled = False
-                'B2SData.IsBackglassStartedAsEXE = False
-                tableReset = False
-            End If
+                ' maybe the table is reseted so reset some stuff
+                If tableReset Then
+                    tableCount = 0
+                    counter = 0
+                    callLamps = False
+                    callSolenoids = False
+                    callGIStrings = False
+                    callLEDs = False
+                    isChangedLampsCalled = False
+                    isChangedSolenoidsCalled = False
+                    isChangedGIStringsCalled = False
+                    isChangedLEDsCalled = False
+                    'B2SData.IsBackglassStartedAsEXE = False
+                    tableReset = False
+                End If
 
-        End If
+            End If
+        Catch ex As Exception
+            Dim st As New StackTrace(ex, True)
+            errorlog.WriteLogEntry(DateTime.Now & "Line: " & st.GetFrame(0).GetMethod().Name & " : " & st.GetFrame(0).GetFileLineNumber().ToString & " : " & ex.Message)
+            Throw ex
+        End Try
 
     End Sub
 
