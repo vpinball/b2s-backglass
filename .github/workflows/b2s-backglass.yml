@@ -19,8 +19,7 @@ jobs:
           - platform: x86
             config: Release
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: DirectOutput/B2SServerPluginInterface
           path: B2SServerPluginInterface
@@ -101,7 +100,7 @@ jobs:
           cp -r ScreenResTemplates tmp
           cp -r B2STools tmp
           cp b2sbackglassserverregisterapp/ScreenResTemplates.cmd tmp
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
          name: B2SServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
          path: tmp
@@ -123,7 +122,7 @@ jobs:
           - platform: x64
             config: Release
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: version
         name: Update AssemblyInformationalVersion
         run: |
@@ -152,7 +151,7 @@ jobs:
              cp leds/BetterLed/bin/${{ matrix.platform }}/${{ matrix.config }}/Dream7Display.pdb tmp
           fi
           cp license.txt tmp
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
          name: BetterLed-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
          path: tmp
