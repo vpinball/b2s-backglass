@@ -773,6 +773,7 @@ Public Class formBackglass
 
                 ' get top node
                 Dim topnode As Xml.XmlElement = XML.SelectSingleNode("DirectB2SData")
+                Dim mergeBulbs As Boolean = topnode.SelectSingleNode("MergeBulbs") IsNot Nothing AndAlso topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
 
                 ' clear all data
                 B2SData.ClearAll(True)
@@ -1492,7 +1493,7 @@ Public Class formBackglass
                     End If
 
                     ' maybe draw some light images for pretty fast image changing
-                    If top4Authentic >= minSize4Image Then
+                    If top4Authentic >= minSize4Image And mergeBulbs Then
                         ' create some light images
                         If TopLightImage4Authentic Is Nothing Then
                             TopLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic)
@@ -1505,7 +1506,7 @@ Public Class formBackglass
                             TopAndSecondLightImage4Authentic = CreateLightImage(TopLightImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic)
                         End If
                     End If
-                    If B2SData.DualBackglass AndAlso top4Fantasy >= minSize4Image Then
+                    If B2SData.DualBackglass AndAlso top4Fantasy >= minSize4Image And mergeBulbs Then
                         ' create some light images
                         If TopLightImage4Fantasy Is Nothing Then
                             TopLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy)
