@@ -6,7 +6,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
 using System.Drawing;
-using System.Security.Principal;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -75,20 +74,9 @@ namespace B2SWindowPunch
             public string cutter { get; set; }
 
         }
-        private static bool IsAdmin()
-        {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-            WindowsPrincipal principal = new WindowsPrincipal(identity);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
+
         private static int Main(string[] args)
         {
-            if (IsAdmin())
-            {
-                PrintUsage();
-                Console.WriteLine("You should not start B2SWindowPunch as Administrator!");
-                return 1;
-            }
             string[] cargs = Environment.GetCommandLineArgs();
             Options inputOptions = new Options();
 

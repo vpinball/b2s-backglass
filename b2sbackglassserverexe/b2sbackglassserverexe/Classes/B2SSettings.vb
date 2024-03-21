@@ -181,7 +181,7 @@ Public Class B2SSettings
         If xmlNode.SelectSingleNode("UsedLEDType") IsNot Nothing Then UsedLEDType = CInt(xmlNode.SelectSingleNode("UsedLEDType").InnerText)
         If xmlNode.SelectSingleNode("IsGlowBulbOn") IsNot Nothing Then IsGlowBulbOn = (xmlNode.SelectSingleNode("IsGlowBulbOn").InnerText = "1")
         If xmlNode.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(xmlNode.SelectSingleNode("GlowIndex").InnerText)
-        'If xmlNode.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (xmlNode.SelectSingleNode("StartAsEXE").InnerText = "1")
+        If xmlNode.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (xmlNode.SelectSingleNode("StartAsEXE").InnerText = "1")
 
         If Not PureEXE Then
             If xmlNode.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (xmlNode.SelectSingleNode("FormToFront").InnerText = "1")
@@ -214,10 +214,10 @@ Public Class B2SSettings
                 ' get plugin status
                 If nodeHeader.SelectSingleNode("ArePluginsOn") IsNot Nothing Then ArePluginsOn = (nodeHeader.SelectSingleNode("ArePluginsOn").InnerText = "1")
                 ' get default start mode
-                'If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
-                'If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
-                'If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
-                'If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
+                If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
+                If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
+                If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
+                If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
                 ' get overall settings
                 If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)

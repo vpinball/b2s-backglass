@@ -6,7 +6,7 @@ Imports Microsoft.Win32
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "2.1.2"
+    Public Const DirectB2SVersion As String = "2.1.1"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
@@ -149,7 +149,7 @@ Public Class B2SSettings
         End Set
     End Property
     Public Shared Property LEDsOff() As Boolean = False
-    Public Shared Property StartAsEXE() As Boolean = False
+    Public Shared Property StartAsEXE() As Boolean = True
     Public Shared Property PureEXE() As Boolean = False
     Public Shared Property DefaultStartMode() As eDefaultStartMode = eDefaultStartMode.EXE
     Public Shared Property DisableFuzzyMatching() As Boolean = True
@@ -291,8 +291,7 @@ Public Class B2SSettings
                     If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
                     If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
                     If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
-
-                    'If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
+                    If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
                     ' get overall settings
                     If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)
@@ -488,7 +487,7 @@ Public Class B2SSettings
         SolenoidsOff = False
         GIStringsOff = False
         LEDsOff = False
-        StartAsEXE = False
+        StartAsEXE = True
         LampsSkipFrames = 0
         SolenoidsSkipFrames = 0
         GIStringsSkipFrames = 0

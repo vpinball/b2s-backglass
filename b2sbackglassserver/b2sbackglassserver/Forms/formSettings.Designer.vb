@@ -207,7 +207,7 @@ Partial Class formSettings
         'chkDisableFuzzyMatching
         '
         Me.chkDisableFuzzyMatching.AutoSize = True
-        Me.chkDisableFuzzyMatching.Enabled = False
+        Me.chkDisableFuzzyMatching.Enabled = True
         Me.chkDisableFuzzyMatching.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(327, 23)
         Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
