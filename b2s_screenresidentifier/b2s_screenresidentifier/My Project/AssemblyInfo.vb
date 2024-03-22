@@ -31,12 +31,6 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<<<<<<< HEAD
-<Assembly: AssemblyVersion("2.1.3")> 
-<Assembly: AssemblyFileVersion("2.1.3")> 
-<Assembly: AssemblyInformationalVersion("2.1.3")>
-=======
 <Assembly: AssemblyVersion("2.1.2")> 
 <Assembly: AssemblyFileVersion("2.1.2")> 
 <Assembly: AssemblyInformationalVersion("2.1.2")>
->>>>>>> 91e813b (All EXE features merged back to the dll version)
