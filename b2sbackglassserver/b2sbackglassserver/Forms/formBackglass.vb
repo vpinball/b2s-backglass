@@ -1244,7 +1244,7 @@ Public Class formBackglass
                                 reel.ScoreType = b2sscoretype
                                 reel.SoundName = soundName
                                 If rollinginterval >= 10 Then reel.RollingInterval = rollinginterval
-                                'AddHandler reel.ReelRollOver, AddressOf Reels_ReelRollOver ' no need to add this right now; maybe later
+
                                 If isOnBackglass Then
                                     reel.Type = B2SBaseBox.eType.OnBackglass
                                     Me.Controls.Add(reel)
