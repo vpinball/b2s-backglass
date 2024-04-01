@@ -1801,6 +1801,8 @@ Public Class formBackglass
                 Dim topnode As Xml.XmlElement = XML.SelectSingleNode("DirectB2SData")
                 Dim mergeBulbs As Boolean = topnode.SelectSingleNode("MergeBulbs") IsNot Nothing AndAlso topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
 
+                Dim mergeBulbs As Boolean = topnode.SelectSingleNode("MergeBulbs") IsNot Nothing AndAlso topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
+
                 ' clear all data
                 B2SData.ClearAll(True)
 
