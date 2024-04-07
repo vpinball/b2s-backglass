@@ -1,4 +1,18 @@
+2.1.1
+
+- Add B2STools/B2SRandom.cmd to randomize many Backglasses when activated in Pinup Popper or similar
+- Backglasses using overlapping partly transparent pictures get it's events merged. This is now deactivated by default.
+  Can be activated in the direct2BS file (there is NO GUI):   <MergeBulbs Value="1" />
+- Add support for PWM modified tables, the light turn on values > 64, if it is a PWM activated table:
+  There is a new setting for VPinMame.SolMask(2) to set the output mode:
+    0 = default
+    1 = modulated (PWM) solenoid (exist for some years already)
+    2 = new PWM mode (all solenoids but also lamps, and value if physic meaning, not smoothed out binary state)
+  For this new mode, we now hardcode a value 64, if the lamp intensity exceed this value, it is binary 1
+- b2s_screenresidentifier: Add Comments hidded behind the taskbar #77
+
 2.1.0
+
 - There was an issue with certain rollover lights all turning on at the same time. 
   Thanks to jejevpuniverse, Hauntfreaks and Cliffy we solved solved this problem.
 - Small problem with B2SWindowPunch fixed (B2SInit.bat had problems)
