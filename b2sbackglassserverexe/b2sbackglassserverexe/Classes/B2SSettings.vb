@@ -181,6 +181,7 @@ Public Class B2SSettings
         If xmlNode.SelectSingleNode("IsGlowBulbOn") IsNot Nothing Then IsGlowBulbOn = (xmlNode.SelectSingleNode("IsGlowBulbOn").InnerText = "1")
         If xmlNode.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(xmlNode.SelectSingleNode("GlowIndex").InnerText)
         If xmlNode.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (xmlNode.SelectSingleNode("StartAsEXE").InnerText = "1")
+        If xmlNode.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (xmlNode.SelectSingleNode("StartBackground").InnerText = "1")
 
         If Not PureEXE Then
             If xmlNode.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (xmlNode.SelectSingleNode("FormToFront").InnerText = "1")
@@ -229,10 +230,9 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("IsStatisticsBackglassOn") IsNot Nothing Then IsStatisticsBackglassOn = (nodeHeader.SelectSingleNode("IsStatisticsBackglassOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("IsBackglassSearchLogOn") IsNot Nothing Then IsBackglassSearchLogOn = (nodeHeader.SelectSingleNode("IsBackglassSearchLogOn").InnerText = "1")
                 If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
-                If nodeHeader.SelectSingleNode("StartBackground") IsNot Nothing Then
-                    GlobalStartBackground = (nodeHeader.SelectSingleNode("StartBackground").InnerText = "1")
-                End If
                 LoadGlobalAndTableSettings(nodeHeader)
+                If StartBackground.HasValue Then GlobalStartBackground = StartBackground
+                StartBackground = Nothing
 
                 If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
                     ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
@@ -247,6 +247,7 @@ Public Class B2SSettings
                     AddNode(XML, nodeHeader, "IsGIStringsStateLogOn", "0")
                     AddNode(XML, nodeHeader, "IsLEDsStateLogOn", "0")
                     AddNode(XML, nodeHeader, "IsPaintingLogOn", "0")
+                    XML.Save(SettingFilePath)
                 End If
                 ' set default dual mode
                 'If B2SData.DualBackglass Then
@@ -258,7 +259,7 @@ Public Class B2SSettings
                     If nodeTable IsNot Nothing Then
                         _IsGameNameFound = True
                         LoadGlobalAndTableSettings(nodeTable)
-                        If nodeTable.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (nodeTable.SelectSingleNode("StartBackground").InnerText = "1")
+                        If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
                         If nodeTable.SelectSingleNode("MatchingFileName") IsNot Nothing Then MatchingFileName = nodeTable.SelectSingleNode("MatchingFileName").InnerText
 
                         Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
