@@ -247,7 +247,6 @@ Public Class B2SSettings
                     AddNode(XML, nodeHeader, "IsGIStringsStateLogOn", "0")
                     AddNode(XML, nodeHeader, "IsLEDsStateLogOn", "0")
                     AddNode(XML, nodeHeader, "IsPaintingLogOn", "0")
-                    XML.Save(filename)
                 End If
                 ' set default dual mode
                 'If B2SData.DualBackglass Then
