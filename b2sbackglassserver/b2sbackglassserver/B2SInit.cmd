@@ -12,7 +12,7 @@ REM Cut holes in the destination "B2S Backglass Server" & "B2S DMD" forms
 set "B2SWindowPunch=^B2S Backglass$|^B2S Backglass Server$|^B2S DMD$"
 
 REM using "Virtual DMD", "Virtual Alphanumeric" and all "PUPSCREEN" forms as regular expressions
-set "cutter=^Virtual DMD$|^Virtual Alphanumeric Display$|^PUPSCREEN[0-9]+$|^VPinMAME:^PROC:"
+set "cutter=^Virtual DMD$|^Virtual Alphanumeric Display$|^PUPSCREEN[0-9]+$|^VPinMAME:|^PROC:"
 
 REM Check if there is any table specific settings for B2SWindowPunch
 if exist "%resfile%" for /f "usebackq eol=# tokens=1,2 delims==" %%G in (`findstr /R "^[A-Za-z0-9][A-Za-z0-9]*=" "%resfile%"`) do set "%%G=%%H"
