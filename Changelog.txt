@@ -10,6 +10,7 @@
     2 = new PWM mode (all solenoids but also lamps, and value if physic meaning, not smoothed out binary state)
   For this new mode, we now hardcode a value 64, if the lamp intensity exceed this value, it is binary 1
 - b2s_screenresidentifier: Add Comments hidded behind the taskbar #77
+- "Fantasy" setting in B2STableSettings.xml is ignored #93
 
 2.1.0
 
