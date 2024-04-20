@@ -2,6 +2,7 @@
 Imports System.Text
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
+Imports System.Drawing
 
 <ProgId("B2S.Server"), ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)>
 Public Class Server
@@ -1685,6 +1686,14 @@ Public Class Server
         End If
 
     End Sub
+
+    Public Sub B2SSetPos(ByVal idORname As Object, ByVal xpos As Object, ByVal ypos As Object)
+
+        If IsNumeric(idORname) And IsNumeric(xpos) And IsNumeric(ypos) Then
+            MyB2SSetPos(CInt(idORname), CInt(xpos), CInt(ypos))
+        End If
+
+    End Sub
     ' pulse the set data
     Public Sub B2SPulseData(ByVal idORname As Object)
 
@@ -2115,6 +2124,34 @@ Public Class Server
         'If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
         '    B2SSettings.PluginHost.DataReceive("E", Convert.ToString(groupname), Convert.ToInt32(value))
         'End If
+
+    End Sub
+    Private Sub MyB2SSetPos(ByVal id As Integer, ByVal xpos As Integer, ByVal ypos As Integer)
+
+        If B2SData.IsBackglassRunning Then
+
+            If B2SData.IsBackglassStartedAsEXE Then
+
+            Else
+                If B2SData.UsedRomLampIDs.ContainsKey(id) Then
+                    For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(id)
+                        If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
+                            picbox.Visible = picbox.Location.X Mod 6 > 0 ' This makes the picturebox blink, so that we see anything at all
+
+                            picbox.Left += xpos
+                            picbox.Top += ypos
+                            'picbox.Location = New Point(xpos, picbox.Location.Y) 'this I have also tried, but it does not work either
+
+                            ' Different tries to invalidate the picturebox, so that it is repainted
+                            picbox.Parent.Invalidate()
+                            picbox.Parent.Update()
+                            'picbox.Invalidate()
+                        End If
+                    Next
+                End If
+            End If
+
+        End If
 
     End Sub
 
