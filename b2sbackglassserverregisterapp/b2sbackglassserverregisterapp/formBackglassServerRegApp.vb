@@ -20,13 +20,13 @@ Public Class formBackglassServerRegApp
         Dim regasmpath As String = String.Empty
         Dim version As String = String.Empty
         Dim dialogResult As DialogResult
+        Dim clsID As String = String.Empty
 
         If Not CommandSilent Then
             If CheckB2SServer(False) Then
                 Dim dllURI As String = "file://Unknown"
                 Try
                     Using regRoot As RegistryKey = Registry.ClassesRoot
-                        Dim clsID As String = String.Empty
                         Using openKey As RegistryKey = regRoot.OpenSubKey("B2S.Server\CLSID", False)
                             If openKey IsNot Nothing Then
                                 clsID = openKey.GetValue("")
@@ -83,6 +83,13 @@ Public Class formBackglassServerRegApp
             ElseIf String.IsNullOrEmpty(regasmpath) Then
                 MessageBox.Show("Error, no regasmpath found.")
             Else
+                ' cleanup earlier B2S.Server entries
+                If clsID IsNot String.Empty Then
+                    Using regRoot As RegistryKey = Registry.ClassesRoot
+                        regRoot.DeleteSubKeyTree("B2S.Server", False)
+                        regRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(clsID, False)
+                    End Using
+                End If
                 ' do the register operation
                 ShellAndWait(regasmpath, "B2SBackglassServer.DLL")
                 If IO.File.Exists("B2SBackglassServer64.DLL") Then
