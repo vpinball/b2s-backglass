@@ -70,9 +70,6 @@ Public Class formBackglassServerRegApp
                             End If
                         Next
                         regkey.Close()
-                        'Else
-                        '    regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NetFramework\policy\v2.0", False)
-                        '    If regkey IsNot Nothing Then version = "v2.0"; regkey.Close() End If
                     End If
                 End Using
             End If
@@ -86,8 +83,12 @@ Public Class formBackglassServerRegApp
                 ' cleanup earlier B2S.Server entries
                 If clsID IsNot String.Empty Then
                     Using regRoot As RegistryKey = Registry.ClassesRoot
+                        'Computer\HKEY_CLASSES_ROOT\B2S.Server
                         regRoot.DeleteSubKeyTree("B2S.Server", False)
+                        'Computer\HKEY_CLASSES_ROOT\CLSID\<id>
                         regRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(clsID, False)
+                        'Computer\HKEY_CLASSES_ROOT\WOW6432Node\CLSID\<id>
+                        regRoot.OpenSubKey("WOW6432Node\\CLSID", True).DeleteSubKeyTree(clsID, False)
                     End Using
                 End If
                 ' do the register operation
@@ -113,22 +114,13 @@ Public Class formBackglassServerRegApp
                     Try
 
                         Dim openKey As RegistryKey = sysFileKey.CreateSubKey(".vpx\shell")
+                        openKey.DeleteSubKeyTree("B2SServer", False)
 
                         ' Clean old registry for the ScreenRes path and only if Yes is choosen it is regenerated.
-                        Try
-                            openKey.DeleteSubKeyTree("B2SServer")
-                        Catch ex As ArgumentException
-                        End Try
-                        Try
-                            rkReg.DeleteSubKeyTree(".directb2s")
-                            rkReg.DeleteSubKeyTree("b2sserver.directb2s")
-                        Catch ex As ArgumentException
-                        End Try
-                        Try
-                            'rkReg.DeleteSubKeyTree(".res") ' Do not delete this one?
-                            rkReg.DeleteSubKeyTree("b2sserver.res")
-                        Catch ex As ArgumentException
-                        End Try
+                        rkReg.DeleteSubKeyTree(".directb2s", False)
+                        rkReg.DeleteSubKeyTree("b2sserver.directb2s", False)
+                        'rkReg.DeleteSubKeyTree(".res", False) ' Do not delete this one?
+                        rkReg.DeleteSubKeyTree("b2sserver.res", False)
 
                         If CommandSilent Or (dialogResult = DialogResult.Yes) Then
 

@@ -11,6 +11,7 @@
   For this new mode, we now hardcode a value 64, if the lamp intensity exceed this value, it is binary 1
 - b2s_screenresidentifier: Add Comments hidded behind the taskbar #77
 - "Fantasy" setting in B2STableSettings.xml is ignored #93
+- re-registering B2S.Server should first cleanup earlier entries #98
 
 2.1.0
 
