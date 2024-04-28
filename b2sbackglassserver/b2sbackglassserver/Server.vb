@@ -2,6 +2,7 @@
 Imports System.Text
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
+Imports System.Linq.Expressions
 
 <ProgId("B2S.Server"), ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)>
 Public Class Server
@@ -25,7 +26,8 @@ Public Class Server
     Private tableHandle As Integer = 0
     Private tableCount As Integer = 0
     Private tableReset As Boolean = False
-    Private lamplighted As Integer = 0
+    Private lampThreshold As Integer = 0
+    Private giStringThreshold As Integer = 4
 
     Private isChangedLampsCalled As Boolean = False
     Private isChangedSolenoidsCalled As Boolean = False
@@ -803,7 +805,7 @@ Public Class Server
 
                     ' get lamp data
                     Dim lampid As Integer = lampdata.Key
-                    Dim lampstate As Integer = lampdata.Value.State
+                    Dim lampstate As Boolean = lampdata.Value.State > lampThreshold
                     Dim datatypes As Integer = lampdata.Value.Types
 
                     ' maybe write log
@@ -815,7 +817,7 @@ Public Class Server
 
                         ' enter new lamp state
                         sb.Remove(lampid, 1)
-                        If lampstate > lamplighted Then
+                        If lampstate Then
                             sb.Insert(lampid, "1")
                         Else
                             sb.Insert(lampid, "0")
@@ -828,10 +830,10 @@ Public Class Server
                             Dim topvisible As Boolean = lastTopVisible
                             Dim secondvisible As Boolean = lastSecondVisible
                             If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 Then
-                                topvisible = (lampstate > lamplighted)
+                                topvisible = lampstate
                                 If formBackglass.TopRomInverted Then topvisible = Not topvisible
                             ElseIf (datatypes And B2SCollectData.eCollectedDataType.SecondImage) <> 0 Then
-                                secondvisible = (lampstate > lamplighted)
+                                secondvisible = lampstate
                                 If formBackglass.SecondRomInverted Then topvisible = Not topvisible
                             End If
                             If lastTopVisible <> topvisible OrElse lastSecondVisible <> secondvisible OrElse Not isVisibleStateSet Then
@@ -855,7 +857,7 @@ Public Class Server
                             For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(lampid)
                                 'If picbox IsNot Nothing Then
                                 If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
-                                    Dim visible As Boolean = (lampstate > lamplighted)
+                                    Dim visible As Boolean = lampstate
                                     If picbox.RomInverted Then visible = Not visible
                                     If B2SData.UseRotatingImage AndAlso B2SData.RotatingPictureBox(0) IsNot Nothing AndAlso picbox.Equals(B2SData.RotatingPictureBox(0)) Then
                                         If visible Then
@@ -874,7 +876,7 @@ Public Class Server
                         If (datatypes And B2SCollectData.eCollectedDataType.Animation) <> 0 Then
                             If B2SData.UsedAnimationLampIDs.ContainsKey(lampid) Then
                                 For Each animation As B2SData.AnimationInfo In B2SData.UsedAnimationLampIDs(lampid)
-                                    Dim start As Boolean = (lampstate > lamplighted)
+                                    Dim start As Boolean = lampstate
                                     If animation.Inverted Then start = Not start
                                     If start Then
                                         formBackglass.StartAnimation(animation.AnimationName)
@@ -885,7 +887,7 @@ Public Class Server
                             End If
                             ' random animation start
                             If B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then
-                                Dim start As Boolean = (lampstate > lamplighted)
+                                Dim start As Boolean = lampstate
                                 Dim isrunning As Boolean = False
                                 If start Then
                                     For Each matchinganimation As B2SData.AnimationInfo In B2SData.UsedRandomAnimationLampIDs(lampid)
@@ -1246,7 +1248,7 @@ Public Class Server
 
                     ' get gistring data
                     Dim gistringid As Integer = gistringdata.Key
-                    Dim gistringstate As Integer = gistringdata.Value.State
+                    Dim gistringstate As Boolean = gistringdata.Value.State > giStringThreshold
                     Dim datatypes As Integer = gistringdata.Value.Types
 
                     ' maybe write log
@@ -1258,7 +1260,7 @@ Public Class Server
 
                         ' enter new gistring state
                         sb.Remove(gistringid, 1)
-                        sb.Insert(gistringid, gistringstate.ToString())
+                        sb.Insert(gistringid, If(gistringstate, "5", "0"))
 
                     Else
 
@@ -1267,10 +1269,10 @@ Public Class Server
                             Dim topvisible As Boolean = lastTopVisible
                             Dim secondvisible As Boolean = lastSecondVisible
                             If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 Then
-                                topvisible = (gistringstate > 4)
+                                topvisible = gistringstate
                                 If formBackglass.TopRomInverted Then topvisible = Not topvisible
                             ElseIf (datatypes And B2SCollectData.eCollectedDataType.SecondImage) <> 0 Then
-                                secondvisible = (gistringstate > 4)
+                                secondvisible = gistringstate
                                 If formBackglass.SecondRomInverted Then topvisible = Not topvisible
                             End If
                             If lastTopVisible <> topvisible OrElse lastSecondVisible <> secondvisible OrElse Not isVisibleStateSet Then
@@ -1294,7 +1296,7 @@ Public Class Server
                             For Each picbox As B2SPictureBox In B2SData.UsedRomGIStringIDs(gistringid)
                                 'If picbox IsNot Nothing Then
                                 If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
-                                    Dim visible As Boolean = (gistringstate > 4)
+                                    Dim visible As Boolean = gistringstate
                                     If picbox.RomInverted Then visible = Not visible
                                     If B2SData.UseRotatingImage AndAlso B2SData.RotatingPictureBox(0) IsNot Nothing AndAlso picbox.Equals(B2SData.RotatingPictureBox(0)) Then
                                         If visible Then
@@ -1313,7 +1315,7 @@ Public Class Server
                         If (datatypes And B2SCollectData.eCollectedDataType.Animation) <> 0 Then
                             If B2SData.UsedAnimationGIStringIDs.ContainsKey(gistringid) Then
                                 For Each animation As B2SData.AnimationInfo In B2SData.UsedAnimationGIStringIDs(gistringid)
-                                    Dim start As Boolean = (gistringstate > 4)
+                                    Dim start As Boolean = gistringstate
                                     If animation.Inverted Then start = Not start
                                     If start Then
                                         formBackglass.StartAnimation(animation.AnimationName)
@@ -1324,7 +1326,7 @@ Public Class Server
                             End If
                             ' random animation start
                             If B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(gistringid) Then
-                                Dim start As Boolean = (gistringstate > 4)
+                                Dim start As Boolean = gistringstate
                                 Dim isrunning As Boolean = False
                                 If start Then
                                     For Each matchinganimation As B2SData.AnimationInfo In B2SData.UsedRandomAnimationGIStringIDs(gistringid)
@@ -1572,7 +1574,8 @@ Public Class Server
             ' 1 = modulated (PWM) solenoid (exist for some years already)
             ' 2 = new PWM mode (all solenoids but also lamps, and value if physic meaning, not smoothed out binary state)
             ' For this new mode, we now hardcode a value 64, if the lamp intensity exceed this value, it is binary 1
-            If number = 2 Then lamplighted = If(value = 2, 64, 0)
+            If number = 2 Then lampThreshold = If(value = 2, 64, 0)
+            If number = 2 Then giStringThreshold = If(value = 2, 64, 4)
         End Set
     End Property
 
