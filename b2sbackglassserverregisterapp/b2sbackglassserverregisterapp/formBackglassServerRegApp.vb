@@ -88,7 +88,7 @@ Public Class formBackglassServerRegApp
                         'Computer\HKEY_CLASSES_ROOT\CLSID\<id>
                         regRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(clsID, False)
                         'Computer\HKEY_CLASSES_ROOT\WOW6432Node\CLSID\<id>
-                        regRoot.OpenSubKey("WOW6432Node\\CLSID", True).DeleteSubKeyTree(clsID, False)
+                        regRoot.OpenSubKey("WOW6432Node\CLSID", True).DeleteSubKeyTree(clsID, False)
                     End Using
                 End If
                 ' do the register operation
@@ -109,61 +109,70 @@ Public Class formBackglassServerRegApp
         If CommandSilent Or (dialogResult = DialogResult.Yes) Or (dialogResult = DialogResult.No) Then
             Dim rkReg As RegistryKey = Registry.ClassesRoot
 
-            If Directory.Exists("ScreenResTemplates") Then
-                Using sysFileKey As RegistryKey = rkReg.OpenSubKey("SystemFileAssociations", True)
-                    Try
 
-                        Dim openKey As RegistryKey = sysFileKey.CreateSubKey(".vpx\shell")
-                        openKey.DeleteSubKeyTree("B2SServer", False)
+            ' Clean old registry for the ScreenRes path and only if Yes is choosen it is regenerated.
 
-                        ' Clean old registry for the ScreenRes path and only if Yes is choosen it is regenerated.
-                        rkReg.DeleteSubKeyTree(".directb2s", False)
-                        rkReg.DeleteSubKeyTree("b2sserver.directb2s", False)
-                        'rkReg.DeleteSubKeyTree(".res", False) ' Do not delete this one?
-                        rkReg.DeleteSubKeyTree("b2sserver.res", False)
+            If rkReg.OpenSubKey("b2sserver.directb2s\ShellEx") Is Nothing Then
+                rkReg.DeleteSubKeyTree(".directb2s", False)
+                rkReg.DeleteSubKeyTree("b2sserver.directb2s", False)
+            Else
+                'keep ".directb2s" for VP preview handler!
+                rkReg.DeleteSubKeyTree("b2sserver.directb2s\shell", False)
+            End If
 
-                        If CommandSilent Or (dialogResult = DialogResult.Yes) Then
+            rkReg.DeleteSubKeyTree(".res", False) ' Do not delete this one?
+            rkReg.DeleteSubKeyTree("b2sserver.res", False)
 
-                            ' Add directb2s file context menu for double click and right click -> Edit ScreenRes file
-                            rkReg.CreateSubKey(".directb2s").SetValue("", "b2sserver.directb2s")
-                            Dim b2sReg As RegistryKey = rkReg.CreateSubKey("b2sserver.directb2s")
+            Using sysFileKey As RegistryKey = rkReg.OpenSubKey("SystemFileAssociations", True)
+                Try
+                    'Remove the old .VPX right click... Computer\HKEY_CLASSES_ROOT\SystemFileAssociations\.vpx\shell\B2SServer\
+                    sysFileKey.DeleteSubKeyTree(".vpx\shell\B2SServer", False)
+                    sysFileKey.DeleteSubKeyTree(".directb2s", False)
+
+                    If CommandSilent Or (dialogResult = DialogResult.Yes) Then
+
+                        ' Add directb2s file context menu for double click and right click -> Edit ScreenRes file
+                        rkReg.CreateSubKey(".directb2s").SetValue("", "b2sserver.directb2s")
+                        Using b2sReg As RegistryKey = rkReg.CreateSubKey("b2sserver.directb2s")
+
                             b2sReg.SetValue("", "B2S Server backglass file")
                             b2sReg.CreateSubKey("DefaultIcon").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """,0")
                             b2sReg.CreateSubKey("shell\open\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """ ""%1""")
                             b2sReg.CreateSubKey("shell\Edit ScreenRes file\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
-                            'b2sReg.CreateSubKey("shell\Edit ScreenRes file\DefaultIcon").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """,0")
+                        End Using
 
-                            ' Add res file context menu for double click and right click -> Edit ScreenRes file
-                            rkReg.CreateSubKey(".res").SetValue("", "b2sserver.res")
-                            ' Add New -> B2S Server ScreenRes file (new).res  Context menu
-                            rkReg.CreateSubKey(".res\b2sserver.res\ShellNew").SetValue("Command", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
-                            b2sReg = rkReg.CreateSubKey("b2sserver.res")
-                            b2sReg.SetValue("", "B2S Server ScreenRes file")
-                            'b2sReg.CreateSubKey("DefaultIcon").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """,0") ' skip icon for res file?
-                            b2sReg.CreateSubKey("shell\open\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
-                            b2sReg.Close()
+                        ' Add res file context menu for double click and right click -> Edit ScreenRes file
+                        rkReg.CreateSubKey(".res").SetValue("", "b2sserver.res")
+                        ' Add New -> B2S Server ScreenRes file (new).res  Context menu
+                        rkReg.CreateSubKey(".res\b2sserver.res\ShellNew").SetValue("Command", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
+                        Using resReg As RegistryKey = rkReg.CreateSubKey("b2sserver.res")
+                            resReg.SetValue("", "B2S Server ScreenRes file")
+                            resReg.CreateSubKey("shell\open\command").SetValue("", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
+                        End Using
 
+                        If Directory.Exists("ScreenResTemplates") Then
                             Dim sFiles() As String = Directory.GetFiles("ScreenResTemplates", "*.res")
                             'And then add it in a Label in the way you want
                             If sFiles.Length > 0 Then
-                                Dim vpxtoolstoplevel As RegistryKey = openKey.CreateSubKey("B2SServer")
-                                vpxtoolstoplevel.SetValue("MUIVerb", "B2S Server copy Screenres template")
-                                vpxtoolstoplevel.SetValue("subcommands", "")
-                                vpxtoolstoplevel.SetValue("Icon", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """")
-                                For Each resFileName As String In sFiles
-                                    '           "D:\vPinball\VisualPinball\B2SServer\ScreenResTemplates.cmd" "ScreenResTemplates\Full Screen.res" "%L"
-                                    Dim shellText As String = """" + IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "ScreenResTemplates.cmd") + """ """ + resFileName + """ ""%L"""
-                                    vpxtoolstoplevel.CreateSubKey("shell\" + Path.GetFileNameWithoutExtension(resFileName) + "\command").SetValue("", shellText)
-                                Next
-                                vpxtoolstoplevel.Close()
+                                Using b2stoolstoplevel As RegistryKey = sysFileKey.CreateSubKey(".directb2s\shell\B2SServer")
+                                    b2stoolstoplevel.SetValue("MUIVerb", "B2S Server copy Screenres template")
+                                    b2stoolstoplevel.SetValue("subcommands", "")
+                                    b2stoolstoplevel.SetValue("Icon", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """")
+                                    For Each resFileName As String In sFiles
+                                        '           "D:\vPinball\VisualPinball\B2SServer\ScreenResTemplates.cmd" "ScreenResTemplates\Full Screen.res" "%L"
+                                        Dim shellText As String = """" + IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "ScreenResTemplates.cmd") + """ """ + resFileName + """ ""%L"""
+                                        b2stoolstoplevel.CreateSubKey("shell\" + Path.GetFileNameWithoutExtension(resFileName) + "\command").SetValue("", shellText)
+                                    Next
+                                End Using
                             End If
                         End If
-                        openKey.Close()
-                    Catch ex As UnauthorizedAccessException
-                        MessageBox.Show("UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End Try
-                End Using
-            End If
+                    End If
+
+                Catch ex As UnauthorizedAccessException
+                    MessageBox.Show("UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Try
+            End Using
+
         End If
 
 

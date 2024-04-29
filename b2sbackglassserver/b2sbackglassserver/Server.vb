@@ -1244,23 +1244,23 @@ Public Class Server
                     sb.Append(Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("B2SGIStrings", New String("0", 251)).ToString())
                 End If
 
-                For Each gistringdata As KeyValuePair(Of Integer, B2SCollectData.CollectData) In collectGIStringsData
+                For Each giStringData As KeyValuePair(Of Integer, B2SCollectData.CollectData) In collectGIStringsData
 
                     ' get gistring data
-                    Dim gistringid As Integer = gistringdata.Key
-                    Dim gistringstate As Boolean = gistringdata.Value.State > giStringThreshold
-                    Dim datatypes As Integer = gistringdata.Value.Types
+                    Dim giStringId As Integer = giStringData.Key
+                    Dim giStringBool As Boolean = giStringData.Value.State > giStringThreshold
+                    Dim datatypes As Integer = giStringData.Value.Types
 
                     ' maybe write log
                     If statelogChangedGIStrings.IsLogOn Then
-                        statelogChangedGIStrings.WriteLogEntry(DateTime.Now & ": Applying data (" & collectGIStringsData.Count & ")  : " & gistringid & " - " & gistringstate & " (" & datatypes & ")")
+                        statelogChangedGIStrings.WriteLogEntry(DateTime.Now & ": Applying data (" & collectGIStringsData.Count & ")  : " & giStringId & " - " & giStringBool & " (" & datatypes & ")")
                     End If
 
                     If B2SData.IsBackglassStartedAsEXE Then
 
                         ' enter new gistring state
-                        sb.Remove(gistringid, 1)
-                        sb.Insert(gistringid, If(gistringstate, "5", "0"))
+                        sb.Remove(giStringId, 1)
+                        sb.Insert(giStringId, If(giStringBool, "5", "0"))
 
                     Else
 
@@ -1269,10 +1269,10 @@ Public Class Server
                             Dim topvisible As Boolean = lastTopVisible
                             Dim secondvisible As Boolean = lastSecondVisible
                             If (datatypes And B2SCollectData.eCollectedDataType.TopImage) <> 0 Then
-                                topvisible = gistringstate
+                                topvisible = giStringBool
                                 If formBackglass.TopRomInverted Then topvisible = Not topvisible
                             ElseIf (datatypes And B2SCollectData.eCollectedDataType.SecondImage) <> 0 Then
-                                secondvisible = gistringstate
+                                secondvisible = giStringBool
                                 If formBackglass.SecondRomInverted Then topvisible = Not topvisible
                             End If
                             If lastTopVisible <> topvisible OrElse lastSecondVisible <> secondvisible OrElse Not isVisibleStateSet Then
@@ -1293,10 +1293,10 @@ Public Class Server
                             End If
                         End If
                         If (datatypes And B2SCollectData.eCollectedDataType.Standard) <> 0 Then
-                            For Each picbox As B2SPictureBox In B2SData.UsedRomGIStringIDs(gistringid)
+                            For Each picbox As B2SPictureBox In B2SData.UsedRomGIStringIDs(giStringId)
                                 'If picbox IsNot Nothing Then
                                 If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
-                                    Dim visible As Boolean = gistringstate
+                                    Dim visible As Boolean = giStringBool
                                     If picbox.RomInverted Then visible = Not visible
                                     If B2SData.UseRotatingImage AndAlso B2SData.RotatingPictureBox(0) IsNot Nothing AndAlso picbox.Equals(B2SData.RotatingPictureBox(0)) Then
                                         If visible Then
@@ -1313,9 +1313,9 @@ Public Class Server
 
                         ' animation stuff
                         If (datatypes And B2SCollectData.eCollectedDataType.Animation) <> 0 Then
-                            If B2SData.UsedAnimationGIStringIDs.ContainsKey(gistringid) Then
-                                For Each animation As B2SData.AnimationInfo In B2SData.UsedAnimationGIStringIDs(gistringid)
-                                    Dim start As Boolean = gistringstate
+                            If B2SData.UsedAnimationGIStringIDs.ContainsKey(giStringId) Then
+                                For Each animation As B2SData.AnimationInfo In B2SData.UsedAnimationGIStringIDs(giStringId)
+                                    Dim start As Boolean = giStringBool
                                     If animation.Inverted Then start = Not start
                                     If start Then
                                         formBackglass.StartAnimation(animation.AnimationName)
@@ -1325,11 +1325,11 @@ Public Class Server
                                 Next
                             End If
                             ' random animation start
-                            If B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(gistringid) Then
-                                Dim start As Boolean = gistringstate
+                            If B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(giStringId) Then
+                                Dim start As Boolean = giStringBool
                                 Dim isrunning As Boolean = False
                                 If start Then
-                                    For Each matchinganimation As B2SData.AnimationInfo In B2SData.UsedRandomAnimationGIStringIDs(gistringid)
+                                    For Each matchinganimation As B2SData.AnimationInfo In B2SData.UsedRandomAnimationGIStringIDs(giStringId)
                                         If formBackglass.IsAnimationRunning(matchinganimation.AnimationName) Then
                                             isrunning = True
                                             Exit For
@@ -1338,8 +1338,8 @@ Public Class Server
                                 End If
                                 If start Then
                                     If Not isrunning Then
-                                        Dim random As Integer = RandomStarter(B2SData.UsedRandomAnimationGIStringIDs(gistringid).Length)
-                                        Dim animation As B2SData.AnimationInfo = B2SData.UsedRandomAnimationGIStringIDs(gistringid)(random)
+                                        Dim random As Integer = RandomStarter(B2SData.UsedRandomAnimationGIStringIDs(giStringId).Length)
+                                        Dim animation As B2SData.AnimationInfo = B2SData.UsedRandomAnimationGIStringIDs(giStringId)(random)
                                         lastRandomStartedAnimation = animation.AnimationName
                                         formBackglass.StartAnimation(lastRandomStartedAnimation)
                                     End If
