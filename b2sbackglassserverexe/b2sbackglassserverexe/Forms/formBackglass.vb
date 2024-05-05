@@ -278,6 +278,11 @@ Public Class formBackglass
 #Region "painting"
 
     Protected Overrides Sub OnPaint(e As System.Windows.Forms.PaintEventArgs)
+        'If B2sSettings.HideBackglass Then hide this form
+        If B2SSettings.HideB2SBackglass Then
+            Me.Hide()
+            Return
+        End If
 
         ' some rendering hints
         e.Graphics.PageUnit = GraphicsUnit.Pixel

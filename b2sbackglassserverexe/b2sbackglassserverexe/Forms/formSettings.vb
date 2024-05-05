@@ -79,6 +79,7 @@ Public Class formSettings
         cmbDMD.SelectedIndex = B2SSettings.HideDMD
         cmbGrill.SelectedIndex = B2SSettings.HideGrill
         cmbB2SDMD.SelectedIndex = If(B2SSettings.HideB2SDMD, 1, 0)
+        cmbB2SBackglass.SelectedIndex = If(B2SSettings.HideB2SBackglass, 1, 0)
         btnScreenshotPath.Text = "Screenshot path: " & B2SSettings.ScreenshotPath
         cmbScreenshotType.SelectedIndex = B2SSettings.ScreenshotFileType
         numLampsSkipFrames.Enabled = (B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps) AndAlso B2SSettings.IsROMControlled
@@ -283,6 +284,11 @@ Public Class formSettings
         activateMsgBoxAtSaving = True
         isSettingsScreenDirty = True
         B2SSettings.HideB2SDMD = (cmbB2SDMD.SelectedIndex = 1)
+    End Sub
+    Private Sub cmbB2SBackglass_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cmbB2SBackglass.SelectedIndexChanged
+        activateMsgBoxAtSaving = True
+        isSettingsScreenDirty = True
+        B2SSettings.HideB2SBackglass = (cmbB2SBackglass.SelectedIndex = 1)
     End Sub
     Private Sub chkStartAsEXE_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkStartAsEXE.CheckedChanged
         activateMsgBoxAtSaving = True
