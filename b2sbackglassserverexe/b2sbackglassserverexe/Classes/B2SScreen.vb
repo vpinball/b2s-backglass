@@ -511,6 +511,11 @@ Public Class B2SScreen
             formBackglass.Show()
         End If
 
+        'If B2sSettings.HideBackglass Then hide this form
+        '        If B2SSettings.HideB2SBackglass Then
+        '        formBackglass.Hide()
+        '       End If
+
         ' maybe show DMD form
         If IsDMDToBeShown Then
             ' set DMD location relative to the backglass location
