@@ -124,7 +124,7 @@
   <data name="B2SLogo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EAAACxABrSO9dQAAHIZJREFUeF7tWQdYlOeyPhuUsp26lO27wNJ7L9LLAtJ7EUVAY1eiETR2jb0TBRVR
+        DAAACwwBP0AiyAAAHIZJREFUeF7tWQdYlOeyPhuUsp26lO27wNJ7L9LLAtJ7EUVAY1eiETR2jb0TBRVR
         LBELCoKACLajGFs0ydHEaGLUJDaMJ4pImTvfuhBWjfHec03OPc+d53mfXfb//vln3plvZr6fv/3V0paR
         T0G8pwRF+fO/l7Sl5lEQam1peRoI5sPUXM5PyTmiH1NyzBCSe2m5hm3pefS2jLwBylveKG2Z6GxmPvXn
         tOHcc9FpDiciEn1ORiR5XUnIsnqQkaeL195KDxF8LgVt6oPy5/+ZtCXnvodQa0vJVUdootP0e8nDDc9H
@@ -253,6 +253,6 @@
     <value>17, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>29</value>
+    <value>46</value>
   </metadata>
 </root>

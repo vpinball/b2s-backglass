@@ -52,6 +52,8 @@ Public Class formBackglass
         ' get B2S xml and start
         LoadB2SData()
 
+        B2SScreen = New B2SScreen()
+
         ' initialize screen settings
         InitB2SScreen()
 
