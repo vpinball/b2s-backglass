@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "B2SBackglassServerWrapper": {
-      "commandName": "Project",
-      "commandLineArgs": "test007"
-    }
-  }
-}

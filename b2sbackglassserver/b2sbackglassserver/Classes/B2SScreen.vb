@@ -7,7 +7,7 @@ Imports System.Reflection
 
 Public Class B2SScreen
 
-    Public Property ScreensOrdered() As Array = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
+    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
     Public Property VersionTwoFile() As Boolean = False
 
     Public Shared formBackglass As formBackglass = Nothing
@@ -40,9 +40,8 @@ Public Class B2SScreen
     Public Property BackglassCutOff() As Rectangle = Nothing
 
     Public Property IsDMDToBeShown() As Boolean = False
-    Public Property IsBackglassToBeShown() As Boolean = True
 
-
+    
 #Region "constructor and startup"
 
     Public Sub New()
@@ -176,11 +175,6 @@ Public Class B2SScreen
     Private Sub GetB2SSettings(ByVal _DefaultDMDLocation As Point, ByVal _DMDViewMode As eDMDViewMode, ByVal _BackglassGrillHeight As Integer, ByVal _BackglassSmallGrillHeight As Integer)
 
         Me.DMDViewMode = _DMDViewMode
-
-        ' show or not the backglass
-        If B2SSettings.HideB2SBackglass = CheckState.Checked Then
-            IsBackglassToBeShown = False
-        End If
 
         ' show or do not show the grill and do some more DMD stuff
         Dim showTheGrill As Boolean = (Me.DMDLocation.X = 0 AndAlso Me.DMDLocation.Y = 0)
@@ -377,25 +371,21 @@ Public Class B2SScreen
         ' move and scale all picked objects
         ScaleAllControls(rescaleBackglassX, rescaleBackglassY, rescaleDMDX, rescaleDMDY)
 
-        ' maybe show the backglass form
-        If IsBackglassToBeShown Then
-            formBackglass.StartPosition = FormStartPosition.Manual
-            formBackglass.BackgroundImageLayout = ImageLayout.Stretch
-            formBackglass.FormBorderStyle = FormBorderStyle.None
-            formBackglass.ControlBox = False
-            formBackglass.MaximizeBox = False
-            formBackglass.MinimizeBox = False
-            formBackglass.Location = screen.Bounds.Location + Me.BackglassLocation
-            formBackglass.Size = Me.BackglassSize
-            formBackglass.Text = "B2S Backglass Server"
-            formBackglass.Show()
+        ' show the backglass form
+        formBackglass.StartPosition = FormStartPosition.Manual
+        formBackglass.BackgroundImageLayout = ImageLayout.Stretch
+        formBackglass.FormBorderStyle = FormBorderStyle.None
+        formBackglass.ControlBox = False
+        formBackglass.MaximizeBox = False
+        formBackglass.MinimizeBox = False
+        formBackglass.Location = screen.Bounds.Location + Me.BackglassLocation
+        formBackglass.Size = Me.BackglassSize
+        formBackglass.Text = "B2S Backglass Server"
+        formBackglass.Show()
 
-            ' bring backglass screen to the front
-            If B2SSettings.FormToFront Then formBackglass.TopMost = True
-            formBackglass.BringToFront()
-        Else
-            formBackglass.Hide()
-        End If
+        ' bring backglass screen to the front
+        If B2SSettings.FormToFront Then formBackglass.TopMost = True
+        formBackglass.BringToFront()
 
         ' maybe show DMD form
         If IsDMDToBeShown Then

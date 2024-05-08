@@ -166,7 +166,6 @@ Public Class B2SSettings
     Public Shared Property FormToFront() As Boolean = True
     Public Shared Property FormToBack() As Boolean = False
     Public Shared Property FormNoFocus() As Boolean = False
-    Public Shared Property HideB2SBackglass() As Boolean = False
     Public Shared Property HideGrill() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
     Public Shared Property HideB2SDMD() As Boolean = False
     Public Shared Property HideDMD() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate

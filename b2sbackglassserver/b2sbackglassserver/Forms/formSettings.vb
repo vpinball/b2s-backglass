@@ -499,8 +499,4 @@ Public Class formSettings
     Private Sub B2SLogo_Click(sender As Object, e As EventArgs) Handles B2SLogo.Click
         B2SLogoToolTip.SetToolTip(B2SLogo, B2SSettings.SettingFilePath & vbCrLf & B2SSettings.LoadedResFilePath & vbCrLf & B2SSettings.PluginsFilePath)
     End Sub
-
-    Private Sub HideBackglass_CheckedChanged(sender As Object, e As EventArgs) Handles HideBackglass.CheckedChanged
-        B2SSettings.HideB2SBackglass = HideBackglass.Checked
-    End Sub
 End Class
