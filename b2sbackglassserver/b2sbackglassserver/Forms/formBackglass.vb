@@ -773,7 +773,11 @@ Public Class formBackglass
 
                 ' get top node
                 Dim topnode As Xml.XmlElement = XML.SelectSingleNode("DirectB2SData")
-                Dim mergeBulbs As Boolean = topnode.SelectSingleNode("MergeBulbs") IsNot Nothing AndAlso topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
+                Dim mergeBulbs As Boolean = True
+
+                If topnode.SelectSingleNode("MergeBulbs") IsNot Nothing Then
+                    mergeBulbs = topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
+                End If
 
                 ' clear all data
                 B2SData.ClearAll(True)
