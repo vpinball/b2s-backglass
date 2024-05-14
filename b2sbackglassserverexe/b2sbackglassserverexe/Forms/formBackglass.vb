@@ -1916,6 +1916,8 @@ Public Class formBackglass
                         Dim loc As Point = New Point(CInt(innerNode.Attributes("LocX").InnerText), CInt(innerNode.Attributes("LocY").InnerText))
                         Dim size As Size = New Size(CInt(innerNode.Attributes("Width").InnerText), CInt(innerNode.Attributes("Height").InnerText))
                         Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
+                        image = CropImageToTransparency(image, loc, size)
+
                         Dim offimage As Image = Nothing
                         If innerNode.Attributes("OffImage") IsNot Nothing Then
                             offimage = Base64ToImage(innerNode.Attributes("OffImage").InnerText)
@@ -3158,7 +3160,70 @@ Public Class formBackglass
             End If
         End If
     End Sub
+    Public Function GetBoundingRectangle(image As Bitmap) As Rectangle
+        Dim rect As New Rectangle(0, 0, image.Width, image.Height)
+        Dim bmpData As Imaging.BitmapData = image.LockBits(rect, Imaging.ImageLockMode.ReadOnly, Imaging.PixelFormat.Format32bppArgb)
 
+        Dim stride As Integer = bmpData.Stride
+        Dim scan0 As IntPtr = bmpData.Scan0
+
+        Dim minX As Integer = image.Width
+        Dim minY As Integer = image.Height
+        Dim maxX As Integer = 0
+        Dim maxY As Integer = 0
+
+        Dim foundNonTransparent As Boolean = False
+
+        Dim pixels(image.Height * stride - 1) As Byte
+        System.Runtime.InteropServices.Marshal.Copy(scan0, pixels, 0, pixels.Length)
+
+        For y As Integer = 0 To image.Height - 1
+            For x As Integer = 0 To image.Width - 1
+                Dim index As Integer = (y * stride) + (x * 4) ' 4 bytes per pixel (32bpp)
+                Dim alpha As Byte = pixels(index + 3)
+
+                If alpha <> 0 Then
+                    foundNonTransparent = True
+                    If x < minX Then minX = x
+                    If y < minY Then minY = y
+                    If x > maxX Then maxX = x
+                    If y > maxY Then maxY = y
+                End If
+            Next
+        Next
+
+        image.UnlockBits(bmpData)
+
+        If Not foundNonTransparent Then
+            ' No non-transparent pixels found
+            Return Rectangle.Empty
+        End If
+
+        Return New Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1)
+    End Function
+
+    Public Function CropImageToTransparency(image As Image, ByRef loc As Point, ByRef size As Size) As Image
+        Dim bitmap As Bitmap = CType(image, Bitmap)
+        Dim boundingRect As Rectangle = GetBoundingRectangle(bitmap)
+
+        If boundingRect = Rectangle.Empty Then
+            ' Return an empty image or the original image as needed
+            Return image
+        End If
+
+        Dim croppedImage As New Bitmap(boundingRect.Width, boundingRect.Height)
+
+        Using g As Graphics = Graphics.FromImage(croppedImage)
+            g.DrawImage(bitmap, New Rectangle(0, 0, boundingRect.Width, boundingRect.Height), boundingRect, GraphicsUnit.Pixel)
+        End Using
+
+        ' Update loc and size based on the new dimensions
+        Dim sizeOrg As Size = size
+        size = New Size(CInt(size.Width * (boundingRect.Width / image.Width)), CInt(size.Height * (boundingRect.Height / image.Height)))
+        loc = New Point(loc.X + boundingRect.X, loc.Y + boundingRect.Y)
+
+        Return croppedImage
+    End Function
     Private Function ImageToBase64(image As Image) As String
         If image IsNot Nothing Then
             With New System.Drawing.ImageConverter
