@@ -1799,11 +1799,11 @@ Public Class formBackglass
 
                 ' get top node
                 Dim topnode As Xml.XmlElement = XML.SelectSingleNode("DirectB2SData")
-                Dim mergeBulbs As Boolean = True
+                Dim mergeBulbs As Boolean = False
 
-                If topnode.SelectSingleNode("MergeBulbs") IsNot Nothing Then
-                    mergeBulbs = topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
-                End If
+                'If topnode.SelectSingleNode("MergeBulbs") IsNot Nothing Then
+                '    mergeBulbs = topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
+                'End If
 
 
                 ' clear all data
@@ -1916,12 +1916,12 @@ Public Class formBackglass
                         Dim loc As Point = New Point(CInt(innerNode.Attributes("LocX").InnerText), CInt(innerNode.Attributes("LocY").InnerText))
                         Dim size As Size = New Size(CInt(innerNode.Attributes("Width").InnerText), CInt(innerNode.Attributes("Height").InnerText))
                         Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
-                        image = CropImageToTransparency(image, loc, size)
 
                         Dim offimage As Image = Nothing
                         If innerNode.Attributes("OffImage") IsNot Nothing Then
                             offimage = Base64ToImage(innerNode.Attributes("OffImage").InnerText)
                         End If
+                        image = CropImageToTransparency(image, offimage, loc, size)
                         ' create new picturebox control
                         Dim picbox As B2SPictureBox = New B2SPictureBox()
                         Dim IsOnBackglass As Boolean = (parent = "Backglass")
@@ -1955,6 +1955,7 @@ Public Class formBackglass
                             ' add info to rom collection
                             If romid > 0 AndAlso picboxtype = B2SPictureBox.ePictureBoxType.StandardImage AndAlso romidtype <> B2SBaseBox.eRomIDType.Mech Then
                                 Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & "|" & romidvalue.ToString()
+
                                 If picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = B2SData.eDualMode.Authentic Then
                                     If roms4Authentic.ContainsKey(key) Then roms4Authentic(key) += size.Width * size.Height Else roms4Authentic.Add(key, size.Width * size.Height)
                                 End If
@@ -2352,40 +2353,61 @@ Public Class formBackglass
                 ' maybe get all reel images
                 If topnode.SelectSingleNode("Reels") IsNot Nothing Then
 
-                        If topnode.SelectNodes("Reels/Image") IsNot Nothing AndAlso topnode.SelectNodes("Reels/Image").Count > 0 Then
-                            For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Reels/Image")
-                                Dim name As String = innerNode.Attributes("Name").InnerText
-                                Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
-                                If Not B2SData.ReelImages.ContainsKey(name) Then
-                                    B2SData.ReelImages.Add(name, image)
-                                End If
-                            Next
+                    If topnode.SelectNodes("Reels/Image") IsNot Nothing AndAlso topnode.SelectNodes("Reels/Image").Count > 0 Then
+                        For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Reels/Image")
+                            Dim name As String = innerNode.Attributes("Name").InnerText
+                            Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
+                            If Not B2SData.ReelImages.ContainsKey(name) Then
+                                B2SData.ReelImages.Add(name, image)
+                            End If
+                        Next
 
-                        ElseIf topnode.SelectNodes("Reels/Images") IsNot Nothing AndAlso topnode.SelectNodes("Reels/Images/Image") IsNot Nothing AndAlso topnode.SelectNodes("Reels/Images/Image").Count > 0 Then
+                    ElseIf topnode.SelectNodes("Reels/Images") IsNot Nothing AndAlso topnode.SelectNodes("Reels/Images/Image") IsNot Nothing AndAlso topnode.SelectNodes("Reels/Images/Image").Count > 0 Then
 
-                            For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Reels/Images/Image")
-                                Dim name As String = innerNode.Attributes("Name").InnerText
-                                Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
-                                If Not B2SData.ReelImages.ContainsKey(name) Then
-                                    B2SData.ReelImages.Add(name, image)
-                                End If
-                                ' maybe get the intermediate reel images
-                                If innerNode.Attributes("CountOfIntermediates") IsNot Nothing Then
-                                    Dim countOfIntermediates As Integer = CInt(innerNode.Attributes("CountOfIntermediates").InnerText)
-                                    For i As Integer = 1 To countOfIntermediates
-                                        Dim intname As String = name & "_" & i.ToString()
-                                        Dim intimage As Image = Base64ToImage(innerNode.Attributes("IntermediateImage" & i.ToString()).InnerText)
-                                        If Not B2SData.ReelIntermediateImages.ContainsKey(intname) Then
-                                            B2SData.ReelIntermediateImages.Add(intname, intimage)
-                                        End If
-                                    Next
-                                End If
-                            Next
+                        For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Reels/Images/Image")
+                            Dim name As String = innerNode.Attributes("Name").InnerText
+                            Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
+                            If Not B2SData.ReelImages.ContainsKey(name) Then
+                                B2SData.ReelImages.Add(name, image)
+                            End If
+                            ' maybe get the intermediate reel images
+                            If innerNode.Attributes("CountOfIntermediates") IsNot Nothing Then
+                                Dim countOfIntermediates As Integer = CInt(innerNode.Attributes("CountOfIntermediates").InnerText)
+                                For i As Integer = 1 To countOfIntermediates
+                                    Dim intname As String = name & "_" & i.ToString()
+                                    Dim intimage As Image = Base64ToImage(innerNode.Attributes("IntermediateImage" & i.ToString()).InnerText)
+                                    If Not B2SData.ReelIntermediateImages.ContainsKey(intname) Then
+                                        B2SData.ReelIntermediateImages.Add(intname, intimage)
+                                    End If
+                                Next
+                            End If
+                        Next
 
-                            If topnode.SelectNodes("Reels/IlluminatedImages") IsNot Nothing Then
-                                If topnode.SelectNodes("Reels/IlluminatedImages/IlluminatedImage") IsNot Nothing AndAlso topnode.SelectNodes("Reels/IlluminatedImages/IlluminatedImage").Count > 0 Then
-                                    For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Reels/IlluminatedImages/IlluminatedImage")
-                                        Dim name As String = innerNode.Attributes("Name").InnerText
+                        If topnode.SelectNodes("Reels/IlluminatedImages") IsNot Nothing Then
+                            If topnode.SelectNodes("Reels/IlluminatedImages/IlluminatedImage") IsNot Nothing AndAlso topnode.SelectNodes("Reels/IlluminatedImages/IlluminatedImage").Count > 0 Then
+                                For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Reels/IlluminatedImages/IlluminatedImage")
+                                    Dim name As String = innerNode.Attributes("Name").InnerText
+                                    Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
+                                    If Not B2SData.ReelIlluImages.ContainsKey(name) Then
+                                        B2SData.ReelIlluImages.Add(name, image)
+                                    End If
+                                    ' maybe get the intermediate reel images
+                                    If innerNode.Attributes("CountOfIntermediates") IsNot Nothing Then
+                                        Dim countOfIntermediates As Integer = CInt(innerNode.Attributes("CountOfIntermediates").InnerText)
+                                        For i As Integer = 1 To countOfIntermediates
+                                            Dim intname As String = name & "_" & i.ToString()
+                                            Dim intimage As Image = Base64ToImage(innerNode.Attributes("IntermediateImage" & i.ToString()).InnerText)
+                                            If Not B2SData.ReelIntermediateIlluImages.ContainsKey(intname) Then
+                                                B2SData.ReelIntermediateIlluImages.Add(intname, intimage)
+                                            End If
+                                        Next
+                                    End If
+                                Next
+                            ElseIf topnode.SelectNodes("Reels/IlluminatedImages/Set") IsNot Nothing AndAlso topnode.SelectNodes("Reels/IlluminatedImages/Set/IlluminatedImage") IsNot Nothing AndAlso topnode.SelectNodes("Reels/IlluminatedImages/Set/IlluminatedImage").Count > 0 Then
+                                For Each setnode As Xml.XmlElement In topnode.SelectNodes("Reels/IlluminatedImages/Set")
+                                    Dim setid As Integer = CInt(setnode.Attributes("ID").InnerText)
+                                    For Each innerNode As Xml.XmlElement In setnode.SelectNodes("IlluminatedImage")
+                                        Dim name As String = innerNode.Attributes("Name").InnerText & "_" & setid.ToString()
                                         Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
                                         If Not B2SData.ReelIlluImages.ContainsKey(name) Then
                                             B2SData.ReelIlluImages.Add(name, image)
@@ -2402,169 +2424,148 @@ Public Class formBackglass
                                             Next
                                         End If
                                     Next
-                                ElseIf topnode.SelectNodes("Reels/IlluminatedImages/Set") IsNot Nothing AndAlso topnode.SelectNodes("Reels/IlluminatedImages/Set/IlluminatedImage") IsNot Nothing AndAlso topnode.SelectNodes("Reels/IlluminatedImages/Set/IlluminatedImage").Count > 0 Then
-                                    For Each setnode As Xml.XmlElement In topnode.SelectNodes("Reels/IlluminatedImages/Set")
-                                        Dim setid As Integer = CInt(setnode.Attributes("ID").InnerText)
-                                        For Each innerNode As Xml.XmlElement In setnode.SelectNodes("IlluminatedImage")
-                                            Dim name As String = innerNode.Attributes("Name").InnerText & "_" & setid.ToString()
-                                            Dim image As Image = Base64ToImage(innerNode.Attributes("Image").InnerText)
-                                            If Not B2SData.ReelIlluImages.ContainsKey(name) Then
-                                                B2SData.ReelIlluImages.Add(name, image)
-                                            End If
-                                            ' maybe get the intermediate reel images
-                                            If innerNode.Attributes("CountOfIntermediates") IsNot Nothing Then
-                                                Dim countOfIntermediates As Integer = CInt(innerNode.Attributes("CountOfIntermediates").InnerText)
-                                                For i As Integer = 1 To countOfIntermediates
-                                                    Dim intname As String = name & "_" & i.ToString()
-                                                    Dim intimage As Image = Base64ToImage(innerNode.Attributes("IntermediateImage" & i.ToString()).InnerText)
-                                                    If Not B2SData.ReelIntermediateIlluImages.ContainsKey(intname) Then
-                                                        B2SData.ReelIntermediateIlluImages.Add(intname, intimage)
-                                                    End If
-                                                Next
-                                            End If
-                                        Next
-                                    Next
-                                End If
+                                Next
                             End If
-
                         End If
 
                     End If
 
-                    ' maybe get all sounds
-                    If topnode.SelectSingleNode("Sounds") IsNot Nothing Then
+                End If
 
-                        If topnode.SelectNodes("Sounds/Sound") IsNot Nothing AndAlso topnode.SelectNodes("Sounds/Sound").Count > 0 Then
-                            For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Sounds/Sound")
-                                Dim name As String = innerNode.Attributes("Name").InnerText
-                                Dim stream As IO.MemoryStream = Base64ToWav(innerNode.Attributes("Stream").InnerText)
-                                If Not B2SData.Sounds.ContainsKey(name) Then
-                                    B2SData.Sounds.Add(name, stream.ToArray)
-                                End If
-                            Next
-                        End If
-                        For Each reel As KeyValuePair(Of String, B2SReelBox) In B2SData.Reels
-                            If B2SData.Sounds.ContainsKey(reel.Value.SoundName) Then
-                                reel.Value.Sound = B2SData.Sounds(reel.Value.SoundName)
+                ' maybe get all sounds
+                If topnode.SelectSingleNode("Sounds") IsNot Nothing Then
+
+                    If topnode.SelectNodes("Sounds/Sound") IsNot Nothing AndAlso topnode.SelectNodes("Sounds/Sound").Count > 0 Then
+                        For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Sounds/Sound")
+                            Dim name As String = innerNode.Attributes("Name").InnerText
+                            Dim stream As IO.MemoryStream = Base64ToWav(innerNode.Attributes("Stream").InnerText)
+                            If Not B2SData.Sounds.ContainsKey(name) Then
+                                B2SData.Sounds.Add(name, stream.ToArray)
                             End If
                         Next
-
                     End If
+                    For Each reel As KeyValuePair(Of String, B2SReelBox) In B2SData.Reels
+                        If B2SData.Sounds.ContainsKey(reel.Value.SoundName) Then
+                            reel.Value.Sound = B2SData.Sounds(reel.Value.SoundName)
+                        End If
+                    Next
 
-                    ' get background and maybe DMD image(s)
-                    If topnode.SelectSingleNode("Images") IsNot Nothing Then
+                End If
 
-                        ' backglass image
-                        Dim offimagenode As Xml.XmlElement = topnode.SelectSingleNode("Images/BackglassOffImage")
-                        If offimagenode IsNot Nothing Then
-                            B2SData.OnAndOffImage = True
-                            ' get on and off image
-                            Dim offimage As Image = Base64ToImage(offimagenode.Attributes("Value").InnerText)
-                            DarkImage4Authentic = offimage
+                ' get background and maybe DMD image(s)
+                If topnode.SelectSingleNode("Images") IsNot Nothing Then
+
+                    ' backglass image
+                    Dim offimagenode As Xml.XmlElement = topnode.SelectSingleNode("Images/BackglassOffImage")
+                    If offimagenode IsNot Nothing Then
+                        B2SData.OnAndOffImage = True
+                        ' get on and off image
+                        Dim offimage As Image = Base64ToImage(offimagenode.Attributes("Value").InnerText)
+                        DarkImage4Authentic = offimage
+                        If B2SData.DualBackglass Then
+                            DarkImage4Fantasy = offimage
+                        End If
+                        Dim onimagenode As Xml.XmlElement = topnode.SelectSingleNode("Images/BackglassOnImage")
+                        If onimagenode IsNot Nothing Then
+                            Dim onimage As Image = Base64ToImage(onimagenode.Attributes("Value").InnerText)
+                            TopLightImage4Authentic = onimage
                             If B2SData.DualBackglass Then
-                                DarkImage4Fantasy = offimage
+                                TopLightImage4Fantasy = onimage
                             End If
-                            Dim onimagenode As Xml.XmlElement = topnode.SelectSingleNode("Images/BackglassOnImage")
-                            If onimagenode IsNot Nothing Then
-                                Dim onimage As Image = Base64ToImage(onimagenode.Attributes("Value").InnerText)
-                                TopLightImage4Authentic = onimage
+                            If onimagenode.Attributes("RomID") IsNot Nothing Then
+                                TopRomID4Authentic = CInt(onimagenode.Attributes("RomID").InnerText)
+                                TopRomIDType4Authentic = CInt(onimagenode.Attributes("RomIDType").InnerText)
+                                TopRomInverted4Authentic = False
+                                Select Case TopRomIDType4Authentic
+                                    Case B2SBaseBox.eRomIDType.Lamp
+                                        B2SData.UsedRomLampIDs4Authentic.Add(TopRomID4Authentic, Nothing)
+                                    Case B2SBaseBox.eRomIDType.Solenoid
+                                        B2SData.UsedRomSolenoidIDs4Authentic.Add(TopRomID4Authentic, Nothing)
+                                    Case B2SBaseBox.eRomIDType.GIString
+                                        B2SData.UsedRomGIStringIDs4Authentic.Add(TopRomID4Authentic, Nothing)
+                                End Select
                                 If B2SData.DualBackglass Then
-                                    TopLightImage4Fantasy = onimage
-                                End If
-                                If onimagenode.Attributes("RomID") IsNot Nothing Then
-                                    TopRomID4Authentic = CInt(onimagenode.Attributes("RomID").InnerText)
-                                    TopRomIDType4Authentic = CInt(onimagenode.Attributes("RomIDType").InnerText)
-                                    TopRomInverted4Authentic = False
+                                    TopRomID4Fantasy = CInt(onimagenode.Attributes("RomID").InnerText)
+                                    TopRomIDType4Fantasy = CInt(onimagenode.Attributes("RomIDType").InnerText)
+                                    TopRomInverted4Fantasy = False
                                     Select Case TopRomIDType4Authentic
                                         Case B2SBaseBox.eRomIDType.Lamp
-                                            B2SData.UsedRomLampIDs4Authentic.Add(TopRomID4Authentic, Nothing)
+                                            B2SData.UsedRomLampIDs4Fantasy.Add(TopRomID4Fantasy, Nothing)
                                         Case B2SBaseBox.eRomIDType.Solenoid
-                                            B2SData.UsedRomSolenoidIDs4Authentic.Add(TopRomID4Authentic, Nothing)
+                                            B2SData.UsedRomSolenoidIDs4Fantasy.Add(TopRomID4Fantasy, Nothing)
                                         Case B2SBaseBox.eRomIDType.GIString
-                                            B2SData.UsedRomGIStringIDs4Authentic.Add(TopRomID4Authentic, Nothing)
+                                            B2SData.UsedRomGIStringIDs4Fantasy.Add(TopRomID4Fantasy, Nothing)
                                     End Select
-                                    If B2SData.DualBackglass Then
-                                        TopRomID4Fantasy = CInt(onimagenode.Attributes("RomID").InnerText)
-                                        TopRomIDType4Fantasy = CInt(onimagenode.Attributes("RomIDType").InnerText)
-                                        TopRomInverted4Fantasy = False
-                                        Select Case TopRomIDType4Authentic
-                                            Case B2SBaseBox.eRomIDType.Lamp
-                                                B2SData.UsedRomLampIDs4Fantasy.Add(TopRomID4Fantasy, Nothing)
-                                            Case B2SBaseBox.eRomIDType.Solenoid
-                                                B2SData.UsedRomSolenoidIDs4Fantasy.Add(TopRomID4Fantasy, Nothing)
-                                            Case B2SBaseBox.eRomIDType.GIString
-                                                B2SData.UsedRomGIStringIDs4Fantasy.Add(TopRomID4Fantasy, Nothing)
-                                        End Select
-                                    End If
-                                End If
-                            End If
-                        Else
-                            Dim imagenode As Xml.XmlElement = topnode.SelectSingleNode("Images/BackglassImage")
-                            If imagenode IsNot Nothing Then
-                                Dim image As Image = Base64ToImage(imagenode.Attributes("Value").InnerText)
-                                DarkImage4Authentic = image
-                                If B2SData.DualBackglass Then
-                                    DarkImage4Fantasy = image
                                 End If
                             End If
                         End If
-                        ' starting image is the dark image
-                        Me.BackgroundImage = DarkImage
-
-                        ' DMD image
-                        Dim dmdimagenode As Xml.XmlElement = topnode.SelectSingleNode("Images/DMDImage")
-                        If dmdimagenode IsNot Nothing Then
-                            Dim image As Image = Base64ToImage(dmdimagenode.Attributes("Value").InnerText)
-                            If image IsNot Nothing Then
-                                If Not B2SSettings.HideB2SDMD Then
-                                    CheckDMDForm()
-                                    formDMD.BackgroundImage = image
-                                End If
+                    Else
+                        Dim imagenode As Xml.XmlElement = topnode.SelectSingleNode("Images/BackglassImage")
+                        If imagenode IsNot Nothing Then
+                            Dim image As Image = Base64ToImage(imagenode.Attributes("Value").InnerText)
+                            DarkImage4Authentic = image
+                            If B2SData.DualBackglass Then
+                                DarkImage4Fantasy = image
                             End If
                         End If
+                    End If
+                    ' starting image is the dark image
+                    Me.BackgroundImage = DarkImage
 
+                    ' DMD image
+                    Dim dmdimagenode As Xml.XmlElement = topnode.SelectSingleNode("Images/DMDImage")
+                    If dmdimagenode IsNot Nothing Then
+                        Dim image As Image = Base64ToImage(dmdimagenode.Attributes("Value").InnerText)
+                        If image IsNot Nothing Then
+                            If Not B2SSettings.HideB2SDMD Then
+                                CheckDMDForm()
+                                formDMD.BackgroundImage = image
+                            End If
+                        End If
+                    End If
+
+                    If mergeBulbs Then
                         ' look for the largest bulb amount
-                        Dim top4Authentic As Integer = 0
+                        Dim topSize4Authentic As Integer = 0
                         Dim topkey4Authentic As String = String.Empty
-                        Dim second4Authentic As Integer = 0
+                        Dim secondSize4Authentic As Integer = 0
                         Dim secondkey4Authentic As String = String.Empty
                         For Each romsize As KeyValuePair(Of String, Integer) In roms4Authentic
-                            If romsize.Value > second4Authentic Then
-                                second4Authentic = romsize.Value
-                                secondkey4Authentic = romsize.Key.Split("|")(0)
+                            If romsize.Value > secondSize4Authentic Then
+                                secondSize4Authentic = romsize.Value
+                                secondkey4Authentic = romsize.Key
                             End If
-                            If romsize.Value > top4Authentic Then
-                                second4Authentic = top4Authentic
+                            If romsize.Value > topSize4Authentic Then
+                                secondSize4Authentic = topSize4Authentic
                                 secondkey4Authentic = topkey4Authentic
-                                top4Authentic = romsize.Value
-                                topkey4Authentic = romsize.Key.Split("|")(0)
+                                topSize4Authentic = romsize.Value
+                                topkey4Authentic = romsize.Key
                             End If
                         Next
                         Dim top4Fantasy As Integer = 0
                         Dim topkey4Fantasy As String = String.Empty
-                        Dim second4Fantasy As Integer = 0
+                        Dim secondSize4Fantasy As Integer = 0
                         Dim secondkey4Fantasy As String = String.Empty
                         If B2SData.DualBackglass Then
                             For Each romsize As KeyValuePair(Of String, Integer) In roms4Fantasy
-                                If romsize.Value > second4Fantasy Then
-                                    second4Fantasy = romsize.Value
-                                    secondkey4Fantasy = romsize.Key.Split("|")(0)
+                                If romsize.Value > secondSize4Fantasy Then
+                                    secondSize4Fantasy = romsize.Value
+                                    secondkey4Fantasy = romsize.Key
                                 End If
                                 If romsize.Value > top4Fantasy Then
-                                    second4Fantasy = top4Fantasy
+                                    secondSize4Fantasy = top4Fantasy
                                     secondkey4Fantasy = topkey4Fantasy
                                     top4Fantasy = romsize.Value
-                                    topkey4Fantasy = romsize.Key.Split("|")(0)
+                                    topkey4Fantasy = romsize.Key
                                 End If
                             Next
                         End If
-
                         ' maybe draw some light images for pretty fast image changing
-                        If top4Authentic >= minSize4Image And mergeBulbs Then
+                        If topSize4Authentic >= minSize4Image Then
                             ' create some light images
                             If TopLightImage4Authentic Is Nothing Then
                                 TopLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic)
-                                If second4Authentic > minSize4Image Then
+                                If secondSize4Authentic > minSize4Image Then
                                     SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, secondkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
                                     TopAndSecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, secondkey4Authentic)
                                 End If
@@ -2573,11 +2574,11 @@ Public Class formBackglass
                                 TopAndSecondLightImage4Authentic = CreateLightImage(TopLightImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic)
                             End If
                         End If
-                        If B2SData.DualBackglass AndAlso top4Fantasy >= minSize4Image And mergeBulbs Then
+                        If B2SData.DualBackglass AndAlso top4Fantasy >= minSize4Image Then
                             ' create some light images
                             If TopLightImage4Fantasy Is Nothing Then
                                 TopLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy)
-                                If second4Fantasy > minSize4Image Then
+                                If secondSize4Fantasy > minSize4Image Then
                                     SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, secondkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
                                     TopAndSecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, secondkey4Fantasy)
                                 End If
@@ -2600,160 +2601,160 @@ Public Class formBackglass
                             CheckBulbs(TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
                             CheckBulbs(SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
                         End If
-
                     End If
-
-                    ' get all animation info
-                    Dim animationpulseswitch As Boolean = False
-                    If topnode.SelectSingleNode("Animations") IsNot Nothing AndAlso topnode.SelectNodes("Animations/Animation") IsNot Nothing Then
-                        For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Animations/Animation")
-                            Dim name As String = innerNode.Attributes("Name").InnerText
-                            Dim dualmode As B2SData.eDualMode = B2SData.eDualMode.Both
-                            If innerNode.Attributes("DualMode") IsNot Nothing Then
-                                dualmode = CInt(innerNode.Attributes("DualMode").InnerText)
-                            End If
-                            Dim interval As Integer = CInt(innerNode.Attributes("Interval").InnerText)
-                            Dim loops As Integer = CInt(innerNode.Attributes("Loops").InnerText)
-                            Dim idJoins As String = innerNode.Attributes("IDJoin").InnerText
-                            Dim startAnimationAtBackglassStartup As Boolean = (innerNode.Attributes("StartAnimationAtBackglassStartup").InnerText = "1")
-                            Dim lightsStateAtAnimationStart As B2SAnimation.eLightsStateAtAnimationStart = B2SAnimation.eLightsStateAtAnimationStart.NoChange
-                            Dim lightsStateAtAnimationEnd As B2SAnimation.eLightsStateAtAnimationEnd = B2SAnimation.eLightsStateAtAnimationEnd.InvolvedLightsOff
-                            Dim animationstopbehaviour As B2SAnimation.eAnimationStopBehaviour = B2S.B2SAnimation.eAnimationStopBehaviour.StopImmediatelly
-                            Dim lockInvolvedLamps As Boolean = False
-                            Dim hidescoredisplays As Boolean = False
-                            Dim bringtofront As Boolean = False
-                            Dim randomstart As Boolean = False
-                            Dim randomquality As Integer = 1
-                            If innerNode.Attributes("LightsStateAtAnimationStart") IsNot Nothing Then
-                                lightsStateAtAnimationStart = CInt(innerNode.Attributes("LightsStateAtAnimationStart").InnerText)
-                            ElseIf innerNode.Attributes("AllLightsOffAtAnimationStart") IsNot Nothing Then
-                                lightsStateAtAnimationStart = If((innerNode.Attributes("AllLightsOffAtAnimationStart").InnerText = "1"), B2SAnimation.eLightsStateAtAnimationStart.LightsOff, B2SAnimation.eLightsStateAtAnimationStart.NoChange)
-                            End If
-                            If innerNode.Attributes("LightsStateAtAnimationEnd") IsNot Nothing Then
-                                lightsStateAtAnimationEnd = CInt(innerNode.Attributes("LightsStateAtAnimationEnd").InnerText)
-                            ElseIf innerNode.Attributes("ResetLightsAtAnimationEnd") IsNot Nothing Then
-                                lightsStateAtAnimationEnd = If((innerNode.Attributes("ResetLightsAtAnimationEnd").InnerText = "1"), B2SAnimation.eLightsStateAtAnimationEnd.LightsReseted, B2SAnimation.eLightsStateAtAnimationEnd.Undefined)
-                            End If
-                            If innerNode.Attributes("AnimationStopBehaviour") IsNot Nothing Then
-                                animationstopbehaviour = CInt(innerNode.Attributes("AnimationStopBehaviour").InnerText)
-                            ElseIf innerNode.Attributes("RunAnimationTilEnd") IsNot Nothing Then
-                                animationstopbehaviour = If((innerNode.Attributes("RunAnimationTilEnd").InnerText = "1"), B2SAnimation.eAnimationStopBehaviour.RunAnimationTillEnd, B2SAnimation.eAnimationStopBehaviour.StopImmediatelly)
-                            End If
-                            lockInvolvedLamps = (innerNode.Attributes("LockInvolvedLamps").InnerText = "1")
-                            If innerNode.Attributes("HideScoreDisplays") IsNot Nothing Then
-                                hidescoredisplays = (innerNode.Attributes("HideScoreDisplays").InnerText = "1")
-                            End If
-                            If innerNode.Attributes("BringToFront") IsNot Nothing Then
-                                bringtofront = (innerNode.Attributes("BringToFront").InnerText = "1")
-                            End If
-                            If innerNode.Attributes("RandomStart") IsNot Nothing Then
-                                randomstart = (innerNode.Attributes("RandomStart").InnerText = "1")
-                            End If
-                            If randomstart AndAlso innerNode.Attributes("RandomQuality") IsNot Nothing Then
-                                randomquality = CInt(innerNode.Attributes("RandomQuality").InnerText)
-                            End If
-                            If lightsStateAtAnimationStart = B2SAnimation.eLightsStateAtAnimationStart.Undefined Then lightsStateAtAnimationStart = B2SAnimation.eLightsStateAtAnimationStart.NoChange
-                            If lightsStateAtAnimationEnd = B2SAnimation.eLightsStateAtAnimationEnd.Undefined Then lightsStateAtAnimationEnd = B2SAnimation.eLightsStateAtAnimationEnd.InvolvedLightsOff
-                            If animationstopbehaviour = B2SAnimation.eAnimationStopBehaviour.Undefined Then animationstopbehaviour = B2SAnimation.eAnimationStopBehaviour.StopImmediatelly
-                            Dim entries As B2SAnimation.PictureBoxAnimationEntry() = Nothing
-                            For Each stepnode As Xml.XmlElement In innerNode.SelectNodes("AnimationStep")
-                                Dim [step] As Integer = CInt(stepnode.Attributes("Step").InnerText)
-                                Dim [on] As String = stepnode.Attributes("On").InnerText
-                                Dim waitLoopsAfterOn As Integer = CInt(stepnode.Attributes("WaitLoopsAfterOn").InnerText)
-                                Dim off As String = stepnode.Attributes("Off").InnerText
-                                Dim waitLoopsAfterOff As Integer = CInt(stepnode.Attributes("WaitLoopsAfterOff").InnerText)
-                                Dim pulseswitch As Integer = 0
-                                If stepnode.Attributes("PulseSwitch") IsNot Nothing Then
-                                    pulseswitch = CInt(stepnode.Attributes("PulseSwitch").InnerText)
-                                    If pulseswitch > 0 Then animationpulseswitch = True
-                                End If
-                                Dim entry As B2SAnimation.PictureBoxAnimationEntry = New B2SAnimation.PictureBoxAnimationEntry([on], waitLoopsAfterOn, off, waitLoopsAfterOff, , , , , pulseswitch)
-                                If entries Is Nothing Then
-                                    ReDim entries(0)
-                                    entries(0) = entry
-                                Else
-                                    ReDim Preserve entries(entries.Length)
-                                    entries(entries.Length - 1) = entry
-                                End If
-                            Next
-                            ' maybe add animation
-                            If interval > 0 AndAlso entries.Length > 0 Then
-                                B2SAnimation.AddAnimation(name, Me, formDMD, dualmode, interval, loops, startAnimationAtBackglassStartup, lightsStateAtAnimationStart, lightsStateAtAnimationEnd,
-                                                      animationstopbehaviour, lockInvolvedLamps, hidescoredisplays, bringtofront, randomstart, randomquality,
-                                                      entries)
-                                ' maybe set slowdown
-                                If B2SSettings.AnimationSlowDowns.ContainsKey(name) Then
-                                    B2SAnimation.AnimationSlowDown(name) = B2SSettings.AnimationSlowDowns(name)
-                                End If
-                                ' add join to ID
-                                If Not String.IsNullOrEmpty(idJoins) Then
-                                    For Each idJoin As String In idJoins.Split(",")
-                                        If Not String.IsNullOrEmpty(idJoin) Then
-                                            Dim id0 As Integer = 0
-                                            Dim id1 As Integer = 0
-                                            Dim id2 As Integer = 0
-                                            Dim id3 As Integer = 0
-                                            If idJoin.Length >= 1 AndAlso IsNumeric(idJoin) Then id0 = CInt(idJoin)
-                                            If idJoin.Length >= 2 AndAlso IsNumeric(idJoin.Substring(1)) Then id1 = CInt(idJoin.Substring(1))
-                                            If idJoin.Length >= 3 AndAlso IsNumeric(idJoin.Substring(2)) Then id2 = CInt(idJoin.Substring(2))
-                                            If idJoin.Length >= 4 AndAlso IsNumeric(idJoin.Substring(3)) Then id3 = CInt(idJoin.Substring(3))
-                                            Select Case idJoin.Substring(0, 1).ToUpper
-                                                Case "L"
-                                                    Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationLampIDs, B2SData.UsedAnimationLampIDs)
-                                                    If id1 > 0 Then animations.Add(id1, New B2SData.AnimationInfo(name, False))
-                                                Case "S"
-                                                    Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationSolenoidIDs, B2SData.UsedAnimationSolenoidIDs)
-                                                    If id1 > 0 Then animations.Add(id1, New B2SData.AnimationInfo(name, False))
-                                                Case "G"
-                                                    Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationGIStringIDs, B2SData.UsedAnimationGIStringIDs)
-                                                    If idJoin.Substring(1, 1).ToUpper = "I" Then
-                                                        If id2 > 0 Then animations.Add(id2, New B2SData.AnimationInfo(name, False))
-                                                    Else
-                                                        If id1 > 0 Then animations.Add(id1, New B2SData.AnimationInfo(name, False))
-                                                    End If
-                                                Case "I"
-                                                    If idJoin.Length >= 2 Then
-                                                        Select Case idJoin.Substring(0, 2).ToUpper
-                                                            Case "IL"
-                                                                Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationLampIDs, B2SData.UsedAnimationLampIDs)
-                                                                If id2 > 0 Then animations.Add(id2, New B2SData.AnimationInfo(name, True))
-                                                            Case "IS"
-                                                                Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationSolenoidIDs, B2SData.UsedAnimationSolenoidIDs)
-                                                                If id2 > 0 Then animations.Add(id2, New B2SData.AnimationInfo(name, True))
-                                                            Case "IG"
-                                                                Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationGIStringIDs, B2SData.UsedAnimationGIStringIDs)
-                                                                If idJoin.Substring(2, 1).ToUpper = "I" Then
-                                                                    If id3 > 0 Then animations.Add(id3, New B2SData.AnimationInfo(name, True))
-                                                                Else
-                                                                    If id2 > 0 Then animations.Add(id2, New B2SData.AnimationInfo(name, True))
-                                                                End If
-                                                            Case Else
-                                                                Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationLampIDs, B2SData.UsedAnimationLampIDs)
-                                                                If id1 > 0 Then animations.Add(id1, New B2SData.AnimationInfo(name, True))
-                                                        End Select
-                                                    End If
-                                                Case Else
-                                                    Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationLampIDs, B2SData.UsedAnimationLampIDs)
-                                                    If id0 > 0 Then animations.Add(id0, New B2SData.AnimationInfo(name, False))
-                                            End Select
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        Next
-                    End If
-                    Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
-                        regkey.SetValue("B2SSetSwitch", If(animationpulseswitch, 1, 0), RegistryValueKind.DWord)
-                    End Using
-
-                    ' set backglass to topmost window
-                    'Me.TopMost = True
-                    'Me.BringToFront()
-                    'Me.TopMost = False
-
                 End If
 
+                ' get all animation info
+                Dim animationpulseswitch As Boolean = False
+                If topnode.SelectSingleNode("Animations") IsNot Nothing AndAlso topnode.SelectNodes("Animations/Animation") IsNot Nothing Then
+                    For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Animations/Animation")
+                        Dim name As String = innerNode.Attributes("Name").InnerText
+                        Dim dualmode As B2SData.eDualMode = B2SData.eDualMode.Both
+                        If innerNode.Attributes("DualMode") IsNot Nothing Then
+                            dualmode = CInt(innerNode.Attributes("DualMode").InnerText)
+                        End If
+                        Dim interval As Integer = CInt(innerNode.Attributes("Interval").InnerText)
+                        Dim loops As Integer = CInt(innerNode.Attributes("Loops").InnerText)
+                        Dim idJoins As String = innerNode.Attributes("IDJoin").InnerText
+                        Dim startAnimationAtBackglassStartup As Boolean = (innerNode.Attributes("StartAnimationAtBackglassStartup").InnerText = "1")
+                        Dim lightsStateAtAnimationStart As B2SAnimation.eLightsStateAtAnimationStart = B2SAnimation.eLightsStateAtAnimationStart.NoChange
+                        Dim lightsStateAtAnimationEnd As B2SAnimation.eLightsStateAtAnimationEnd = B2SAnimation.eLightsStateAtAnimationEnd.InvolvedLightsOff
+                        Dim animationstopbehaviour As B2SAnimation.eAnimationStopBehaviour = B2S.B2SAnimation.eAnimationStopBehaviour.StopImmediatelly
+                        Dim lockInvolvedLamps As Boolean = False
+                        Dim hidescoredisplays As Boolean = False
+                        Dim bringtofront As Boolean = False
+                        Dim randomstart As Boolean = False
+                        Dim randomquality As Integer = 1
+                        If innerNode.Attributes("LightsStateAtAnimationStart") IsNot Nothing Then
+                            lightsStateAtAnimationStart = CInt(innerNode.Attributes("LightsStateAtAnimationStart").InnerText)
+                        ElseIf innerNode.Attributes("AllLightsOffAtAnimationStart") IsNot Nothing Then
+                            lightsStateAtAnimationStart = If((innerNode.Attributes("AllLightsOffAtAnimationStart").InnerText = "1"), B2SAnimation.eLightsStateAtAnimationStart.LightsOff, B2SAnimation.eLightsStateAtAnimationStart.NoChange)
+                        End If
+                        If innerNode.Attributes("LightsStateAtAnimationEnd") IsNot Nothing Then
+                            lightsStateAtAnimationEnd = CInt(innerNode.Attributes("LightsStateAtAnimationEnd").InnerText)
+                        ElseIf innerNode.Attributes("ResetLightsAtAnimationEnd") IsNot Nothing Then
+                            lightsStateAtAnimationEnd = If((innerNode.Attributes("ResetLightsAtAnimationEnd").InnerText = "1"), B2SAnimation.eLightsStateAtAnimationEnd.LightsReseted, B2SAnimation.eLightsStateAtAnimationEnd.Undefined)
+                        End If
+                        If innerNode.Attributes("AnimationStopBehaviour") IsNot Nothing Then
+                            animationstopbehaviour = CInt(innerNode.Attributes("AnimationStopBehaviour").InnerText)
+                        ElseIf innerNode.Attributes("RunAnimationTilEnd") IsNot Nothing Then
+                            animationstopbehaviour = If((innerNode.Attributes("RunAnimationTilEnd").InnerText = "1"), B2SAnimation.eAnimationStopBehaviour.RunAnimationTillEnd, B2SAnimation.eAnimationStopBehaviour.StopImmediatelly)
+                        End If
+                        lockInvolvedLamps = (innerNode.Attributes("LockInvolvedLamps").InnerText = "1")
+                        If innerNode.Attributes("HideScoreDisplays") IsNot Nothing Then
+                            hidescoredisplays = (innerNode.Attributes("HideScoreDisplays").InnerText = "1")
+                        End If
+                        If innerNode.Attributes("BringToFront") IsNot Nothing Then
+                            bringtofront = (innerNode.Attributes("BringToFront").InnerText = "1")
+                        End If
+                        If innerNode.Attributes("RandomStart") IsNot Nothing Then
+                            randomstart = (innerNode.Attributes("RandomStart").InnerText = "1")
+                        End If
+                        If randomstart AndAlso innerNode.Attributes("RandomQuality") IsNot Nothing Then
+                            randomquality = CInt(innerNode.Attributes("RandomQuality").InnerText)
+                        End If
+                        If lightsStateAtAnimationStart = B2SAnimation.eLightsStateAtAnimationStart.Undefined Then lightsStateAtAnimationStart = B2SAnimation.eLightsStateAtAnimationStart.NoChange
+                        If lightsStateAtAnimationEnd = B2SAnimation.eLightsStateAtAnimationEnd.Undefined Then lightsStateAtAnimationEnd = B2SAnimation.eLightsStateAtAnimationEnd.InvolvedLightsOff
+                        If animationstopbehaviour = B2SAnimation.eAnimationStopBehaviour.Undefined Then animationstopbehaviour = B2SAnimation.eAnimationStopBehaviour.StopImmediatelly
+                        Dim entries As B2SAnimation.PictureBoxAnimationEntry() = Nothing
+                        For Each stepnode As Xml.XmlElement In innerNode.SelectNodes("AnimationStep")
+                            Dim [step] As Integer = CInt(stepnode.Attributes("Step").InnerText)
+                            Dim [on] As String = stepnode.Attributes("On").InnerText
+                            Dim waitLoopsAfterOn As Integer = CInt(stepnode.Attributes("WaitLoopsAfterOn").InnerText)
+                            Dim off As String = stepnode.Attributes("Off").InnerText
+                            Dim waitLoopsAfterOff As Integer = CInt(stepnode.Attributes("WaitLoopsAfterOff").InnerText)
+                            Dim pulseswitch As Integer = 0
+                            If stepnode.Attributes("PulseSwitch") IsNot Nothing Then
+                                pulseswitch = CInt(stepnode.Attributes("PulseSwitch").InnerText)
+                                If pulseswitch > 0 Then animationpulseswitch = True
+                            End If
+                            Dim entry As B2SAnimation.PictureBoxAnimationEntry = New B2SAnimation.PictureBoxAnimationEntry([on], waitLoopsAfterOn, off, waitLoopsAfterOff, , , , , pulseswitch)
+                            If entries Is Nothing Then
+                                ReDim entries(0)
+                                entries(0) = entry
+                            Else
+                                ReDim Preserve entries(entries.Length)
+                                entries(entries.Length - 1) = entry
+                            End If
+                        Next
+                        ' maybe add animation
+                        If interval > 0 AndAlso entries.Length > 0 Then
+                            B2SAnimation.AddAnimation(name, Me, formDMD, dualmode, interval, loops, startAnimationAtBackglassStartup, lightsStateAtAnimationStart, lightsStateAtAnimationEnd,
+                                                      animationstopbehaviour, lockInvolvedLamps, hidescoredisplays, bringtofront, randomstart, randomquality,
+                                                      entries)
+                            ' maybe set slowdown
+                            If B2SSettings.AnimationSlowDowns.ContainsKey(name) Then
+                                B2SAnimation.AnimationSlowDown(name) = B2SSettings.AnimationSlowDowns(name)
+                            End If
+                            ' add join to ID
+                            If Not String.IsNullOrEmpty(idJoins) Then
+                                For Each idJoin As String In idJoins.Split(",")
+                                    If Not String.IsNullOrEmpty(idJoin) Then
+                                        Dim id0 As Integer = 0
+                                        Dim id1 As Integer = 0
+                                        Dim id2 As Integer = 0
+                                        Dim id3 As Integer = 0
+                                        If idJoin.Length >= 1 AndAlso IsNumeric(idJoin) Then id0 = CInt(idJoin)
+                                        If idJoin.Length >= 2 AndAlso IsNumeric(idJoin.Substring(1)) Then id1 = CInt(idJoin.Substring(1))
+                                        If idJoin.Length >= 3 AndAlso IsNumeric(idJoin.Substring(2)) Then id2 = CInt(idJoin.Substring(2))
+                                        If idJoin.Length >= 4 AndAlso IsNumeric(idJoin.Substring(3)) Then id3 = CInt(idJoin.Substring(3))
+                                        Select Case idJoin.Substring(0, 1).ToUpper
+                                            Case "L"
+                                                Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationLampIDs, B2SData.UsedAnimationLampIDs)
+                                                If id1 > 0 Then animations.Add(id1, New B2SData.AnimationInfo(name, False))
+                                            Case "S"
+                                                Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationSolenoidIDs, B2SData.UsedAnimationSolenoidIDs)
+                                                If id1 > 0 Then animations.Add(id1, New B2SData.AnimationInfo(name, False))
+                                            Case "G"
+                                                Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationGIStringIDs, B2SData.UsedAnimationGIStringIDs)
+                                                If idJoin.Substring(1, 1).ToUpper = "I" Then
+                                                    If id2 > 0 Then animations.Add(id2, New B2SData.AnimationInfo(name, False))
+                                                Else
+                                                    If id1 > 0 Then animations.Add(id1, New B2SData.AnimationInfo(name, False))
+                                                End If
+                                            Case "I"
+                                                If idJoin.Length >= 2 Then
+                                                    Select Case idJoin.Substring(0, 2).ToUpper
+                                                        Case "IL"
+                                                            Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationLampIDs, B2SData.UsedAnimationLampIDs)
+                                                            If id2 > 0 Then animations.Add(id2, New B2SData.AnimationInfo(name, True))
+                                                        Case "IS"
+                                                            Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationSolenoidIDs, B2SData.UsedAnimationSolenoidIDs)
+                                                            If id2 > 0 Then animations.Add(id2, New B2SData.AnimationInfo(name, True))
+                                                        Case "IG"
+                                                            Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationGIStringIDs, B2SData.UsedAnimationGIStringIDs)
+                                                            If idJoin.Substring(2, 1).ToUpper = "I" Then
+                                                                If id3 > 0 Then animations.Add(id3, New B2SData.AnimationInfo(name, True))
+                                                            Else
+                                                                If id2 > 0 Then animations.Add(id2, New B2SData.AnimationInfo(name, True))
+                                                            End If
+                                                        Case Else
+                                                            Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationLampIDs, B2SData.UsedAnimationLampIDs)
+                                                            If id1 > 0 Then animations.Add(id1, New B2SData.AnimationInfo(name, True))
+                                                    End Select
+                                                End If
+                                            Case Else
+                                                Dim animations As B2SData.AnimationCollection = If(randomstart, B2SData.UsedRandomAnimationLampIDs, B2SData.UsedAnimationLampIDs)
+                                                If id0 > 0 Then animations.Add(id0, New B2SData.AnimationInfo(name, False))
+                                        End Select
+                                    End If
+                                Next
+                            End If
+                        End If
+                    Next
+                End If
+                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                    regkey.SetValue("B2SSetSwitch", If(animationpulseswitch, 1, 0), RegistryValueKind.DWord)
+                End Using
+
+                ' set backglass to topmost window
+                'Me.TopMost = True
+                'Me.BringToFront()
+                'Me.TopMost = False
+
             End If
+
+        End If
 
     End Sub
 
@@ -3087,16 +3088,25 @@ Public Class formBackglass
                                       Optional ByRef romid As Integer = 0,
                                       Optional ByRef romidtype As B2SBaseBox.eRomIDType = B2SBaseBox.eRomIDType.NotDefined,
                                       Optional ByRef rominverted As Boolean = False) As Image
+        Dim firstromValue As Integer = 0
+
         Dim secondromid As Integer = 0
+        Dim secondromValue As Integer = 0
         Dim secondromidtype As B2SBaseBox.eRomIDType = B2SBaseBox.eRomIDType.NotDefined
         Dim secondrominverted As Boolean = False
         If firstromkey.Substring(0, 1) = "I" Then
             rominverted = True
             firstromkey = firstromkey.Substring(1)
         End If
+        firstromValue = CInt(secondromkey.Split("|")(1))
+        firstromkey = firstromkey.Split("|")(0)
+
         romidtype = If((firstromkey.Substring(0, 1) = "S"), B2SBaseBox.eRomIDType.Solenoid, If((firstromkey.Substring(0, 2) = "GI"), B2SBaseBox.eRomIDType.GIString, B2SBaseBox.eRomIDType.Lamp))
         romid = CInt(If((romidtype = B2SBaseBox.eRomIDType.GIString), firstromkey.Substring(2), firstromkey.Substring(1)))
+
         If Not String.IsNullOrEmpty(secondromkey) Then
+            secondromValue = CInt(secondromkey.Split("|")(1))
+            secondromkey = secondromkey.Split("|")(0)
             If secondromkey.Substring(0, 1) = "I" Then
                 secondrominverted = True
                 secondromkey = secondromkey.Substring(1)
@@ -3113,7 +3123,7 @@ Public Class formBackglass
         End Using
         ' draw matching bulbs into image
         For Each picbox As B2SPictureBox In Me.Controls.OfType(Of B2SPictureBox)()
-            If picbox.RomID = romid AndAlso picbox.RomIDType = romidtype AndAlso picbox.RomInverted = rominverted AndAlso (picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = dualmode) Then
+            If picbox.RomID = romid AndAlso picbox.RomIDValue = firstromValue AndAlso picbox.RomIDType = romidtype AndAlso picbox.RomInverted = rominverted AndAlso (picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = dualmode) Then
                 Using gr As Graphics = Graphics.FromImage(ret)
                     gr.InterpolationMode = Drawing2D.InterpolationMode.High
                     gr.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
@@ -3124,7 +3134,7 @@ Public Class formBackglass
         ' maybe draw second matching bulbs into image
         If Not String.IsNullOrEmpty(secondromkey) Then
             For Each picbox As B2SPictureBox In Me.Controls.OfType(Of B2SPictureBox)()
-                If picbox.RomID = secondromid AndAlso picbox.RomIDType = secondromidtype AndAlso picbox.RomInverted = secondrominverted AndAlso (picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = dualmode) Then
+                If picbox.RomID = secondromid AndAlso picbox.RomIDValue = secondromValue AndAlso picbox.RomIDType = secondromidtype AndAlso picbox.RomInverted = secondrominverted AndAlso (picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = dualmode) Then
                     Using gr As Graphics = Graphics.FromImage(ret)
                         gr.InterpolationMode = Drawing2D.InterpolationMode.High
                         gr.DrawImage(picbox.BackgroundImage, New Rectangle(picbox.Location.X, picbox.Location.Y, picbox.Size.Width, picbox.Size.Height))
@@ -3202,7 +3212,7 @@ Public Class formBackglass
         Return New Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1)
     End Function
 
-    Public Function CropImageToTransparency(image As Image, ByRef loc As Point, ByRef size As Size) As Image
+    Public Function CropImageToTransparency(image As Image, offimage As Image, ByRef loc As Point, ByRef size As Size) As Image
         Dim bitmap As Bitmap = CType(image, Bitmap)
         Dim boundingRect As Rectangle = GetBoundingRectangle(bitmap)
 
@@ -3212,6 +3222,21 @@ Public Class formBackglass
         End If
 
         Dim croppedImage As New Bitmap(boundingRect.Width, boundingRect.Height)
+
+        If offimage IsNot Nothing Then
+            Dim offbitmap As Bitmap = CType(offimage, Bitmap)
+            Dim offboundingRect As Rectangle = GetBoundingRectangle(offbitmap)
+            If offboundingRect = Rectangle.Empty Then
+                ' Return an empty image or the original image as needed
+                Return image
+            End If
+            ' Crop the image
+            boundingRect = Rectangle.Union(boundingRect, offboundingRect)
+            Using g As Graphics = Graphics.FromImage(croppedImage)
+                g.DrawImage(offbitmap, New Rectangle(0, 0, boundingRect.Width, boundingRect.Height), boundingRect, GraphicsUnit.Pixel)
+            End Using
+            offimage = offbitmap
+        End If
 
         Using g As Graphics = Graphics.FromImage(croppedImage)
             g.DrawImage(bitmap, New Rectangle(0, 0, boundingRect.Width, boundingRect.Height), boundingRect, GraphicsUnit.Pixel)

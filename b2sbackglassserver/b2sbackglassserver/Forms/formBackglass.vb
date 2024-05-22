@@ -773,11 +773,11 @@ Public Class formBackglass
 
                 ' get top node
                 Dim topnode As Xml.XmlElement = XML.SelectSingleNode("DirectB2SData")
-                Dim mergeBulbs As Boolean = True
+                Dim mergeBulbs As Boolean = False
 
-                If topnode.SelectSingleNode("MergeBulbs") IsNot Nothing Then
-                    mergeBulbs = topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
-                End If
+                'If topnode.SelectSingleNode("MergeBulbs") IsNot Nothing Then
+                '    mergeBulbs = topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
+                'End If
 
                 ' clear all data
                 B2SData.ClearAll(True)
@@ -926,7 +926,7 @@ Public Class formBackglass
                             End If
                             ' add info to rom collection
                             If romid > 0 AndAlso picboxtype = B2SPictureBox.ePictureBoxType.StandardImage AndAlso romidtype <> B2SBaseBox.eRomIDType.Mech Then
-                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString()
+                                Dim key As String = If(rominverted, "I", "") & Choose(romidtype, "L", "S", "GI") & romid.ToString() & "|" & romidvalue.ToString()
                                 If picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = B2SData.eDualMode.Authentic Then
                                     If roms4Authentic.ContainsKey(key) Then roms4Authentic(key) += size.Width * size.Height Else roms4Authentic.Add(key, size.Width * size.Height)
                                 End If
@@ -1460,84 +1460,84 @@ Public Class formBackglass
                         End If
                     End If
 
-                    ' look for the largest bulb amount
-                    Dim top4Authentic As Integer = 0
-                    Dim topkey4Authentic As String = String.Empty
-                    Dim second4Authentic As Integer = 0
-                    Dim secondkey4Authentic As String = String.Empty
-                    For Each romsize As KeyValuePair(Of String, Integer) In roms4Authentic
-                        If romsize.Value > second4Authentic Then
-                            second4Authentic = romsize.Value
-                            secondkey4Authentic = romsize.Key
-                        End If
-                        If romsize.Value > top4Authentic Then
-                            second4Authentic = top4Authentic
-                            secondkey4Authentic = topkey4Authentic
-                            top4Authentic = romsize.Value
-                            topkey4Authentic = romsize.Key
-                        End If
-                    Next
-                    Dim top4Fantasy As Integer = 0
-                    Dim topkey4Fantasy As String = String.Empty
-                    Dim second4Fantasy As Integer = 0
-                    Dim secondkey4Fantasy As String = String.Empty
-                    If B2SData.DualBackglass Then
-                        For Each romsize As KeyValuePair(Of String, Integer) In roms4Fantasy
-                            If romsize.Value > second4Fantasy Then
-                                second4Fantasy = romsize.Value
-                                secondkey4Fantasy = romsize.Key
+                    If mergeBulbs Then
+                        ' look for the largest bulb amount
+                        Dim topSize4Authentic As Integer = 0
+                        Dim topkey4Authentic As String = String.Empty
+                        Dim secondSize4Authentic As Integer = 0
+                        Dim secondkey4Authentic As String = String.Empty
+                        For Each romsize As KeyValuePair(Of String, Integer) In roms4Authentic
+                            If romsize.Value > secondSize4Authentic Then
+                                secondSize4Authentic = romsize.Value
+                                secondkey4Authentic = romsize.Key
                             End If
-                            If romsize.Value > top4Fantasy Then
-                                second4Fantasy = top4Fantasy
-                                secondkey4Fantasy = topkey4Fantasy
-                                top4Fantasy = romsize.Value
-                                topkey4Fantasy = romsize.Key
+                            If romsize.Value > topSize4Authentic Then
+                                secondSize4Authentic = topSize4Authentic
+                                secondkey4Authentic = topkey4Authentic
+                                topSize4Authentic = romsize.Value
+                                topkey4Authentic = romsize.Key
                             End If
                         Next
-                    End If
-
-                    ' maybe draw some light images for pretty fast image changing
-                    If top4Authentic >= minSize4Image And mergeBulbs Then
-                        ' create some light images
-                        If TopLightImage4Authentic Is Nothing Then
-                            TopLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic)
-                            If second4Authentic > minSize4Image Then
-                                SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, secondkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
-                                TopAndSecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, secondkey4Authentic)
+                        Dim top4Fantasy As Integer = 0
+                        Dim topkey4Fantasy As String = String.Empty
+                        Dim secondSize4Fantasy As Integer = 0
+                        Dim secondkey4Fantasy As String = String.Empty
+                        If B2SData.DualBackglass Then
+                            For Each romsize As KeyValuePair(Of String, Integer) In roms4Fantasy
+                                If romsize.Value > secondSize4Fantasy Then
+                                    secondSize4Fantasy = romsize.Value
+                                    secondkey4Fantasy = romsize.Key
+                                End If
+                                If romsize.Value > top4Fantasy Then
+                                    secondSize4Fantasy = top4Fantasy
+                                    secondkey4Fantasy = topkey4Fantasy
+                                    top4Fantasy = romsize.Value
+                                    topkey4Fantasy = romsize.Key
+                                End If
+                            Next
+                        End If
+                        ' maybe draw some light images for pretty fast image changing
+                        If topSize4Authentic >= minSize4Image Then
+                            ' create some light images
+                            If TopLightImage4Authentic Is Nothing Then
+                                TopLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic)
+                                If secondSize4Authentic > minSize4Image Then
+                                    SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, secondkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
+                                    TopAndSecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, secondkey4Authentic)
+                                End If
+                            Else
+                                SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
+                                TopAndSecondLightImage4Authentic = CreateLightImage(TopLightImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic)
                             End If
-                        Else
-                            SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
-                            TopAndSecondLightImage4Authentic = CreateLightImage(TopLightImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic)
+                        End If
+                        If B2SData.DualBackglass AndAlso top4Fantasy >= minSize4Image Then
+                            ' create some light images
+                            If TopLightImage4Fantasy Is Nothing Then
+                                TopLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy)
+                                If secondSize4Fantasy > minSize4Image Then
+                                    SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, secondkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
+                                    TopAndSecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, secondkey4Fantasy)
+                                End If
+                            Else
+                                SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
+                                TopAndSecondLightImage4Fantasy = CreateLightImage(TopLightImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy)
+                            End If
+                        End If
+                        B2SData.UsedTopRomIDType4Authentic = TopRomIDType4Authentic
+                        B2SData.UsedSecondRomIDType4Authentic = SecondRomIDType4Authentic
+                        If B2SData.DualBackglass Then
+                            B2SData.UsedTopRomIDType4Fantasy = TopRomIDType4Fantasy
+                            B2SData.UsedSecondRomIDType4Fantasy = SecondRomIDType4Fantasy
+                        End If
+
+                        ' remove top and second rom bulbs
+                        CheckBulbs(TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic, B2SData.eDualMode.Authentic)
+                        CheckBulbs(SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic, B2SData.eDualMode.Authentic)
+                        If B2SData.DualBackglass Then
+                            CheckBulbs(TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
+                            CheckBulbs(SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
                         End If
                     End If
-                    If B2SData.DualBackglass AndAlso top4Fantasy >= minSize4Image And mergeBulbs Then
-                        ' create some light images
-                        If TopLightImage4Fantasy Is Nothing Then
-                            TopLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy)
-                            If second4Fantasy > minSize4Image Then
-                                SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, secondkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
-                                TopAndSecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, secondkey4Fantasy)
-                            End If
-                        Else
-                            SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
-                            TopAndSecondLightImage4Fantasy = CreateLightImage(TopLightImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy)
-                        End If
-                    End If
-                    B2SData.UsedTopRomIDType4Authentic = TopRomIDType4Authentic
-                    B2SData.UsedSecondRomIDType4Authentic = SecondRomIDType4Authentic
-                    If B2SData.DualBackglass Then
-                        B2SData.UsedTopRomIDType4Fantasy = TopRomIDType4Fantasy
-                        B2SData.UsedSecondRomIDType4Fantasy = SecondRomIDType4Fantasy
-                    End If
-
-                    ' remove top and second rom bulbs
-                    CheckBulbs(TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic, B2SData.eDualMode.Authentic)
-                    CheckBulbs(SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic, B2SData.eDualMode.Authentic)
-                    If B2SData.DualBackglass Then
-                        CheckBulbs(TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
-                        CheckBulbs(SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
-                    End If
-
                 End If
 
                 ' get all animation info
@@ -2029,16 +2029,24 @@ Public Class formBackglass
                                       Optional ByRef romid As Integer = 0,
                                       Optional ByRef romidtype As B2SBaseBox.eRomIDType = B2SBaseBox.eRomIDType.NotDefined,
                                       Optional ByRef rominverted As Boolean = False) As Image
+        Dim firstromValue As Integer = 0
+
         Dim secondromid As Integer = 0
+        Dim secondromValue As Integer = 0
         Dim secondromidtype As B2SBaseBox.eRomIDType = B2SBaseBox.eRomIDType.NotDefined
         Dim secondrominverted As Boolean = False
         If firstromkey.Substring(0, 1) = "I" Then
             rominverted = True
             firstromkey = firstromkey.Substring(1)
         End If
+        firstromValue = CInt(secondromkey.Split("|")(1))
+        firstromkey = firstromkey.Split("|")(0)
+
         romidtype = If((firstromkey.Substring(0, 1) = "S"), B2SBaseBox.eRomIDType.Solenoid, If((firstromkey.Substring(0, 2) = "GI"), B2SBaseBox.eRomIDType.GIString, B2SBaseBox.eRomIDType.Lamp))
         romid = CInt(If((romidtype = B2SBaseBox.eRomIDType.GIString), firstromkey.Substring(2), firstromkey.Substring(1)))
         If Not String.IsNullOrEmpty(secondromkey) Then
+            secondromValue = CInt(secondromkey.Split("|")(1))
+            secondromkey = secondromkey.Split("|")(0)
             If secondromkey.Substring(0, 1) = "I" Then
                 secondrominverted = True
                 secondromkey = secondromkey.Substring(1)
@@ -2055,7 +2063,7 @@ Public Class formBackglass
         End Using
         ' draw matching bulbs into image
         For Each picbox As B2SPictureBox In Me.Controls.OfType(Of B2SPictureBox)()
-            If picbox.RomID = romid AndAlso picbox.RomIDType = romidtype AndAlso picbox.RomInverted = rominverted AndAlso (picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = dualmode) Then
+            If picbox.RomID = romid AndAlso picbox.RomIDValue = firstromValue AndAlso picbox.RomIDType = romidtype AndAlso picbox.RomInverted = rominverted AndAlso (picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = dualmode) Then
                 Using gr As Graphics = Graphics.FromImage(ret)
                     gr.InterpolationMode = Drawing2D.InterpolationMode.High
                     gr.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
@@ -2066,7 +2074,7 @@ Public Class formBackglass
         ' maybe draw second matching bulbs into image
         If Not String.IsNullOrEmpty(secondromkey) Then
             For Each picbox As B2SPictureBox In Me.Controls.OfType(Of B2SPictureBox)()
-                If picbox.RomID = secondromid AndAlso picbox.RomIDType = secondromidtype AndAlso picbox.RomInverted = secondrominverted AndAlso (picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = dualmode) Then
+                If picbox.RomID = secondromid AndAlso picbox.RomIDValue = secondromValue AndAlso picbox.RomIDType = secondromidtype AndAlso picbox.RomInverted = secondrominverted AndAlso (picbox.DualMode = B2SData.eDualMode.Both OrElse picbox.DualMode = dualmode) Then
                     Using gr As Graphics = Graphics.FromImage(ret)
                         gr.InterpolationMode = Drawing2D.InterpolationMode.High
                         gr.DrawImage(picbox.BackgroundImage, New Rectangle(picbox.Location.X, picbox.Location.Y, picbox.Size.Width, picbox.Size.Height))
@@ -2102,7 +2110,85 @@ Public Class formBackglass
             End If
         End If
     End Sub
+    Public Function GetBoundingRectangle(image As Bitmap) As Rectangle
+        Dim rect As New Rectangle(0, 0, image.Width, image.Height)
+        Dim bmpData As Imaging.BitmapData = image.LockBits(rect, Imaging.ImageLockMode.ReadOnly, Imaging.PixelFormat.Format32bppArgb)
 
+        Dim stride As Integer = bmpData.Stride
+        Dim scan0 As IntPtr = bmpData.Scan0
+
+        Dim minX As Integer = image.Width
+        Dim minY As Integer = image.Height
+        Dim maxX As Integer = 0
+        Dim maxY As Integer = 0
+
+        Dim foundNonTransparent As Boolean = False
+
+        Dim pixels(image.Height * stride - 1) As Byte
+        System.Runtime.InteropServices.Marshal.Copy(scan0, pixels, 0, pixels.Length)
+
+        For y As Integer = 0 To image.Height - 1
+            For x As Integer = 0 To image.Width - 1
+                Dim index As Integer = (y * stride) + (x * 4) ' 4 bytes per pixel (32bpp)
+                Dim alpha As Byte = pixels(index + 3)
+
+                If alpha <> 0 Then
+                    foundNonTransparent = True
+                    If x < minX Then minX = x
+                    If y < minY Then minY = y
+                    If x > maxX Then maxX = x
+                    If y > maxY Then maxY = y
+                End If
+            Next
+        Next
+
+        image.UnlockBits(bmpData)
+
+        If Not foundNonTransparent Then
+            ' No non-transparent pixels found
+            Return Rectangle.Empty
+        End If
+
+        Return New Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1)
+    End Function
+
+    Public Function CropImageToTransparency(image As Image, offimage As Image, ByRef loc As Point, ByRef size As Size) As Image
+        Dim bitmap As Bitmap = CType(image, Bitmap)
+        Dim boundingRect As Rectangle = GetBoundingRectangle(bitmap)
+
+        If boundingRect = Rectangle.Empty Then
+            ' Return an empty image or the original image as needed
+            Return image
+        End If
+
+        Dim croppedImage As New Bitmap(boundingRect.Width, boundingRect.Height)
+
+        If offimage IsNot Nothing Then
+            Dim offbitmap As Bitmap = CType(offimage, Bitmap)
+            Dim offboundingRect As Rectangle = GetBoundingRectangle(offbitmap)
+            If offboundingRect = Rectangle.Empty Then
+                ' Return an empty image or the original image as needed
+                Return image
+            End If
+            ' Crop the image
+            boundingRect = Rectangle.Union(boundingRect, offboundingRect)
+            Using g As Graphics = Graphics.FromImage(croppedImage)
+                g.DrawImage(offbitmap, New Rectangle(0, 0, boundingRect.Width, boundingRect.Height), boundingRect, GraphicsUnit.Pixel)
+            End Using
+            offimage = offbitmap
+        End If
+
+        Using g As Graphics = Graphics.FromImage(croppedImage)
+            g.DrawImage(bitmap, New Rectangle(0, 0, boundingRect.Width, boundingRect.Height), boundingRect, GraphicsUnit.Pixel)
+        End Using
+
+        ' Update loc and size based on the new dimensions
+        Dim sizeOrg As Size = size
+        size = New Size(CInt(size.Width * (boundingRect.Width / image.Width)), CInt(size.Height * (boundingRect.Height / image.Height)))
+        loc = New Point(loc.X + boundingRect.X, loc.Y + boundingRect.Y)
+
+        Return croppedImage
+    End Function
     Private Function ImageToBase64(image As Image) As String
         If image IsNot Nothing Then
             With New System.Drawing.ImageConverter
