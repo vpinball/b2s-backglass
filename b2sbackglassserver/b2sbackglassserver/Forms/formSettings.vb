@@ -76,6 +76,7 @@ Public Class formSettings
         cmbDMD.SelectedIndex = B2SSettings.HideDMD
         cmbGrill.SelectedIndex = B2SSettings.HideGrill
         cmbB2SDMD.SelectedIndex = If(B2SSettings.HideB2SDMD, 1, 0)
+        cmbB2SBackglass.SelectedIndex = If(B2SSettings.HideB2SBackglass, 1, 0)
         btnScreenshotPath.Text = "Screenshot path: " & B2SSettings.ScreenshotPath
         cmbScreenshotType.SelectedIndex = B2SSettings.ScreenshotFileType
         numLampsSkipFrames.Enabled = (B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps) AndAlso B2SSettings.IsROMControlled
@@ -179,7 +180,14 @@ Public Class formSettings
 
     End Sub
     Private Sub btnSaveSettings_Click(sender As System.Object, e As System.EventArgs) Handles btnSaveSettings.Click
-
+        If B2SSettings.HideB2SBackglass Then
+            Dim result As DialogResult = MessageBox.Show("If you save the settings with the backglass hidden, it will become hard to open the settings for this table!" & vbCrLf & vbCrLf &
+                                                         "To edit the B2SBackglassSettings.xml file manually search for " & vbCrLf & vbCrLf & "<HideB2SBackglass>1</HideB2SBackglass>" & vbCrLf & vbCrLf & "in the B2SBackglassSettings.xml file" & vbCrLf & vbCrLf & "Do you want to continue?",
+                                                         My.Resources.AppTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+            If result = Windows.Forms.DialogResult.No Then
+                Return
+            End If
+        End If
         B2SSettings.Save(B2SAnimation)
         B2SSettings.Save(, , True)
         isSettingsScreenDirty = False
@@ -279,7 +287,11 @@ Public Class formSettings
         isSettingsScreenDirty = True
         B2SSettings.HideB2SDMD = (cmbB2SDMD.SelectedIndex = 1)
     End Sub
-
+    Private Sub cmbB2SBackglass_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cmbB2SBackglass.SelectedIndexChanged
+        activateMsgBoxAtSaving = True
+        isSettingsScreenDirty = True
+        B2SSettings.HideB2SBackglass = (cmbB2SBackglass.SelectedIndex = 1)
+    End Sub
     Private Sub chkStartAsEXE_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkStartAsEXE.CheckedChanged
         activateMsgBoxAtSaving = True
         isSettingsScreenDirty = True

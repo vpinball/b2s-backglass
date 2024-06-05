@@ -168,6 +168,7 @@ Public Class B2SSettings
     Public Shared Property FormNoFocus() As Boolean = False
     Public Shared Property HideGrill() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
     Public Shared Property HideB2SDMD() As Boolean = False
+    Public Shared Property HideB2SBackglass() As Boolean = False
     Public Shared Property HideDMD() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
 
     Public Shared Property AnimationSlowDowns() As Generic.Dictionary(Of String, Integer) = New Generic.Dictionary(Of String, Integer)
@@ -310,6 +311,7 @@ Public Class B2SSettings
                             If nodeTable.SelectSingleNode("HideGrill") IsNot Nothing Then HideGrill = CInt(nodeTable.SelectSingleNode("HideGrill").InnerText)
                             If nodeTable.SelectSingleNode("HideB2SDMD") IsNot Nothing Then HideB2SDMD = (nodeTable.SelectSingleNode("HideB2SDMD").InnerText = "1")
                             If nodeTable.SelectSingleNode("HideDMD") IsNot Nothing Then HideDMD = CInt(nodeTable.SelectSingleNode("HideDMD").InnerText)
+                            If nodeTable.SelectSingleNode("HideB2SBackglass") IsNot Nothing Then HideB2SBackglass = (nodeTable.SelectSingleNode("HideB2SBackglass").InnerText = "1")
                             If nodeTable.SelectSingleNode("MatchingFileName") IsNot Nothing Then MatchingFileName = nodeTable.SelectSingleNode("MatchingFileName").InnerText
                             If nodeTable.SelectSingleNode("LampsBlackTurns") IsNot Nothing Then LampsSkipFrames = CInt(nodeTable.SelectSingleNode("LampsBlackTurns").InnerText)
                             If nodeTable.SelectSingleNode("SolenoidsBlackTurns") IsNot Nothing Then SolenoidsSkipFrames = CInt(nodeTable.SelectSingleNode("SolenoidsBlackTurns").InnerText)
@@ -389,6 +391,7 @@ Public Class B2SSettings
                 nodeTable.RemoveAll()
                 AddNode(XML, nodeTable, "HideGrill", CInt(HideGrill).ToString())
                 AddNode(XML, nodeTable, "HideB2SDMD", If(HideB2SDMD, "1", "0"))
+                AddNode(XML, nodeTable, "HideB2SBackglass", If(HideB2SBackglass, "1", "0"))
                 AddNode(XML, nodeTable, "HideDMD", CInt(HideDMD).ToString())
                 If Not String.IsNullOrEmpty(MatchingFileName) Then
                     AddNode(XML, nodeTable, "MatchingFileName", MatchingFileName)
@@ -466,6 +469,7 @@ Public Class B2SSettings
         DefaultGlow = -1
         HideGrill = System.Windows.Forms.CheckState.Indeterminate
         HideB2SDMD = False
+        HideB2SBackglass = False
         HideDMD = System.Windows.Forms.CheckState.Indeterminate
         HyperpinXMLFile = String.Empty
         AnimationSlowDowns.Clear()

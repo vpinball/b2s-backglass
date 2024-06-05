@@ -183,7 +183,14 @@ Public Class formSettings
 
     End Sub
     Private Sub btnSaveSettings_Click(sender As System.Object, e As System.EventArgs) Handles btnSaveSettings.Click
-
+        If B2SSettings.HideB2SBackglass Then
+            Dim result As DialogResult = MessageBox.Show("If you save the settings with the backglass hidden, it will become hard to open the settings for this table!" & vbCrLf & vbCrLf &
+                                                         "To edit the B2SBackglassSettings.xml file manually search for " & vbCrLf & vbCrLf & "<HideB2SBackglass>1</HideB2SBackglass>" & vbCrLf & vbCrLf & "in the B2SBackglassSettings.xml file" & vbCrLf & vbCrLf & "Do you want to continue?",
+                                                         My.Resources.AppTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+            If result = Windows.Forms.DialogResult.No Then
+                Return
+            End If
+        End If
         B2SSettings.Save(B2SAnimation)
         B2SSettings.Save(, True)
         isSettingsScreenDirty = False
