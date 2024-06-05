@@ -1,3 +1,10 @@
+2.1.2
+- Request to turn off backglass in b2s settings #80   Thanks @stevejones72!
+  It is a setting per table, so the table you save with hidden backglass will have it's backglass not shown. 
+  You can still get settings opened on the background or b2s-dmd using right click though.
+  To edit the B2SBackglassSettings.xml file manually search for <HideB2SBackglass>1</HideB2SBackglass> and set to zero.
+- Backglasses using overlapping partly transparent pictures get it's events merged. This is now deactivated by default. And cannot be deactivated!
+
 2.1.1
 
 - Add B2STools/B2SRandom.cmd to randomize many Backglasses when activated in Pinup Popper or similar
