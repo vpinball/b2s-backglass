@@ -54,6 +54,7 @@ Public Class B2SScreen
         debugLog.IsLogOn = B2SSettings.B2SDebugLog
         debugLog.WriteLogEntry("B2SScreen.New")
 
+        'searchPathLog.WriteLogEntry("Start Search ScreenRes")
 
 
         ' read settings file
@@ -115,7 +116,7 @@ Public Class B2SScreen
                                              B2SSettings.B2SScreenResFileName,                                           ' .\ScreenRes.txt
                                              IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), B2SSettings.B2SScreenResFileName)' B2SFolder\ScreenRes.txt
                                             }
-
+			' TODO                                              IO.Path.Combine(Application.StartupPath(), B2SSettings.B2SScreenResFileName)' B2SFolder\ScreenRes.txt
             For Each testFileName As String In loadFileNames
                 Server.errorlog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Test " & testFileName)
                 'searchPathLog.WriteLogEntry("  Test " & testFileName)

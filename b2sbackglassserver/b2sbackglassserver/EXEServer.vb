@@ -1,32 +1,25 @@
-﻿Imports System
-Imports System.Text
-Imports System.Runtime.InteropServices
+﻿Imports System.Text
 Imports Microsoft.Win32
 
-<ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)> _
-Public Class Server
+<ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)>
+Public Class EXEServer
+    Inherits Server
 
-    Private Declare Function IsWindow Lib "user32" (ByVal hwnd As IntPtr) As Boolean
+    Implements IDisposable
+
+    Private Declare Function IsWindow Lib "user32.dll" (ByVal hWnd As IntPtr) As Boolean
+    Private Declare Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hWnd As IntPtr, Msg As UInteger, wParam As Integer, lParam As Integer) As Integer
 
     Private formBackglass As formBackglass = Nothing
 
     Private timer As Windows.Forms.Timer = Nothing
 
     Private tableHandle As Integer = 0
-    Private tableCount As Integer = 0
 
     Private isChangedLampsCalled As Boolean = False
     Private isChangedSolenoidsCalled As Boolean = False
     Private isChangedGIStringsCalled As Boolean = False
     Private isChangedLEDsCalled As Boolean = False
-
-
-#Region "COM GUIDs"
-    ' GUIDs provide the COM identity for this class 
-    Public Const ClassID As String = "09e233a3-cc79-457a-b49e-f637588891e5"
-    Public Const InterfaceID As String = "5693c68c-5834-466d-aaac-a86922076efd"
-    Public Const EventsID As String = "a48a5c0a-656c-4253-9f33-2426cc9c87b7"
-#End Region
 
 #Region "constructor and end timer"
 
@@ -40,8 +33,6 @@ Public Class Server
     End Sub
 
     Private Sub Timer_Tick()
-
-        'timer.Stop()
 
         ' check whether the table is left
         If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
@@ -62,7 +53,7 @@ Public Class Server
             callLEDs = Not isChangedLEDsCalled AndAlso (B2SData.UseLEDs OrElse B2SData.UseLEDDisplays OrElse B2SData.UseReels)
             CheckTableHandle()
         Else
-            If B2SSettings.IsGameNameSet Then
+            If B2SSettings.IsROMControlled Then
                 If callLamps Then Dim chg As Object = ChangedLamps()
                 If callSolenoids Then Dim chg As Object = ChangedSolenoids()
                 If callGIStrings Then Dim chg As Object = ChangedGIStrings()
@@ -70,11 +61,10 @@ Public Class Server
             End If
         End If
 
-        'timer.Start()
-
     End Sub
 
 #End Region
+
 
 #Region "Visual PinMAME COM object"
 
@@ -91,65 +81,26 @@ Public Class Server
 #End Region
 
 #Region "Visual PinMAME control"
+    Public Shadows Sub WorkingDir(value As String)
+        IO.Directory.SetCurrentDirectory(value)
+        B2SData.TestMode = True
+    End Sub
 
-    Public Property GameName() As String
-        Get
-            Return VPinMAME.GameName
-        End Get
-        Set(ByVal value As String)
-            VPinMAME.GameName = value
-            B2SSettings.GameName = value
-        End Set
-    End Property
-    Public ReadOnly Property ROMName() As String
-        Get
-            Return VPinMAME.ROMName
-        End Get
-    End Property
-
-    Public ReadOnly Property Games(ByVal gamename As Object) As Object
-        Get
-            Return VPinMAME.Games(gamename)
-        End Get
-    End Property
-
-    Public ReadOnly Property Running() As Boolean
-        Get
-            Return VPinMAME.Running
-        End Get
-    End Property
-
-    Public Property Pause() As Boolean
-        Get
-            Return VPinMAME.Pause
-        End Get
-        Set(ByVal value As Boolean)
-            VPinMAME.Pause = value
-        End Set
-    End Property
-
-    Public ReadOnly Property Version() As String
-        Get
-            Return VPinMAME.Version
-        End Get
-    End Property
-
-    Public Sub Run(Optional ByVal handle As Object = 0)
+    Public Shadows Sub Run(Optional ByVal handle As Object = 0)
         tableHandle = handle
         Startup()
         ShowBackglassForm()
-        If B2SSettings.IsGameNameSet Then
+        If B2SSettings.IsROMControlled Then
             VPinMAME.Run(handle)
         End If
     End Sub
 
-    Public Sub [Stop]()
+    Public Shadows Sub [Stop]()
         HideBackglassForm()
         timer.Stop()
         VPinMAME.Stop()
         KillBackglassForm()
     End Sub
-
 #End Region
 
 #Region "customization"
@@ -164,68 +115,8 @@ Public Class Server
         End Set
     End Property
 
-    Public Property SplashInfoLine() As String
-        Get
-            Return VPinMAME.SplashInfoLine
-        End Get
-        Set(ByVal value As String)
-            VPinMAME.SplashInfoLine = value
-        End Set
-    End Property
-
-    Public Property ShowFrame() As Boolean
-        Get
-            Return VPinMAME.ShowFrame
-        End Get
-        Set(ByVal value As Boolean)
-            VPinMAME.ShowFrame = value
-        End Set
-    End Property
-    Public Property ShowTitle() As Boolean
-        Get
-            Return VPinMAME.ShowTitle
-        End Get
-        Set(ByVal value As Boolean)
-            VPinMAME.ShowTitle = value
-        End Set
-    End Property
-    Public Property ShowDMDOnly() As Boolean
-        Get
-            Return VPinMAME.ShowDMDOnly
-        End Get
-        Set(ByVal value As Boolean)
-            VPinMAME.ShowDMDOnly = value
-        End Set
-    End Property
-    Public Property ShowPinDMD() As Boolean
-        Get
-            Return VPinMAME.ShowPinDMD
-        End Get
-        Set(ByVal value As Boolean)
-            VPinMAME.ShowPinDMD = value
-        End Set
-    End Property
-
-    Public Property LockDisplay() As Boolean
-        Get
-            Return VPinMAME.LockDisplay
-        End Get
-        Set(ByVal value As Boolean)
-            VPinMAME.LockDisplay = value
-        End Set
-    End Property
-
-    Public Property DoubleSize() As Boolean
-        Get
-            Return VPinMAME.DoubleSize
-        End Get
-        Set(ByVal value As Boolean)
-            VPinMAME.DoubleSize = value
-        End Set
-    End Property
-
     Private _hidden As Boolean
-    Public Property Hidden() As Boolean
+    Public Overloads Property Hidden() As Boolean
         Get
             Return _hidden
         End Get
@@ -237,27 +128,6 @@ Public Class Server
 
 #End Region
 
-#Region "game settings"
-
-    Public Property HandleKeyboard() As Boolean
-        Get
-            Return VPinMAME.HandleKeyboard
-        End Get
-        Set(ByVal value As Boolean)
-            VPinMAME.HandleKeyboard = value
-        End Set
-    End Property
-
-    Public Property HandleMechanics() As Int16
-        Get
-            Return VPinMAME.HandleMechanics
-        End Get
-        Set(ByVal value As Int16)
-            VPinMAME.HandleMechanics = value
-        End Set
-    End Property
-
-#End Region
 
 #Region "polling functions"
 
@@ -272,7 +142,7 @@ Public Class Server
     'Private statChangedLamps As Statistics = New Statistics(timelogChangedLamps)
     'Private statChangedSolenoids As Statistics = New Statistics(timelogChangedSolenoids)
 
-    Public ReadOnly Property ChangedLamps() As Object
+    Public Overloads ReadOnly Property ChangedLamps() As Object
         Get
             isChangedLampsCalled = True
             Dim chg As Object = VPinMAME.ChangedLamps()
@@ -283,7 +153,7 @@ Public Class Server
         End Get
     End Property
 
-    Public ReadOnly Property ChangedSolenoids() As Object
+    Public Overloads ReadOnly Property ChangedSolenoids() As Object
         Get
             isChangedSolenoidsCalled = True
             Dim chg As Object = VPinMAME.ChangedSolenoids()
@@ -294,7 +164,7 @@ Public Class Server
         End Get
     End Property
 
-    Public ReadOnly Property ChangedGIStrings() As Object
+    Public Overloads ReadOnly Property ChangedGIStrings() As Object
         Get
             isChangedGIStringsCalled = True
             Dim chg As Object = VPinMAME.ChangedGIStrings()
@@ -305,7 +175,7 @@ Public Class Server
         End Get
     End Property
 
-    Public ReadOnly Property ChangedLEDs(ByVal mask2 As Object, ByVal mask1 As Object, Optional ByVal mask3 As Object = 0, Optional ByVal mask4 As Object = 0) As Object
+    Public Overloads ReadOnly Property ChangedLEDs(ByVal mask2 As Object, ByVal mask1 As Object, Optional ByVal mask3 As Object = 0, Optional ByVal mask4 As Object = 0) As Object
         Get
             isChangedLEDsCalled = True
             Dim chg As Object = VPinMAME.ChangedLEDs(mask2, mask1, mask3, mask4) ' (&HFFFFFFFF, &HFFFFFFFF) 
@@ -316,7 +186,7 @@ Public Class Server
         End Get
     End Property
 
-    Public ReadOnly Property NewSoundCommands() As Object
+    Public Overloads ReadOnly Property NewSoundCommands() As Object
         Get
             Dim chg As Object = VPinMAME.NewSoundCommands()
             Return chg
@@ -368,7 +238,7 @@ Public Class Server
                 Next
 
                 Registry.CurrentUser.OpenSubKey("B2S", True).SetValue("B2SLamps", sb.ToString())
-                
+
             End If
 
         Else
@@ -856,30 +726,11 @@ Public Class Server
     End Sub
 
 #End Region
-
 #End Region
 
 #Region "game input/output"
 
-    Public ReadOnly Property Lamp(ByVal number As Object) As Boolean
-        Get
-            Return VPinMAME.Lamp(number)
-        End Get
-    End Property
-
-    Public ReadOnly Property Solenoid(ByVal number As Object) As Boolean
-        Get
-            Return VPinMAME.Solenoid(number)
-        End Get
-    End Property
-
-    Public ReadOnly Property GIString(ByVal number As Object) As Boolean
-        Get
-            Return VPinMAME.GIString(number)
-        End Get
-    End Property
-
-    Public Property Switch(ByVal number As Object) As Boolean
+    Public Overloads Property Switch(ByVal number As Object) As Boolean
         Get
             Return VPinMAME.Switch(number)
         End Get
@@ -888,7 +739,7 @@ Public Class Server
         End Set
     End Property
 
-    Public Property Mech(ByVal number As Object) As Integer
+    Public Overloads Property Mech(ByVal number As Object) As Integer
         Get
             Return VPinMAME.Mech(number)
         End Get
@@ -896,74 +747,12 @@ Public Class Server
             VPinMAME.Mech(number) = value
         End Set
     End Property
-    Public ReadOnly Property GetMech(ByVal number As Object) As Object
+    Public Overloads ReadOnly Property GetMech(ByVal number As Object) As Object
         Get
             Return VPinMAME.GetMech(number)
         End Get
     End Property
 
-    Public Property Dip(ByVal number As Object) As Integer
-        Get
-            Return VPinMAME.Dip(number)
-        End Get
-        Set(ByVal value As Integer)
-            VPinMAME.Dip(number) = value
-        End Set
-    End Property
-
-    Public Property SolMask(ByVal number As Object) As Integer
-        Get
-            Return VPinMAME.SolMask(number)
-        End Get
-        Set(ByVal value As Integer)
-            VPinMAME.SolMask(number) = value
-        End Set
-    End Property
-
-    Public ReadOnly Property RawDmdWidth As Integer
-        Get
-            Return VPinMAME.RawDmdWidth
-        End Get
-    End Property
-
-    Public ReadOnly Property RawDmdHeight As Integer
-        Get
-            Return VPinMAME.RawDmdHeight
-        End Get
-    End Property
-
-    Public ReadOnly Property RawDmdPixels As Object
-        Get
-            Return VPinMAME.RawDmdPixels
-        End Get
-    End Property
-
-    Public ReadOnly Property RawDmdColoredPixels As Object
-        Get
-            Return VPinMAME.RawDmdColoredPixels
-        End Get
-    End Property
-
-    Public ReadOnly Property ChangedNVRAM As Object
-        Get
-            Return VPinMAME.ChangedNVRAM
-        End Get
-    End Property
-
-    Public ReadOnly Property NVRAM As Object
-        Get
-            Return VPinMAME.NVRAM
-        End Get
-    End Property
-
-    Public Property SoundMode As Integer
-        Get
-            Return VPinMAME.SoundMode
-        End Get
-        Set(ByVal value As Integer)
-            VPinMAME.SoundMode = value
-        End Set
-    End Property
 #End Region
 
 #Region "non VPinMAME support"
@@ -1035,12 +824,12 @@ Public Class Server
                 formBackglass.Controls(I).Dispose()
             Next
             formBackglass.TopLightImage.Dispose()
-            formBackglass.TopLightImage = Nothing
+            'formBackglass.TopLightImage = Nothing
             If formBackglass.SecondLightImage IsNot Nothing Then
                 formBackglass.SecondLightImage.Dispose()
-                formBackglass.SecondLightImage = Nothing
+                'formBackglass.SecondLightImage = Nothing
                 formBackglass.TopAndSecondLightImage.Dispose()
-                formBackglass.TopAndSecondLightImage = Nothing
+                'formBackglass.TopAndSecondLightImage = Nothing
             End If
             formBackglass.BackgroundImage.Dispose()
             formBackglass.BackgroundImage = Nothing
@@ -1058,6 +847,5 @@ Public Class Server
     End Sub
 
 #End Region
-
 
 End Class
