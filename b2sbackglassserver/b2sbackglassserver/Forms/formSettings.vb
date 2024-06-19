@@ -1,9 +1,9 @@
-﻿Imports System
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Windows.Forms
 Imports System.IO
 Imports System.Reflection
 Imports System.Security.Principal
+Imports Microsoft.Win32
 
 Public Class formSettings
 
@@ -45,15 +45,17 @@ Public Class formSettings
         ' load data
         Dim _isdirty As Boolean = isSettingsScreenDirty
         Me.Text = "Settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")" & If(IsAdmin(), " (Administrator)", "")
+        If B2SSettings.PureEXE Then btnSaveSettings.Enabled = False
 
         ' set version info
-        lblCopyright.Text = String.Format(lblCopyright.Text, My.Application.Info.ProductName.ToString, My.Application.Info.Copyright.ToString)
+        lblCopyright.Text = String.Format(lblCopyright.Text, If(B2SData.IsBackglassStartedAsEXE, "B2S.Server.EXE", "B2S.Server.DLL"), My.Application.Info.Copyright.ToString)
 
         Dim Assembly As Assembly = Assembly.GetExecutingAssembly()
         Dim FileVersionInfo As FileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.Location)
 
         lblVersion.Text = String.Format("Server version {0} {1}, backglass file version {2}", FileVersionInfo.ProductVersion, If(Environment.Is64BitProcess, "x64", "x86"), B2SSettings.BackglassFileVersion)
         ' get more data
+
         formSettingsMore.btnLogPath.Text = "Log path: " & B2SSettings.LogPath
         formSettingsMore.chkLogLamps.Checked = B2SSettings.IsLampsStateLogOn
         formSettingsMore.chkLogSolenoids.Checked = B2SSettings.IsSolenoidsStateLogOn
@@ -427,6 +429,14 @@ Public Class formSettings
     End Sub
     Private Sub btnPluginSettings_Click(sender As Object, e As EventArgs) Handles btnPluginSettings.Click
         B2SSettings.PluginHost.ShowPluginWindow(Me)
+        If B2SSettings.StartAsEXE And B2SData.IsBackglassStartedAsEXE Then
+            Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                With Me 'B2SScreen.BackglassScreen.Bounds
+                    regkey.SetValue("PluginsScreen", .Location.X & "," & .Location.Y & "," & .Size.Width & "," & .Size.Height)
+                End With
+                regkey.SetValue("PluginsOpenDialog", 1)
+            End Using
+        End If
     End Sub
 
     Private Function IsDirty() As Boolean

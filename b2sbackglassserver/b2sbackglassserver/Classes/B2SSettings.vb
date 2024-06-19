@@ -7,7 +7,7 @@ Imports Microsoft.Win32
 
 Public Class B2SSettings
 
-    Public Const DirectB2SVersion As String = "2.1.2"
+    Public Const DirectB2SVersion As String = "3.0.0"
     Public Const MinimumDirectB2SVersion As String = "1.0"
     Public Shared Property BackglassFileVersion() As String = String.Empty
 
@@ -234,6 +234,8 @@ Public Class B2SSettings
     Public Shared Function GetSettingFilename() As String
         If IO.File.Exists(filename) Then
             Return filename
+        ElseIf StartAsEXE And B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
+            Return IO.Path.Combine(Application.StartupPath(), filename)
         ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)) Then
             Return IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)
         End If
