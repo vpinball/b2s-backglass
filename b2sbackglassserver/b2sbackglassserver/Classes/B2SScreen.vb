@@ -47,7 +47,11 @@ Public Class B2SScreen
     Public Property StartBackground() As Boolean = False
 
     Public Property rescaleBackglass As SizeF = New SizeF(1, 1)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> ac68072 (SteveJones72's Potential New Feature to B2S Snippet x/y translation #71)
 #Region "constructor and startup"
 
     Public Sub New()
