@@ -41,7 +41,8 @@ Public Class B2SScreen
 
     Public Property IsDMDToBeShown() As Boolean = False
 
-    
+    Public Property rescaleBackglass As SizeF = New SizeF(1, 1)
+
 #Region "constructor and startup"
 
     Public Sub New()
@@ -340,11 +341,11 @@ Public Class B2SScreen
         End If
 
         ' calculate backglass rescale factors
-        Dim rescaleBackglassX As Single = formBackglass.Width / Me.BackglassSize.Width
-        Dim rescaleBackglassY As Single = formBackglass.Height / Me.BackglassSize.Height
+
         If formBackglass.BackgroundImage IsNot Nothing Then
-            rescaleBackglassX = formBackglass.BackgroundImage.Width / Me.BackglassSize.Width
-            rescaleBackglassY = formBackglass.BackgroundImage.Height / Me.BackglassSize.Height
+            rescaleBackglass = New SizeF(CSng(formBackglass.BackgroundImage.Width / Me.BackglassSize.Width), CSng(formBackglass.BackgroundImage.Height / Me.BackglassSize.Height))
+        Else
+            rescaleBackglass = New SizeF(CSng(formBackglass.Width / Me.BackglassSize.Width), CSng(formBackglass.Height / Me.BackglassSize.Height))
         End If
 
         ' maybe rescale the location and the size because this is the default and therefore it has to be done
@@ -353,9 +354,9 @@ Public Class B2SScreen
         If IsDMDToBeShown Then
             If Me.DMDAtDefaultLocation Then
                 Me.DMDSize = Me.formDMD.Size
-                If rescaleBackglassX <> 1 OrElse rescaleBackglassY <> 1 Then
-                    Me.DMDLocation = New Point(Int(Me.DMDLocation.X / rescaleBackglassX), Int(Me.DMDLocation.Y / rescaleBackglassY))
-                    Me.DMDSize = New Size(Int(Me.DMDSize.Width / rescaleBackglassX), Int(Me.DMDSize.Height / rescaleBackglassY))
+                If rescaleBackglass.Width <> 1 OrElse rescaleBackglass.Height <> 1 Then
+                    Me.DMDLocation = New Point(Int(Me.DMDLocation.X / rescaleBackglass.Width), Int(Me.DMDLocation.Y / rescaleBackglass.Height))
+                    Me.DMDSize = New Size(Int(Me.DMDSize.Width / rescaleBackglass.Width), Int(Me.DMDSize.Height / rescaleBackglass.Height))
                 End If
             End If
 
@@ -369,7 +370,7 @@ Public Class B2SScreen
         End If
 
         ' move and scale all picked objects
-        ScaleAllControls(rescaleBackglassX, rescaleBackglassY, rescaleDMDX, rescaleDMDY)
+        ScaleAllControls(rescaleBackglass.Width, rescaleBackglass.Height, rescaleDMDX, rescaleDMDY)
 
         ' show the backglass form
         formBackglass.StartPosition = FormStartPosition.Manual
