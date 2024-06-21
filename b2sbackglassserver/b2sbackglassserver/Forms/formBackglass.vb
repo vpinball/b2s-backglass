@@ -348,15 +348,12 @@ Public Class formBackglass
             If drawme Then
                 If B2SData.OnAndOffImage Then
                     If B2SData.IsOffImageVisible AndAlso picbox.OffImage IsNot Nothing Then
-                        'e.Graphics.DrawImage(picbox.OffImage, picbox.RectangleF)
                         e.Graphics.DrawImage(picbox.OffImage, picbox.RectangleF.Location)
                     Else
-                        'e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF)
                         e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location)
                     End If
                 Else
-                    'e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF)
-                    e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location)
+                    e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location.X, picbox.RectangleF.Location.Y)
                 End If
             End If
 
@@ -680,6 +677,11 @@ Public Class formBackglass
 
     End Sub
 
+    Public Sub GetScaleFactor(ByRef scale As SizeF)
+
+        scale = B2SScreen.rescaleBackglass
+
+    End Sub
 #End Region
 
 
