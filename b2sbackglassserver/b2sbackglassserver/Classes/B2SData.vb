@@ -630,16 +630,12 @@ Public Class B2SData
     End Sub
 
     Public Shared Function ShortFileName(ByVal longFileName As String) As String
-
-        On Error Resume Next
-        Dim ret As String = Space(255)
-        GetShortPathName(longFileName, ret, Len(ret))
-        If Not String.IsNullOrEmpty(ret) AndAlso InStr(ret, Chr(0)) > 0 Then
-            Return ret.Substring(0, InStr(ret, Chr(0)) - 1)
-        Else
-            ' Do not return an empty string as Short File Name
-            Return longFileName
+        ' Cut filename after the first parenthesis
+        ' Return short file name
+        If longFileName Like "*)*" Then
+            Return longFileName.Substring(0, longFileName.IndexOf(")") - 1)
         End If
+        Return longFileName
 
     End Function
 
