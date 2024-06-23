@@ -72,6 +72,7 @@ Public Class formDMD
     Private Sub formDMD_MouseClick(sender As Object, e As MouseEventArgs) Handles MyBase.MouseClick
         If e.Button = Windows.Forms.MouseButtons.Right Then
             B2SScreen.formBackglass.formBackglass_MouseClick(sender, e)
+            'formBackglass.formBackglass_MouseClick(sender, e)
         End If
     End Sub
 

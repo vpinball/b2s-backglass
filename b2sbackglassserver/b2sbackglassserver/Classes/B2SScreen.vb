@@ -27,6 +27,7 @@ Public Class B2SScreen
     Public Property PlayfieldSize() As Size = New Size(0, 0)
     Public Property BackglassMonitor() As String = String.Empty
     Public Property BackglassScreen() As Screen = Nothing
+    Public Property StartBackground() As Boolean = False
     Public Property BackglassSize() As Size = New Size(0, 0)
     Public Property BackglassLocation() As Point = New Point(0, 0)
     Public Property BackglassGrillHeight() As Integer = 0
@@ -47,11 +48,7 @@ Public Class B2SScreen
     Public Property StartBackground() As Boolean = False
 
     Public Property rescaleBackglass As SizeF = New SizeF(1, 1)
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> ac68072 (SteveJones72's Potential New Feature to B2S Snippet x/y translation #71)
 #Region "constructor and startup"
 
     Public Sub New()
@@ -63,8 +60,7 @@ Public Class B2SScreen
 
         ' read settings file
         ReadB2SSettingsFromFile()
-        Server.errorlog.WriteLogEntry("B2SScreen.New DONE")
-
+        debugLog.WriteLogEntry("B2SScreen.New DONE")
     End Sub
 
     Public Sub Start(ByVal _formBackglass As Form)
@@ -109,33 +105,31 @@ Public Class B2SScreen
 
     Private Sub ReadB2SSettingsFromFile()
         Dim loadFileName As String = String.Empty
-        'Dim searchPathLog As Log = New Log("BackglassSearchPath")
-        'searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
+        debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Start Search ScreenRes")
 
-        'searchPathLog.WriteLogEntry("Start Search ScreenRes")
-        Server.errorlog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Start Search ScreenRes")
         Try
             Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & ".res"),    ' .\TableName.res
                                              IO.Path.Combine(B2SData.TableFileName, B2SSettings.B2SScreenResFileName),   ' .\TableName\ScreenRes.txt
                                              B2SSettings.B2SScreenResFileName,                                           ' .\ScreenRes.txt
                                              IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), B2SSettings.B2SScreenResFileName)' B2SFolder\ScreenRes.txt
                                             }
-			' TODO                                              IO.Path.Combine(Application.StartupPath(), B2SSettings.B2SScreenResFileName)' B2SFolder\ScreenRes.txt
+            ' TODO                                              IO.Path.Combine(Application.StartupPath(), B2SSettings.B2SScreenResFileName)' B2SFolder\ScreenRes.txt
             For Each testFileName As String In loadFileNames
-                Server.errorlog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Test " & testFileName)
-                'searchPathLog.WriteLogEntry("  Test " & testFileName)
+
+                debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Test " & testFileName)
+
                 If IO.File.Exists(testFileName) Then
                     loadFileName = testFileName
                     B2SSettings.LoadedResFilePath = Path.GetFullPath(loadFileName)
-                    Server.errorlog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Found ScreenRes " & loadFileName)
-                    'searchPathLog.WriteLogEntry("Found ScreenRes " & loadFileName)
+                    debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Found ScreenRes " & loadFileName)
+
                     Exit For
                 End If
             Next
         Catch
         End Try
-        Server.errorlog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Stop Search ScreenRes")
-        'searchPathLog.WriteLogEntry("Stop Search ScreenRes")
+        debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Stop Search ScreenRes")
+
 
         If Not loadFileName = String.Empty Then
 
@@ -155,7 +149,8 @@ Public Class B2SScreen
             Loop
             ' close file handle
             FileClose(1)
-            Server.errorlog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile A version #2 file " & Me.BackgroundPath)
+            debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile A version #2 file " & Me.BackgroundPath)
+
             line(i) = 0
             line(i + 1) = 0
             Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
@@ -182,13 +177,17 @@ Public Class B2SScreen
             End If
 
         Else
-            Server.errorlog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile no B2S screen resolution file found")
+
+            debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile no B2S screen resolution file found")
 
             MessageBox.Show("There is no B2S screen resolution file '" & B2SSettings.B2SScreenResFileName & "' in the current folder '" & IO.Directory.GetCurrentDirectory() & "'." & vbCrLf & vbCrLf &
                             "Please create this file with the tool 'B2S_ScreenResIdentifier.exe'.",
                             "B2S backglass error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+#If B2S = "DLL" Then
             Stop
-
+#Else
+            End
+#End If
         End If
     End Sub
     Private Function GetBackgroundPath(BackgroundPath As String, ByVal TableFileName As String, ByVal GameName As String) As String
@@ -370,9 +369,9 @@ Public Class B2SScreen
             ((Me.DMDViewMode = eDMDViewMode.ShowDMD) OrElse
              (Me.DMDViewMode = eDMDViewMode.ShowDMDOnlyAtDefaultLocation AndAlso Me.DMDAtDefaultLocation) OrElse
              (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
-
+#If B2S = "DLL" Then
         On Error Resume Next
-
+#End If
         ' get the correct screen
         Me.BackglassScreen = ScreensOrdered(0)
         Dim s As Screen
@@ -514,10 +513,14 @@ Public Class B2SScreen
             formBackglass.Show(Me.formbackground)
         Else
             ' Without background picture the backglass is the main form
-        formBackglass.Text = "B2S Backglass Server"
-        formBackglass.Show()
+            formBackglass.Text = "B2S Backglass Server"
+            formBackglass.Show()
         End If
-
+#If B2S = "DLL" Then
+        ' bring backglass screen to the front
+        If B2SSettings.FormToFront Then formBackglass.TopMost = True
+        formBackglass.BringToFront()
+#End If
         ' maybe show DMD form
         If IsDMDToBeShown Then
             ' set DMD location relative to the backglass location
@@ -527,7 +530,11 @@ Public Class B2SScreen
             Me.formDMD.ControlBox = False
             Me.formDMD.MaximizeBox = False
             Me.formDMD.MinimizeBox = False
+#If B2S = "DLL" Then
             Me.formDMD.Location = formBackglass.Location + Me.DMDLocation
+#Else
+            Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + DMDKeepBackglassLocation + Me.DMDLocation
+#End If
             Me.formDMD.Size = Me.DMDSize
             Me.formDMD.Text = "B2S DMD"
 
@@ -542,7 +549,7 @@ Public Class B2SScreen
                     Me.formDMD.Show(formBackglass)
                 Else
                     ' DMD and Back Glass separate and accessed separately
-            Me.formDMD.Show()
+                    Me.formDMD.Show()
                 End If
             ElseIf B2SSettings.FormToBack Then
                 ' DMD and Back Glass one unit, make sure they are together and also make sure it is impossible to activate
@@ -551,7 +558,7 @@ Public Class B2SScreen
                 Me.formDMD.Show(formBackglass)
             Else
                 ' show the DMD form without grill
-            Me.formDMD.BringToFront()
+                Me.formDMD.BringToFront()
                 Me.formDMD.Show()
             End If
         End If

@@ -7,15 +7,18 @@ Imports System.Runtime.InteropServices
 ' associated with an assembly.
 
 ' Review the values of the assembly attributes
-
+#If B2S = "DLL" Then
 <Assembly: AssemblyTitle("B2S Backglass Server")> 
-<Assembly: AssemblyDescription("Display directb2s Backglass files for Visual Pinball")> 
-<Assembly: AssemblyCompany("Visual Pinball")> 
 <Assembly: AssemblyProduct("B2S Backglass Server")> 
-<Assembly: AssemblyCopyright("Copyright (c) 2012-2024")> 
-<Assembly: AssemblyTrademark("A Herweh & B2S Team production")> 
-
-<Assembly: ComVisible(True)> 
+#Else
+<Assembly: AssemblyTitle("B2S Backglass Server EXE")>
+<Assembly: AssemblyProduct("B2S Backglass Server EXE")>
+#End If
+<Assembly: AssemblyDescription("Display directb2s Backglass files for Visual Pinball")>
+<Assembly: AssemblyCompany("Visual Pinball")>
+<Assembly: AssemblyCopyright("Copyright (c) 2012-2024")>
+<Assembly: AssemblyTrademark("A Herweh & B2S Team production")>
+<Assembly: ComVisible(True)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
 <Assembly: Guid("4e596935-cb6b-40d8-81f9-428397c654cf")> 

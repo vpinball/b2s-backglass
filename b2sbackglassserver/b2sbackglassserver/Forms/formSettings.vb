@@ -37,26 +37,36 @@ Public Class formSettings
             Return Name + If(SlowDown = 1, "", " (" & If(SlowDown = 0, "Off", SlowDown.ToString & "x") & ")")
         End Function
     End Class
-
+#If B2S = "DLL" Then
     Private Sub formSettings_Load(sender As System.Object, e As System.EventArgs) Handles Me.Load
-
+#Else
+    Private Sub formSettings_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+#End If
         formSettingsMore = New formSettingsMore(Me, formBackglass)
 
         ' load data
         Dim _isdirty As Boolean = isSettingsScreenDirty
         Me.Text = "Settings... [" & B2SData.TableFileName & "] " & " (" & If(Not String.IsNullOrEmpty(B2SSettings.GameName), B2SSettings.GameName, B2SSettings.B2SName) & ")" & If(IsAdmin(), " (Administrator)", "")
+
         If B2SSettings.PureEXE Then btnSaveSettings.Enabled = False
 
         ' set version info
-        lblCopyright.Text = String.Format(lblCopyright.Text, If(B2SData.IsBackglassStartedAsEXE, "B2S.Server.EXE", "B2S.Server.DLL"), My.Application.Info.Copyright.ToString)
+#If B2S = "DLL" Then
+        lblCopyright.Text = String.Format(lblCopyright.Text, "B2S.Server.DLL", My.Application.Info.Copyright.ToString)
 
         Dim Assembly As Assembly = Assembly.GetExecutingAssembly()
         Dim FileVersionInfo As FileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.Location)
-
         lblVersion.Text = String.Format("Server version {0} {1}, backglass file version {2}", FileVersionInfo.ProductVersion, If(Environment.Is64BitProcess, "x64", "x86"), B2SSettings.BackglassFileVersion)
+#Else
+        lblCopyright.Text = String.Format(lblCopyright.Text, "B2S.Server.EXE", My.Application.Info.Copyright.ToString)
+        lblVersion.Text = String.Format("Server version {0} {1}, backglass file version {2}", Application.ProductVersion, If(Environment.Is64BitProcess, "x64", "x86"), B2SSettings.BackglassFileVersion)
+#End If
+
+
+
         ' get more data
 
-        formSettingsMore.btnLogPath.Text = "Log path: " & B2SSettings.LogPath
+        formSettingsMore.btnLogPath.Text = "Log path:  " & B2SSettings.LogPath
         formSettingsMore.chkLogLamps.Checked = B2SSettings.IsLampsStateLogOn
         formSettingsMore.chkLogSolenoids.Checked = B2SSettings.IsSolenoidsStateLogOn
         formSettingsMore.chkLogGIStrings.Checked = B2SSettings.IsGIStringsStateLogOn
@@ -134,9 +144,15 @@ Public Class formSettings
         ' plugin stuff
         chkActivatePlugins.Checked = B2SSettings.ArePluginsOn
         chkShowStartupError.Checked = B2SSettings.ShowStartupError
+#If B2S = "DLL" Then
         If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost IsNot Nothing AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
             btnPluginSettings.Enabled = True
         End If
+#Else
+        If B2SSettings.ArePluginsOn AndAlso Registry.CurrentUser.OpenSubKey("Software\B2S").GetValue("Plugins", 0) > 0 Then
+            btnPluginSettings.Enabled = True
+        End If
+#End If
         ' size panel
         PanelSettings.Location = New Point((Me.Size.Width - PanelSettings.Width) / 2, (Me.Size.Height - PanelSettings.Height) / 2)
         ' reset dirty flag to previous state
@@ -147,8 +163,11 @@ Public Class formSettings
         TimerOpacity.Start()
 
     End Sub
-
+#If B2S = "DLL" Then
     Private Sub formSettings_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
+#Else
+    Private Sub formSettings_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyUp
+#End If
         If e.KeyCode = Keys.Escape OrElse e.KeyCode = Keys.S Then
             btnCloseSettings.PerformClick()
         End If
@@ -191,7 +210,11 @@ Public Class formSettings
             End If
         End If
         B2SSettings.Save(B2SAnimation)
+#If B2S = "DLL" Then
         B2SSettings.Save(, , True)
+#Else
+        B2SSettings.Save(, True)
+#End If
         isSettingsScreenDirty = False
         If activateMsgBoxAtSaving Then
             MessageBox.Show(My.Resources.MSG_ChangesNeedARestart, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -242,7 +265,11 @@ Public Class formSettings
                             MessageBox.Show("The following error occurred opening the file '" & name & "':" & vbCrLf & vbCrLf & ex.Message, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                         End Try
                         B2SSettings.HyperpinXMLFile = name
-                        B2SSettings.Save(, , , True)
+#If B2S = "DLL" Then
+        B2SSettings.Save(, , , True)
+#Else
+                        B2SSettings.Save(, , True)
+#End If
                         MessageBox.Show("Your 'Visual Pinball.xml' file could be located correctly.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information)
                     Else
                         MessageBox.Show("'Visual Pinball.xml' could not be found.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -428,8 +455,10 @@ Public Class formSettings
         B2SSettings.ShowStartupError = chkShowStartupError.Checked
     End Sub
     Private Sub btnPluginSettings_Click(sender As Object, e As EventArgs) Handles btnPluginSettings.Click
+#If B2S = "DLL" Then
         B2SSettings.PluginHost.ShowPluginWindow(Me)
-        If B2SSettings.StartAsEXE And B2SData.IsBackglassStartedAsEXE Then
+#End If
+        If B2SSettings.StartAsEXE Then
             Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
                 With Me 'B2SScreen.BackglassScreen.Bounds
                     regkey.SetValue("PluginsScreen", .Location.X & "," & .Location.Y & "," & .Size.Width & "," & .Size.Height)
@@ -474,8 +503,11 @@ Public Class formSettings
     Private Sub btnEditScreenRes_Click(sender As Object, e As EventArgs) Handles btnEditScreenRes.Click
         Dim p As Process = New Process()
         Dim pi As ProcessStartInfo = New ProcessStartInfo()
+#If B2S = "DLL" Then
         Dim B2S_Identifier As String = IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "B2S_ScreenResIdentifier.exe")
-
+#Else
+        Dim B2S_Identifier As String = IO.Path.Combine(Application.StartupPath, "B2S_ScreenResIdentifier.exe")
+#End If
         If IO.File.Exists(B2S_Identifier) Then
             pi.Arguments = """" & B2SData.TableFileName & ".res" & """"
             pi.FileName = B2S_Identifier

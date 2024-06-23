@@ -59,7 +59,9 @@ Public Class B2SSettings
         End Get
         Set(ByVal value As Boolean)
             _IsLampsStateLogOn = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
         End Set
     End Property
     Private Shared Property _IsSolenoidsStateLogOn() As Boolean = False
@@ -69,7 +71,10 @@ Public Class B2SSettings
         End Get
         Set(ByVal value As Boolean)
             _IsSolenoidsStateLogOn = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
+
         End Set
     End Property
     Private Shared Property _IsGIStringsStateLogOn() As Boolean = False
@@ -79,7 +84,10 @@ Public Class B2SSettings
         End Get
         Set(ByVal value As Boolean)
             _IsGIStringsStateLogOn = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
+
         End Set
     End Property
     Private Shared Property _IsLEDsStateLogOn() As Boolean = False
@@ -89,7 +97,10 @@ Public Class B2SSettings
         End Get
         Set(ByVal value As Boolean)
             _IsLEDsStateLogOn = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
+
         End Set
     End Property
     Public Shared Property IsPaintingLogOn() As Boolean = True
@@ -101,9 +112,9 @@ Public Class B2SSettings
     Public Shared Property ArePluginsOn() As Boolean = False
 
     Public Shared Property CPUAffinityMask() As Integer = 0
-
+#If B2S = "DLL" Then
     Public Shared Property PluginHost() As PluginHost = Nothing
-
+#End If
     Public Shared Property ScreenshotPath() As String = String.Empty
     Public Shared Property ScreenshotFileType() As eImageFileType = eImageFileType.PNG
 
@@ -117,7 +128,10 @@ Public Class B2SSettings
         End Get
         Set(ByVal value As Boolean)
             _AllOff = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
+
         End Set
     End Property
     Private Shared Property _LampsOff() As Boolean = False
@@ -127,7 +141,10 @@ Public Class B2SSettings
         End Get
         Set(ByVal value As Boolean)
             _LampsOff = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
+
         End Set
     End Property
     Private Shared Property _SolenoidsOff() As Boolean = False
@@ -137,7 +154,10 @@ Public Class B2SSettings
         End Get
         Set(ByVal value As Boolean)
             _SolenoidsOff = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
+
         End Set
     End Property
     Private Shared Property _GIStringsOff() As Boolean = False
@@ -147,7 +167,10 @@ Public Class B2SSettings
         End Get
         Set(ByVal value As Boolean)
             _GIStringsOff = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
+
         End Set
     End Property
     Public Shared Property LEDsOff() As Boolean = False
@@ -171,8 +194,8 @@ Public Class B2SSettings
     Public Shared Property FormToBack() As Boolean = False
     Public Shared Property FormNoFocus() As Boolean = False
     Public Shared Property HideGrill() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
-    Public Shared Property HideB2SDMD() As Boolean = False
     Public Shared Property HideB2SBackglass() As Boolean = False
+    Public Shared Property HideB2SDMD() As Boolean = False
     Public Shared Property HideDMD() As System.Windows.Forms.CheckState = Windows.Forms.CheckState.Indeterminate
 
     Public Shared Property AnimationSlowDowns() As Generic.Dictionary(Of String, Integer) = New Generic.Dictionary(Of String, Integer)
@@ -234,8 +257,13 @@ Public Class B2SSettings
     Public Shared Function GetSettingFilename() As String
         If IO.File.Exists(filename) Then
             Return filename
+#If B2S = "DLL" Then
         ElseIf StartAsEXE And B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
             Return IO.Path.Combine(Application.StartupPath(), filename)
+#Else
+        ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
+            Return IO.Path.Combine(Application.StartupPath(), filename)
+#End If
         ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)) Then
             Return IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)
         End If
@@ -290,75 +318,81 @@ Public Class B2SSettings
 
             If XML IsNot Nothing AndAlso XML.SelectSingleNode("B2STableSettings") IsNot Nothing Then
                 Dim nodeHeader As Xml.XmlNode = XML.SelectSingleNode("B2STableSettings")
+#If B2S = "DLL" Then
                 If justLoadPluginSetting Then
                     ' get plugin status
                     If nodeHeader.SelectSingleNode("ArePluginsOn") IsNot Nothing Then ArePluginsOn = (nodeHeader.SelectSingleNode("ArePluginsOn").InnerText = "1")
                 Else
-                    ' get default start mode
-                    If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
-                    If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
-                    If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
+#Else
+                If nodeHeader.SelectSingleNode("ArePluginsOn") IsNot Nothing Then ArePluginsOn = (nodeHeader.SelectSingleNode("ArePluginsOn").InnerText = "1")
+#End If
+                ' get default start mode
+                If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
+                If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
+                If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
 
                     'If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
-                    ' get overall settings
-                    If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)
-                    If nodeHeader.SelectSingleNode("LogPath") IsNot Nothing Then LogPath = nodeHeader.SelectSingleNode("LogPath").InnerText
-                    If nodeHeader.SelectSingleNode("IsLampsStateLogOn") IsNot Nothing Then IsLampsStateLogOn = (nodeHeader.SelectSingleNode("IsLampsStateLogOn").InnerText = "1")
-                    If nodeHeader.SelectSingleNode("IsSolenoidsStateLogOn") IsNot Nothing Then IsSolenoidsStateLogOn = (nodeHeader.SelectSingleNode("IsSolenoidsStateLogOn").InnerText = "1")
-                    If nodeHeader.SelectSingleNode("IsGIStringsStateLogOn") IsNot Nothing Then IsGIStringsStateLogOn = (nodeHeader.SelectSingleNode("IsGIStringsStateLogOn").InnerText = "1")
-                    If nodeHeader.SelectSingleNode("IsLEDsStateLogOn") IsNot Nothing Then IsLEDsStateLogOn = (nodeHeader.SelectSingleNode("IsLEDsStateLogOn").InnerText = "1")
-                    If nodeHeader.SelectSingleNode("IsPaintingLogOn") IsNot Nothing Then IsPaintingLogOn = (nodeHeader.SelectSingleNode("IsPaintingLogOn").InnerText = "1")
-                    If nodeHeader.SelectSingleNode("IsStatisticsBackglassOn") IsNot Nothing Then IsStatisticsBackglassOn = (nodeHeader.SelectSingleNode("IsStatisticsBackglassOn").InnerText = "1")
-                    If nodeHeader.SelectSingleNode("IsBackglassSearchLogOn") IsNot Nothing Then IsBackglassSearchLogOn = (nodeHeader.SelectSingleNode("IsBackglassSearchLogOn").InnerText = "1")
-                    If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
-                    LoadGlobalAndTableSettings(nodeHeader)
-                    If StartBackground.HasValue Then GlobalStartBackground = StartBackground
-                    StartBackground = Nothing
+                ' get overall settings
+                If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)
+                If nodeHeader.SelectSingleNode("LogPath") IsNot Nothing Then LogPath = nodeHeader.SelectSingleNode("LogPath").InnerText
+                If nodeHeader.SelectSingleNode("IsLampsStateLogOn") IsNot Nothing Then IsLampsStateLogOn = (nodeHeader.SelectSingleNode("IsLampsStateLogOn").InnerText = "1")
+                If nodeHeader.SelectSingleNode("IsSolenoidsStateLogOn") IsNot Nothing Then IsSolenoidsStateLogOn = (nodeHeader.SelectSingleNode("IsSolenoidsStateLogOn").InnerText = "1")
+                If nodeHeader.SelectSingleNode("IsGIStringsStateLogOn") IsNot Nothing Then IsGIStringsStateLogOn = (nodeHeader.SelectSingleNode("IsGIStringsStateLogOn").InnerText = "1")
+                If nodeHeader.SelectSingleNode("IsLEDsStateLogOn") IsNot Nothing Then IsLEDsStateLogOn = (nodeHeader.SelectSingleNode("IsLEDsStateLogOn").InnerText = "1")
+                If nodeHeader.SelectSingleNode("IsPaintingLogOn") IsNot Nothing Then IsPaintingLogOn = (nodeHeader.SelectSingleNode("IsPaintingLogOn").InnerText = "1")
+                If nodeHeader.SelectSingleNode("IsStatisticsBackglassOn") IsNot Nothing Then IsStatisticsBackglassOn = (nodeHeader.SelectSingleNode("IsStatisticsBackglassOn").InnerText = "1")
+                If nodeHeader.SelectSingleNode("IsBackglassSearchLogOn") IsNot Nothing Then IsBackglassSearchLogOn = (nodeHeader.SelectSingleNode("IsBackglassSearchLogOn").InnerText = "1")
+                If nodeHeader.SelectSingleNode("ShowStartupError") IsNot Nothing Then ShowStartupError = (nodeHeader.SelectSingleNode("ShowStartupError").InnerText = "1")
+                LoadGlobalAndTableSettings(nodeHeader)
+                If StartBackground.HasValue Then GlobalStartBackground = StartBackground
+                StartBackground = Nothing
 
-                    If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
-                        ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
-                        ScreenshotFileType = CInt(nodeHeader.SelectSingleNode("ScreenshotFileType").InnerText)
-                    End If
-                    If nodeHeader.SelectSingleNode("HyperpinXMLFile") IsNot Nothing Then
-                        HyperpinXMLFile = nodeHeader.SelectSingleNode("HyperpinXMLFile").InnerText
-                    End If
-                    If resetLogs AndAlso (IsLampsStateLogOn OrElse IsSolenoidsStateLogOn OrElse IsGIStringsStateLogOn OrElse IsLEDsStateLogOn OrElse IsPaintingLogOn) Then
-                        AddNode(XML, nodeHeader, "IsLampsStateLogOn", "0")
-                        AddNode(XML, nodeHeader, "IsSolenoidsStateLogOn", "0")
-                        AddNode(XML, nodeHeader, "IsGIStringsStateLogOn", "0")
-                        AddNode(XML, nodeHeader, "IsLEDsStateLogOn", "0")
-                        AddNode(XML, nodeHeader, "IsPaintingLogOn", "0")
-                        XML.Save(SettingFilePath)
-                    End If
-                    ' set default dual mode
-                    'If B2SData.DualBackglass Then
-                    CurrentDualMode = eDualMode.Authentic
-                    'End If
-                    ' maybe get table specific settings
-                    If Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName) Then
-                        Dim nodeTable As Xml.XmlElement = nodeHeader.SelectSingleNode(If(Not String.IsNullOrEmpty(GameName), GameName, B2SName))
-                        If nodeTable IsNot Nothing Then
-                            _IsGameNameFound = True
-                            LoadGlobalAndTableSettings(nodeTable)
-                            If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
-                            If nodeTable.SelectSingleNode("MatchingFileName") IsNot Nothing Then MatchingFileName = nodeTable.SelectSingleNode("MatchingFileName").InnerText
+                If nodeHeader.SelectSingleNode("ScreenshotPath") IsNot Nothing Then
+                    ScreenshotPath = nodeHeader.SelectSingleNode("ScreenshotPath").InnerText
+                    ScreenshotFileType = CInt(nodeHeader.SelectSingleNode("ScreenshotFileType").InnerText)
+                End If
+                If nodeHeader.SelectSingleNode("HyperpinXMLFile") IsNot Nothing Then
+                    HyperpinXMLFile = nodeHeader.SelectSingleNode("HyperpinXMLFile").InnerText
+                End If
+                If resetLogs AndAlso (IsLampsStateLogOn OrElse IsSolenoidsStateLogOn OrElse IsGIStringsStateLogOn OrElse IsLEDsStateLogOn OrElse IsPaintingLogOn) Then
+                    AddNode(XML, nodeHeader, "IsLampsStateLogOn", "0")
+                    AddNode(XML, nodeHeader, "IsSolenoidsStateLogOn", "0")
+                    AddNode(XML, nodeHeader, "IsGIStringsStateLogOn", "0")
+                    AddNode(XML, nodeHeader, "IsLEDsStateLogOn", "0")
+                    AddNode(XML, nodeHeader, "IsPaintingLogOn", "0")
+                    XML.Save(SettingFilePath)
+                End If
+                ' set default dual mode
+                'If B2SData.DualBackglass Then
+                CurrentDualMode = eDualMode.Authentic
+                'End If
+                ' maybe get table specific settings
+                If Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName) Then
+                    Dim nodeTable As Xml.XmlElement = nodeHeader.SelectSingleNode(If(Not String.IsNullOrEmpty(GameName), GameName, B2SName))
+                    If nodeTable IsNot Nothing Then
+                        _IsGameNameFound = True
+                        LoadGlobalAndTableSettings(nodeTable)
+                        If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
+                        If nodeTable.SelectSingleNode("MatchingFileName") IsNot Nothing Then MatchingFileName = nodeTable.SelectSingleNode("MatchingFileName").InnerText
 
-                            Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
-                            If nodeAnimations IsNot Nothing Then
-                                For Each nodeAnimation As Xml.XmlElement In nodeAnimations.ChildNodes
-                                    If nodeAnimation.Name.Equals("Animation") Then
-                                        AnimationSlowDowns.Add(nodeAnimation.Attributes("Name").InnerText, CInt(nodeAnimation.Attributes("SlowDown").InnerText))
-                                    ElseIf nodeAnimation.Name.Equals("AllAnimations") Then
-                                        AllAnimationSlowDown = CInt(nodeAnimation.Attributes("SlowDown").InnerText)
-                                    End If
-                                Next
-                            End If
+                        Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
+                        If nodeAnimations IsNot Nothing Then
+                            For Each nodeAnimation As Xml.XmlElement In nodeAnimations.ChildNodes
+                                If nodeAnimation.Name.Equals("Animation") Then
+                                    AnimationSlowDowns.Add(nodeAnimation.Attributes("Name").InnerText, CInt(nodeAnimation.Attributes("SlowDown").InnerText))
+                                ElseIf nodeAnimation.Name.Equals("AllAnimations") Then
+                                    AllAnimationSlowDown = CInt(nodeAnimation.Attributes("SlowDown").InnerText)
+                                End If
+                            Next
                         End If
                     End If
                 End If
             End If
         End If
+#If B2S = "DLL" Then
+        End If
+#End If
     End Sub
     Public Shared Sub Save(Optional ByVal b2sanimation As B2SAnimation = Nothing,
                            Optional ByVal justSaveSnifferCheck As Boolean = False,
@@ -368,9 +402,13 @@ Public Class B2SSettings
         Dim XML As Xml.XmlDocument = New Xml.XmlDocument
         If IO.File.Exists(SettingFilePath) Then XML.Load(SettingFilePath)
         Dim nodeHeader As Xml.XmlElement = AddHeader(XML, XML, "B2STableSettings")
+#If B2S = "DLL" Then
         If justSaveSnifferCheck Then
             AddNode(XML, nodeHeader, "IsStatisticsBackglassOn", If(IsStatisticsBackglassOn, "1", "0"))
         ElseIf justSaveDualMode Then
+#Else
+        If justSaveDualMode Then
+#End If
             If B2SData.DualBackglass AndAlso (Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName)) Then
                 Dim nodeTable As Xml.XmlElement = AddHeader(XML, nodeHeader, If(Not String.IsNullOrEmpty(GameName), GameName, B2SName))
                 AddNode(XML, nodeTable, "DualMode", CInt(CurrentDualMode).ToString())
@@ -544,7 +582,12 @@ Public Class B2SSettings
                 ' not found
                 HyperpinXMLFile = "Unknown"
             End If
+#If B2S = "DLL" Then
             Save(, , , True)
+#Else
+            Save(, , True)
+#End If
+
         End If
         Return (HyperpinXMLFile <> "Unknown")
     End Function

@@ -51,7 +51,6 @@ Public Class B2SPictureBox
 
         ' do not show the control
         MyBase.Visible = False
-        Me.BringToFront()
     End Sub
 
     Public Property PictureBoxType() As ePictureBoxType = ePictureBoxType.StandardImage
