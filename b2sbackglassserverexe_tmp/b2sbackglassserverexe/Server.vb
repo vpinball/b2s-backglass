@@ -736,7 +736,7 @@ Public Class Server
                         ElseIf secondvisible Then
                             formBackglass.BackgroundImage = formBackglass.SecondLightImage
                         Else
-                            formBackglass.BackgroundImage = formBackglass.DarkImage
+                            formBackglass.BackgroundImage = formBackglass.LightImage
                             B2SData.IsOffImageVisible = True
                         End If
                     End If

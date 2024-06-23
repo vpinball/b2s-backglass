@@ -51,8 +51,10 @@ Public Class formBackglass
         MyBase.WndProc(m)
     End Sub
 #End Region 'Properties
+
 #Region "constructor and closing"
 
+#If B2S = "DLL" Then
     Public Sub New()
 
         InitializeComponent()
@@ -166,16 +168,16 @@ Public Class formBackglass
         snifferTimer.Start()
 
     End Sub
+#Else
+    Public Sub New()
 
-    Public Sub New(tableName As String, TopMost As Boolean)
-        ' This is the constructor for the server when run from the wrapper
         InitializeComponent()
 
         ' set some styles
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.OptimizedDoubleBuffer, True)
         Me.DoubleBuffered = True
 
-        ' set key preview to allow some key action
+        ' set key peview to allow some key action
         Me.KeyPreview = True
 
         ' mabye create the base registry key
@@ -190,13 +192,24 @@ Public Class formBackglass
         'B2SData.TableFileName = "Close_Encounters_FS"
         'B2SData.TableFileName = "Pinbot.uw.V1.02.1_JF_91x_BMPR_MOD_FS"
         'B2SData.TableFileName = "ScaredStiff_FS_B2S"
+        If My.Application.CommandLineArgs.Count > 0 Then
+            B2SData.TableFileName = My.Application.CommandLineArgs(0).ToString
 
-        If tableName.EndsWith(".directb2s") Then
-            tableName = System.IO.Path.GetFileNameWithoutExtension(tableName)
-            B2SSettings.PureEXE = True
+            If B2SData.TableFileName.EndsWith(".directb2s") Then
+                B2SData.TableFileName = Path.GetFileNameWithoutExtension(B2SData.TableFileName)
+                B2SSettings.PureEXE = True
+            End If
+
+            If My.Application.CommandLineArgs.Count > 1 Then
+                If My.Application.CommandLineArgs(1).ToString = "1" Then
+                    Me.TopMost = True
+                End If
+            End If
+        Else
+            MessageBox.Show("Please do not start the EXE this way.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End
         End If
-        B2SData.TableFileName = tableName
-        Me.TopMost = TopMost
+
 
         ' get the game name
         'B2SSettings.GameName = "bguns_l8"
@@ -234,7 +247,7 @@ Public Class formBackglass
             If B2SSettings.ShowStartupError Then
                 MessageBox.Show(ex.Message, My.Resources.AppTitle, Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Error)
             End If
-            Stop
+            End
         End Try
 
         ' initialize screen settings
@@ -271,6 +284,7 @@ Public Class formBackglass
 
     End Sub
 
+#End If
     Private Sub formBackglass_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
 
         If Not B2SSettings.FormToFront Then
@@ -385,7 +399,7 @@ Public Class formBackglass
         B2SStatistics.ClearAll()
 
     End Sub
-
+#If B2S = "DLL" Then
     Private Sub formBackglass_Disposed(sender As Object, e As System.EventArgs) Handles Me.Disposed
 
         On Error Resume Next
@@ -401,9 +415,8 @@ Public Class formBackglass
         'If rotateTimer IsNot Nothing Then RemoveHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
 
     End Sub
-
+#End If
 #End Region
-
 
 #Region "painting"
 
@@ -414,68 +427,65 @@ Public Class formBackglass
             Return
         End If
 
-        If Not B2SStatistics.LogStatistics Then
+        If B2SStatistics.LogStatistics Then
+            ' invalidate the statistics controls
+            DrawSniffer()
 
-            ' some rendering hints
-            e.Graphics.PageUnit = GraphicsUnit.Pixel
-            e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+            Return
+        End If
 
-            ' draw background and illumination images
-            If Me.BackgroundImage IsNot Nothing Then
+        ' some rendering hints
+        e.Graphics.PageUnit = GraphicsUnit.Pixel
+        e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
-                On Error Resume Next
+        ' draw background and illumination images
+        If Me.BackgroundImage IsNot Nothing Then
 
-                ' generate new clipping region
-                Dim clip As Region = New Region(e.ClipRectangle)
-                For Each ledarea As KeyValuePair(Of String, B2SData.LEDAreaInfo) In B2SData.LEDAreas
-                    If Not ledarea.Value.IsOnDMD Then
-                        clip.Exclude(ledarea.Value.Rect)
-                    End If
-                Next
-                e.Graphics.SetClip(clip, Drawing2D.CombineMode.Replace)
+            On Error Resume Next
 
-                ' draw background image
-                e.Graphics.DrawImage(Me.BackgroundImage, 0, 0)
+            ' generate new clipping region
+            Dim clip As Region = New Region(e.ClipRectangle)
+            For Each ledarea As KeyValuePair(Of String, B2SData.LEDAreaInfo) In B2SData.LEDAreas
+                If Not ledarea.Value.IsOnDMD Then
+                    clip.Exclude(ledarea.Value.Rect)
+                End If
+            Next
+            e.Graphics.SetClip(clip, Drawing2D.CombineMode.Replace)
 
-                ' draw all visible and necessary images
-                If B2SData.Illuminations.Count > 0 Then
+            ' draw background image
+            e.Graphics.DrawImage(Me.BackgroundImage, 0, 0)
 
-                    If Not B2SData.UseZOrder Then
+            ' draw all visible and necessary images
+            If B2SData.Illuminations.Count > 0 Then
 
-                        ' draw all standard images
-                        For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
-                            DrawImage(e, illu.Value)
+                If Not B2SData.UseZOrder Then
+
+                    ' draw all standard images
+                    For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                        DrawImage(e, illu.Value)
+                    Next
+
+                Else
+
+                    ' first of all draw all standard images
+                    For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                        If illu.Value.ZOrder = 0 Then DrawImage(e, illu.Value)
+                    Next
+                    ' now draw zorderd images
+                    For Each illus As KeyValuePair(Of Integer, B2SPictureBox()) In B2SData.ZOrderImages
+                        'For Each illu As B2SPictureBox In illus.Value
+                        '    DrawImage(e, illu)
+                        'Next
+                        For i As Integer = 0 To illus.Value.Length - 1
+                            DrawImage(e, illus.Value(i))
                         Next
-
-                    Else
-
-                        ' first of all draw all standard images
-                        For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
-                            If illu.Value.ZOrder = 0 Then DrawImage(e, illu.Value)
-                        Next
-                        ' now draw zorderd images
-                        For Each illus As KeyValuePair(Of Integer, B2SPictureBox()) In B2SData.ZOrderImages
-                            'For Each illu As B2SPictureBox In illus.Value
-                            '    DrawImage(e, illu)
-                            'Next
-                            For i As Integer = 0 To illus.Value.Length - 1
-                                DrawImage(e, illus.Value(i))
-                            Next
-                        Next
-
-                    End If
+                    Next
 
                 End If
 
             End If
 
-        Else
-
-            ' invalidate the statistics controls
-            DrawSniffer()
-
         End If
-
     End Sub
     Protected Overrides Sub OnPaintBackground(e As System.Windows.Forms.PaintEventArgs)
 
@@ -519,7 +529,7 @@ Public Class formBackglass
                         e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location)
                     End If
                 Else
-                    e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location.X, picbox.RectangleF.Location.Y)
+                    e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location)
                 End If
             End If
 
@@ -537,9 +547,8 @@ Public Class formBackglass
 
 #End Region
 
-
 #Region "some timer events"
-    Private Sub Timer_Tick()
+    Private Sub Timer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         timer.Stop()
 
@@ -560,7 +569,7 @@ Public Class formBackglass
 
     End Sub
 
-    Private Sub TableTimer_Tick()
+    Private Sub TableTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
             ' get out here
@@ -570,7 +579,8 @@ Public Class formBackglass
         End If
 
     End Sub
-
+#If B2S = "DLL" Then
+#Else
     Private Sub B2STimer_Tick()
 
         ' poll registry data
@@ -580,19 +590,7 @@ Public Class formBackglass
         ShowStartupImages()
 
     End Sub
-
-    Private Sub StartupTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
-
-        startupTimer.Stop()
-
-        ' maybe show some 'startup on' images
-        ShowStartupImages()
-
-        ' start autostarted animations
-        B2SAnimation.AutoStart()
-
-    End Sub
-
+#End If
     Private Sub RotateTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         Static currentAngleS As Single = 0
@@ -645,6 +643,19 @@ Public Class formBackglass
 
     End Sub
 
+
+    Private Sub StartupTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
+
+        startupTimer.Stop()
+
+        ' maybe show some 'startup on' images
+        ShowStartupImages()
+
+        ' start autostarted animations
+        B2SAnimation.AutoStart()
+
+    End Sub
+
     Private Sub SnifferTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         If B2SStatistics.LogStatistics Then
@@ -656,7 +667,8 @@ Public Class formBackglass
 #End Region
 
 #Region "polling action B2SBackglassServerEXE"
-
+#If B2S = "DLL" Then
+#Else
     Private isVisibleStateSet As Boolean = False
     Private lastTopVisible As Boolean = False
     Private lastSecondVisible As Boolean = False
@@ -1642,8 +1654,8 @@ Public Class formBackglass
 
     End Function
 
+#End If
 #End Region
-
 
 #Region "settings action"
 
@@ -1657,90 +1669,100 @@ Public Class formBackglass
 
     Private Sub formBackglass_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
 
-        If Not B2SStatistics.LogStatistics Then
+        If B2SStatistics.LogStatistics Then Return
 
-            If e.KeyCode = Keys.S Then
 
-                If formSettings IsNot Nothing Then
+        If e.KeyCode = Keys.S Then
+
+            If formSettings IsNot Nothing Then
+                Try
+                    formSettings.Dispose()
+                    formSettings = Nothing
+                Catch
+                End Try
+            End If
+            formSettings = New formSettings()
+            formSettings.B2SScreen = B2SScreen
+            formSettings.B2SAnimation = B2SAnimation
+            formSettings.formBackglass = Me
+            formSettings.Show(Me)
+
+        ElseIf e.KeyCode = Keys.D1 Then
+            StartAnimation("Ball1")
+        ElseIf e.KeyCode = Keys.D2 Then
+            StartAnimation("Ball2")
+        ElseIf e.KeyCode = Keys.D3 Then
+            StartAnimation("Ball3")
+        ElseIf e.KeyCode = Keys.D4 Then
+            StartAnimation("Ball4")
+        ElseIf e.KeyCode = Keys.D5 Then
+            StartAnimation("Ball5")
+
+        ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.A OrElse e.KeyCode = Keys.F Then
+
+            If B2SData.DualBackglass Then
+                If e.KeyCode = Keys.M Then
+                    B2SSettings.CurrentDualMode = If(B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy, B2SSettings.eDualMode.Authentic, B2SSettings.eDualMode.Fantasy)
+                ElseIf e.KeyCode = Keys.A Then
+                    B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Authentic
+                ElseIf e.KeyCode = Keys.F Then
+                    B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy
+                End If
+#If B2S = "DLL" Then
+                B2SSettings.Save(, , True)
+#Else
+                B2SSettings.Save(, True)
+#End If
+                Me.BackgroundImage = DarkImage
+                Me.Refresh()
+                ShowStartupImages()
+                B2SAnimation.RestartAnimations()
+                If formMode IsNot Nothing Then
                     Try
-                        formSettings.Dispose()
-                        formSettings = Nothing
+                        formMode.Dispose()
+                        formMode = Nothing
                     Catch
                     End Try
                 End If
-                formSettings = New formSettings()
-                formSettings.B2SScreen = B2SScreen
-                formSettings.B2SAnimation = B2SAnimation
-                formSettings.formBackglass = Me
-                formSettings.Show(Me)
-
-            ElseIf e.KeyCode = Keys.D1 Then
-                StartAnimation("Ball1")
-            ElseIf e.KeyCode = Keys.D2 Then
-                StartAnimation("Ball2")
-            ElseIf e.KeyCode = Keys.D3 Then
-                StartAnimation("Ball3")
-            ElseIf e.KeyCode = Keys.D4 Then
-                StartAnimation("Ball4")
-            ElseIf e.KeyCode = Keys.D5 Then
-                StartAnimation("Ball5")
-
-            ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.A OrElse e.KeyCode = Keys.F Then
-
-                If B2SData.DualBackglass Then
-                    If e.KeyCode = Keys.M Then
-                        B2SSettings.CurrentDualMode = If(B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy, B2SSettings.eDualMode.Authentic, B2SSettings.eDualMode.Fantasy)
-                    ElseIf e.KeyCode = Keys.A Then
-                        B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Authentic
-                    ElseIf e.KeyCode = Keys.F Then
-                        B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy
-                    End If
-                    B2SSettings.Save(, , True)
-                    Me.BackgroundImage = DarkImage
-                    Me.Refresh()
-                    ShowStartupImages()
-                    B2SAnimation.RestartAnimations()
-                    If formMode IsNot Nothing Then
-                        Try
-                            formMode.Dispose()
-                            formMode = Nothing
-                        Catch
-                        End Try
-                    End If
-                    formMode = New formMode()
-                    formMode.Show(Me)
-                    Me.Focus()
-                End If
-
-            ElseIf e.KeyCode = Keys.I OrElse e.KeyCode = Keys.Print OrElse e.KeyCode = Keys.PrintScreen Then
-
-                ' do a screenshot and save it
-                If String.IsNullOrEmpty(B2SSettings.ScreenshotPath) Then
-                    MessageBox.Show("Please enter a valid screenshot path here at the settings.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                Else
-                    Dim imageformat As Imaging.ImageFormat = Imaging.ImageFormat.Png
-                    Dim extension As String = ".png"
-                    Select Case B2SSettings.ScreenshotFileType
-                        Case B2SSettings.eImageFileType.JPG : imageformat = Imaging.ImageFormat.Jpeg : extension = ".jpg"
-                        Case B2SSettings.eImageFileType.GIF : imageformat = Imaging.ImageFormat.Gif : extension = ".gif"
-                        Case B2SSettings.eImageFileType.BMP : imageformat = Imaging.ImageFormat.Bmp : extension = ".bmp"
-                    End Select
-                    Dim filename As String = IO.Path.Combine(B2SSettings.ScreenshotPath, IO.Path.GetFileNameWithoutExtension(B2SData.BackglassFileName) & extension)
-                    B2SScreen.MakeScreenShot(filename, imageformat)
-                    My.Computer.Audio.Play(My.Resources.camera1, AudioPlayMode.Background)
-                End If
-
+                formMode = New formMode()
+                formMode.Show(Me)
+                Me.Focus()
             End If
 
+        ElseIf e.KeyCode = Keys.I OrElse e.KeyCode = Keys.Print OrElse e.KeyCode = Keys.PrintScreen Then
+
+            ' do a screenshot and save it
+            If String.IsNullOrEmpty(B2SSettings.ScreenshotPath) Then
+                MessageBox.Show("Please enter a valid screenshot path here at the settings.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            Else
+                Dim imageformat As Imaging.ImageFormat = Imaging.ImageFormat.Png
+                Dim extension As String = ".png"
+                Select Case B2SSettings.ScreenshotFileType
+                    Case B2SSettings.eImageFileType.JPG : imageformat = Imaging.ImageFormat.Jpeg : extension = ".jpg"
+                    Case B2SSettings.eImageFileType.GIF : imageformat = Imaging.ImageFormat.Gif : extension = ".gif"
+                    Case B2SSettings.eImageFileType.BMP : imageformat = Imaging.ImageFormat.Bmp : extension = ".bmp"
+                End Select
+                Dim filename As String = IO.Path.Combine(B2SSettings.ScreenshotPath, IO.Path.GetFileNameWithoutExtension(B2SData.BackglassFileName) & extension)
+                B2SScreen.MakeScreenShot(filename, imageformat)
+                My.Computer.Audio.Play(My.Resources.camera1, AudioPlayMode.Background)
+            End If
+#If B2S = "DLL" Then
+#Else
+        ElseIf e.KeyCode = Keys.Escape Then
+
+            ' stop the app
+            End
+#End If
         End If
 
-    End Sub
 
+    End Sub
+#If B2S = "DLL" Then
     Private Sub chkSniffer_CheckedChanged(sender As System.Object, e As System.EventArgs)
         B2SSettings.IsStatisticsBackglassOn = chkSniffer.Checked
         B2SSettings.Save(, True)
     End Sub
-
+#End If
 #End Region
 
 
@@ -1957,7 +1979,7 @@ Public Class formBackglass
             Try
                 XML.Load(B2SData.BackglassFileName)
             Catch ex As Exception
-                MessageBox.Show("The following error occurred opening the file '" & IO.Path.GetFileName(B2SData.BackglassFileName) & "':" & vbCrLf & vbCrLf & ex.Message, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show("The following error occurred opening the file '" & Path.GetFileName(B2SData.BackglassFileName) & "':" & vbCrLf & vbCrLf & ex.Message, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Try
         End If
 
@@ -1969,7 +1991,12 @@ Public Class formBackglass
         Else
 
             B2SSettings.BackglassFileVersion = XML.SelectSingleNode("DirectB2SData").Attributes("Version").InnerText
-
+#If B2S = "DLL" Then
+            ' write backglass file version to registry
+            Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                regkey.SetValue("B2SBackglassFileVersion", B2SSettings.BackglassFileVersion, RegistryValueKind.String)
+            End Using
+#End If
             ' current backglass version is not allowed to be larger than server version and to be smaller minimum B2S version
             If B2SSettings.BackglassFileVersion > B2SSettings.DirectB2SVersion Then
 
@@ -2106,6 +2133,7 @@ Public Class formBackglass
                         If innerNode.Attributes("OffImage") IsNot Nothing Then
                             offimage = Base64ToImage(innerNode.Attributes("OffImage").InnerText)
                         End If
+                        image = CropImageToTransparency(image, offimage, loc, size)
                         ' create new picturebox control
                         Dim picbox As B2SPictureBox = New B2SPictureBox()
                         Dim IsOnBackglass As Boolean = (parent = "Backglass")
@@ -2426,6 +2454,11 @@ Public Class formBackglass
                                 'B2SData.LEDAreas.Add("LEDArea" & id.ToString(), New B2SData.LEDAreaInfo(New Rectangle(loc, size), Not isOnBackglass))
                                 ' add or update player info collection
                                 ' no need to do this here since it's done at the dream7 LEDs
+                                ' write reel info into registry
+                                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                                    regkey.SetValue("B2SScoreDigit" & led.ID.ToString(), If(isDream7LEDs, "2", "1") & "," & CInt(led.LEDType).ToString() & "," & led.StartDigit.ToString() & "," & led.Digits, RegistryValueKind.String)
+                                    regkey.SetValue("B2SScoreDisplay" & id.ToString(), startdigit.ToString(), RegistryValueKind.String)
+                                End Using
                             ElseIf isReels Then
                                 ' look for matching reel sound
                                 soundName = String.Empty
@@ -2488,6 +2521,11 @@ Public Class formBackglass
                                     End If
                                     B2SData.Players(b2splayerno).Add(New B2SPlayer.ControlInfo(startdigit, digits, B2SPlayer.eControlType.ReelDisplay, B2SData.ReelDisplays(id)))
                                 End If
+                                ' write reel info into registry
+                                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                                    regkey.SetValue("B2SScoreDigit" & reel.ID.ToString(), "3,0," & reel.StartDigit.ToString() & "," & reel.Digits, RegistryValueKind.String)
+                                    regkey.SetValue("B2SScoreDisplay" & id.ToString(), startdigit.ToString(), RegistryValueKind.String)
+                                End Using
                             End If
 
                             renderedandreelindex += 1
@@ -2498,7 +2536,31 @@ Public Class formBackglass
                         dream7index = renderedandreelindex
 
                     Next
-
+#If TARGET = "" Then
+#Else
+                    ' write player info into registry
+                    For Each controls As KeyValuePair(Of Integer, B2SPlayer.ControlCollection) In B2SData.Players
+                        Dim player As String = String.Empty
+                        For Each controlinfo As B2SPlayer.ControlInfo In controls.Value
+                            With controlinfo
+                                Dim type As String = "0"
+                                If .LEDBox IsNot Nothing Then
+                                    type = CInt(.LEDBox.LEDType).ToString()
+                                ElseIf .LEDDisplay IsNot Nothing Then
+                                    type = If(.LEDDisplay.Type = SegmentNumberType.TenSegment, "2", If(.LEDDisplay.Type = SegmentNumberType.FourteenSegment, "3", "1"))
+                                End If
+                                player &= ";" & If(.Type = B2SPlayer.eControlType.ReelDisplay OrElse .Type = B2SPlayer.eControlType.ReelBox, "3", "1") & "," &
+                                          type & "," &
+                                          controlinfo.StartDigit & "," &
+                                          controlinfo.Digits
+                            End With
+                        Next
+                        If Not String.IsNullOrEmpty(player) Then player = player.Substring(1)
+                        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                            regkey.SetValue("B2SScorePlayer" & controls.Key.ToString(), player, RegistryValueKind.String)
+                        End Using
+                    Next
+#End If
                 End If
 
                 ' maybe get all reel images
@@ -2896,10 +2958,23 @@ Public Class formBackglass
                         End If
                     Next
                 End If
+#If B2S = "DLL" Then
+                Me.TopMost = True
+                Me.BringToFront()
+                Me.TopMost = False
+#Else
+                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                    regkey.SetValue("B2SSetSwitch", If(animationpulseswitch, 1, 0), RegistryValueKind.DWord)
+                End Using
+#End If
             End If
 
+
             ' set info flags to dirty to load them
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
+
 
         End If
 
@@ -3019,15 +3094,17 @@ Public Class formBackglass
     End Sub
 
     Private Sub ShowStartupSnippits()
-
-        ' maybe show some 'startup on' snippits
-        Dim topIsOn As Boolean = False
-        For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
-            If picbox.Value.InitialState = 1 AndAlso picbox.Value.IsImageSnippit Then
-                picbox.Value.Visible = True
-            End If
-        Next
-
+        Static isdone As Boolean = False
+        If Not isdone Then
+            isdone = True
+            ' maybe show some 'startup on' snippits
+            Dim topIsOn As Boolean = False
+            For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                If picbox.Value.InitialState = 1 AndAlso picbox.Value.IsImageSnippit Then
+                    picbox.Value.Visible = True
+                End If
+            Next
+        End If
     End Sub
     Private Sub ShowStartupImages()
 

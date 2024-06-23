@@ -70,7 +70,7 @@ Public Class Processes
             End If
         Next
     End Sub
-
+#If B2S = "DLL" Then
     Public Sub KillProcess(ByVal processname As String)
 
         Dim proc As Process() = Process.GetProcesses
@@ -82,7 +82,7 @@ Public Class Processes
         Next
 
     End Sub
-
+#End If
     Public ReadOnly Property TableName() As String
         Get
             Return _tablename
