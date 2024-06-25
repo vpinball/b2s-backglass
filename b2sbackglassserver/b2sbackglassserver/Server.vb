@@ -1709,6 +1709,14 @@ Public Class Server
         End If
     End Sub
 
+
+    Public Sub B2SSetPosAbsolute(ByVal idORname As Object, ByVal xpos As Object, ByVal ypos As Object)
+
+        If IsNumeric(idORname) And IsNumeric(xpos) And IsNumeric(ypos) Then
+            MyB2SSetPosAbsolute(CInt(idORname), CInt(xpos), CInt(ypos))
+        End If
+    End Sub
+
     ' method to set illumination
     Public Sub B2SSetIllumination(ByVal name As Object, ByVal value As Object)
 
@@ -2144,6 +2152,35 @@ Public Class Server
                         If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
                             picbox.Left += xpos
                             picbox.Top += ypos
+                            ' Using RectangleF as this is used in the DrawImage within OnPaint for picturBoxes.
+                            picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                            'Invalidating this object does not work, need to Invalidate the parent.
+                            If picbox.Parent IsNot Nothing Then
+                                picbox.Parent.Invalidate()
+                            End If
+                        End If
+                    Next
+                End If
+            End If
+        End If
+
+    End Sub
+
+    Private Sub MyB2SSetPosAbsolute(ByVal id As Integer, ByVal xpos As Integer, ByVal ypos As Integer)
+
+        If B2SData.IsBackglassRunning Then
+
+            If B2SData.IsBackglassStartedAsEXE Then
+
+            Else
+                If B2SData.UsedRomLampIDs.ContainsKey(id) Then
+                    Dim rescaleBackglass As SizeF
+                    Me.formBackglass.GetScaleFactor(rescaleBackglass)
+
+                    For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(id)
+                        If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
+                            picbox.Left = xpos
+                            picbox.Top = ypos
                             ' Using RectangleF as this is used in the DrawImage within OnPaint for picturBoxes.
                             picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
                             'Invalidating this object does not work, need to Invalidate the parent.
