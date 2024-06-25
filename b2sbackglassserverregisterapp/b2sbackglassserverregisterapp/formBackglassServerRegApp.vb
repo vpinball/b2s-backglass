@@ -25,6 +25,7 @@ Public Class formBackglassServerRegApp
         If Not CommandSilent Then
             If CheckB2SServer(False) Then
                 Dim dllURI As String = "file://Unknown"
+                Dim dllVersion As String = ""
                 Try
                     Using regRoot As RegistryKey = Registry.ClassesRoot
                         Using openKey As RegistryKey = regRoot.OpenSubKey("B2S.Server\CLSID", False)
@@ -36,6 +37,12 @@ Public Class formBackglassServerRegApp
                             Using openKey As RegistryKey = regRoot.OpenSubKey(IO.Path.Combine("CLSID", clsID, "InprocServer32"), False)
                                 If openKey IsNot Nothing Then
                                     dllURI = openKey.GetValue("CodeBase")
+                                    Try
+                                        '"Assembly"="B2SBackglassServer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null"
+                                        dllVersion = openKey.GetValue("Assembly").Split(",")(1).ToString()
+                                    Catch
+                                        dllVersion = "(not available)"
+                                    End Try
                                 End If
                             End Using
                         End If
@@ -43,7 +50,7 @@ Public Class formBackglassServerRegApp
                 Catch
                 End Try
                 Dim filepath As String = New Uri(dllURI).LocalPath
-                dialogResult = MessageBox.Show("The 'B2S Server' is already registered here:" & vbCrLf & vbCrLf & filepath & vbCrLf & vbCrLf & "Do you want to (try to) re-register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+                dialogResult = MessageBox.Show($"The 'B2S Server'{dllVersion} is already registered here:" & vbCrLf & vbCrLf & filepath & vbCrLf & vbCrLf & "Do you want to (try to) re-register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
             Else
                 dialogResult = MessageBox.Show("The 'B2S Server' is not registered yet." & vbCrLf & vbCrLf & "Do you want to register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
             End If
@@ -85,6 +92,8 @@ Public Class formBackglassServerRegApp
                     Using regRoot As RegistryKey = Registry.ClassesRoot
                         'Computer\HKEY_CLASSES_ROOT\B2S.Server
                         regRoot.DeleteSubKeyTree("B2S.Server", False)
+                        'Computer\HKEY_CLASSES_ROOT\CLSID\<id>\InprocServer32
+                        regRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree($"{clsID}\InprocServer32", False)
                         'Computer\HKEY_CLASSES_ROOT\CLSID\<id>
                         regRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(clsID, False)
                         'Computer\HKEY_CLASSES_ROOT\WOW6432Node\CLSID\<id>
@@ -93,7 +102,7 @@ Public Class formBackglassServerRegApp
                 End If
                 ' do the register operation
                 ShellAndWait(regasmpath, "B2SBackglassServer.DLL")
-                If IO.File.Exists("B2SBackglassServer64.DLL") Then
+                If File.Exists("B2SBackglassServer64.DLL") Then
                     ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer64.DLL")
                 Else
                     ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer.DLL")
