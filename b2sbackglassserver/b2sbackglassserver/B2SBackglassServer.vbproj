@@ -118,7 +118,6 @@
     </Compile>
     <Compile Include="Dream7\Segment.vb" />
     <Compile Include="Dream7\SegmentNumber.vb" />
-    <Compile Include="EXEServer.vb" />
     <Compile Include="Forms\Background.Designer.vb">
       <DependentUpon>Background.vb</DependentUpon>
     </Compile>
