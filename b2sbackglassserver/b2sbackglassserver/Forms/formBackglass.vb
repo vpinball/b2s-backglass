@@ -2738,7 +2738,7 @@ Public Class formBackglass
                         End If
                     End If
 
-                    If mergeBulbs Then
+#If mergeBulbs Then
                     ' look for the largest bulb amount
                         Dim topSize4Authentic As Integer = 0
                     Dim topkey4Authentic As String = String.Empty
@@ -2816,7 +2816,7 @@ Public Class formBackglass
                         CheckBulbs(TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
                         CheckBulbs(SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
                     End If
-                    End If
+#End If
                 End If
 
                 ' get all animation info

@@ -27,7 +27,6 @@ Public Class B2SScreen
     Public Property PlayfieldSize() As Size = New Size(0, 0)
     Public Property BackglassMonitor() As String = String.Empty
     Public Property BackglassScreen() As Screen = Nothing
-    Public Property StartBackground() As Boolean = False
     Public Property BackglassSize() As Size = New Size(0, 0)
     Public Property BackglassLocation() As Point = New Point(0, 0)
     Public Property BackglassGrillHeight() As Integer = 0

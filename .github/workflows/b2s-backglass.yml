@@ -70,7 +70,6 @@ jobs:
         shell: cmd
       - name: Bundle 
         run: |
-          ls -R b2sbackglassserver/b2sbackglassserver/bin
           mkdir tmp  
           cp b2s_screenresidentifier/b2s_screenresidentifier/bin/${{ matrix.platform }}/${{ matrix.config }}/B2S_ScreenResIdentifier.exe tmp
           cp b2s_screenresidentifier/b2s_screenresidentifier/bin/${{ matrix.platform }}/${{ matrix.config }}/B2S_ScreenResIdentifier.exe.config tmp
