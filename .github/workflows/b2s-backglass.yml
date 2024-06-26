@@ -100,5 +100,5 @@ jobs:
           cp b2sbackglassserverregisterapp/ScreenResTemplates.cmd tmp
       - uses: actions/upload-artifact@v4
         with:
-         name: B2SServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win-${{ matrix.platform }}
+         name: B2SServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win
          path: tmp
