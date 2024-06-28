@@ -18,11 +18,21 @@ Public Class formBackglass
     Private formSettings As formSettings = Nothing
     Private formMode As formMode = Nothing
 
+#If B2S = "DLL" Then
     Private startupTimer As Timer = Nothing
+    Private snifferTimer As Timer = Nothing
+
+    Private snifferLamps As B2SSnifferPanel = Nothing
+    Private snifferSolenoids As B2SSnifferPanel = Nothing
+    Private snifferGIStrings As B2SSnifferPanel = Nothing
+    Private chkSniffer As CheckBox = Nothing
+    Private Const snifferTimerInterval As Integer = 311
+#Else
     Private timer As Timer = Nothing
-    Private tabletimer As Timer = Nothing
+    Private tableTimer As Timer = Nothing
     Private B2STimer As Timer = Nothing
     Private tableHandle As Integer = 0
+#End If
 
     Private rotateTimer As Timer = Nothing
     Private rotateSlowDownSteps As Integer = 0
@@ -31,15 +41,9 @@ Public Class formBackglass
     Private rotateSteps As Integer = 0
     Private rotateAngle As Single = 0
     Private rotateTimerInterval As Integer = 0
+
     Private Const MA_NOACTIVATE As System.Int32 = 3
     Private Const WM_MOUSEACTIVATE As Integer = &H21
-
-    Private snifferLamps As B2SSnifferPanel = Nothing
-    Private snifferSolenoids As B2SSnifferPanel = Nothing
-    Private snifferGIStrings As B2SSnifferPanel = Nothing
-    Private chkSniffer As CheckBox = Nothing
-    Private snifferTimer As Timer = Nothing
-    Private Const snifferTimerInterval As Integer = 311
 
 #Region " Properties "
     Protected Overrides Sub WndProc(ByRef m As Message)
@@ -266,9 +270,9 @@ Public Class formBackglass
         timer.Start()
 
         ' create 'table is still running' timer
-        tabletimer = New Timer
-        tabletimer.Interval = 207
-        AddHandler tabletimer.Tick, AddressOf TableTimer_Tick
+        tableTimer = New Timer
+        tableTimer.Interval = 207
+        AddHandler tableTimer.Tick, AddressOf TableTimer_Tick
 
         ' create B2S data timer
         B2STimer = New Timer
@@ -284,7 +288,6 @@ Public Class formBackglass
 
     End Sub
 
-#End If
     Private Sub formBackglass_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
 
         If Not B2SSettings.FormToFront Then
@@ -297,22 +300,22 @@ Public Class formBackglass
         SetFocusToVPPlayer()
 
     End Sub
+#End If
 
     Private Sub formBackglass_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
 
         On Error Resume Next
-
+        If rotateTimer IsNot Nothing Then rotateTimer.Stop()
+#If B2S = "DLL" Then
         ' stop all timers as DLL
         If startupTimer IsNot Nothing Then startupTimer.Stop()
-        If rotateTimer IsNot Nothing Then rotateTimer.Stop()
         If snifferTimer IsNot Nothing Then snifferTimer.Stop()
-
+#Else
         ' stop all timers as EXE
         If timer IsNot Nothing Then timer.Stop()
-        If tabletimer IsNot Nothing Then tabletimer.Stop()
+        If tableTimer IsNot Nothing Then tableTimer.Stop()
         If B2STimer IsNot Nothing Then B2STimer.Stop()
-        If rotateTimer IsNot Nothing Then rotateTimer.Stop()
-
+#End If
         ' unload DMD form stuff
         If formDMD IsNot Nothing Then
             formDMD.Close()
@@ -426,14 +429,14 @@ Public Class formBackglass
             Me.Hide()
             Return
         End If
-
+#If B2S = "DLL" Then
         If B2SStatistics.LogStatistics Then
             ' invalidate the statistics controls
             DrawSniffer()
 
             Return
         End If
-
+#End If
         ' some rendering hints
         e.Graphics.PageUnit = GraphicsUnit.Pixel
         e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
@@ -536,6 +539,9 @@ Public Class formBackglass
         End If
 
     End Sub
+
+#If B2S = "DLL" Then
+
     Private Sub DrawSniffer()
 
         ' invalidate the statistics controls
@@ -548,6 +554,28 @@ Public Class formBackglass
 #End Region
 
 #Region "some timer events"
+
+    Private Sub StartupTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
+
+        startupTimer.Stop()
+
+        ' maybe show some 'startup on' images
+        ShowStartupImages()
+
+        ' start autostarted animations
+        B2SAnimation.AutoStart()
+
+    End Sub
+
+    Private Sub SnifferTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
+
+        If B2SStatistics.LogStatistics Then
+            Me.Invalidate()
+        End If
+
+    End Sub
+#Else
+
     Private Sub Timer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         timer.Stop()
@@ -565,22 +593,19 @@ Public Class formBackglass
         SetFocusToVPPlayer()
 
         ' start table check timer
-        tabletimer.Start()
+        tableTimer.Start()
 
     End Sub
-
     Private Sub TableTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
             ' get out here
-            tabletimer.Stop()
+            tableTimer.Stop()
             Me.Close()
             Me.Dispose()
         End If
 
     End Sub
-#If B2S = "DLL" Then
-#Else
     Private Sub B2STimer_Tick()
 
         ' poll registry data
@@ -590,6 +615,7 @@ Public Class formBackglass
         ShowStartupImages()
 
     End Sub
+
 #End If
     Private Sub RotateTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
@@ -643,32 +669,10 @@ Public Class formBackglass
 
     End Sub
 
-
-    Private Sub StartupTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
-
-        startupTimer.Stop()
-
-        ' maybe show some 'startup on' images
-        ShowStartupImages()
-
-        ' start autostarted animations
-        B2SAnimation.AutoStart()
-
-    End Sub
-
-    Private Sub SnifferTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
-
-        If B2SStatistics.LogStatistics Then
-            Me.Invalidate()
-        End If
-
-    End Sub
-
 #End Region
 
 #Region "polling action B2SBackglassServerEXE"
-#If B2S = "DLL" Then
-#Else
+#If B2S = "EXE" Then
     Private isVisibleStateSet As Boolean = False
     Private lastTopVisible As Boolean = False
     Private lastSecondVisible As Boolean = False
@@ -3524,6 +3528,7 @@ Public Class formBackglass
         Return Drawing.Color.FromArgb(CInt(colorvalues(0)), CInt(colorvalues(1)), CInt(colorvalues(2)))
     End Function
 
+#If B2S = "EXE" Then
     Private Sub SetFocusToVPPlayer()
 
         ' set focus to the VP player
@@ -3532,6 +3537,7 @@ Public Class formBackglass
         tableHandle = proc.TableHandle
 
     End Sub
+#End If
 
     Private Function RandomStarter(ByVal top As Integer) As Integer
 
