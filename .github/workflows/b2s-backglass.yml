@@ -29,27 +29,27 @@ jobs:
         name: Update AssemblyInformationalVersion
         run: |
           SHA7="${GITHUB_SHA::7}"
+          : # B2SServerPluginInterface
           ASSEMBLY_INFO="B2SServerPluginInterface/B2SServerPluginInterface/Properties/AssemblyInfo.cs"
           VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
           TAG="${VERSION}-${SHA7}"
           echo -e "\n[assembly: AssemblyInformationalVersion(\"${TAG}\")]" >> "${ASSEMBLY_INFO}"
-          ASSEMBLY_INFO="b2s_screenresidentifier/b2s_screenresidentifier/My Project/AssemblyInfo.vb"
-          VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
-          TAG="${VERSION}-${SHA7}"
-          perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
-          ASSEMBLY_INFO="b2sbackglassserverregisterapp/b2sbackglassserverregisterapp/My Project/AssemblyInfo.vb"
-          VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
-          TAG="${VERSION}-${SHA7}"
-          perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
+          : # b2sbackglassserver
           ASSEMBLY_INFO="b2sbackglassserver/b2sbackglassserver/My Project/AssemblyInfo.vb"
-          VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
+          VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1).${{ github.run_number }}
           TAG="${VERSION}-${SHA7}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
-          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          : # b2s_screenresidentifier
+          ASSEMBLY_INFO="b2s_screenresidentifier/b2s_screenresidentifier/My Project/AssemblyInfo.vb"
+          perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
+          : # b2sbackglassserverregisterapp
+          ASSEMBLY_INFO="b2sbackglassserverregisterapp/b2sbackglassserverregisterapp/My Project/AssemblyInfo.vb"
+          perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
+          : # B2SWindowPunch
           ASSEMBLY_INFO="B2SWindowPunch/B2SWindowPunch/Properties/AssemblyInfo.cs"
-          VERSION=$(grep -Eo "AssemblyVersion\(.*\)" "${ASSEMBLY_INFO}" | grep -Eo "[0-9\.]+" | tail -1)
-          TAG="${VERSION}-${SHA7}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${TAG}\"\)/g" "${ASSEMBLY_INFO}"
+          : # Keep the TAG for later
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
       - uses: microsoft/setup-msbuild@v2
       - name: Build B2SServerPluginInterface
         run: |
