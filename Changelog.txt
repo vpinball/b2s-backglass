@@ -1,6 +1,7 @@
 2.5.0
 - Finally a merge of the source code of B2SBackglassServer & B2SBackglassServerEXE into one. Should not be noticed while running, but huge for development.
 - Added new method B2SSetPos(ImageId, xpos, ypos) to move the images on the backglass.
+- Added new method B2SServerBuild() returning float version number: 20500.0295
 
 2.1.2
 - Request to turn off backglass in b2s settings #80   Thanks @stevejones72!
