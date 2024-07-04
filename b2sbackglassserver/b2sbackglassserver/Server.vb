@@ -356,6 +356,12 @@ Public Class Server
         End Get
     End Property
 
+    Public WriteOnly Property TimeFence() As Double
+        Set(ByVal value As Double)
+            If B2SData.VPMHasTimeFence Then VPinMAME.TimeFence = value
+        End Set
+    End Property
+
     Public Property Pause() As Boolean
         Get
             Try

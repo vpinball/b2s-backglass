@@ -18,10 +18,12 @@ Public Class B2SData
     End Enum
 #If B2S = "DLL" Then
     Private Shared _vpinmame As Object = Nothing
+    Public Shared VPMHasTimeFence As Boolean = False
     Public Shared ReadOnly Property VPinMAME() As Object
         Get
             If _vpinmame Is Nothing OrElse IsStopped Then
                 _vpinmame = CreateObject("VPinMAME.Controller")
+                VPMHasTimeFence = _vpinmame.GetType.GetProperty("TimeFence") IsNot Nothing
                 If IsStopped Then
                     _vpinmame.GameName = stoppedGameName
                     IsStopped = False
