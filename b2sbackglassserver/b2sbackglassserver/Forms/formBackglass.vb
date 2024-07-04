@@ -2002,9 +2002,9 @@ Public Class formBackglass
             End Using
 #End If
             ' current backglass version is not allowed to be larger than server version and to be smaller minimum B2S version
-            If B2SSettings.BackglassFileVersion > B2SSettings.DirectB2SVersion Then
+            If B2SSettings.BackglassFileVersion > B2SVersionInfo.B2S_VERSION_STRING Then
 
-                Throw New Exception("B2S.Server version (" & B2SSettings.DirectB2SVersion & ") doesn't match 'directb2s' file version (" & B2SSettings.BackglassFileVersion & "). " & vbCrLf & vbCrLf &
+                Throw New Exception("B2S.Server version (" & B2SVersionInfo.B2S_VERSION_STRING & ") doesn't match 'directb2s' file version (" & B2SSettings.BackglassFileVersion & "). " & vbCrLf & vbCrLf &
                                     "Please update the B2S.Server.")
 
             ElseIf B2SSettings.BackglassFileVersion < B2SSettings.MinimumDirectB2SVersion Then

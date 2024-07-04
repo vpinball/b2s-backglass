@@ -10,10 +10,14 @@
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <TargetFrameworkProfile />
     <DefineConstants>B2S="DLL"</DefineConstants>
   </PropertyGroup>
@@ -99,6 +103,7 @@
     <Compile Include="Classes\B2SSettings.vb" />
     <Compile Include="Classes\B2SStatistics.vb" />
     <Compile Include="Classes\Processes.vb" />
+    <Compile Include="Classes\B2SVersionInfo.vb" />
     <Compile Include="Controls\B2SBaseBox.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -188,6 +193,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\Background.resx">
       <DependentUpon>Background.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formBackglass.resx">
       <DependentUpon>formBackglass.vb</DependentUpon>
@@ -195,9 +201,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formDMD.resx">
       <DependentUpon>formDMD.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formMode.resx">
       <DependentUpon>formMode.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formSettings.resx">
       <DependentUpon>formSettings.vb</DependentUpon>
@@ -205,6 +213,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formSettingsMore.resx">
       <DependentUpon>formSettingsMore.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

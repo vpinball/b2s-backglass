@@ -4,6 +4,8 @@ Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
 Imports System.Linq.Expressions
 Imports System.Drawing
+Imports System.Reflection
+Imports System.Runtime.InteropServices.WindowsRuntime
 
 <ProgId("B2S.Server"), ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)>
 Public Class Server
@@ -268,9 +270,19 @@ Public Class Server
 
     Public ReadOnly Property B2SServerVersion() As String
         Get
-            Return B2SSettings.DirectB2SVersion
+            Return B2SVersionInfo.B2S_VERSION_STRING
         End Get
     End Property
+
+    Public ReadOnly Property B2SServerBuild() As Double
+        Get
+            Return CInt(B2SVersionInfo.B2S_VERSION_MAJOR) * 10000 +
+                                CInt(B2SVersionInfo.B2S_VERSION_MINOR) * 100 +
+                                CInt(B2SVersionInfo.B2S_VERSION_REVISION) +
+                                CInt(B2SVersionInfo.B2S_VERSION_BUILD) / 10000
+        End Get
+    End Property
+
 
     Public ReadOnly Property B2SServerDirectory() As String
         Get
@@ -2148,13 +2160,15 @@ Public Class Server
 
                     For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(id)
                         If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
-                            picbox.Left = xpos
-                            picbox.Top = ypos
-                            ' Using RectangleF as this is used in the DrawImage within OnPaint for picturBoxes.
-                            picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
-                            'Invalidating this object does not work, need to Invalidate the parent.
-                            If picbox.Parent IsNot Nothing Then
-                                picbox.Parent.Invalidate()
+                            If picbox.Left <> xpos OrElse picbox.Top <> ypos Then
+                                picbox.Left = xpos
+                                picbox.Top = ypos
+                                ' Using RectangleF as this is used in the DrawImage within OnPaint for picturBoxes.
+                                picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                                'Invalidating this object does not work, need to Invalidate the parent.
+                                If picbox.Parent IsNot Nothing Then
+                                    picbox.Parent.Invalidate()
+                                End If
                             End If
                         End If
                     Next
@@ -2168,8 +2182,8 @@ Public Class Server
 
         If Not B2SData.IsBackglassRunning Then Return
 
-        Dim useLEDs As Boolean = (B2SData.LEDs.ContainsKey("LEDBox" & digit.ToString()) AndAlso B2SSettings.UsedLEDType = B2SSettings.eLEDTypes.Rendered)
-        Dim useLEDDisplays As Boolean = (B2SData.LEDDisplayDigits.ContainsKey(digit - 1) AndAlso B2SSettings.UsedLEDType = B2SSettings.eLEDTypes.Dream7)
+        'Dim useLEDs As Boolean = (B2SData.LEDs.ContainsKey("LEDBox" & digit.ToString()) AndAlso B2SSettings.UsedLEDType = B2SSettings.eLEDTypes.Rendered)
+        'Dim useLEDDisplays As Boolean = (B2SData.LEDDisplayDigits.ContainsKey(digit - 1) AndAlso B2SSettings.UsedLEDType = B2SSettings.eLEDTypes.Dream7)
 
         If B2SData.IsBackglassStartedAsEXE Then
 
@@ -2177,16 +2191,16 @@ Public Class Server
                 regkey.SetValue("B2SLED" & digit.ToString(), value)
             End Using
 
-        ElseIf useLEDs Then
-
+            'ElseIf useLEDs Then
+        ElseIf (B2SSettings.UsedLEDType = B2SSettings.eLEDTypes.Rendered AndAlso B2SData.LEDs.ContainsKey("LEDBox" & digit.ToString())) Then
             ' rendered LEDs are used
             Dim ledname As String = "LEDBox" & digit.ToString()
             If B2SData.LEDs.ContainsKey(ledname) Then
                 B2SData.LEDs(ledname).Value = value
             End If
 
-        ElseIf useLEDDisplays Then
-
+            'ElseIf useLEDDisplays Then
+        ElseIf (B2SSettings.UsedLEDType = B2SSettings.eLEDTypes.Dream7 AndAlso B2SData.LEDDisplayDigits.ContainsKey(digit - 1)) Then
             ' Dream 7 displays are used
             If B2SData.LEDDisplayDigits.ContainsKey(digit - 1) Then
                 With B2SData.LEDDisplayDigits(digit - 1)

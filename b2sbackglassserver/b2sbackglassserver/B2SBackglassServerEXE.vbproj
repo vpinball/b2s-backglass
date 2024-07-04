@@ -10,10 +10,14 @@
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsFormsWithCustomSubMain</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -160,6 +164,7 @@
     <Compile Include="Classes\B2SSettings.vb" />
     <Compile Include="Classes\B2SStatistics.vb" />
     <Compile Include="Classes\B2SSystem.vb" />
+    <Compile Include="Classes\B2SVersionInfo.vb" />
     <Compile Include="Classes\Processes.vb" />
     <Compile Include="Controls\B2SBaseBox.vb">
       <SubType>Component</SubType>
