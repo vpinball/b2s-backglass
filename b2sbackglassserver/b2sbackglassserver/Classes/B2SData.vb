@@ -6,10 +6,12 @@ Public Class B2SData
     Private Declare Function GetShortPathName Lib "kernel32" Alias "GetShortPathNameA" (ByVal LongName As String, ShortName As String, ByVal bufsize As Integer) As Long
 
     Private Shared _vpinmame As Object = Nothing
+    Public Shared VPMHasTimeFence As Boolean = False
     Public Shared ReadOnly Property VPinMAME() As Object
         Get
             If _vpinmame Is Nothing OrElse IsStopped Then
                 _vpinmame = CreateObject("VPinMAME.Controller")
+                VPMHasTimeFence = _vpinmame.GetType.GetProperty("TimeFence") IsNot Nothing
                 If IsStopped Then
                     _vpinmame.GameName = stoppedGameName
                     IsStopped = False
