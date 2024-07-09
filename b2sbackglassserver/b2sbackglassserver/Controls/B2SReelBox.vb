@@ -117,7 +117,11 @@ Public Class B2SReelBox
 
         If intermediates2go > 0 OrElse intermediates = -1 Then
 
-            Me.Refresh()
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(Sub() Me.Invalidate())
+            Else
+                Me.Invalidate()
+            End If
             intermediates2go -= 1
 
         Else
@@ -143,8 +147,11 @@ Public Class B2SReelBox
                     End If
                 Catch
                 End Try
-                Me.Refresh()
-
+                If Me.InvokeRequired Then
+                    Me.BeginInvoke(Sub() Me.Invalidate())
+                Else
+                    Me.Invalidate()
+                End If
                 intermediates2go -= 1
             ElseIf intermediates2go = -1 Then
                 intermediates2go -= 1
@@ -201,7 +208,11 @@ Public Class B2SReelBox
             If _Illuminated <> value Then
                 _Illuminated = value
                 intermediates2go = 0
-                Me.Refresh()
+                If Me.InvokeRequired Then
+                    Me.BeginInvoke(Sub() Me.Invalidate())
+                Else
+                    Me.Invalidate()
+                End If
             End If
         End Set
     End Property
@@ -215,7 +226,11 @@ Public Class B2SReelBox
             If _Value <> value OrElse refresh Then
                 _Value = value
                 reelindex = ConvertValue(_Value)
-                Me.Refresh()
+                If Me.InvokeRequired Then
+                    Me.BeginInvoke(Sub() Me.Invalidate())
+                Else
+                    Me.Invalidate()
+                End If
             End If
         End Set
     End Property
@@ -236,7 +251,11 @@ Public Class B2SReelBox
                         timer.Start()
                     Else
                         reelindex = ConvertText(_Text)
-                        Me.Refresh()
+                        If Me.InvokeRequired Then
+                            Me.BeginInvoke(Sub() Me.Invalidate())
+                        Else
+                            Me.Invalidate()
+                        End If
                     End If
                 End If
             End If

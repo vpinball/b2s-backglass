@@ -1718,7 +1718,13 @@ Public Class formBackglass
                 B2SSettings.Save(, True)
 #End If
                 Me.BackgroundImage = DarkImage
-                Me.Refresh()
+
+                If Me.InvokeRequired Then
+                    Me.BeginInvoke(Sub() Me.Invalidate())
+                Else
+                    Me.Invalidate()
+                End If
+
                 ShowStartupImages()
                 B2SAnimation.RestartAnimations()
                 If formMode IsNot Nothing Then

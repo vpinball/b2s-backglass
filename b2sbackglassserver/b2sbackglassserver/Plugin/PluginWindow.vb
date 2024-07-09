@@ -17,7 +17,7 @@ Public Class PluginWindow
         Private Set(ByVal value As PluginList)
             _Plugins = value
             Me.PluginDataGrid.DataSource = value
-            Me.PluginDataGrid.Refresh()
+            Me.PluginDataGrid.Invalidate()
         End Set
     End Property
 

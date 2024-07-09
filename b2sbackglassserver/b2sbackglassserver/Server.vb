@@ -6,11 +6,18 @@ Imports System.Linq.Expressions
 Imports System.Drawing
 Imports System.Reflection
 Imports System.Runtime.InteropServices.WindowsRuntime
+Imports System.ComponentModel
+Imports System.Threading
+Imports System.Windows.Forms
 
 <ProgId("B2S.Server"), ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)>
 Public Class Server
 
     Implements IDisposable
+
+    Private Shared thread As Thread
+    Private Shared threadContext As SynchronizationContext = Nothing
+    Public threadReady As Boolean = False
 
     Private Declare Function IsWindow Lib "user32.dll" (ByVal hWnd As IntPtr) As Boolean
     Private Declare Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hWnd As IntPtr, Msg As UInteger, wParam As Integer, lParam As Integer) As Integer
@@ -94,7 +101,31 @@ Public Class Server
 #Region "constructor and end timer"
 
     Public Sub New()
+        ' Create new STA thread for this dll to run in, if the thread is already running then don't start another
+        ' However if the thread is running, we need to stop the application from running, and then restart it by running StartThread again
+        If thread IsNot Nothing Then
+            Try
+                thread.Abort()
+            Catch
+            End Try
+        End If
 
+        thread = New Thread(AddressOf StartThread)
+        thread.SetApartmentState(ApartmentState.STA)
+        thread.Name = "B2SThread"
+        thread.Start()
+        ' Dont return until the thread is ready, by checking the threadReady variable
+        Do While Not threadReady
+            Thread.Sleep(100)
+        Loop
+    End Sub
+
+
+    Private Sub StartThread()
+        ' Create a syncronization context for the thread
+        SynchronizationContext.SetSynchronizationContext(New WindowsFormsSynchronizationContext())
+        ' Store the context for later use
+        threadContext = SynchronizationContext.Current
         ' maybe create the base registry key
         If Registry.CurrentUser.OpenSubKey("Software\B2S") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S")
         If Registry.CurrentUser.OpenSubKey("Software\B2S\VPinMAME") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S\VPinMAME")
@@ -104,7 +135,6 @@ Public Class Server
             regkey.DeleteValue("B2SGameName", False)
             regkey.DeleteValue("B2SB2SName", False)
         End Using
-
 
         ' maybe prepare plugins
         B2SSettings.Load(, True)
@@ -127,6 +157,10 @@ Public Class Server
         AddHandler timer.Tick, AddressOf Timer_Tick
         timer.Interval = 37
 
+        ' set the thread ready flag
+        threadReady = True
+
+        Application.Run()
     End Sub
 
     Private Sub Timer_Tick()
@@ -394,6 +428,11 @@ Public Class Server
     End Property
 
     Public Sub Run(Optional ByVal handle As Object = 0)
+        'Make sure this is run on threadContext thread
+        If SynchronizationContext.Current IsNot threadContext Then
+            threadContext.Send(New SendOrPostCallback(AddressOf Run), handle)
+            Return
+        End If
 
         ' startup
         tableHandle = CInt(handle)
@@ -2167,13 +2206,18 @@ Public Class Server
                     For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(id)
                         If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
                             If picbox.Left <> xpos OrElse picbox.Top <> ypos Then
-                                picbox.Left = xpos
-                                picbox.Top = ypos
-                                ' Using RectangleF as this is used in the DrawImage within OnPaint for picturBoxes.
-                                picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
-                                'Invalidating this object does not work, need to Invalidate the parent.
-                                If picbox.Parent IsNot Nothing Then
-                                    picbox.Parent.Invalidate()
+                                If (picbox.InvokeRequired) Then
+                                    picbox.BeginInvoke(Sub()
+                                                           picbox.Left = xpos
+                                                           picbox.Top = ypos
+                                                           picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                                                           If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
+                                                       End Sub)
+                                Else
+                                    picbox.Left = xpos
+                                    picbox.Top = ypos
+                                    picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                                    If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
                                 End If
                             End If
                         End If

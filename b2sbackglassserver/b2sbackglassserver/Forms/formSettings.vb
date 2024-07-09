@@ -227,8 +227,16 @@ Public Class formSettings
         isSettingsScreenDirty = True
         B2SSettings.CurrentDualMode = cmbMode.SelectedIndex + 1
         If formBackglass IsNot Nothing Then
-            formBackglass.BackgroundImage = formBackglass.DarkImage
-            formBackglass.Refresh()
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(Sub()
+                                   formBackglass.BackgroundImage = formBackglass.DarkImage
+                                   formBackglass.Invalidate()
+                               End Sub
+                    )
+            Else
+                formBackglass.BackgroundImage = formBackglass.DarkImage
+                formBackglass.Invalidate()
+            End If
         End If
         B2SAnimation.RestartAnimations()
     End Sub
