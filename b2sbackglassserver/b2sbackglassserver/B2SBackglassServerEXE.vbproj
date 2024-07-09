@@ -10,10 +10,14 @@
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsFormsWithCustomSubMain</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -30,6 +34,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <DefineConstants>B2S="EXE"</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -42,6 +47,7 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <RegisterForComInterop>false</RegisterForComInterop>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>B2S="EXE"</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,6 +61,7 @@
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>B2S="EXE"</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -67,6 +74,7 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <RegisterForComInterop>false</RegisterForComInterop>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>B2S="EXE"</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -80,6 +88,7 @@
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>B2S="EXE"</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -153,6 +162,9 @@
     <Compile Include="Classes\B2SReelDisplay.vb" />
     <Compile Include="Classes\B2SScreen.vb" />
     <Compile Include="Classes\B2SSettings.vb" />
+    <Compile Include="Classes\B2SStatistics.vb" />
+    <Compile Include="Classes\B2SSystem.vb" />
+    <Compile Include="Classes\B2SVersionInfo.vb" />
     <Compile Include="Classes\Processes.vb" />
     <Compile Include="Controls\B2SBaseBox.vb">
       <SubType>Component</SubType>
@@ -164,6 +176,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\B2SReelBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\B2SSnifferPanel.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Dream7\Dream7Display.vb">
@@ -207,9 +222,9 @@
     <Compile Include="Forms\formSettingsMore.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="moduleImageExtensions.vb" />
     <Compile Include="Logging\Statistics.vb" />
     <Compile Include="Logging\Log.vb" />
+    <Compile Include="moduleImageExtensions.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -285,6 +300,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

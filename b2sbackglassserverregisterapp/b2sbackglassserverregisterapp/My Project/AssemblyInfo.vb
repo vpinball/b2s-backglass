@@ -9,8 +9,8 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("B2S Backglass Server Register")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyDescription("Register the B2S COM interface")> 
+<Assembly: AssemblyCompany("Visual Pinball")> 
 <Assembly: AssemblyProduct("B2S Backglass Server Register")> 
 <Assembly: AssemblyCopyright("Copyright (c) 2012-2024")> 
 <Assembly: AssemblyTrademark("A Herweh & B2S Team production")> 
@@ -31,6 +31,6 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.1.3")> 
-<Assembly: AssemblyFileVersion("2.1.3")> 
-<Assembly: AssemblyInformationalVersion("2.1.3")> 
+<Assembly: AssemblyVersion("2.5.0")> 
+<Assembly: AssemblyFileVersion("2.5.0")> 
+<Assembly: AssemblyInformationalVersion("2.5.0")> 

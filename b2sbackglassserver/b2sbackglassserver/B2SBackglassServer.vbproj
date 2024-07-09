@@ -10,11 +10,16 @@
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <TargetFrameworkProfile />
+    <DefineConstants>B2S="DLL"</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -25,8 +30,9 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>B2SBackglassServer.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <RegisterForComInterop>true</RegisterForComInterop>
+    <RegisterForComInterop>false</RegisterForComInterop>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>B2S="DLL"</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,9 +43,10 @@
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>B2SBackglassServer.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <RegisterForComInterop>true</RegisterForComInterop>
+    <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>B2S="DLL"</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -96,6 +103,7 @@
     <Compile Include="Classes\B2SSettings.vb" />
     <Compile Include="Classes\B2SStatistics.vb" />
     <Compile Include="Classes\Processes.vb" />
+    <Compile Include="Classes\B2SVersionInfo.vb" />
     <Compile Include="Controls\B2SBaseBox.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -116,6 +124,12 @@
     </Compile>
     <Compile Include="Dream7\Segment.vb" />
     <Compile Include="Dream7\SegmentNumber.vb" />
+    <Compile Include="Forms\Background.Designer.vb">
+      <DependentUpon>Background.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Background.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\formBackglass.Designer.vb">
       <DependentUpon>formBackglass.vb</DependentUpon>
     </Compile>
@@ -158,7 +172,6 @@
     <Compile Include="Plugin\PluginWindow.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Server.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -175,17 +188,24 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Server.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\Background.resx">
+      <DependentUpon>Background.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\formBackglass.resx">
       <DependentUpon>formBackglass.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formDMD.resx">
       <DependentUpon>formDMD.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formMode.resx">
       <DependentUpon>formMode.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formSettings.resx">
       <DependentUpon>formSettings.vb</DependentUpon>
@@ -193,6 +213,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\formSettingsMore.resx">
       <DependentUpon>formSettingsMore.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

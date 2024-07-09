@@ -4,12 +4,26 @@ Imports System.Drawing
 Public Class B2SData
 
     Private Declare Function GetShortPathName Lib "kernel32" Alias "GetShortPathNameA" (ByVal LongName As String, ShortName As String, ByVal bufsize As Integer) As Long
-
+    Public Enum eDMDType
+        NotDefined = 0
+        NoB2SDMD = 1
+        B2SAlwaysOnSecondMonitor = 2
+        B2SAlwaysOnThirdMonitor = 3
+        B2SOnSecondOrThirdMonitor = 4
+    End Enum
+    Public Enum eDualMode
+        Both = 0
+        Authentic = 1
+        Fantasy = 2
+    End Enum
+#If B2S = "DLL" Then
     Private Shared _vpinmame As Object = Nothing
+    Public Shared VPMHasTimeFence As Boolean = False
     Public Shared ReadOnly Property VPinMAME() As Object
         Get
             If _vpinmame Is Nothing OrElse IsStopped Then
                 _vpinmame = CreateObject("VPinMAME.Controller")
+                VPMHasTimeFence = _vpinmame.GetType.GetProperty("TimeFence") IsNot Nothing
                 If IsStopped Then
                     _vpinmame.GameName = stoppedGameName
                     IsStopped = False
@@ -30,18 +44,6 @@ Public Class B2SData
         IsStopped = True
     End Sub
 
-    Public Enum eDMDType
-        NotDefined = 0
-        NoB2SDMD = 1
-        B2SAlwaysOnSecondMonitor = 2
-        B2SAlwaysOnThirdMonitor = 3
-        B2SOnSecondOrThirdMonitor = 4
-    End Enum
-    Public Enum eDualMode
-        Both = 0
-        Authentic = 1
-        Fantasy = 2
-    End Enum
 
     Private Shared IsLampsInfoDirty As Boolean = True
     Private Shared IsSolenoidsInfoDirty As Boolean = True
@@ -95,6 +97,7 @@ Public Class B2SData
             IsInfoDirty = True
         End Set
     End Property
+#End If
 
     Public Shared Property OnAndOffImage() As Boolean = False
     Public Shared Property IsOffImageVisible() As Boolean = False
@@ -161,7 +164,7 @@ Public Class B2SData
     Public Shared Property SmallGrillHeight() As Integer = 0
     Public Shared Property DMDDefaultLocation() As Point = New Point(0, 0)
     Public Shared Property DualBackglass() As Boolean = False
-
+#If B2S = "DLL" Then
     Private Shared Property _TestMode() As Boolean = False
     Public Shared Property TestMode() As Boolean
         Get
@@ -172,7 +175,7 @@ Public Class B2SData
             IsInfoDirty = True
         End Set
     End Property
-
+#End If
     Public Class PictureBoxCollection
         Inherits Generic.SortedList(Of String, B2SPictureBox)
 
@@ -183,7 +186,9 @@ Public Class B2SData
         Public Shadows Sub Add(ByVal value As B2SPictureBox, Optional ByVal dualmode As B2SData.eDualMode = eDualMode.Both)
             If Not MyBase.ContainsKey(value.Name) Then MyBase.Add(value.Name, value)
             If value.RomID > 0 Then
+#If B2S = "DLL" Then
                 IsInfoDirty = True
+#End If
                 Dim UsedRomIDs4Authentic As Generic.SortedList(Of Integer, B2SBaseBox()) = Nothing
                 Dim UsedRomIDs4Fantasy As Generic.SortedList(Of Integer, B2SBaseBox()) = Nothing
                 If value.RomIDType = B2SBaseBox.eRomIDType.Lamp Then
@@ -285,7 +290,9 @@ Public Class B2SData
         Inherits Generic.Dictionary(Of Integer, AnimationInfo())
 
         Public Shadows Sub Add(key As Integer, value As AnimationInfo)
+#If B2S = "DLL" Then
             IsInfoDirty = True
+#End If
             If Not Me.ContainsKey(key) Then
                 MyBase.Add(key, New AnimationInfo() {value})
             Else
@@ -317,7 +324,7 @@ Public Class B2SData
             End If
         End Sub
     End Class
-
+#If B2S = "DLL" Then
     Public Shared ReadOnly Property GetLampsData() As Boolean
         Get
             Static ret As Boolean = False
@@ -366,7 +373,7 @@ Public Class B2SData
             Return ret
         End Get
     End Property
-
+#End If
     Public Shared ReadOnly Property UseRomLamps() As Boolean
         Get
             If B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy Then
@@ -443,6 +450,18 @@ Public Class B2SData
         End Get
     End Property
 
+    Private Shared _ScoreMaxDigit As Integer = 0
+    Public Shared Property ScoreMaxDigit() As Integer
+        Get
+            Return _ScoreMaxDigit
+        End Get
+        Set(value As Integer)
+            If _ScoreMaxDigit < value Then
+                _ScoreMaxDigit = value
+            End If
+        End Set
+    End Property
+
     Public Shared Property Players() As B2SPlayer = New B2SPlayer()
     Public Shared Property IsAPlayerAdded() As Boolean = False
 
@@ -507,15 +526,19 @@ Public Class B2SData
     Public Shared Property ledCoordMax() As Integer
 
     Public Shared Sub ClearAll(Optional ByVal donotclearnames As Boolean = False)
+#If B2S = "DLL" Then
         IsInfoDirty = True
+#End If
         If Not donotclearnames Then
             TableName = String.Empty
             TableFileName = String.Empty
             BackglassFileName = String.Empty
+#If B2S = "DLL" Then
         Else
             LaunchBackglass = True
             IsBackglassVisible = False
             IsBackglassStartedAsEXE = False
+#End If
         End If
         TableType = 0
         DMDType = 0

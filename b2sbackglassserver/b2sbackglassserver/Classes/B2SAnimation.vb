@@ -1,6 +1,7 @@
 Imports System
 Imports System.Windows.Forms
 Imports System.Drawing
+Imports Microsoft.Win32
 
 Public Class B2SAnimation
 
@@ -980,6 +981,7 @@ Public Class B2SAnimation
 
 #Region "switch timer stuff"
 
+#If B2S = "DLL" Then
     Private Shared switches As Generic.SortedList(Of Integer, Boolean) = New Generic.SortedList(Of Integer, Boolean)
 
     Private Shared SwitchTimer As Timers.Timer = Nothing
@@ -1012,7 +1014,21 @@ Public Class B2SAnimation
         switches.Clear()
 
     End Sub
+#Else
+    Private Shared Sub SetSwitch(ByVal switchid As Integer)
 
+        For i As Integer = 1 To 2
+            Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                If regkey.GetValue("B2SSetSwitch" & i.ToString(), "").ToString.Length = 0 Then
+                    regkey.SetValue("B2SSetSwitch" & i.ToString(), switchid, RegistryValueKind.DWord)
+                    Exit For
+                End If
+            End Using
+        Next
+
+    End Sub
+
+#End If
 #End Region
 
 End Class

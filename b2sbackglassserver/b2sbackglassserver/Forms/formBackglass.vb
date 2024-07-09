@@ -1,12 +1,16 @@
-﻿Imports System
-Imports System.Drawing
+﻿Imports System.Drawing
+Imports System.IO
 Imports System.Windows.Forms
+Imports Microsoft.Win32
 
 Public Class formBackglass
+    Inherits System.Windows.Forms.Form
+    Private Declare Function SetForegroundWindow Lib "user32.dll" (ByVal hwnd As IntPtr) As Integer
+    Private Declare Function IsWindow Lib "user32.dll" (ByVal hwnd As IntPtr) As Boolean
 
     Private Const minSize4Image As Integer = 300000
 
-    Private B2SScreen As B2SScreen = New B2SScreen()
+    Private B2SScreen As B2SScreen = Nothing  '  was New B2SScreen(), delayed to do later  - Westworld, 2016-11-18
     Private B2SLED As B2SLED = New B2SLED()
     Private B2SAnimation As B2SAnimation = New B2SAnimation()
 
@@ -14,7 +18,21 @@ Public Class formBackglass
     Private formSettings As formSettings = Nothing
     Private formMode As formMode = Nothing
 
+#If B2S = "DLL" Then
     Private startupTimer As Timer = Nothing
+    Private snifferTimer As Timer = Nothing
+
+    Private snifferLamps As B2SSnifferPanel = Nothing
+    Private snifferSolenoids As B2SSnifferPanel = Nothing
+    Private snifferGIStrings As B2SSnifferPanel = Nothing
+    Private chkSniffer As CheckBox = Nothing
+    Private Const snifferTimerInterval As Integer = 311
+#Else
+    Private timer As Timer = Nothing
+    Private tableTimer As Timer = Nothing
+    Private B2STimer As Timer = Nothing
+    Private tableHandle As Integer = 0
+#End If
 
     Private rotateTimer As Timer = Nothing
     Private rotateSlowDownSteps As Integer = 0
@@ -24,34 +42,53 @@ Public Class formBackglass
     Private rotateAngle As Single = 0
     Private rotateTimerInterval As Integer = 0
 
-    Private snifferLamps As B2SSnifferPanel = Nothing
-    Private snifferSolenoids As B2SSnifferPanel = Nothing
-    Private snifferGIStrings As B2SSnifferPanel = Nothing
-    Private chkSniffer As CheckBox = Nothing
-    Private snifferTimer As Timer = Nothing
-    Private Const snifferTimerInterval As Integer = 311
+    Private Const MA_NOACTIVATE As System.Int32 = 3
+    Private Const WM_MOUSEACTIVATE As Integer = &H21
 
+#Region " Properties "
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        'Don't allow the window to be activated by swallowing the mouse event.
+        If B2SSettings.FormNoFocus And m.Msg = WM_MOUSEACTIVATE Then
+            m.Result = New IntPtr(MA_NOACTIVATE)
+            Return
+        End If
+        MyBase.WndProc(m)
+    End Sub
+#End Region 'Properties
 
 #Region "constructor and closing"
 
+#If B2S = "DLL" Then
     Public Sub New()
 
         InitializeComponent()
 
         ' set some styles
-        'Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint, True)
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.OptimizedDoubleBuffer, True)
         Me.DoubleBuffered = True
 
-        ' set key peview to allow some key reaction
+        ' set key preview to allow some key action
         Me.KeyPreview = True
+
+        B2SScreen = New B2SScreen()
 
         ' load settings
         B2SSettings.Load()
 
-        ' get B2S xml and start
-        LoadB2SData()
+        If B2SSettings.CPUAffinityMask > 0 Then
+            Dim Proc = Process.GetCurrentProcess
+            Proc.ProcessorAffinity = B2SSettings.CPUAffinityMask
+        End If
 
+        ' get B2S xml and start
+        Try
+            LoadB2SData()
+        Catch ex As Exception
+            If B2SSettings.ShowStartupError Then
+                MessageBox.Show(ex.Message, My.Resources.AppTitle, Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Error)
+            End If
+            Stop
+        End Try
         ' initialize screen settings
         InitB2SScreen()
 
@@ -68,13 +105,14 @@ Public Class formBackglass
         startupTimer.Start()
 
         ' create rotation timer
-        rotateTimer = New Timer()
+        rotateTimer = New Timer
         If rotateTimerInterval > 0 Then
             rotateTimer.Interval = rotateTimerInterval
         End If
         AddHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
 
     End Sub
+
     Public Sub New(ByVal doNotLoadBackglassData As Boolean)
 
         InitializeComponent()
@@ -134,20 +172,159 @@ Public Class formBackglass
         snifferTimer.Start()
 
     End Sub
+#Else
+    Public Sub New()
+
+        InitializeComponent()
+
+        ' set some styles
+        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.OptimizedDoubleBuffer, True)
+        Me.DoubleBuffered = True
+
+        ' set key peview to allow some key action
+        Me.KeyPreview = True
+
+        ' mabye create the base registry key
+        If Registry.CurrentUser.OpenSubKey("Software\B2S") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S")
+        If Registry.CurrentUser.OpenSubKey("Software\B2S\VPinMAME") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S\VPinMAME")
+
+        ' get the table
+        'IO.Directory.SetCurrentDirectory("C:\Visual Pinball\Tables")
+        'B2SData.TableFileName = "Big Guns (Williams 1987)_1.0"
+        'B2SData.TableFileName = "ScaredStiff_FS_B2S_GI8"
+        'B2SData.TableFileName = "ACDC_B2S" '"Baseball 1.0 FS" '"Elvira_and_the_Party_Monsters_VP91x_v1.2FS" '"Close_Encounters_FS"
+        'B2SData.TableFileName = "Close_Encounters_FS"
+        'B2SData.TableFileName = "Pinbot.uw.V1.02.1_JF_91x_BMPR_MOD_FS"
+        'B2SData.TableFileName = "ScaredStiff_FS_B2S"
+        If My.Application.CommandLineArgs.Count > 0 Then
+            B2SData.TableFileName = My.Application.CommandLineArgs(0).ToString
+
+            If B2SData.TableFileName.EndsWith(".directb2s") Then
+                B2SData.TableFileName = Path.GetFileNameWithoutExtension(B2SData.TableFileName)
+                B2SSettings.PureEXE = True
+            End If
+
+            If My.Application.CommandLineArgs.Count > 1 Then
+                If My.Application.CommandLineArgs(1).ToString = "1" Then
+                    Me.TopMost = True
+                End If
+            End If
+        Else
+            MessageBox.Show("Please do not start the EXE this way.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End
+        End If
+
+
+        ' get the game name
+        'B2SSettings.GameName = "bguns_l8"
+        'B2SSettings.GameName = "closeenc"
+        'B2SSettings.B2SName = "Baseball"
+        'B2SSettings.B2SName = "Spider-Man(Stern 2007) alt full dmdON127"
+        'B2SSettings.GameName = "smanve_101"
+        'B2SData.TableFileName = "Spider-Man(Stern 2007) alt full dmdON127"
+
+
+        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S")
+            B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
+            B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)
+        End Using
+
+        ' Westworld 2016-18-11 - TableFileName is empty in some cases when launched via PinballX, we use GameName as alternativ
+        If String.IsNullOrEmpty(B2SData.TableFileName) Then
+            B2SData.TableFileName = B2SSettings.GameName
+        End If
+        B2SScreen = New B2SScreen() ' was started before Tablename was identified, so alternativ ScreenRes was failing
+
+
+        ' load settings
+        B2SSettings.Load()
+
+        If B2SSettings.CPUAffinityMask > 0 Then
+            Dim Proc = Process.GetCurrentProcess
+            Proc.ProcessorAffinity = B2SSettings.CPUAffinityMask
+        End If
+
+        ' get B2S xml and start
+        Try
+            LoadB2SData()
+        Catch ex As Exception
+            If B2SSettings.ShowStartupError Then
+                MessageBox.Show(ex.Message, My.Resources.AppTitle, Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Error)
+            End If
+            End
+        End Try
+
+        ' initialize screen settings
+        InitB2SScreen()
+
+        ' resize images
+        ResizeSomeImages()
+
+        ' show snippits
+        ShowStartupSnippits()
+
+        ' create 'image on' timer and start it
+        timer = New Timer()
+        timer.Interval = 2000
+        AddHandler timer.Tick, AddressOf Timer_Tick
+        timer.Start()
+
+        ' create 'table is still running' timer
+        tableTimer = New Timer
+        tableTimer.Interval = 207
+        AddHandler tableTimer.Tick, AddressOf TableTimer_Tick
+
+        ' create B2S data timer
+        B2STimer = New Timer
+        B2STimer.Interval = 13
+        AddHandler B2STimer.Tick, AddressOf B2STimer_Tick
+
+        ' create rotation timer
+        rotateTimer = New Timer
+        If rotateTimerInterval > 0 Then
+            rotateTimer.Interval = rotateTimerInterval
+        End If
+        AddHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
+
+    End Sub
+
+    Private Sub formBackglass_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
+
+        If Not B2SSettings.FormToFront Then
+            Me.SendToBack()
+        End If
+
+
+        'Me.TopMost = False
+
+        SetFocusToVPPlayer()
+
+    End Sub
+#End If
 
     Private Sub formBackglass_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
 
         On Error Resume Next
-
-        ' stop all timers
-        If startupTimer IsNot Nothing Then startupTimer.Stop()
         If rotateTimer IsNot Nothing Then rotateTimer.Stop()
+#If B2S = "DLL" Then
+        ' stop all timers as DLL
+        If startupTimer IsNot Nothing Then startupTimer.Stop()
         If snifferTimer IsNot Nothing Then snifferTimer.Stop()
-
+#Else
+        ' stop all timers as EXE
+        If timer IsNot Nothing Then timer.Stop()
+        If tableTimer IsNot Nothing Then tableTimer.Stop()
+        If B2STimer IsNot Nothing Then B2STimer.Stop()
+#End If
         ' unload DMD form stuff
         If formDMD IsNot Nothing Then
             formDMD.Close()
             formDMD.Dispose()
+        End If
+
+        If B2SScreen.formbackground IsNot Nothing Then
+            B2SScreen.formbackground.Close()
+            B2SScreen.formbackground.Dispose()
         End If
 
         ' unload mode form
@@ -225,7 +402,7 @@ Public Class formBackglass
         B2SStatistics.ClearAll()
 
     End Sub
-
+#If B2S = "DLL" Then
     Private Sub formBackglass_Disposed(sender As Object, e As System.EventArgs) Handles Me.Disposed
 
         On Error Resume Next
@@ -234,10 +411,15 @@ Public Class formBackglass
         If rotateTimer IsNot Nothing Then RemoveHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
         If snifferTimer IsNot Nothing Then RemoveHandler snifferTimer.Tick, AddressOf SnifferTimer_Tick
 
+        ' stop all timers as EXE
+        'If timer IsNot Nothing Then RemoveHandler timer.Tick, AddressOf Timer_Tick
+        'If tabletimer IsNot Nothing Then RemoveHandler tabletimer.Tick, AddressOf TableTimer_Tick
+        'If B2STimer IsNot Nothing Then RemoveHandler B2STimer.Tick, AddressOf B2STimer_Tick
+        'If rotateTimer IsNot Nothing Then RemoveHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
+
     End Sub
-
+#End If
 #End Region
-
 
 #Region "painting"
 
@@ -247,69 +429,66 @@ Public Class formBackglass
             Me.Hide()
             Return
         End If
+#If B2S = "DLL" Then
+        If B2SStatistics.LogStatistics Then
+            ' invalidate the statistics controls
+            DrawSniffer()
 
-        If Not B2SStatistics.LogStatistics Then
+            Return
+        End If
+#End If
+        ' some rendering hints
+        e.Graphics.PageUnit = GraphicsUnit.Pixel
+        e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
-            ' some rendering hints
-            e.Graphics.PageUnit = GraphicsUnit.Pixel
-            e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        ' draw background and illumination images
+        If Me.BackgroundImage IsNot Nothing Then
 
-            ' draw background and illumination images
-            If Me.BackgroundImage IsNot Nothing Then
+            On Error Resume Next
 
-                On Error Resume Next
+            ' generate new clipping region
+            Dim clip As Region = New Region(e.ClipRectangle)
+            For Each ledarea As KeyValuePair(Of String, B2SData.LEDAreaInfo) In B2SData.LEDAreas
+                If Not ledarea.Value.IsOnDMD Then
+                    clip.Exclude(ledarea.Value.Rect)
+                End If
+            Next
+            e.Graphics.SetClip(clip, Drawing2D.CombineMode.Replace)
 
-                ' generate new clipping region
-                Dim clip As Region = New Region(e.ClipRectangle)
-                For Each ledarea As KeyValuePair(Of String, B2SData.LEDAreaInfo) In B2SData.LEDAreas
-                    If Not ledarea.Value.IsOnDMD Then
-                        clip.Exclude(ledarea.Value.Rect)
-                    End If
-                Next
-                e.Graphics.SetClip(clip, Drawing2D.CombineMode.Replace)
+            ' draw background image
+            e.Graphics.DrawImage(Me.BackgroundImage, 0, 0)
 
-                ' draw background image
-                e.Graphics.DrawImage(Me.BackgroundImage, 0, 0)
+            ' draw all visible and necessary images
+            If B2SData.Illuminations.Count > 0 Then
 
-                ' draw all visible and necessary images
-                If B2SData.Illuminations.Count > 0 Then
+                If Not B2SData.UseZOrder Then
 
-                    If Not B2SData.UseZOrder Then
+                    ' draw all standard images
+                    For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                        DrawImage(e, illu.Value)
+                    Next
 
-                        ' draw all standard images
-                        For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
-                            DrawImage(e, illu.Value)
+                Else
+
+                    ' first of all draw all standard images
+                    For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                        If illu.Value.ZOrder = 0 Then DrawImage(e, illu.Value)
+                    Next
+                    ' now draw zorderd images
+                    For Each illus As KeyValuePair(Of Integer, B2SPictureBox()) In B2SData.ZOrderImages
+                        'For Each illu As B2SPictureBox In illus.Value
+                        '    DrawImage(e, illu)
+                        'Next
+                        For i As Integer = 0 To illus.Value.Length - 1
+                            DrawImage(e, illus.Value(i))
                         Next
-
-                    Else
-
-                        ' first of all draw all standard images
-                        For Each illu As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
-                            If illu.Value.ZOrder = 0 Then DrawImage(e, illu.Value)
-                        Next
-                        ' now draw zorderd images
-                        For Each illus As KeyValuePair(Of Integer, B2SPictureBox()) In B2SData.ZOrderImages
-                            'For Each illu As B2SPictureBox In illus.Value
-                            '    DrawImage(e, illu)
-                            'Next
-                            For i As Integer = 0 To illus.Value.Length - 1
-                                DrawImage(e, illus.Value(i))
-                            Next
-                        Next
-
-                    End If
+                    Next
 
                 End If
 
             End If
 
-        Else
-
-            ' invalidate the statistics controls
-            DrawSniffer()
-
         End If
-
     End Sub
     Protected Overrides Sub OnPaintBackground(e As System.Windows.Forms.PaintEventArgs)
 
@@ -353,13 +532,16 @@ Public Class formBackglass
                         e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location)
                     End If
                 Else
-                    e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location.X, picbox.RectangleF.Location.Y)
+                    e.Graphics.DrawImage(picbox.BackgroundImage, picbox.RectangleF.Location)
                 End If
             End If
 
         End If
 
     End Sub
+
+#If B2S = "DLL" Then
+
     Private Sub DrawSniffer()
 
         ' invalidate the statistics controls
@@ -370,7 +552,6 @@ Public Class formBackglass
     End Sub
 
 #End Region
-
 
 #Region "some timer events"
 
@@ -386,6 +567,56 @@ Public Class formBackglass
 
     End Sub
 
+    Private Sub SnifferTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
+
+        If B2SStatistics.LogStatistics Then
+            Me.Invalidate()
+        End If
+
+    End Sub
+#Else
+
+    Private Sub Timer_Tick(ByVal sender As Object, ByVal e As EventArgs)
+
+        timer.Stop()
+
+        ' set focus to the VP player
+        SetFocusToVPPlayer()
+
+        ' start autostarted animations
+        B2SAnimation.AutoStart()
+
+        ' start B2S data timer
+        B2STimer.Start()
+
+        ' set focus to the VP player
+        SetFocusToVPPlayer()
+
+        ' start table check timer
+        tableTimer.Start()
+
+    End Sub
+    Private Sub TableTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
+
+        If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
+            ' get out here
+            tableTimer.Stop()
+            Me.Close()
+            Me.Dispose()
+        End If
+
+    End Sub
+    Private Sub B2STimer_Tick()
+
+        ' poll registry data
+        PollingData()
+
+        ' show some 'startup on' images (one time)
+        ShowStartupImages()
+
+    End Sub
+
+#End If
     Private Sub RotateTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         Static currentAngleS As Single = 0
@@ -438,16 +669,997 @@ Public Class formBackglass
 
     End Sub
 
-    Private Sub SnifferTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
+#End Region
 
-        If B2SStatistics.LogStatistics Then
-            Me.Invalidate()
+#Region "polling action B2SBackglassServerEXE"
+#If B2S = "EXE" Then
+    Private isVisibleStateSet As Boolean = False
+    Private lastTopVisible As Boolean = False
+    Private lastSecondVisible As Boolean = False
+
+    Private pollingInit As Boolean = False
+    Private lamps(400) As Integer
+    Private solenoids(400) As Integer
+    Private gistrings(400) As Integer
+    Private b2sSets(400) As Integer
+    Private mechs(5) As Integer
+    Private leds(100) As Integer
+
+    Private animations As Generic.Dictionary(Of String, Integer) = Nothing
+    Private lastRandomStartedAnimation As String = String.Empty
+
+    Private rotation As Integer = 0
+
+    Private sounds As Generic.Dictionary(Of String, Integer) = Nothing
+
+    Private Sub PollingData()
+
+        ' initialize the value storage - this storage is to avoid too much update traffic
+        InitializePollArrays()
+
+        ' open registry sub key
+        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+
+            ' get current data
+            Dim lampsData As String = GetLampsPollingData(regkey)
+            Dim solenoidsData As String = GetSolenoidsPollingData(regkey)
+            Dim gistringsData As String = GetGIStringsPollingData(regkey)
+            Dim b2sSetsData As String = GetB2SSetsPollingData(regkey)
+            Dim mechsData As Integer() = GetMechPollingData(regkey)
+            Dim animationsdata As String = GetAnimationsPollingData(regkey)
+            Dim rotationsdata As String = GetRotationsPollingData(regkey)
+            Dim soundsdata As String = GetSoundsPollingData(regkey)
+
+            ' first of all have a look at the both top images
+            Dim topVisible As Boolean = lastTopVisible
+            topVisible = GetLampsTopVisible(lampsData, topVisible)
+            topVisible = GetSolenoidsTopVisible(solenoidsData, topVisible)
+            topVisible = GetGIStringsTopVisible(gistringsData, topVisible)
+            topVisible = GetB2SSetsTopVisible(b2sSetsData, topVisible)
+            Dim secondVisible As Boolean = lastSecondVisible
+            secondVisible = GetLampsSecondVisible(lampsData, secondVisible)
+            secondVisible = GetSolenoidsSecondVisible(solenoidsData, secondVisible)
+            secondVisible = GetGIStringsSecondVisible(gistringsData, secondVisible)
+            secondVisible = GetB2SSetsSecondVisible(b2sSetsData, secondVisible)
+            ' maybe show or hide top images
+            If lastTopVisible <> topVisible OrElse lastSecondVisible <> secondVisible OrElse Not isVisibleStateSet Then
+                B2SData.IsOffImageVisible = False
+                isVisibleStateSet = True
+                lastTopVisible = topVisible
+                lastSecondVisible = secondVisible
+                If topVisible AndAlso secondVisible Then
+                    BackgroundImage = TopAndSecondLightImage
+                ElseIf topVisible Then
+                    BackgroundImage = TopLightImage
+                ElseIf secondVisible Then
+                    BackgroundImage = SecondLightImage
+                Else
+                    BackgroundImage = DarkImage
+                    B2SData.IsOffImageVisible = True
+                End If
+            End If
+
+            ' get thru all lamps
+            GetThruAllLamps(lampsData)
+
+            ' get thru all solenoids
+            GetThruAllSolenoids(solenoidsData)
+
+            ' get thru all gistrings
+            GetThruAllGIStrings(gistringsData)
+
+            ' get thru all B2SSetData
+            GetThruAllB2SData(b2sSetsData)
+
+            ' get thru all mechs
+            GetThruAllMechs(mechsData)
+
+            ' get thru all LEDs
+            GetThruAllLEDs(regkey)
+
+            ' get thru all animations
+            GetThruAllAnimations(regkey, animationsdata)
+
+            ' get thru all rotations
+            GetThruAllRotations(regkey, rotationsdata)
+
+            ' get thru all sounds
+            GetThruAllSounds(regkey, soundsdata)
+
+            ' maybe hide score display
+            GetThruAllScoreDisplays(regkey)
+
+            ' maybe show or hide some illus by groupname
+            GetThruAllIlluGroups(regkey)
+
+        End Using
+
+    End Sub
+
+    Private Sub InitializePollArrays()
+
+        If Not pollingInit Then
+
+            pollingInit = True
+
+            For I As Integer = 0 To 250
+                lamps(I) = 0
+            Next
+            For I As Integer = 0 To 250
+                solenoids(I) = 0
+            Next
+            For I As Integer = 0 To 250
+                gistrings(I) = 0
+            Next
+            For I As Integer = 0 To 250
+                b2sSets(I) = 0
+            Next
+            For I As Integer = 0 To 5
+                mechs(I) = -1
+            Next
+            For I As Integer = 0 To 100
+                leds(I) = 0
+            Next
+            animations = New Generic.Dictionary(Of String, Integer)
+            sounds = New Generic.Dictionary(Of String, Integer)
+
         End If
 
     End Sub
 
-#End Region
+    Private Function GetLampsPollingData(ByVal regkey As RegistryKey) As String
 
+        Dim lampsData As String = String.Empty
+
+        If B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps Then
+            lampsData = regkey.GetValue("B2SLamps", New String("0", 401))
+            'If B2SSettings.IsROMControlled AndAlso lampsData.Contains("2") Then
+            '    regkey.SetValue("B2SLamps", lampsData.Replace("2", "0"))
+            'End If
+        End If
+
+        Return lampsData
+
+    End Function
+    Private Function GetSolenoidsPollingData(ByVal regkey As RegistryKey) As String
+
+        Dim solenoidsData As String = String.Empty
+
+        If B2SData.UseRomSolenoids OrElse B2SData.UseAnimationSolenoids Then
+            solenoidsData = regkey.GetValue("B2SSolenoids", New String("0", 251))
+            If B2SSettings.IsROMControlled AndAlso solenoidsData.Contains("2") Then
+                regkey.SetValue("B2SSolenoids", solenoidsData.Replace("2", "0"))
+            End If
+        End If
+
+        Return solenoidsData
+
+    End Function
+    Private Function GetGIStringsPollingData(ByVal regkey As RegistryKey) As String
+
+        Dim gistringsData As String = String.Empty
+
+        If B2SData.UseRomGIStrings OrElse B2SData.UseAnimationGIStrings Then
+            gistringsData = regkey.GetValue("B2SGIStrings", New String("0", 251))
+        End If
+
+        Return gistringsData
+
+    End Function
+    Private Function GetB2SSetsPollingData(ByVal regkey As RegistryKey) As String
+
+        Dim b2sSetsData As String = String.Empty
+
+        If B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps Then
+            b2sSetsData = regkey.GetValue("B2SSetData", New String(Chr(0), 251))
+            'If B2SSettings.IsROMControlled AndAlso b2sSetsData.Contains("2") Then
+            '    regkey.SetValue("B2SSetData", b2sSetsData.Replace("2", "0"))
+            'End If
+        End If
+
+        Return b2sSetsData
+
+    End Function
+    Private Function GetMechPollingData(ByVal regkey As RegistryKey) As Integer()
+
+        Dim mechsData As Integer() = New Integer() {-1, -1, -1, -1, -1, -1}
+
+        If B2SData.UseRomMechs Then
+            For i As Integer = 1 To Math.Min(B2SData.UsedRomMechIDs.Count, 5)
+                mechsData(i) = regkey.GetValue("B2SMechs" & i.ToString(), -1)
+            Next
+        End If
+
+        Return mechsData
+
+    End Function
+    Private Function GetAnimationsPollingData(ByVal regkey As RegistryKey) As String
+
+        Dim animationsdata As String = String.Empty
+
+        If B2SAnimation.AreThereAnimations Then
+            animationsdata = regkey.GetValue("B2SAnimations", String.Empty)
+        End If
+
+        Return animationsdata
+
+    End Function
+    Private Function GetRotationsPollingData(ByVal regkey As RegistryKey) As String
+
+        Dim rotationsdata As String = String.Empty
+
+        rotationsdata = regkey.GetValue("B2SRotations", String.Empty)
+
+        Return rotationsdata
+
+    End Function
+    Private Function GetSoundsPollingData(ByVal regkey As RegistryKey) As String
+
+        Dim soundsdata As String = String.Empty
+
+        soundsdata = regkey.GetValue("B2SSounds", String.Empty)
+
+        Return soundsdata
+
+    End Function
+
+    Private Function GetLampsTopVisible(ByVal lampsData As String, ByVal currentTopVisible As Boolean) As Boolean
+
+        Dim topVisible As Boolean = currentTopVisible
+
+        If B2SData.UseRomLamps AndAlso TopRomIDType = B2SBaseBox.eRomIDType.Lamp Then
+            Dim lampid As Integer = TopRomID
+            Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
+            If lamps(lampid) <> currentvalue Then
+                If Not B2SData.UsedRomLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedAnimationLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then lamps(lampid) = currentvalue
+                topVisible = (currentvalue <> 0)
+                If TopRomInverted Then topVisible = Not topVisible
+            End If
+        End If
+
+        Return topVisible
+
+    End Function
+    Private Function GetSolenoidsTopVisible(ByVal solenoidsData As String, ByVal currentTopVisible As Boolean) As Boolean
+
+        Dim topVisible As Boolean = currentTopVisible
+
+        If B2SData.UseRomSolenoids AndAlso TopRomIDType = B2SBaseBox.eRomIDType.Solenoid Then
+            Dim solenoidid As Integer = TopRomID
+            Dim currentvalue As Integer = CInt(solenoidsData.Substring(solenoidid, 1))
+            If solenoids(solenoidid) <> currentvalue Then
+                If Not B2SData.UsedRomSolenoidIDs.ContainsKey(solenoidid) AndAlso Not B2SData.UsedAnimationSolenoidIDs.ContainsKey(solenoidid) AndAlso Not B2SData.UsedRandomAnimationSolenoidIDs.ContainsKey(solenoidid) Then solenoids(solenoidid) = currentvalue
+                topVisible = (currentvalue <> 0)
+                If TopRomInverted Then topVisible = Not topVisible
+            End If
+        End If
+
+        Return topVisible
+
+    End Function
+    Private Function GetGIStringsTopVisible(ByVal gistringsData As String, ByVal currentTopVisible As Boolean) As Boolean
+
+        Dim topVisible As Boolean = currentTopVisible
+
+        If B2SData.UseRomGIStrings AndAlso TopRomIDType = B2SBaseBox.eRomIDType.GIString Then
+            Dim gistringid As Integer = TopRomID
+            Dim currentvalue As Integer = CInt(gistringsData.Substring(gistringid, 1))
+            If gistrings(gistringid) <> currentvalue Then
+                If Not B2SData.UsedRomGIStringIDs.ContainsKey(gistringid) AndAlso Not B2SData.UsedAnimationGIStringIDs.ContainsKey(gistringid) AndAlso Not B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(gistringid) Then gistrings(gistringid) = currentvalue
+                topVisible = (currentvalue > 4)
+                If TopRomInverted Then topVisible = Not topVisible
+            End If
+        End If
+
+        Return topVisible
+
+    End Function
+    Private Function GetB2SSetsTopVisible(ByVal b2sSetsData As String, ByVal currentTopVisible As Boolean) As Boolean
+
+        Dim topVisible As Boolean = currentTopVisible
+
+        If B2SData.UseRomLamps AndAlso TopRomIDType = B2SBaseBox.eRomIDType.Lamp Then
+            Dim b2ssetid As Integer = TopRomID
+            Dim currentvalue As Integer = Asc(b2sSetsData.Substring(b2ssetid, 1))
+            If b2sSets(b2ssetid) <> currentvalue Then
+                If Not B2SData.UsedRomLampIDs.ContainsKey(b2ssetid) AndAlso Not B2SData.UsedAnimationLampIDs.ContainsKey(b2ssetid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(b2ssetid) Then b2sSets(b2ssetid) = currentvalue
+                topVisible = (currentvalue <> 0)
+                If TopRomInverted Then topVisible = Not topVisible
+            End If
+        End If
+
+        Return topVisible
+
+    End Function
+    Private Function GetLampsSecondVisible(ByVal lampsData As String, ByVal currentSecondVisible As Boolean) As Boolean
+
+        Dim secondVisible As Boolean = currentSecondVisible
+
+        If B2SData.UseRomLamps AndAlso SecondRomIDType = B2SBaseBox.eRomIDType.Lamp Then
+            Dim lampid As Integer = SecondRomID
+            Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
+            If lamps(lampid) <> currentvalue Then
+                If Not B2SData.UsedRomLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedAnimationLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then lamps(lampid) = currentvalue
+                secondVisible = (currentvalue <> 0)
+                If SecondRomInverted Then secondVisible = Not secondVisible
+            End If
+        End If
+
+        Return secondVisible
+
+    End Function
+    Private Function GetSolenoidsSecondVisible(ByVal solenoidsData As String, ByVal currentSecondVisible As Boolean) As Boolean
+
+        Dim secondVisible As Boolean = currentSecondVisible
+
+        If B2SData.UseRomSolenoids AndAlso SecondRomIDType = B2SBaseBox.eRomIDType.Solenoid Then
+            Dim solenoidid As Integer = SecondRomID
+            Dim currentvalue As Integer = CInt(solenoidsData.Substring(solenoidid, 1))
+            If solenoids(solenoidid) <> currentvalue Then
+                If Not B2SData.UsedRomSolenoidIDs.ContainsKey(solenoidid) AndAlso Not B2SData.UsedAnimationSolenoidIDs.ContainsKey(solenoidid) AndAlso Not B2SData.UsedRandomAnimationSolenoidIDs.ContainsKey(solenoidid) Then solenoids(solenoidid) = currentvalue
+                secondVisible = (currentvalue <> 0)
+                If SecondRomInverted Then secondVisible = Not secondVisible
+            End If
+        End If
+
+        Return secondVisible
+
+    End Function
+    Private Function GetGIStringsSecondVisible(ByVal gistringsData As String, ByVal currentSecondVisible As Boolean) As Boolean
+
+        Dim secondVisible As Boolean = currentSecondVisible
+
+        If B2SData.UseRomGIStrings AndAlso SecondRomIDType = B2SBaseBox.eRomIDType.GIString Then
+            Dim gistringid As Integer = SecondRomID
+            Dim currentvalue As Integer = CInt(gistringsData.Substring(gistringid, 1))
+            If gistrings(gistringid) <> currentvalue Then
+                If Not B2SData.UsedRomGIStringIDs.ContainsKey(gistringid) AndAlso Not B2SData.UsedAnimationGIStringIDs.ContainsKey(gistringid) AndAlso Not B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(gistringid) Then gistrings(gistringid) = currentvalue
+                secondVisible = (currentvalue > 4)
+                If SecondRomInverted Then secondVisible = Not secondVisible
+            End If
+        End If
+
+        Return secondVisible
+
+    End Function
+    Private Function GetB2SSetsSecondVisible(ByVal b2sSetsData As String, ByVal currentSecondVisible As Boolean) As Boolean
+
+        Dim secondVisible As Boolean = currentSecondVisible
+
+        If B2SData.UseRomLamps AndAlso SecondRomIDType = B2SBaseBox.eRomIDType.Lamp Then
+            Dim b2ssetid As Integer = SecondRomID
+            Dim currentvalue As Integer = Asc(b2sSetsData.Substring(b2ssetid, 1))
+            If b2sSets(b2ssetid) <> currentvalue Then
+                If Not B2SData.UsedRomLampIDs.ContainsKey(b2ssetid) AndAlso Not B2SData.UsedAnimationLampIDs.ContainsKey(b2ssetid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(b2ssetid) Then b2sSets(b2ssetid) = currentvalue
+                secondVisible = (currentvalue <> 0)
+                If SecondRomInverted Then secondVisible = Not secondVisible
+            End If
+        End If
+
+        Return secondVisible
+
+    End Function
+
+    Private Sub GetThruAllLamps(ByVal lampsData As String)
+
+        If B2SData.UseRomLamps Then
+            For Each lampid As Integer In B2SData.UsedRomLampIDs.Keys
+                If lampid < lampsData.Length And lampid < lamps.Length Then
+                    Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
+                    If lamps(lampid) <> currentvalue Then
+                        If Not B2SData.UsedRomReelLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedAnimationLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then lamps(lampid) = currentvalue
+                        If B2SData.UsedRomLampIDs.ContainsKey(lampid) Then
+                            For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(lampid)
+                                If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
+                                    If picbox.RomIDValue > 0 Then
+                                        picbox.Visible = (picbox.RomIDValue = currentvalue)
+                                    Else
+                                        Dim visible As Boolean = (currentvalue <> 0)
+                                        If picbox.RomInverted Then visible = Not visible
+                                        If B2SData.UseRotatingImage AndAlso B2SData.RotatingPictureBox(0) IsNot Nothing AndAlso picbox.Equals(B2SData.RotatingPictureBox(0)) Then
+                                            If visible Then
+                                                StartRotation()
+                                            Else
+                                                StopRotation()
+                                            End If
+                                        Else
+                                            picbox.Visible = visible
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+        End If
+        If B2SData.UseRomReelLamps Then
+            For Each lampid As Integer In B2SData.UsedRomReelLampIDs.Keys
+                If lampid < lampsData.Length And lampid < lamps.Length Then
+                    Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
+                    If lamps(lampid) <> currentvalue Then
+                        If Not B2SData.UsedAnimationLampIDs.ContainsKey(lampid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then lamps(lampid) = currentvalue
+                        If B2SData.UsedRomReelLampIDs.ContainsKey(lampid) Then
+                            For Each reelbox As B2SReelBox In B2SData.UsedRomReelLampIDs(lampid)
+                                If reelbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(reelbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(reelbox.GroupName)) Then
+                                    If reelbox.RomIDValue > 0 Then
+                                        reelbox.Illuminated = (reelbox.RomIDValue = currentvalue)
+                                    Else
+                                        Dim illuminated As Boolean = (currentvalue <> 0)
+                                        If reelbox.RomInverted Then illuminated = Not illuminated
+                                        reelbox.Illuminated = illuminated
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+        End If
+        If B2SData.UseAnimationLamps Then
+            For Each lampid As Integer In B2SData.UsedAnimationLampIDs.Keys
+                If lampid < lampsData.Length And lampid < lamps.Length Then
+                    Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
+                    If lamps(lampid) <> currentvalue Then
+                        If Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then lamps(lampid) = currentvalue
+                        If B2SData.UsedAnimationLampIDs.ContainsKey(lampid) Then
+                            For Each animation As B2SData.AnimationInfo In B2SData.UsedAnimationLampIDs(lampid)
+                                Dim start As Boolean = (currentvalue <> 0)
+                                If animation.Inverted Then start = Not start
+                                If start Then
+                                    StartAnimation(animation.AnimationName)
+                                Else
+                                    StopAnimation(animation.AnimationName)
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+            ' random animation start
+            For Each lampid As Integer In B2SData.UsedRandomAnimationLampIDs.Keys
+                If lampid < lampsData.Length And lampid < lamps.Length Then
+                    Dim currentvalue As Integer = CInt(lampsData.Substring(lampid, 1))
+                    If lamps(lampid) <> currentvalue Then
+                        lamps(lampid) = currentvalue
+                        If B2SData.UsedRandomAnimationLampIDs.ContainsKey(lampid) Then
+                            Dim start As Boolean = (currentvalue <> 0)
+                            Dim isrunning As Boolean = False
+                            If start Then
+                                For Each matchinganimation As B2SData.AnimationInfo In B2SData.UsedRandomAnimationLampIDs(lampid)
+                                    If IsAnimationRunning(matchinganimation.AnimationName) Then
+                                        isrunning = True
+                                        Exit For
+                                    End If
+                                Next
+                            End If
+                            If start Then
+                                If Not isrunning Then
+                                    Dim random As Integer = RandomStarter(B2SData.UsedRandomAnimationLampIDs(lampid).Length)
+                                    Dim animation As B2SData.AnimationInfo = B2SData.UsedRandomAnimationLampIDs(lampid)(random)
+                                    lastRandomStartedAnimation = animation.AnimationName
+                                    StartAnimation(lastRandomStartedAnimation)
+                                End If
+                            Else
+                                If Not String.IsNullOrEmpty(lastRandomStartedAnimation) Then
+                                    StopAnimation(lastRandomStartedAnimation)
+                                    lastRandomStartedAnimation = String.Empty
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllSolenoids(ByVal solenoidsData As String)
+
+        If B2SData.UseRomSolenoids Then
+            For Each solenoidid As Integer In B2SData.UsedRomSolenoidIDs.Keys
+                If solenoidid < solenoidsData.Length Then
+                    Dim currentvalue As Integer = CInt(solenoidsData.Substring(solenoidid, 1))
+                    If solenoids(solenoidid) <> currentvalue Then
+                        If Not B2SData.UsedAnimationSolenoidIDs.ContainsKey(solenoidid) AndAlso Not B2SData.UsedRandomAnimationSolenoidIDs.ContainsKey(solenoidid) Then solenoids(solenoidid) = currentvalue
+                        If B2SData.UsedRomSolenoidIDs.ContainsKey(solenoidid) Then
+                            For Each picbox As B2SPictureBox In B2SData.UsedRomSolenoidIDs(solenoidid)
+                                'If picbox IsNot Nothing Then
+                                If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
+                                    Dim visible As Boolean = (currentvalue <> 0)
+                                    If picbox.RomInverted Then visible = Not visible
+                                    If B2SData.UseRotatingImage AndAlso B2SData.RotatingPictureBox(0) IsNot Nothing AndAlso picbox.Equals(B2SData.RotatingPictureBox(0)) Then
+                                        If visible Then
+                                            StartRotation()
+                                        Else
+                                            StopRotation()
+                                        End If
+                                    Else
+                                        picbox.Visible = visible
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+        End If
+        If B2SData.UseAnimationSolenoids Then
+            For Each solenoidid As Integer In B2SData.UsedAnimationSolenoidIDs.Keys
+                If solenoidid < solenoidsData.Length Then
+                    Dim currentvalue As Integer = CInt(solenoidsData.Substring(solenoidid, 1))
+                    If solenoids(solenoidid) <> currentvalue Then
+                        If Not B2SData.UsedRandomAnimationSolenoidIDs.ContainsKey(solenoidid) Then solenoids(solenoidid) = currentvalue
+                        If B2SData.UsedAnimationSolenoidIDs.ContainsKey(solenoidid) Then
+                            For Each animation As B2SData.AnimationInfo In B2SData.UsedAnimationSolenoidIDs(solenoidid)
+                                Dim start As Boolean = (currentvalue <> 0)
+                                If animation.Inverted Then start = Not start
+                                If start Then
+                                    StartAnimation(animation.AnimationName)
+                                Else
+                                    StopAnimation(animation.AnimationName)
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+            ' random animation start
+            For Each solenoidid As Integer In B2SData.UsedRandomAnimationSolenoidIDs.Keys
+                If solenoidid < solenoidsData.Length Then
+                    Dim currentvalue As Integer = CInt(solenoidsData.Substring(solenoidid, 1))
+                    If solenoids(solenoidid) <> currentvalue Then
+                        solenoids(solenoidid) = currentvalue
+                        If B2SData.UsedRandomAnimationSolenoidIDs.ContainsKey(solenoidid) Then
+                            Dim start As Boolean = (currentvalue <> 0)
+                            Dim isrunning As Boolean = False
+                            If start Then
+                                For Each matchinganimation As B2SData.AnimationInfo In B2SData.UsedRandomAnimationSolenoidIDs(solenoidid)
+                                    If IsAnimationRunning(matchinganimation.AnimationName) Then
+                                        isrunning = True
+                                        Exit For
+                                    End If
+                                Next
+                            End If
+                            If start Then
+                                If Not isrunning Then
+                                    Dim random As Integer = RandomStarter(B2SData.UsedRandomAnimationSolenoidIDs(solenoidid).Length)
+                                    Dim animation As B2SData.AnimationInfo = B2SData.UsedRandomAnimationSolenoidIDs(solenoidid)(random)
+                                    lastRandomStartedAnimation = animation.AnimationName
+                                    StartAnimation(lastRandomStartedAnimation)
+                                End If
+                            Else
+                                If Not String.IsNullOrEmpty(lastRandomStartedAnimation) Then
+                                    StopAnimation(lastRandomStartedAnimation)
+                                    lastRandomStartedAnimation = String.Empty
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllGIStrings(ByVal gistringsData As String)
+
+        If B2SData.UseRomGIStrings Then
+            For Each gistringid As Integer In B2SData.UsedRomGIStringIDs.Keys
+                If gistringid < gistringsData.Length Then
+                    Dim currentvalue As Integer = CInt(gistringsData.Substring(gistringid, 1))
+                    If gistrings(gistringid) <> currentvalue Then
+                        If Not B2SData.UsedAnimationGIStringIDs.ContainsKey(gistringid) AndAlso Not B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(gistringid) Then gistrings(gistringid) = currentvalue
+                        If B2SData.UsedRomGIStringIDs.ContainsKey(gistringid) Then
+                            For Each picbox As B2SPictureBox In B2SData.UsedRomGIStringIDs(gistringid)
+                                'If picbox IsNot Nothing Then
+                                If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
+                                    Dim visible As Boolean = (currentvalue > 4)
+                                    If picbox.RomInverted Then visible = Not visible
+                                    If B2SData.UseRotatingImage AndAlso B2SData.RotatingPictureBox(0) IsNot Nothing AndAlso picbox.Equals(B2SData.RotatingPictureBox(0)) Then
+                                        If visible Then
+                                            StartRotation()
+                                        Else
+                                            StopRotation()
+                                        End If
+                                    Else
+                                        picbox.Visible = visible
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+        End If
+        If B2SData.UseAnimationGIStrings Then
+            For Each gistringid As Integer In B2SData.UsedAnimationGIStringIDs.Keys
+                If gistringid < gistringsData.Length Then
+                    Dim currentvalue As Integer = CInt(gistringsData.Substring(gistringid, 1))
+                    If gistrings(gistringid) <> currentvalue Then
+                        If Not B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(gistringid) Then gistrings(gistringid) = currentvalue
+                        If B2SData.UsedAnimationGIStringIDs.ContainsKey(gistringid) Then
+                            For Each animation As B2SData.AnimationInfo In B2SData.UsedAnimationGIStringIDs(gistringid)
+                                Dim start As Boolean = (currentvalue > 4)
+                                If animation.Inverted Then start = Not start
+                                If start Then
+                                    StartAnimation(animation.AnimationName)
+                                Else
+                                    StopAnimation(animation.AnimationName)
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+            ' random animation start
+            For Each gistringid As Integer In B2SData.UsedRandomAnimationGIStringIDs.Keys
+                If gistringid < gistringsData.Length Then
+                    Dim currentvalue As Integer = CInt(gistringsData.Substring(gistringid, 1))
+                    If gistrings(gistringid) <> currentvalue Then
+                        gistrings(gistringid) = currentvalue
+                        If B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(gistringid) Then
+                            Dim start As Boolean = (currentvalue > 4)
+                            Dim isrunning As Boolean = False
+                            If start Then
+                                For Each matchinganimation As B2SData.AnimationInfo In B2SData.UsedRandomAnimationGIStringIDs(gistringid)
+                                    If IsAnimationRunning(matchinganimation.AnimationName) Then
+                                        isrunning = True
+                                        Exit For
+                                    End If
+                                Next
+                            End If
+                            If start Then
+                                If Not isrunning Then
+                                    Dim random As Integer = RandomStarter(B2SData.UsedRandomAnimationGIStringIDs(gistringid).Length)
+                                    Dim animation As B2SData.AnimationInfo = B2SData.UsedRandomAnimationGIStringIDs(gistringid)(random)
+                                    lastRandomStartedAnimation = animation.AnimationName
+                                    StartAnimation(lastRandomStartedAnimation)
+                                End If
+                            Else
+                                If Not String.IsNullOrEmpty(lastRandomStartedAnimation) Then
+                                    StopAnimation(lastRandomStartedAnimation)
+                                    lastRandomStartedAnimation = String.Empty
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllB2SData(ByVal b2sSetData As String)
+
+        If B2SData.UseRomLamps Then
+            For Each b2ssetid As Integer In B2SData.UsedRomLampIDs.Keys
+                If b2ssetid < b2sSetData.Length Then
+                    Dim currentvalue As Integer = Asc(b2sSetData.Substring(b2ssetid, 1))
+                    If b2sSets(b2ssetid) <> currentvalue Then
+                        If Not B2SData.UsedRomReelLampIDs.ContainsKey(b2ssetid) AndAlso Not B2SData.UsedAnimationLampIDs.ContainsKey(b2ssetid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(b2ssetid) Then b2sSets(b2ssetid) = currentvalue
+                        If B2SData.UsedRomLampIDs.ContainsKey(b2ssetid) Then
+                            For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(b2ssetid)
+                                If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
+                                    If picbox.RomIDValue > 0 Then
+                                        picbox.Visible = (picbox.RomIDValue = currentvalue)
+                                    Else
+                                        Dim visible As Boolean = (currentvalue <> 0)
+                                        If picbox.RomInverted Then visible = Not visible
+                                        If B2SData.UseRotatingImage AndAlso B2SData.RotatingPictureBox(0) IsNot Nothing AndAlso picbox.Equals(B2SData.RotatingPictureBox(0)) Then
+                                            If visible Then
+                                                StartRotation()
+                                            Else
+                                                StopRotation()
+                                            End If
+                                        Else
+                                            picbox.Visible = visible
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+        End If
+        If B2SData.UseRomReelLamps Then
+            For Each b2ssetid As Integer In B2SData.UsedRomReelLampIDs.Keys
+                If b2ssetid < b2sSetData.Length Then
+                    Dim currentvalue As Integer = Asc(b2sSetData.Substring(b2ssetid, 1))
+                    If b2sSets(b2ssetid) <> currentvalue Then
+                        If Not B2SData.UsedAnimationLampIDs.ContainsKey(b2ssetid) AndAlso Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(b2ssetid) Then b2sSets(b2ssetid) = currentvalue
+                        If B2SData.UsedRomReelLampIDs.ContainsKey(b2ssetid) Then
+                            For Each reelbox As B2SReelBox In B2SData.UsedRomReelLampIDs(b2ssetid)
+                                If reelbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(reelbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(reelbox.GroupName)) Then
+                                    If reelbox.RomIDValue > 0 Then
+                                        reelbox.Illuminated = (reelbox.RomIDValue = currentvalue)
+                                    Else
+                                        Dim illuminated As Boolean = (currentvalue <> 0)
+                                        If reelbox.RomInverted Then illuminated = Not illuminated
+                                        reelbox.Illuminated = illuminated
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+        End If
+        If B2SData.UseAnimationLamps Then
+            For Each b2ssetid As Integer In B2SData.UsedAnimationLampIDs.Keys
+                If b2ssetid < b2sSetData.Length Then
+                    Dim currentvalue As Integer = Asc(b2sSetData.Substring(b2ssetid, 1))
+                    If b2sSets(b2ssetid) <> currentvalue Then
+                        If Not B2SData.UsedRandomAnimationLampIDs.ContainsKey(b2ssetid) Then b2sSets(b2ssetid) = currentvalue
+                        If B2SData.UsedAnimationLampIDs.ContainsKey(b2ssetid) Then
+                            For Each animation As B2SData.AnimationInfo In B2SData.UsedAnimationLampIDs(b2ssetid)
+                                Dim start As Boolean = (currentvalue <> 0)
+                                If animation.Inverted Then start = Not start
+                                If start Then
+                                    StartAnimation(animation.AnimationName)
+                                Else
+                                    StopAnimation(animation.AnimationName)
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+            ' random animation start
+            For Each b2ssetid As Integer In B2SData.UsedRandomAnimationLampIDs.Keys
+                If b2ssetid < b2sSetData.Length Then
+                    Dim currentvalue As Integer = Asc(b2sSetData.Substring(b2ssetid, 1))
+                    If b2sSets(b2ssetid) <> currentvalue Then
+                        b2sSets(b2ssetid) = currentvalue
+                        If B2SData.UsedRandomAnimationLampIDs.ContainsKey(b2ssetid) Then
+                            Dim start As Boolean = (currentvalue <> 0)
+                            Dim isrunning As Boolean = False
+                            If start Then
+                                For Each matchinganimation As B2SData.AnimationInfo In B2SData.UsedRandomAnimationLampIDs(b2ssetid)
+                                    If IsAnimationRunning(matchinganimation.AnimationName) Then
+                                        isrunning = True
+                                        Exit For
+                                    End If
+                                Next
+                            End If
+                            If start Then
+                                If Not isrunning Then
+                                    Dim random As Integer = RandomStarter(B2SData.UsedRandomAnimationLampIDs(b2ssetid).Length)
+                                    Dim animation As B2SData.AnimationInfo = B2SData.UsedRandomAnimationLampIDs(b2ssetid)(random)
+                                    lastRandomStartedAnimation = animation.AnimationName
+                                    StartAnimation(lastRandomStartedAnimation)
+                                End If
+                            Else
+                                If Not String.IsNullOrEmpty(lastRandomStartedAnimation) Then
+                                    StopAnimation(lastRandomStartedAnimation)
+                                    lastRandomStartedAnimation = String.Empty
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllMechs(ByVal mechsData As Integer())
+
+        If B2SData.UseRomMechs Then
+            For Each mechid As Integer In B2SData.UsedRomMechIDs.Keys
+                If mechid >= 1 AndAlso mechid <= 5 Then
+                    Dim currentvalue As Integer = mechsData(mechid)
+                    If mechs(mechid) <> currentvalue Then
+                        mechs(mechid) = currentvalue
+                        If B2SData.UsedRomMechIDs.ContainsKey(mechid) Then
+                            If B2SData.RotatingPictureBox(mechid) IsNot Nothing AndAlso B2SData.RotatingImages(mechid) IsNot Nothing AndAlso B2SData.RotatingImages(mechid).Count > 0 AndAlso B2SData.RotatingImages(mechid).ContainsKey(currentvalue) Then
+                                B2SData.RotatingPictureBox(mechid).BackgroundImage = B2SData.RotatingImages(mechid)(currentvalue)
+                                B2SData.RotatingPictureBox(mechid).Visible = True
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllLEDs(ByVal regkey As RegistryKey)
+
+        If B2SData.UseLEDs OrElse B2SData.UseLEDDisplays OrElse B2SData.UseReels Then
+            For digit As Integer = 1 To B2SData.ScoreMaxDigit
+                Dim currentvalue As Integer = regkey.GetValue("B2SLED" & digit.ToString(), 0)
+                If leds(digit) <> currentvalue Then
+                    leds(digit) = currentvalue
+                    If B2SData.LEDs.ContainsKey("LEDBox" & digit.ToString()) AndAlso B2SSettings.UsedLEDType = B2SSettings.eLEDTypes.Rendered Then
+                        ' rendered LEDs are used
+                        Dim ledname As String = "LEDBox" & digit.ToString()
+                        B2SData.LEDs(ledname).Value = currentvalue
+                    ElseIf B2SData.LEDDisplayDigits.ContainsKey(digit - 1) AndAlso B2SSettings.UsedLEDType = B2SSettings.eLEDTypes.Dream7 Then
+                        ' Dream 7 displays are used
+                        With B2SData.LEDDisplayDigits(digit - 1)
+                            .LEDDisplay.SetValue(.Digit, currentvalue)
+                        End With
+                    ElseIf B2SData.Reels.ContainsKey("ReelBox" & digit.ToString()) Then
+                        ' reels are used
+                        Dim reelname As String = "ReelBox" & digit.ToString()
+                        Dim reelbox As B2SReelBox = B2SData.Reels(reelname)
+                        If B2SSettings.IsROMControlled Then
+                            reelbox.Value = currentvalue 'ConvertLEDValue4Reels(currentvalue)
+                        Else
+                            If reelbox.ScoreType = B2SReelBox.eScoreType.Scores Then
+                                reelbox.Text(True) = ConvertLEDValue4Reels(currentvalue)
+                            Else
+                                reelbox.Text(False) = currentvalue
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllAnimations(ByVal regkey As RegistryKey, ByVal animationsdata As String)
+
+        If B2SAnimation.AreThereAnimations Then
+            If Not String.IsNullOrEmpty(animationsdata) Then
+                Dim writeAnimationsData As Boolean = False
+                For Each animationinfo As String In animationsdata.Split(Chr(1))
+                    If Not String.IsNullOrEmpty(animationinfo) Then
+                        Dim animationname As String = animationinfo.Substring(0, animationinfo.Length - 2)
+                        Dim animationstate As Integer = CInt(animationinfo.Substring(animationinfo.Length - 1))
+                        If animations.ContainsKey(animationname) Then
+                            If animations(animationname) <> animationstate Then
+                                animations(animationname) = animationstate
+                                If animationstate = 1 OrElse animationstate = 2 Then
+                                    B2SAnimation.StartAnimation(animationname, (animationstate = 2))
+                                ElseIf animationstate = 0 Then
+                                    B2SAnimation.StopAnimation(animationname)
+                                End If
+                                writeAnimationsData = True
+                                animationsdata = animationsdata.Replace(animationinfo, animationname & "=9")
+                            End If
+                        Else
+                            animations.Add(animationname, animationstate)
+                            If animationstate = 1 OrElse animationstate = 2 Then
+                                B2SAnimation.StartAnimation(animationname, (animationstate = 2))
+                            ElseIf animationstate = 0 Then
+                                B2SAnimation.StopAnimation(animationname)
+                            End If
+                            writeAnimationsData = True
+                            animationsdata = animationsdata.Replace(animationinfo, animationname & "=9")
+                        End If
+                    End If
+                Next
+                If writeAnimationsData Then
+                    regkey.SetValue("B2SAnimations", animationsdata)
+                End If
+            End If
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllRotations(ByVal regkey As RegistryKey, ByVal rotationsdata As String)
+
+        If Not String.IsNullOrEmpty(rotationsdata) Then
+            Dim rotationstate As Integer = CInt(rotationsdata)
+            If rotation <> rotationstate Then
+                rotation = rotationstate
+                If rotationstate = 1 Then
+                    StartRotation()
+                ElseIf rotationstate = 0 Then
+                    StopRotation()
+                End If
+            End If
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllSounds(ByVal regkey As RegistryKey, ByVal soundsdata As String)
+
+        If Not String.IsNullOrEmpty(soundsdata) Then
+            Dim writeSoundsData As Boolean = False
+            For Each soundinfo As String In soundsdata.Split(Chr(1))
+                If Not String.IsNullOrEmpty(soundinfo) Then
+                    Dim soundname As String = soundinfo.Substring(0, soundinfo.Length - 2)
+                    Dim soundstate As Integer = CInt(soundinfo.Substring(soundinfo.Length - 1))
+                    If sounds.ContainsKey(soundname) Then
+                        If sounds(soundname) <> soundstate Then
+                            sounds(soundname) = soundstate
+                            If soundstate = 1 Then
+                                PlaySound(soundname)
+                            ElseIf soundstate = 0 Then
+                                StopSound(soundname)
+                            End If
+                            writeSoundsData = True
+                            soundsdata = soundsdata.Replace(soundinfo, soundname & "=9")
+                        End If
+                    Else
+                        sounds.Add(soundname, soundstate)
+                        If soundstate = 1 Then
+                            PlaySound(soundname)
+                        ElseIf soundstate = 0 Then
+                            StopSound(soundname)
+                        End If
+                        writeSoundsData = True
+                        soundsdata = soundsdata.Replace(soundinfo, soundname & "=9")
+                    End If
+                End If
+            Next
+            If writeSoundsData Then
+                regkey.SetValue("B2SSounds", soundsdata)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllScoreDisplays(ByVal regkey As RegistryKey)
+
+        Dim hide As Integer = regkey.GetValue("B2SHideScoreDisplays", -1)
+        If hide <> -1 Then
+            regkey.DeleteValue("B2SHideScoreDisplays", False)
+            If hide = 0 Then
+                ' show all score displays
+                ShowScoreDisplays()
+            ElseIf hide = 1 Then
+                ' hide all score display
+                HideScoreDisplays()
+            End If
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllIlluGroups(ByVal regkey As RegistryKey)
+
+        Dim illugroups As String = regkey.GetValue("B2SIlluGroupsByName", String.Empty)
+        If Not String.IsNullOrEmpty(illugroups) Then
+            regkey.DeleteValue("B2SIlluGroupsByName", False)
+            ' get thru all illu groups
+            For Each illugroupinfo As String In illugroups.Split(Chr(1))
+                ' only do the lightning stuff if the group has a name
+                If Not String.IsNullOrEmpty(illugroupinfo) And illugroupinfo.Contains("=") Then
+                    Dim pos As Integer = illugroupinfo.IndexOf("=")
+                    Dim groupname As String = illugroupinfo.Substring(0, pos)
+                    Dim value As Integer = CInt(illugroupinfo.Substring(pos + 1))
+                    If B2SData.IlluminationGroups.ContainsKey(groupname) Then
+                        ' get all matching picture boxes
+                        For Each picbox As B2SPictureBox In B2SData.IlluminationGroups(groupname)
+                            If picbox.RomIDValue > 0 Then
+                                picbox.Visible = (picbox.RomIDValue = value)
+                            Else
+                                picbox.Visible = (value <> 0)
+                            End If
+                        Next
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Function ConvertLEDValue4Reels(ByVal ledvalue As Integer) As Integer
+
+        Dim ret As Integer = 0
+        Select Case ledvalue
+            Case 0, 63 : ret = 0
+            Case 6 : ret = 1
+            Case 91 : ret = 2
+            Case 79 : ret = 3
+            Case 102 : ret = 4
+            Case 109 : ret = 5
+            Case 125 : ret = 6
+            Case 7 : ret = 7
+            Case 127 : ret = 8
+            Case 111 : ret = 9
+        End Select
+        Return ret
+
+    End Function
+
+#End If
+#End Region
 
 #Region "settings action"
 
@@ -461,90 +1673,100 @@ Public Class formBackglass
 
     Private Sub formBackglass_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
 
-        If Not B2SStatistics.LogStatistics Then
+        If B2SStatistics.LogStatistics Then Return
 
-            If e.KeyCode = Keys.S Then
 
-                If formSettings IsNot Nothing Then
+        If e.KeyCode = Keys.S Then
+
+            If formSettings IsNot Nothing Then
+                Try
+                    formSettings.Dispose()
+                    formSettings = Nothing
+                Catch
+                End Try
+            End If
+            formSettings = New formSettings()
+            formSettings.B2SScreen = B2SScreen
+            formSettings.B2SAnimation = B2SAnimation
+            formSettings.formBackglass = Me
+            formSettings.Show(Me)
+
+        ElseIf e.KeyCode = Keys.D1 Then
+            StartAnimation("Ball1")
+        ElseIf e.KeyCode = Keys.D2 Then
+            StartAnimation("Ball2")
+        ElseIf e.KeyCode = Keys.D3 Then
+            StartAnimation("Ball3")
+        ElseIf e.KeyCode = Keys.D4 Then
+            StartAnimation("Ball4")
+        ElseIf e.KeyCode = Keys.D5 Then
+            StartAnimation("Ball5")
+
+        ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.A OrElse e.KeyCode = Keys.F Then
+
+            If B2SData.DualBackglass Then
+                If e.KeyCode = Keys.M Then
+                    B2SSettings.CurrentDualMode = If(B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy, B2SSettings.eDualMode.Authentic, B2SSettings.eDualMode.Fantasy)
+                ElseIf e.KeyCode = Keys.A Then
+                    B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Authentic
+                ElseIf e.KeyCode = Keys.F Then
+                    B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy
+                End If
+#If B2S = "DLL" Then
+                B2SSettings.Save(, , True)
+#Else
+                B2SSettings.Save(, True)
+#End If
+                Me.BackgroundImage = DarkImage
+                Me.Refresh()
+                ShowStartupImages()
+                B2SAnimation.RestartAnimations()
+                If formMode IsNot Nothing Then
                     Try
-                        formSettings.Dispose()
-                        formSettings = Nothing
+                        formMode.Dispose()
+                        formMode = Nothing
                     Catch
                     End Try
                 End If
-                formSettings = New formSettings()
-                formSettings.B2SScreen = B2SScreen
-                formSettings.B2SAnimation = B2SAnimation
-                formSettings.formBackglass = Me
-                formSettings.Show(Me)
-
-            ElseIf e.KeyCode = Keys.D1 Then
-                StartAnimation("Ball1")
-            ElseIf e.KeyCode = Keys.D2 Then
-                StartAnimation("Ball2")
-            ElseIf e.KeyCode = Keys.D3 Then
-                StartAnimation("Ball3")
-            ElseIf e.KeyCode = Keys.D4 Then
-                StartAnimation("Ball4")
-            ElseIf e.KeyCode = Keys.D5 Then
-                StartAnimation("Ball5")
-
-            ElseIf e.KeyCode = Keys.M OrElse e.KeyCode = Keys.A OrElse e.KeyCode = Keys.F Then
-
-                If B2SData.DualBackglass Then
-                    If e.KeyCode = Keys.M Then
-                        B2SSettings.CurrentDualMode = If(B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy, B2SSettings.eDualMode.Authentic, B2SSettings.eDualMode.Fantasy)
-                    ElseIf e.KeyCode = Keys.A Then
-                        B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Authentic
-                    ElseIf e.KeyCode = Keys.F Then
-                        B2SSettings.CurrentDualMode = B2SSettings.eDualMode.Fantasy
-                    End If
-                    B2SSettings.Save(, , True)
-                    Me.BackgroundImage = DarkImage
-                    Me.Refresh()
-                    ShowStartupImages()
-                    B2SAnimation.RestartAnimations()
-                    If formMode IsNot Nothing Then
-                        Try
-                            formMode.Dispose()
-                            formMode = Nothing
-                        Catch
-                        End Try
-                    End If
-                    formMode = New formMode()
-                    formMode.Show(Me)
-                    Me.Focus()
-                End If
-
-            ElseIf e.KeyCode = Keys.I OrElse e.KeyCode = Keys.Print OrElse e.KeyCode = Keys.PrintScreen Then
-
-                ' do a screenshot and save it
-                If String.IsNullOrEmpty(B2SSettings.ScreenshotPath) Then
-                    MessageBox.Show("Please enter a valid screenshot path here at the settings.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                Else
-                    Dim imageformat As Imaging.ImageFormat = Imaging.ImageFormat.Png
-                    Dim extension As String = ".png"
-                    Select Case B2SSettings.ScreenshotFileType
-                        Case B2SSettings.eImageFileType.JPG : imageformat = Imaging.ImageFormat.Jpeg : extension = ".jpg"
-                        Case B2SSettings.eImageFileType.GIF : imageformat = Imaging.ImageFormat.Gif : extension = ".gif"
-                        Case B2SSettings.eImageFileType.BMP : imageformat = Imaging.ImageFormat.Bmp : extension = ".bmp"
-                    End Select
-                    Dim filename As String = IO.Path.Combine(B2SSettings.ScreenshotPath, IO.Path.GetFileNameWithoutExtension(B2SData.BackglassFileName) & extension)
-                    B2SScreen.MakeScreenShot(filename, imageformat)
-                    My.Computer.Audio.Play(My.Resources.camera1, AudioPlayMode.Background)
-                End If
-
+                formMode = New formMode()
+                formMode.Show(Me)
+                Me.Focus()
             End If
 
+        ElseIf e.KeyCode = Keys.I OrElse e.KeyCode = Keys.Print OrElse e.KeyCode = Keys.PrintScreen Then
+
+            ' do a screenshot and save it
+            If String.IsNullOrEmpty(B2SSettings.ScreenshotPath) Then
+                MessageBox.Show("Please enter a valid screenshot path here at the settings.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            Else
+                Dim imageformat As Imaging.ImageFormat = Imaging.ImageFormat.Png
+                Dim extension As String = ".png"
+                Select Case B2SSettings.ScreenshotFileType
+                    Case B2SSettings.eImageFileType.JPG : imageformat = Imaging.ImageFormat.Jpeg : extension = ".jpg"
+                    Case B2SSettings.eImageFileType.GIF : imageformat = Imaging.ImageFormat.Gif : extension = ".gif"
+                    Case B2SSettings.eImageFileType.BMP : imageformat = Imaging.ImageFormat.Bmp : extension = ".bmp"
+                End Select
+                Dim filename As String = IO.Path.Combine(B2SSettings.ScreenshotPath, IO.Path.GetFileNameWithoutExtension(B2SData.BackglassFileName) & extension)
+                B2SScreen.MakeScreenShot(filename, imageformat)
+                My.Computer.Audio.Play(My.Resources.camera1, AudioPlayMode.Background)
+            End If
+#If B2S = "DLL" Then
+#Else
+        ElseIf e.KeyCode = Keys.Escape Then
+
+            ' stop the app
+            End
+#End If
         End If
 
-    End Sub
 
+    End Sub
+#If B2S = "DLL" Then
     Private Sub chkSniffer_CheckedChanged(sender As System.Object, e As System.EventArgs)
         B2SSettings.IsStatisticsBackglassOn = chkSniffer.Checked
         B2SSettings.Save(, True)
     End Sub
-
+#End If
 #End Region
 
 
@@ -695,35 +1917,44 @@ Public Class formBackglass
         Dim shorthyperpinfilename As String = String.Empty
 
         ' check whether the table name can be found
-        If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
-            If B2SSettings.LocateHyperpinXMLFile() Then
-                hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"
-                shorthyperpinfilename = B2SData.ShortFileName(hyperpinfilename)
+        If Not String.IsNullOrEmpty(B2SSettings.GameName) And Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+            'Westworld, check for gamename
+            If IO.File.Exists(B2SSettings.GameName & ".directb2s") Then
+                filename = B2SSettings.GameName & ".directb2s"
             End If
-            ' check whether the hyperpin description can be found
-            If Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
-                If filename.Length >= 8 Then
-                    ' look for short name
-                    B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6) & "*.directb2s")
-                    If B2SSettings.MatchingFileNames Is Nothing OrElse Not IsArray(B2SSettings.MatchingFileNames) OrElse B2SSettings.MatchingFileNames.Length <= 0 Then
-                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6).Replace(" ", "") & "*.directb2s")
-                    End If
-                    If B2SSettings.MatchingFileNames IsNot Nothing Then
-                        For i As Integer = 0 To B2SSettings.MatchingFileNames.Length - 1
-                            Dim fileinfo As IO.FileInfo = New IO.FileInfo(B2SSettings.MatchingFileNames(i))
-                            B2SSettings.MatchingFileNames(i) = fileinfo.Name
+        End If
+
+        If Not B2SSettings.DisableFuzzyMatching Then
+            If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+                If B2SSettings.LocateHyperpinXMLFile() Then
+                    hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"
+                    shorthyperpinfilename = B2SData.ShortFileName(hyperpinfilename)
+                End If
+                ' check whether the hyperpin description can be found
+                If Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
+                    If filename.Length >= 8 Then
+                        ' look for short name
+                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6) & "*.directb2s")
+                        If B2SSettings.MatchingFileNames Is Nothing OrElse Not IsArray(B2SSettings.MatchingFileNames) OrElse B2SSettings.MatchingFileNames.Length <= 0 Then
+                            B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6).Replace(" ", "") & "*.directb2s")
+                        End If
+                        If B2SSettings.MatchingFileNames IsNot Nothing Then
+                            For i As Integer = 0 To B2SSettings.MatchingFileNames.Length - 1
+                                Dim fileinfo As IO.FileInfo = New IO.FileInfo(B2SSettings.MatchingFileNames(i))
+                                B2SSettings.MatchingFileNames(i) = fileinfo.Name
+                            Next
+                        End If
+                        shortfilename = String.Empty
+                        For Each file As String In B2SSettings.MatchingFileNames
+                            If String.IsNullOrEmpty(shortfilename) Then
+                                shortfilename = file
+                            End If
+                            If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) AndAlso file.Equals(B2SSettings.MatchingFileName, StringComparison.CurrentCultureIgnoreCase) Then
+                                shortfilename = file
+                                Exit For
+                            End If
                         Next
                     End If
-                    shortfilename = String.Empty
-                    For Each file As String In B2SSettings.MatchingFileNames
-                        If String.IsNullOrEmpty(shortfilename) Then
-                            shortfilename = file
-                        End If
-                        If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) AndAlso file.Equals(B2SSettings.MatchingFileName, StringComparison.CurrentCultureIgnoreCase) Then
-                            shortfilename = file
-                            Exit For
-                        End If
-                    Next
                 End If
             End If
         End If
@@ -752,7 +1983,7 @@ Public Class formBackglass
             Try
                 XML.Load(B2SData.BackglassFileName)
             Catch ex As Exception
-                MessageBox.Show("The following error occurred opening the file '" & IO.Path.GetFileName(B2SData.BackglassFileName) & "':" & vbCrLf & vbCrLf & ex.Message, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                MessageBox.Show("The following error occurred opening the file '" & Path.GetFileName(B2SData.BackglassFileName) & "':" & vbCrLf & vbCrLf & ex.Message, My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Try
         End If
 
@@ -764,12 +1995,17 @@ Public Class formBackglass
         Else
 
             B2SSettings.BackglassFileVersion = XML.SelectSingleNode("DirectB2SData").Attributes("Version").InnerText
-
+#If B2S = "DLL" Then
+            ' write backglass file version to registry
+            Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                regkey.SetValue("B2SBackglassFileVersion", B2SSettings.BackglassFileVersion, RegistryValueKind.String)
+            End Using
+#End If
             ' current backglass version is not allowed to be larger than server version and to be smaller minimum B2S version
-            If B2SSettings.BackglassFileVersion > B2SSettings.DirectB2SVersion Then
+            If B2SSettings.BackglassFileVersion > B2SVersionInfo.B2S_VERSION_STRING Then
 
-                Throw New Exception("B2S backglass server version (" & B2SSettings.DirectB2SVersion & ") doesn't match 'directb2s' file version (" & B2SSettings.BackglassFileVersion & "). " & vbCrLf & vbCrLf &
-                                    "Please update the B2S backglass server.")
+                Throw New Exception("B2S.Server version (" & B2SVersionInfo.B2S_VERSION_STRING & ") doesn't match 'directb2s' file version (" & B2SSettings.BackglassFileVersion & "). " & vbCrLf & vbCrLf &
+                                    "Please update the B2S.Server.")
 
             ElseIf B2SSettings.BackglassFileVersion < B2SSettings.MinimumDirectB2SVersion Then
 
@@ -901,6 +2137,7 @@ Public Class formBackglass
                         If innerNode.Attributes("OffImage") IsNot Nothing Then
                             offimage = Base64ToImage(innerNode.Attributes("OffImage").InnerText)
                         End If
+                        image = CropImageToTransparency(image, offimage, loc, size)
                         ' create new picturebox control
                         Dim picbox As B2SPictureBox = New B2SPictureBox()
                         Dim IsOnBackglass As Boolean = (parent = "Backglass")
@@ -1153,7 +2390,9 @@ Public Class formBackglass
                             ' add digit location info
                             For i = 0 To digits - 1
                                 If isOnBackglass OrElse Not B2SSettings.HideB2SDMD Then
-                                    B2SData.LEDDisplayDigits.Add(If(dream7b2sstartdigit > 0, dream7b2sstartdigit, dream7index) - 1, New B2SData.LEDDisplayDigitLocation(led, i, id))
+                                    Dim leddisplayid As Integer = If(dream7b2sstartdigit > 0, dream7b2sstartdigit, dream7index)
+                                    B2SData.LEDDisplayDigits.Add(leddisplayid - 1, New B2SData.LEDDisplayDigitLocation(led, i, id))
+                                    B2SData.ScoreMaxDigit = leddisplayid
                                 End If
                                 dream7index += 1
                                 If dream7b2sstartdigit > 0 Then dream7b2sstartdigit += 1
@@ -1212,12 +2451,18 @@ Public Class formBackglass
                                         B2SData.LEDs.Add(led.Name, led)
                                     End If
                                 End If
+                                B2SData.ScoreMaxDigit = led.ID
                                 led.BringToFront()
                                 led.Visible = isRenderedLEDs AndAlso Not hidden
                                 ' add LED area
                                 'B2SData.LEDAreas.Add("LEDArea" & id.ToString(), New B2SData.LEDAreaInfo(New Rectangle(loc, size), Not isOnBackglass))
                                 ' add or update player info collection
                                 ' no need to do this here since it's done at the dream7 LEDs
+                                ' write reel info into registry
+                                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                                    regkey.SetValue("B2SScoreDigit" & led.ID.ToString(), If(isDream7LEDs, "2", "1") & "," & CInt(led.LEDType).ToString() & "," & led.StartDigit.ToString() & "," & led.Digits, RegistryValueKind.String)
+                                    regkey.SetValue("B2SScoreDisplay" & id.ToString(), startdigit.ToString(), RegistryValueKind.String)
+                                End Using
                             ElseIf isReels Then
                                 ' look for matching reel sound
                                 soundName = String.Empty
@@ -1244,7 +2489,7 @@ Public Class formBackglass
                                 reel.ScoreType = b2sscoretype
                                 reel.SoundName = soundName
                                 If rollinginterval >= 10 Then reel.RollingInterval = rollinginterval
-                                'AddHandler reel.ReelRollOver, AddressOf Reels_ReelRollOver ' no need to add this right now; maybe later
+
                                 If isOnBackglass Then
                                     reel.Type = B2SBaseBox.eType.OnBackglass
                                     Me.Controls.Add(reel)
@@ -1259,6 +2504,7 @@ Public Class formBackglass
                                         B2SData.Reels.Add(reel)
                                     End If
                                 End If
+                                B2SData.ScoreMaxDigit = reel.ID
                                 reel.BringToFront()
                                 reel.Visible = Not hidden
                                 ' add or update reel display
@@ -1279,6 +2525,11 @@ Public Class formBackglass
                                     End If
                                     B2SData.Players(b2splayerno).Add(New B2SPlayer.ControlInfo(startdigit, digits, B2SPlayer.eControlType.ReelDisplay, B2SData.ReelDisplays(id)))
                                 End If
+                                ' write reel info into registry
+                                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                                    regkey.SetValue("B2SScoreDigit" & reel.ID.ToString(), "3,0," & reel.StartDigit.ToString() & "," & reel.Digits, RegistryValueKind.String)
+                                    regkey.SetValue("B2SScoreDisplay" & id.ToString(), startdigit.ToString(), RegistryValueKind.String)
+                                End Using
                             End If
 
                             renderedandreelindex += 1
@@ -1289,7 +2540,31 @@ Public Class formBackglass
                         dream7index = renderedandreelindex
 
                     Next
-
+#If TARGET = "" Then
+#Else
+                    ' write player info into registry
+                    For Each controls As KeyValuePair(Of Integer, B2SPlayer.ControlCollection) In B2SData.Players
+                        Dim player As String = String.Empty
+                        For Each controlinfo As B2SPlayer.ControlInfo In controls.Value
+                            With controlinfo
+                                Dim type As String = "0"
+                                If .LEDBox IsNot Nothing Then
+                                    type = CInt(.LEDBox.LEDType).ToString()
+                                ElseIf .LEDDisplay IsNot Nothing Then
+                                    type = If(.LEDDisplay.Type = SegmentNumberType.TenSegment, "2", If(.LEDDisplay.Type = SegmentNumberType.FourteenSegment, "3", "1"))
+                                End If
+                                player &= ";" & If(.Type = B2SPlayer.eControlType.ReelDisplay OrElse .Type = B2SPlayer.eControlType.ReelBox, "3", "1") & "," &
+                                          type & "," &
+                                          controlinfo.StartDigit & "," &
+                                          controlinfo.Digits
+                            End With
+                        Next
+                        If Not String.IsNullOrEmpty(player) Then player = player.Substring(1)
+                        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                            regkey.SetValue("B2SScorePlayer" & controls.Key.ToString(), player, RegistryValueKind.String)
+                        End Using
+                    Next
+#End If
                 End If
 
                 ' maybe get all reel images
@@ -1467,87 +2742,89 @@ Public Class formBackglass
                         End If
                     End If
 
-                    If mergeBulbs Then
-                        ' look for the largest bulb amount
+#If mergeBulbs Then
+                    ' look for the largest bulb amount
                         Dim topSize4Authentic As Integer = 0
-                        Dim topkey4Authentic As String = String.Empty
+                    Dim topkey4Authentic As String = String.Empty
                         Dim secondSize4Authentic As Integer = 0
-                        Dim secondkey4Authentic As String = String.Empty
-                        For Each romsize As KeyValuePair(Of String, Integer) In roms4Authentic
+                    Dim secondkey4Authentic As String = String.Empty
+                    For Each romsize As KeyValuePair(Of String, Integer) In roms4Authentic
                             If romsize.Value > secondSize4Authentic Then
                                 secondSize4Authentic = romsize.Value
-                                secondkey4Authentic = romsize.Key
-                            End If
+                                secondkey4Authentic = romsize.Keysecondkey4Authentic = romsize.Key.Split("|")(0)
+                        End If
                             If romsize.Value > topSize4Authentic Then
                                 secondSize4Authentic = topSize4Authentic
-                                secondkey4Authentic = topkey4Authentic
+                            secondkey4Authentic = topkey4Authentic
                                 topSize4Authentic = romsize.Value
-                                topkey4Authentic = romsize.Key
-                            End If
-                        Next
-                        Dim top4Fantasy As Integer = 0
-                        Dim topkey4Fantasy As String = String.Empty
+                                topkey4Authentic = romsize.Keysecondkey4Authentic = romsize.Key.Split("|")(0)
+                        End If
+                    Next
+                    Dim top4Fantasy As Integer = 0
+                    Dim topkey4Fantasy As String = String.Empty
                         Dim secondSize4Fantasy As Integer = 0
-                        Dim secondkey4Fantasy As String = String.Empty
-                        If B2SData.DualBackglass Then
-                            For Each romsize As KeyValuePair(Of String, Integer) In roms4Fantasy
+                    Dim secondkey4Fantasy As String = String.Empty
+                    If B2SData.DualBackglass Then
+                        For Each romsize As KeyValuePair(Of String, Integer) In roms4Fantasy
                                 If romsize.Value > secondSize4Fantasy Then
                                     secondSize4Fantasy = romsize.Value
-                                    secondkey4Fantasy = romsize.Key
-                                End If
-                                If romsize.Value > top4Fantasy Then
+                                    secondkey4Fantasy = romsize.Keysecondkey4Authentic = romsize.Key.Split("|")(0)
+                            End If
+                            If romsize.Value > top4Fantasy Then
                                     secondSize4Fantasy = top4Fantasy
-                                    secondkey4Fantasy = topkey4Fantasy
-                                    top4Fantasy = romsize.Value
-                                    topkey4Fantasy = romsize.Key
-                                End If
-                            Next
-                        End If
-                        ' maybe draw some light images for pretty fast image changing
-                        If topSize4Authentic >= minSize4Image Then
-                            ' create some light images
-                            If TopLightImage4Authentic Is Nothing Then
-                                TopLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic)
-                                If secondSize4Authentic > minSize4Image Then
-                                    SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, secondkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
-                                    TopAndSecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, secondkey4Authentic)
-                                End If
-                            Else
-                                SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
-                                TopAndSecondLightImage4Authentic = CreateLightImage(TopLightImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic)
+                                secondkey4Fantasy = topkey4Fantasy
+                                top4Fantasy = romsize.Value
+                                topkey4Fantasy = romsize.Key.Split("|")(0)
                             End If
-                        End If
-                        If B2SData.DualBackglass AndAlso top4Fantasy >= minSize4Image Then
-                            ' create some light images
-                            If TopLightImage4Fantasy Is Nothing Then
-                                TopLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy)
-                                If secondSize4Fantasy > minSize4Image Then
-                                    SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, secondkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
-                                    TopAndSecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, secondkey4Fantasy)
-                                End If
-                            Else
-                                SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
-                                TopAndSecondLightImage4Fantasy = CreateLightImage(TopLightImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy)
-                            End If
-                        End If
-                        B2SData.UsedTopRomIDType4Authentic = TopRomIDType4Authentic
-                        B2SData.UsedSecondRomIDType4Authentic = SecondRomIDType4Authentic
-                        If B2SData.DualBackglass Then
-                            B2SData.UsedTopRomIDType4Fantasy = TopRomIDType4Fantasy
-                            B2SData.UsedSecondRomIDType4Fantasy = SecondRomIDType4Fantasy
-                        End If
+                        Next
+                    End If
 
-                        ' remove top and second rom bulbs
-                        CheckBulbs(TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic, B2SData.eDualMode.Authentic)
-                        CheckBulbs(SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic, B2SData.eDualMode.Authentic)
-                        If B2SData.DualBackglass Then
-                            CheckBulbs(TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
-                            CheckBulbs(SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
+                    ' maybe draw some light images for pretty fast image changing
+                        If topSize4Authentic >= minSize4Image Then
+                        ' create some light images
+                        If TopLightImage4Authentic Is Nothing Then
+                            TopLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic)
+                                If secondSize4Authentic > minSize4Image Then
+                                SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, secondkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
+                                TopAndSecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, secondkey4Authentic)
+                            End If
+                        Else
+                            SecondLightImage4Authentic = CreateLightImage(DarkImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic, , SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic)
+                            TopAndSecondLightImage4Authentic = CreateLightImage(TopLightImage4Authentic, B2SData.eDualMode.Authentic, topkey4Authentic)
                         End If
                     End If
+                    If B2SData.DualBackglass AndAlso top4Fantasy >= minSize4Image Then
+                        ' create some light images
+                        If TopLightImage4Fantasy Is Nothing Then
+                            TopLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy)
+                                If secondSize4Fantasy > minSize4Image Then
+                                SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, secondkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
+                                TopAndSecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, secondkey4Fantasy)
+                            End If
+                        Else
+                            SecondLightImage4Fantasy = CreateLightImage(DarkImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy, , SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy)
+                            TopAndSecondLightImage4Fantasy = CreateLightImage(TopLightImage4Fantasy, B2SData.eDualMode.Fantasy, topkey4Fantasy)
+                        End If
+                    End If
+                    B2SData.UsedTopRomIDType4Authentic = TopRomIDType4Authentic
+                    B2SData.UsedSecondRomIDType4Authentic = SecondRomIDType4Authentic
+                    If B2SData.DualBackglass Then
+                        B2SData.UsedTopRomIDType4Fantasy = TopRomIDType4Fantasy
+                        B2SData.UsedSecondRomIDType4Fantasy = SecondRomIDType4Fantasy
+                    End If
+
+                    ' remove top and second rom bulbs
+                    CheckBulbs(TopRomID4Authentic, TopRomIDType4Authentic, TopRomInverted4Authentic, B2SData.eDualMode.Authentic)
+                    CheckBulbs(SecondRomID4Authentic, SecondRomIDType4Authentic, SecondRomInverted4Authentic, B2SData.eDualMode.Authentic)
+                    If B2SData.DualBackglass Then
+                        CheckBulbs(TopRomID4Fantasy, TopRomIDType4Fantasy, TopRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
+                        CheckBulbs(SecondRomID4Fantasy, SecondRomIDType4Fantasy, SecondRomInverted4Fantasy, B2SData.eDualMode.Fantasy)
+                    End If
+#End If
                 End If
 
                 ' get all animation info
+                Dim animationpulseswitch As Boolean = False
                 If topnode.SelectSingleNode("Animations") IsNot Nothing AndAlso topnode.SelectNodes("Animations/Animation") IsNot Nothing Then
                     For Each innerNode As Xml.XmlElement In topnode.SelectNodes("Animations/Animation")
                         Dim name As String = innerNode.Attributes("Name").InnerText
@@ -1608,6 +2885,7 @@ Public Class formBackglass
                             Dim pulseswitch As Integer = 0
                             If stepnode.Attributes("PulseSwitch") IsNot Nothing Then
                                 pulseswitch = CInt(stepnode.Attributes("PulseSwitch").InnerText)
+                                If pulseswitch > 0 Then animationpulseswitch = True
                             End If
                             Dim entry As B2SAnimation.PictureBoxAnimationEntry = New B2SAnimation.PictureBoxAnimationEntry([on], waitLoopsAfterOn, off, waitLoopsAfterOff, , , , , pulseswitch)
                             If entries Is Nothing Then
@@ -1684,16 +2962,23 @@ Public Class formBackglass
                         End If
                     Next
                 End If
-
-                ' set backglass to topmost window
+#If B2S = "DLL" Then
                 Me.TopMost = True
                 Me.BringToFront()
                 Me.TopMost = False
+#Else
+                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                    regkey.SetValue("B2SSetSwitch", If(animationpulseswitch, 1, 0), RegistryValueKind.DWord)
+                End Using
+#End If
+            End If
 
-                End If
 
-                ' set info flags to dirty to load them
-                B2SData.IsInfoDirty = True
+            ' set info flags to dirty to load them
+#If B2S = "DLL" Then
+            B2SData.IsInfoDirty = True
+#End If
+
 
         End If
 
@@ -1813,36 +3098,42 @@ Public Class formBackglass
     End Sub
 
     Private Sub ShowStartupSnippits()
-
-        ' maybe show some 'startup on' snippits
-        Dim topIsOn As Boolean = False
-        For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
-            If picbox.Value.InitialState = 1 AndAlso picbox.Value.IsImageSnippit Then
-                picbox.Value.Visible = True
-            End If
-        Next
-
+        Static isdone As Boolean = False
+        If Not isdone Then
+            isdone = True
+            ' maybe show some 'startup on' snippits
+            Dim topIsOn As Boolean = False
+            For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                If picbox.Value.InitialState = 1 AndAlso picbox.Value.IsImageSnippit Then
+                    picbox.Value.Visible = True
+                End If
+            Next
+        End If
     End Sub
     Private Sub ShowStartupImages()
 
-        ' maybe show some 'startup on' images
-        Dim topIsOn As Boolean = False
-        For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
-            If picbox.Value.InitialState = 1 AndAlso Not picbox.Value.IsImageSnippit Then
-                If TopRomID > 0 AndAlso picbox.Value.RomID = TopRomID AndAlso picbox.Value.RomIDType = TopRomIDType AndAlso picbox.Value.RomInverted = TopRomInverted Then
-                    topIsOn = True
-                    If TopLightImage IsNot Nothing AndAlso Not TopLightImage.Equals(Me.BackgroundImage) Then
-                        Me.BackgroundImage = TopLightImage
+        Static isdone As Boolean = False
+        If Not isdone Then
+            isdone = True
+            ' maybe show some 'startup on' images
+            Dim topIsOn As Boolean = False
+            For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.Illuminations
+                If picbox.Value.InitialState = 1 AndAlso Not picbox.Value.IsImageSnippit Then
+                    If TopRomID > 0 AndAlso picbox.Value.RomID = TopRomID AndAlso picbox.Value.RomIDType = TopRomIDType AndAlso picbox.Value.RomInverted = TopRomInverted Then
+                        topIsOn = True
+                        If TopLightImage IsNot Nothing AndAlso Not TopLightImage.Equals(Me.BackgroundImage) Then
+                            Me.BackgroundImage = TopLightImage
+                        End If
+                    ElseIf Not topIsOn AndAlso SecondRomID > 0 AndAlso picbox.Value.RomID = SecondRomID AndAlso picbox.Value.RomIDType = SecondRomIDType AndAlso picbox.Value.RomInverted = SecondRomInverted Then
+                        If SecondLightImage IsNot Nothing AndAlso Not SecondLightImage.Equals(Me.BackgroundImage) Then
+                            Me.BackgroundImage = SecondLightImage
+                        End If
+                    Else
+                        picbox.Value.Visible = True
                     End If
-                ElseIf Not topIsOn AndAlso SecondRomID > 0 AndAlso picbox.Value.RomID = SecondRomID AndAlso picbox.Value.RomIDType = SecondRomIDType AndAlso picbox.Value.RomInverted = SecondRomInverted Then
-                    If SecondLightImage IsNot Nothing AndAlso Not SecondLightImage.Equals(Me.BackgroundImage) Then
-                        Me.BackgroundImage = SecondLightImage
-                    End If
-                Else
-                    picbox.Value.Visible = True
                 End If
-            End If
-        Next
+            Next
+        End If
 
     End Sub
 
@@ -2006,17 +3297,6 @@ Public Class formBackglass
     Public Property SecondRomID4Fantasy() As Integer = 0
     Public Property SecondRomIDType4Fantasy() As B2SBaseBox.eRomIDType = B2SBaseBox.eRomIDType.NotDefined
     Public Property SecondRomInverted4Fantasy() As Boolean = False
-
-#End Region
-
-
-#Region "event handling for the created backglass controls"
-
-    Private Sub Reels_ReelRollOver(ByVal sender As Object, ByVal e As B2SReelBox.ReelRollOverEventArgs)
-
-        ' nothing to do for the moment so I removed the AddHandler at the reels
-
-    End Sub
 
 #End Region
 
@@ -2248,6 +3528,29 @@ Public Class formBackglass
         Return Drawing.Color.FromArgb(CInt(colorvalues(0)), CInt(colorvalues(1)), CInt(colorvalues(2)))
     End Function
 
+#If B2S = "EXE" Then
+    Private Sub SetFocusToVPPlayer()
+
+        ' set focus to the VP player
+        Dim proc As Processes = New Processes()
+        SetForegroundWindow(proc.TableHandle)
+        tableHandle = proc.TableHandle
+
+    End Sub
+#End If
+
+    Private Function RandomStarter(ByVal top As Integer) As Integer
+
+        Static lastone As Integer = -1
+        Dim ret As Integer = -1
+        Do Until ret >= 0 AndAlso ret < top AndAlso ret <> lastone
+            Dim random As Random = New Random(Date.Now.Millisecond)
+            ret = CInt(Math.Truncate(random.NextDouble() * top))
+        Loop
+        lastone = ret
+        Return ret
+
+    End Function
 #End Region
 
 

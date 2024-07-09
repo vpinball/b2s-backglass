@@ -9,7 +9,9 @@ Public Class B2SStatistics
         End Get
         Set(ByVal value As Boolean)
             _LogStatistics = value
+#If B2S = "DLL" Then
             B2SData.IsInfoDirty = True
+#End If
         End Set
     End Property
 
