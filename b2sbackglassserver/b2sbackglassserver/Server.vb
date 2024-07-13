@@ -104,10 +104,8 @@ Public Class Server
         ' Create new STA thread for this dll to run in, if the thread is already running then don't start another
         ' However if the thread is running, we need to stop the application from running, and then restart it by running StartThread again
         If thread IsNot Nothing Then
-            Try
-                thread.Abort()
-            Catch
-            End Try
+            ' stop the application from running
+            Application.Exit()
         End If
 
         thread = New Thread(AddressOf StartThread)
@@ -170,6 +168,7 @@ Public Class Server
             If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
 
                 Try
+                    timer.Stop()
                     Me.Stop()
                 Finally
                     Me.Dispose()
@@ -469,6 +468,17 @@ Public Class Server
     Public Sub [Stop]()
 
         Try
+            If SynchronizationContext.Current IsNot threadContext Then
+                threadContext.Send(New SendOrPostCallback(AddressOf [Stop]), Nothing)
+                Return
+            End If
+
+        Catch ex As Exception
+            'If Exception is InvalidAsynchronousStateException then the thread is already stopped, so we can ignore it and return
+            Return
+        End Try
+
+        Try
             Try
                 timer.Stop()
                 HideBackglassForm()
@@ -654,21 +664,12 @@ Public Class Server
     Private statelogChangedGIStrings As Log = New Log("GIStringsState")
     Private statelogChangedLEDs As Log = New Log("LEDState")
 
-    'Private timelogChangedLamps As Log = New Log("Lamps")
-    'Private timelogChangedSolenoids As Log = New Log("Solenoids")
-
-    'Private statChangedLamps As Statistics = New Statistics(timelogChangedLamps)
-    'Private statChangedSolenoids As Statistics = New Statistics(timelogChangedSolenoids)
-
     Public ReadOnly Property ChangedLamps() As Object
         Get
             Try
                 isChangedLampsCalled = True
                 Dim chg As Object = VPinMAME.ChangedLamps()
                 If B2SData.GetLampsData() Then
-                    'If B2SData.IsBackglassRunning AndAlso
-                    '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps OrElse B2SSettings.IsLampsStateLogOn OrElse B2SData.TestMode OrElse B2SStatistics.LogStatistics) AndAlso
-                    '    Not B2SSettings.AllOff AndAlso Not B2SSettings.LampsOff Then
                     CheckLamps(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
@@ -688,9 +689,6 @@ Public Class Server
                 isChangedSolenoidsCalled = True
                 Dim chg As Object = VPinMAME.ChangedSolenoids()
                 If B2SData.GetSolenoidsData() Then
-                    'If B2SData.IsBackglassRunning AndAlso
-                    '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomSolenoids OrElse B2SData.UseAnimationSolenoids OrElse B2SSettings.IsSolenoidsStateLogOn OrElse B2SData.TestMode OrElse B2SStatistics.LogStatistics) AndAlso
-                    '    Not B2SSettings.AllOff AndAlso Not B2SSettings.SolenoidsOff Then
                     CheckSolenoids(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
@@ -710,9 +708,6 @@ Public Class Server
                 isChangedGIStringsCalled = True
                 Dim chg As Object = VPinMAME.ChangedGIStrings()
                 If B2SData.GetGIStringsData() Then
-                    'If B2SData.IsBackglassRunning AndAlso
-                    '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomGIStrings OrElse B2SData.UseAnimationGIStrings OrElse B2SSettings.IsGIStringsStateLogOn OrElse B2SData.TestMode OrElse B2SStatistics.LogStatistics) AndAlso
-                    '    Not B2SSettings.AllOff AndAlso Not B2SSettings.GIStringsOff Then
                     CheckGIStrings(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
@@ -732,9 +727,6 @@ Public Class Server
                 isChangedLEDsCalled = True
                 Dim chg As Object = VPinMAME.ChangedLEDs(mask2, mask1, mask3, mask4) ' (&HFFFFFFFF, &HFFFFFFFF) 
                 If B2SData.GetLEDsData() Then
-                    'If B2SData.IsBackglassRunning AndAlso
-                    '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseLEDs OrElse B2SData.UseLEDDisplays OrElse B2SData.UseReels OrElse B2SSettings.IsLEDsStateLogOn) AndAlso
-                    '    Not B2SSettings.AllOff AndAlso Not B2SSettings.LEDsOff Then
                     CheckLEDs(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
@@ -997,13 +989,6 @@ Public Class Server
     Private Sub CheckSolenoids(ByVal solenoids As Object(,))
 
         statelogChangedSolenoids.IsLogOn = B2SSettings.IsSolenoidsStateLogOn
-
-        'If statelogChangedSolenoids.IsLogOn Then
-        '    Static stopwatch As Stopwatch = New Stopwatch()
-        '    If Not stopwatch.IsRunning Then stopwatch.Start()
-        '    statelogChangedSolenoids.WriteLogEntry(DateTime.Now & " (" & stopwatch.ElapsedMilliseconds & ")")
-        '    stopwatch.Restart()
-        'End If
 
         If solenoids IsNot Nothing AndAlso IsArray(solenoids) Then
 
@@ -2173,7 +2158,7 @@ Public Class Server
 
         Else
 
-            ' only do the lightning stuff if the group has a name
+            ' only do the lighting stuff if the group has a name
             If Not String.IsNullOrEmpty(groupname) AndAlso B2SData.IlluminationGroups.ContainsKey(groupname) Then
                 ' get all matching picture boxes
                 For Each picbox As B2SPictureBox In B2SData.IlluminationGroups(groupname)
