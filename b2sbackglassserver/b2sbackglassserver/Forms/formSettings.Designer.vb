@@ -29,7 +29,6 @@ Partial Class formSettings
         Me.lowerPanel = New System.Windows.Forms.Panel()
         Me.btnCloseSettings = New System.Windows.Forms.Button()
         Me.btnSaveSettings = New System.Windows.Forms.Button()
-        Me.lblNonAvailableSettings = New System.Windows.Forms.Label()
         Me.btnEditScreenRes = New System.Windows.Forms.Button()
         Me.btnMore = New System.Windows.Forms.Button()
         Me.headerPanel = New System.Windows.Forms.Panel()
@@ -127,27 +126,26 @@ Partial Class formSettings
         Me.PanelSettings.Location = New System.Drawing.Point(0, 0)
         Me.PanelSettings.Margin = New System.Windows.Forms.Padding(6)
         Me.PanelSettings.Name = "PanelSettings"
-        Me.PanelSettings.Size = New System.Drawing.Size(536, 693)
+        Me.PanelSettings.Size = New System.Drawing.Size(536, 673)
         Me.PanelSettings.TabIndex = 2
         '
         'lowerPanel
         '
         Me.lowerPanel.Controls.Add(Me.btnCloseSettings)
         Me.lowerPanel.Controls.Add(Me.btnSaveSettings)
-        Me.lowerPanel.Controls.Add(Me.lblNonAvailableSettings)
         Me.lowerPanel.Controls.Add(Me.btnEditScreenRes)
         Me.lowerPanel.Controls.Add(Me.btnMore)
         Me.lowerPanel.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.lowerPanel.Location = New System.Drawing.Point(0, 620)
+        Me.lowerPanel.Location = New System.Drawing.Point(0, 624)
         Me.lowerPanel.Name = "lowerPanel"
-        Me.lowerPanel.Size = New System.Drawing.Size(536, 73)
+        Me.lowerPanel.Size = New System.Drawing.Size(536, 49)
         Me.lowerPanel.TabIndex = 42
         '
         'btnCloseSettings
         '
         Me.btnCloseSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCloseSettings.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCloseSettings.Location = New System.Drawing.Point(446, 37)
+        Me.btnCloseSettings.Location = New System.Drawing.Point(446, 13)
         Me.btnCloseSettings.Name = "btnCloseSettings"
         Me.btnCloseSettings.Size = New System.Drawing.Size(78, 24)
         Me.btnCloseSettings.TabIndex = 35
@@ -157,26 +155,17 @@ Partial Class formSettings
         'btnSaveSettings
         '
         Me.btnSaveSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSaveSettings.Location = New System.Drawing.Point(312, 37)
+        Me.btnSaveSettings.Location = New System.Drawing.Point(312, 13)
         Me.btnSaveSettings.Name = "btnSaveSettings"
         Me.btnSaveSettings.Size = New System.Drawing.Size(128, 24)
         Me.btnSaveSettings.TabIndex = 34
         Me.btnSaveSettings.Text = "Save settings"
         Me.btnSaveSettings.UseVisualStyleBackColor = True
         '
-        'lblNonAvailableSettings
-        '
-        Me.lblNonAvailableSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblNonAvailableSettings.Location = New System.Drawing.Point(229, 16)
-        Me.lblNonAvailableSettings.Name = "lblNonAvailableSettings"
-        Me.lblNonAvailableSettings.Size = New System.Drawing.Size(295, 13)
-        Me.lblNonAvailableSettings.TabIndex = 40
-        Me.lblNonAvailableSettings.Text = "* all settings in Italic is only available when run in EXE mode!"
-        '
         'btnEditScreenRes
         '
         Me.btnEditScreenRes.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnEditScreenRes.Location = New System.Drawing.Point(91, 37)
+        Me.btnEditScreenRes.Location = New System.Drawing.Point(91, 13)
         Me.btnEditScreenRes.Name = "btnEditScreenRes"
         Me.btnEditScreenRes.Size = New System.Drawing.Size(99, 24)
         Me.btnEditScreenRes.TabIndex = 39
@@ -186,7 +175,7 @@ Partial Class formSettings
         'btnMore
         '
         Me.btnMore.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnMore.Location = New System.Drawing.Point(12, 37)
+        Me.btnMore.Location = New System.Drawing.Point(12, 13)
         Me.btnMore.Name = "btnMore"
         Me.btnMore.Size = New System.Drawing.Size(73, 24)
         Me.btnMore.TabIndex = 32
@@ -239,7 +228,7 @@ Partial Class formSettings
         Me.grpPlugins.Controls.Add(Me.chkShowStartupError)
         Me.grpPlugins.Controls.Add(Me.chkActivatePlugins)
         Me.grpPlugins.Controls.Add(Me.btnPluginSettings)
-        Me.grpPlugins.Location = New System.Drawing.Point(12, 533)
+        Me.grpPlugins.Location = New System.Drawing.Point(12, 535)
         Me.grpPlugins.Name = "grpPlugins"
         Me.grpPlugins.Size = New System.Drawing.Size(515, 75)
         Me.grpPlugins.TabIndex = 37
@@ -292,7 +281,7 @@ Partial Class formSettings
         'chkDisableFuzzyMatching
         '
         Me.chkDisableFuzzyMatching.AutoSize = True
-        Me.chkDisableFuzzyMatching.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkDisableFuzzyMatching.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
         Me.chkDisableFuzzyMatching.Location = New System.Drawing.Point(327, 23)
         Me.chkDisableFuzzyMatching.Name = "chkDisableFuzzyMatching"
         Me.chkDisableFuzzyMatching.Size = New System.Drawing.Size(134, 17)
@@ -312,7 +301,6 @@ Partial Class formSettings
         'chkStartAsEXE
         '
         Me.chkStartAsEXE.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkStartAsEXE.Enabled = True
         Me.chkStartAsEXE.Location = New System.Drawing.Point(6, 20)
         Me.chkStartAsEXE.Name = "chkStartAsEXE"
         Me.chkStartAsEXE.Size = New System.Drawing.Size(151, 21)
@@ -324,7 +312,6 @@ Partial Class formSettings
         'cmbDefaultStartMode
         '
         Me.cmbDefaultStartMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbDefaultStartMode.Enabled = True
         Me.cmbDefaultStartMode.FormattingEnabled = True
         Me.cmbDefaultStartMode.Items.AddRange(New Object() {"Standard", "In EXE"})
         Me.cmbDefaultStartMode.Location = New System.Drawing.Point(242, 20)
@@ -524,7 +511,7 @@ Partial Class formSettings
         'chkFormNoFocus
         '
         Me.chkFormNoFocus.AutoSize = True
-        Me.chkFormNoFocus.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkFormNoFocus.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
         Me.chkFormNoFocus.Location = New System.Drawing.Point(441, 50)
         Me.chkFormNoFocus.Name = "chkFormNoFocus"
         Me.chkFormNoFocus.Size = New System.Drawing.Size(72, 17)
@@ -796,7 +783,7 @@ Partial Class formSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
-        Me.ClientSize = New System.Drawing.Size(536, 693)
+        Me.ClientSize = New System.Drawing.Size(536, 673)
         Me.Controls.Add(Me.PanelSettings)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.KeyPreview = True
@@ -894,7 +881,6 @@ Partial Class formSettings
     Friend WithEvents btnEditScreenRes As Windows.Forms.Button
     Friend WithEvents lblBackground As Windows.Forms.Label
     Friend WithEvents cmbBackground As Windows.Forms.ComboBox
-    Friend WithEvents lblNonAvailableSettings As Windows.Forms.Label
     Friend WithEvents B2SLogoToolTip As Windows.Forms.ToolTip
     Friend WithEvents lowerPanel As Windows.Forms.Panel
     Friend WithEvents headerPanel As Windows.Forms.Panel

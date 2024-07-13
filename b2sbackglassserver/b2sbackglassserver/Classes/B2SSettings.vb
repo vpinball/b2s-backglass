@@ -256,7 +256,7 @@ Public Class B2SSettings
     Public Shared Function GetSettingFilename() As String
         If IO.File.Exists(filename) Then
             Return filename
-#If B2S = "DLL" Then
+#If B2S = "DLLBefore" Then
         ElseIf StartAsEXE And B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
             Return IO.Path.Combine(Application.StartupPath(), filename)
 #Else

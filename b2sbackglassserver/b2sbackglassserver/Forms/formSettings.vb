@@ -37,11 +37,9 @@ Public Class formSettings
             Return Name + If(SlowDown = 1, "", " (" & If(SlowDown = 0, "Off", SlowDown.ToString & "x") & ")")
         End Function
     End Class
-#If B2S = "DLL" Then
+
     Private Sub formSettings_Load(sender As System.Object, e As System.EventArgs) Handles Me.Load
-#Else
-    Private Sub formSettings_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
-#End If
+
         formSettingsMore = New formSettingsMore(Me, formBackglass)
 
         ' load data
@@ -157,11 +155,8 @@ Public Class formSettings
         TimerOpacity.Start()
 
     End Sub
-#If B2S = "DLL" Then
+
     Private Sub formSettings_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
-#Else
-    Private Sub formSettings_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyUp
-#End If
         If e.KeyCode = Keys.Escape OrElse e.KeyCode = Keys.S Then
             btnCloseSettings.PerformClick()
         End If

@@ -58,7 +58,7 @@ Public Class formBackglass
 
 #Region "constructor and closing"
 
-#If B2S = "DLL" Then
+
     Public Sub New()
 
         InitializeComponent()
@@ -70,16 +70,56 @@ Public Class formBackglass
         ' set key preview to allow some key action
         Me.KeyPreview = True
 
-        B2SScreen = New B2SScreen()
+#If B2S = "EXE" Then
+        If My.Application.CommandLineArgs.Count > 0 Then
+            B2SData.TableFileName = My.Application.CommandLineArgs(0).ToString
 
-        ' load settings
-        B2SSettings.Load()
+            If B2SData.TableFileName.EndsWith(".directb2s") Then
+                B2SData.TableFileName = Path.GetFileNameWithoutExtension(B2SData.TableFileName)
+                B2SSettings.PureEXE = True
+            End If
+
+            If My.Application.CommandLineArgs.Count > 1 Then
+                If My.Application.CommandLineArgs(1).ToString = "1" Then
+                    Me.TopMost = True
+                End If
+            End If
+        Else
+            MessageBox.Show("Please do not start the EXE this way.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End
+        End If
+
+
+        ' get the game name
+        'B2SSettings.GameName = "bguns_l8"
+        'B2SSettings.GameName = "closeenc"
+        'B2SSettings.B2SName = "Baseball"
+        'B2SSettings.B2SName = "Spider-Man(Stern 2007) alt full dmdON127"
+        'B2SSettings.GameName = "smanve_101"
+        'B2SData.TableFileName = "Spider-Man(Stern 2007) alt full dmdON127"
+
+
+        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S")
+            B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
+            B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)
+        End Using
+
+        ' Westworld 2016-18-11 - TableFileName is empty in some cases when launched via PinballX, we use GameName as alternativ
+        If String.IsNullOrEmpty(B2SData.TableFileName) Then
+            B2SData.TableFileName = B2SSettings.GameName
+        End If
 
         If B2SSettings.CPUAffinityMask > 0 Then
             Dim Proc = Process.GetCurrentProcess
             Proc.ProcessorAffinity = B2SSettings.CPUAffinityMask
         End If
+#Else
+        Me.TopMost = True
+#End If
+        B2SScreen = New B2SScreen()
 
+        ' load settings
+        B2SSettings.Load()
         ' get B2S xml and start
         Try
             LoadB2SData()
@@ -87,7 +127,11 @@ Public Class formBackglass
             If B2SSettings.ShowStartupError Then
                 MessageBox.Show(ex.Message, My.Resources.AppTitle, Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Error)
             End If
+#If B2S = "DLL" Then
             Stop
+#Else
+            End
+#End If
         End Try
         ' initialize screen settings
         InitB2SScreen()
@@ -98,11 +142,29 @@ Public Class formBackglass
         ' show snippits
         ShowStartupSnippits()
 
+#If B2S = "DLL" Then
         ' create 'image on' timer and start it
         startupTimer = New Timer()
         startupTimer.Interval = 2000
         AddHandler startupTimer.Tick, AddressOf StartupTimer_Tick
         startupTimer.Start()
+#Else
+        ' create 'image on' timer and start it
+        timer = New Timer()
+        timer.Interval = 2000
+        AddHandler timer.Tick, AddressOf Timer_Tick
+        timer.Start()
+
+        ' create 'table is still running' timer
+        tableTimer = New Timer
+        tableTimer.Interval = 207
+        AddHandler tableTimer.Tick, AddressOf TableTimer_Tick
+
+        ' create B2S data timer
+        B2STimer = New Timer
+        B2STimer.Interval = 13
+        AddHandler B2STimer.Tick, AddressOf B2STimer_Tick
+#End If
 
         ' create rotation timer
         rotateTimer = New Timer
@@ -112,13 +174,12 @@ Public Class formBackglass
         AddHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
 
     End Sub
-
+#If B2S = "DLL" Then
     Public Sub New(ByVal doNotLoadBackglassData As Boolean)
 
         InitializeComponent()
 
         ' set some styles
-        'Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint, True)
         Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.OptimizedDoubleBuffer, True)
         Me.DoubleBuffered = True
 
@@ -172,135 +233,29 @@ Public Class formBackglass
         snifferTimer.Start()
 
     End Sub
-#Else
-    Public Sub New()
-
-        InitializeComponent()
-
-        ' set some styles
-        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.OptimizedDoubleBuffer, True)
-        Me.DoubleBuffered = True
-
-        ' set key peview to allow some key action
-        Me.KeyPreview = True
-
-        ' mabye create the base registry key
-        If Registry.CurrentUser.OpenSubKey("Software\B2S") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S")
-        If Registry.CurrentUser.OpenSubKey("Software\B2S\VPinMAME") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S\VPinMAME")
-
-        ' get the table
-        'IO.Directory.SetCurrentDirectory("C:\Visual Pinball\Tables")
-        'B2SData.TableFileName = "Big Guns (Williams 1987)_1.0"
-        'B2SData.TableFileName = "ScaredStiff_FS_B2S_GI8"
-        'B2SData.TableFileName = "ACDC_B2S" '"Baseball 1.0 FS" '"Elvira_and_the_Party_Monsters_VP91x_v1.2FS" '"Close_Encounters_FS"
-        'B2SData.TableFileName = "Close_Encounters_FS"
-        'B2SData.TableFileName = "Pinbot.uw.V1.02.1_JF_91x_BMPR_MOD_FS"
-        'B2SData.TableFileName = "ScaredStiff_FS_B2S"
-        If My.Application.CommandLineArgs.Count > 0 Then
-            B2SData.TableFileName = My.Application.CommandLineArgs(0).ToString
-
-            If B2SData.TableFileName.EndsWith(".directb2s") Then
-                B2SData.TableFileName = Path.GetFileNameWithoutExtension(B2SData.TableFileName)
-                B2SSettings.PureEXE = True
-            End If
-
-            If My.Application.CommandLineArgs.Count > 1 Then
-                If My.Application.CommandLineArgs(1).ToString = "1" Then
-                    Me.TopMost = True
-                End If
-            End If
-        Else
-            MessageBox.Show("Please do not start the EXE this way.", My.Resources.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End
-        End If
-
-
-        ' get the game name
-        'B2SSettings.GameName = "bguns_l8"
-        'B2SSettings.GameName = "closeenc"
-        'B2SSettings.B2SName = "Baseball"
-        'B2SSettings.B2SName = "Spider-Man(Stern 2007) alt full dmdON127"
-        'B2SSettings.GameName = "smanve_101"
-        'B2SData.TableFileName = "Spider-Man(Stern 2007) alt full dmdON127"
-
-
-        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S")
-            B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
-            B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)
-        End Using
-
-        ' Westworld 2016-18-11 - TableFileName is empty in some cases when launched via PinballX, we use GameName as alternativ
-        If String.IsNullOrEmpty(B2SData.TableFileName) Then
-            B2SData.TableFileName = B2SSettings.GameName
-        End If
-        B2SScreen = New B2SScreen() ' was started before Tablename was identified, so alternativ ScreenRes was failing
-
-
-        ' load settings
-        B2SSettings.Load()
-
-        If B2SSettings.CPUAffinityMask > 0 Then
-            Dim Proc = Process.GetCurrentProcess
-            Proc.ProcessorAffinity = B2SSettings.CPUAffinityMask
-        End If
-
-        ' get B2S xml and start
-        Try
-            LoadB2SData()
-        Catch ex As Exception
-            If B2SSettings.ShowStartupError Then
-                MessageBox.Show(ex.Message, My.Resources.AppTitle, Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Error)
-            End If
-            End
-        End Try
-
-        ' initialize screen settings
-        InitB2SScreen()
-
-        ' resize images
-        ResizeSomeImages()
-
-        ' show snippits
-        ShowStartupSnippits()
-
-        ' create 'image on' timer and start it
-        timer = New Timer()
-        timer.Interval = 2000
-        AddHandler timer.Tick, AddressOf Timer_Tick
-        timer.Start()
-
-        ' create 'table is still running' timer
-        tableTimer = New Timer
-        tableTimer.Interval = 207
-        AddHandler tableTimer.Tick, AddressOf TableTimer_Tick
-
-        ' create B2S data timer
-        B2STimer = New Timer
-        B2STimer.Interval = 13
-        AddHandler B2STimer.Tick, AddressOf B2STimer_Tick
-
-        ' create rotation timer
-        rotateTimer = New Timer
-        If rotateTimerInterval > 0 Then
-            rotateTimer.Interval = rotateTimerInterval
-        End If
-        AddHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
-
-    End Sub
+#End If
 
     Private Sub formBackglass_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
 
+#If B2S = "EXE" Then
         If Not B2SSettings.FormToFront Then
             Me.SendToBack()
         End If
-
-
-        'Me.TopMost = False
-
         SetFocusToVPPlayer()
+#Else
+        If Not B2SSettings.FormToFront Then
+            Me.SendToBack()
+        Else
+            Dim StoreTopMost As Boolean = Me.TopMost
+
+            Me.TopMost = True
+            Me.BringToFront()
+            SetFocusToVPPlayer()
+            Me.TopMost = StoreTopMost
+        End If
+#End If
 
     End Sub
-#End If
 
     Private Sub formBackglass_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
 
@@ -402,23 +357,22 @@ Public Class formBackglass
         B2SStatistics.ClearAll()
 
     End Sub
-#If B2S = "DLL" Then
     Private Sub formBackglass_Disposed(sender As Object, e As System.EventArgs) Handles Me.Disposed
 
         On Error Resume Next
 
-        If startupTimer IsNot Nothing Then RemoveHandler startupTimer.Tick, AddressOf StartupTimer_Tick
         If rotateTimer IsNot Nothing Then RemoveHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
+#If B2S = "DLL" Then
         If snifferTimer IsNot Nothing Then RemoveHandler snifferTimer.Tick, AddressOf SnifferTimer_Tick
-
+        If startupTimer IsNot Nothing Then RemoveHandler startupTimer.Tick, AddressOf StartupTimer_Tick
+#Else
         ' stop all timers as EXE
-        'If timer IsNot Nothing Then RemoveHandler timer.Tick, AddressOf Timer_Tick
-        'If tabletimer IsNot Nothing Then RemoveHandler tabletimer.Tick, AddressOf TableTimer_Tick
+        If timer IsNot Nothing Then RemoveHandler timer.Tick, AddressOf Timer_Tick
+        If tabletimer IsNot Nothing Then RemoveHandler tabletimer.Tick, AddressOf TableTimer_Tick
         'If B2STimer IsNot Nothing Then RemoveHandler B2STimer.Tick, AddressOf B2STimer_Tick
-        'If rotateTimer IsNot Nothing Then RemoveHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
+#End If
 
     End Sub
-#End If
 #End Region
 
 #Region "painting"
@@ -1756,8 +1710,7 @@ Public Class formBackglass
                 B2SScreen.MakeScreenShot(filename, imageformat)
                 My.Computer.Audio.Play(My.Resources.camera1, AudioPlayMode.Background)
             End If
-#If B2S = "DLL" Then
-#Else
+#If B2S = "EXE" Then
         ElseIf e.KeyCode = Keys.Escape Then
 
             ' stop the app
@@ -2968,17 +2921,13 @@ Public Class formBackglass
                         End If
                     Next
                 End If
-#If B2S = "DLL" Then
-                Me.TopMost = True
-                Me.BringToFront()
-                Me.TopMost = False
-#Else
+
+#If B2S = "EXE" Then
                 Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
                     regkey.SetValue("B2SSetSwitch", If(animationpulseswitch, 1, 0), RegistryValueKind.DWord)
                 End Using
 #End If
             End If
-
 
             ' set info flags to dirty to load them
 #If B2S = "DLL" Then
@@ -3534,16 +3483,15 @@ Public Class formBackglass
         Return Drawing.Color.FromArgb(CInt(colorvalues(0)), CInt(colorvalues(1)), CInt(colorvalues(2)))
     End Function
 
-#If B2S = "EXE" Then
     Private Sub SetFocusToVPPlayer()
 
         ' set focus to the VP player
         Dim proc As Processes = New Processes()
         SetForegroundWindow(proc.TableHandle)
+#If B2S = "EXE" Then
         tableHandle = proc.TableHandle
-
-    End Sub
 #End If
+    End Sub
 
     Private Function RandomStarter(ByVal top As Integer) As Integer
 
