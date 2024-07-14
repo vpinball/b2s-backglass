@@ -369,7 +369,7 @@ Public Class formBackglass
         ' stop all timers as EXE
         If timer IsNot Nothing Then RemoveHandler timer.Tick, AddressOf Timer_Tick
         If tabletimer IsNot Nothing Then RemoveHandler tabletimer.Tick, AddressOf TableTimer_Tick
-        'If B2STimer IsNot Nothing Then RemoveHandler B2STimer.Tick, AddressOf B2STimer_Tick
+        If B2STimer IsNot Nothing Then RemoveHandler B2STimer.Tick, AddressOf B2STimer_Tick
 #End If
 
     End Sub
@@ -560,7 +560,7 @@ Public Class formBackglass
         End If
 
     End Sub
-    Private Sub B2STimer_Tick()
+    Private Sub B2STimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         ' poll registry data
         PollingData()
