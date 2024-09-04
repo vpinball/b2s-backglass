@@ -38,7 +38,7 @@ Public Class B2SSettings
         Fantasy = 2
     End Enum
 
-    Private Const filename As String = "B2STableSettings.xml"
+    Private Const settingsFilename As String = "B2STableSettings.xml"
     Public Shared Property B2SScreenResFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
     Public Shared Property B2STableSettingsExtendedPath() As Boolean = SafeReadRegistry("Software\B2S", "B2STableSettingsExtendedPath", "0") = "1"
     Public Shared Property B2SWindowPunchActive() As Boolean = SafeReadRegistry("Software\B2S", "B2SWindowPunchActive", "0") = "1"
@@ -254,19 +254,19 @@ Public Class B2SSettings
     End Function
 
     Public Shared Function GetSettingFilename() As String
-        If IO.File.Exists(filename) Then
-            Return filename
+        If IO.File.Exists(settingsFilename) Then
+            Return settingsFilename
 #If B2S = "DLL" Then
-        ElseIf StartAsEXE And B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
-            Return IO.Path.Combine(Application.StartupPath(), filename)
+        ElseIf StartAsEXE And B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), settingsFilename)) Then
+            Return IO.Path.Combine(Application.StartupPath(), settingsFilename)
 #Else
-        ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), filename)) Then
-            Return IO.Path.Combine(Application.StartupPath(), filename)
+        ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), settingsFilename)) Then
+            Return IO.Path.Combine(Application.StartupPath(), settingsFilename)
 #End If
-        ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)) Then
-            Return IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename)
+        ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), settingsFilename)) Then
+            Return IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), settingsFilename)
         End If
-        Return filename
+        Return settingsFilename
     End Function
 
     Public Shared Sub LoadGlobalAndTableSettings(xmlNode As Xml.XmlNode)
@@ -287,6 +287,7 @@ Public Class B2SSettings
         If xmlNode.SelectSingleNode("GlowIndex") IsNot Nothing Then GlowIndex = CInt(xmlNode.SelectSingleNode("GlowIndex").InnerText)
         If xmlNode.SelectSingleNode("StartAsEXE") IsNot Nothing Then StartAsEXE = (xmlNode.SelectSingleNode("StartAsEXE").InnerText = "1")
         If xmlNode.SelectSingleNode("StartBackground") IsNot Nothing Then StartBackground = (xmlNode.SelectSingleNode("StartBackground").InnerText = "1")
+        If xmlNode.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (xmlNode.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
         If Not PureEXE Then
             If xmlNode.SelectSingleNode("FormToFront") IsNot Nothing Then FormToFront = (xmlNode.SelectSingleNode("FormToFront").InnerText = "1")
@@ -329,8 +330,6 @@ Public Class B2SSettings
                 If nodeHeader.SelectSingleNode("DefaultStartMode") IsNot Nothing Then DefaultStartMode = CInt(nodeHeader.SelectSingleNode("DefaultStartMode").InnerText)
                 If DefaultStartMode <> eDefaultStartMode.Standard Then DefaultStartMode = eDefaultStartMode.EXE
                 If DefaultStartMode = eDefaultStartMode.Standard Then StartAsEXE = False
-
-                    'If nodeHeader.SelectSingleNode("DisableFuzzyMatching") IsNot Nothing Then DisableFuzzyMatching = (nodeHeader.SelectSingleNode("DisableFuzzyMatching").InnerText = "1")
 
                 ' get overall settings
                 If nodeHeader.SelectSingleNode("CPUAffinityMask") IsNot Nothing Then CPUAffinityMask = CInt(nodeHeader.SelectSingleNode("CPUAffinityMask").InnerText)
