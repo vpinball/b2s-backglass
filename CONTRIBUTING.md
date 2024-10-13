@@ -42,7 +42,7 @@ There are good sites available such as [VP Universe](https://vpuniverse.com/sear
 
 If you then still feel the need to ask a question and need clarification, we recommend the following:
 
-- Open an [Issue](../../issues/new).
+- Open an [Issue](../../issues/new/choose).
 - Provide as much context as you can about what you're running into.
 - Provide project and platform versions, depending on what seems relevant.
 
@@ -94,7 +94,7 @@ A good bug report shouldn't leave others needing to chase you up for more inform
 
 We use GitHub issues to track bugs and errors. If you run into an issue with the project:
 
-- Open an [Issue](../../issues/new). (Since we can't be sure at this point whether it is a bug or not, we ask you not to talk about a bug yet and not to label the issue.)
+- Open an [Issue](../../issues/new/choose). (Since we can't be sure at this point whether it is a bug or not, we ask you not to talk about a bug yet and not to label the issue.)
 - Explain the behavior you would expect and the actual behavior.
 - Please provide as much context as possible and describe the *reproduction steps* that someone else can follow to recreate the issue on their own. This usually includes your code. For good bug reports you should isolate the problem and create a reduced test case.
 - Provide the information you collected in the previous section.
@@ -142,7 +142,7 @@ Enhancement suggestions are tracked as [GitHub issues](../../issues).
 
 ### Improving The Documentation
 
-- The [Documentation](../../wiki) is stored as a wiki on the repository. If you have any improvements please log an Documentation [Issue](../../issues/new) (label documentation).
+- The [Documentation](../../wiki) is stored as a wiki on the repository. If you have any improvements please log an Documentation [Issue](../../issues/new/choose) (label documentation).
 
 ## Styleguides
 ### Commit Messages
