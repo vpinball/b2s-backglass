@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing
+Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Windows.Forms
 Imports Microsoft.Win32
@@ -18,17 +19,17 @@ Public Class formBackglass
     Private formSettings As formSettings = Nothing
     Private formMode As formMode = Nothing
 
-#If B2S = "DLL" Then
     Private startupTimer As Timer = Nothing
-    Private snifferTimer As Timer = Nothing
 
+#If B2S = "DLL" Then
+
+    Private snifferTimer As Timer = Nothing
     Private snifferLamps As B2SSnifferPanel = Nothing
     Private snifferSolenoids As B2SSnifferPanel = Nothing
     Private snifferGIStrings As B2SSnifferPanel = Nothing
     Private chkSniffer As CheckBox = Nothing
     Private Const snifferTimerInterval As Integer = 311
 #Else
-    Private timer As Timer = Nothing
     Private tableTimer As Timer = Nothing
     Private B2STimer As Timer = Nothing
     Private tableHandle As Integer = 0
@@ -77,6 +78,13 @@ Public Class formBackglass
             If B2SData.TableFileName.EndsWith(".directb2s") Then
                 B2SData.TableFileName = Path.GetFileNameWithoutExtension(B2SData.TableFileName)
                 B2SSettings.PureEXE = True
+                B2SSettings.GameName = String.Empty
+                B2SSettings.B2SName = String.Empty
+            Else
+                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S")
+                    B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
+                    B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)
+                End Using
             End If
 
             If My.Application.CommandLineArgs.Count > 1 Then
@@ -96,12 +104,6 @@ Public Class formBackglass
         'B2SSettings.B2SName = "Spider-Man(Stern 2007) alt full dmdON127"
         'B2SSettings.GameName = "smanve_101"
         'B2SData.TableFileName = "Spider-Man(Stern 2007) alt full dmdON127"
-
-
-        Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S")
-            B2SSettings.GameName = regkey.GetValue("B2SGameName", String.Empty)
-            B2SSettings.B2SName = regkey.GetValue("B2SB2SName", String.Empty)
-        End Using
 
         ' Westworld 2016-18-11 - TableFileName is empty in some cases when launched via PinballX, we use GameName as alternativ
         If String.IsNullOrEmpty(B2SData.TableFileName) Then
@@ -141,18 +143,13 @@ Public Class formBackglass
         ' show snippits
         ShowStartupSnippits()
 
-#If B2S = "DLL" Then
         ' create 'image on' timer and start it
         startupTimer = New Timer()
         startupTimer.Interval = 2000
         AddHandler startupTimer.Tick, AddressOf StartupTimer_Tick
         startupTimer.Start()
-#Else
-        ' create 'image on' timer and start it
-        timer = New Timer()
-        timer.Interval = 2000
-        AddHandler timer.Tick, AddressOf Timer_Tick
-        timer.Start()
+
+#If B2S = "EXE" Then
 
         ' create 'table is still running' timer
         tableTimer = New Timer
@@ -260,13 +257,13 @@ Public Class formBackglass
 
         On Error Resume Next
         If rotateTimer IsNot Nothing Then rotateTimer.Stop()
+        If startupTimer IsNot Nothing Then startupTimer.Stop()
+
 #If B2S = "DLL" Then
         ' stop all timers as DLL
-        If startupTimer IsNot Nothing Then startupTimer.Stop()
         If snifferTimer IsNot Nothing Then snifferTimer.Stop()
 #Else
         ' stop all timers as EXE
-        If timer IsNot Nothing Then timer.Stop()
         If tableTimer IsNot Nothing Then tableTimer.Stop()
         If B2STimer IsNot Nothing Then B2STimer.Stop()
 #End If
@@ -361,13 +358,12 @@ Public Class formBackglass
         On Error Resume Next
 
         If rotateTimer IsNot Nothing Then RemoveHandler rotateTimer.Tick, AddressOf RotateTimer_Tick
+
+        If startupTimer IsNot Nothing Then RemoveHandler startupTimer.Tick, AddressOf StartupTimer_Tick
 #If B2S = "DLL" Then
         If snifferTimer IsNot Nothing Then RemoveHandler snifferTimer.Tick, AddressOf SnifferTimer_Tick
-        If startupTimer IsNot Nothing Then RemoveHandler startupTimer.Tick, AddressOf StartupTimer_Tick
 #Else
-        ' stop all timers as EXE
-        If timer IsNot Nothing Then RemoveHandler timer.Tick, AddressOf Timer_Tick
-        If tabletimer IsNot Nothing Then RemoveHandler tabletimer.Tick, AddressOf TableTimer_Tick
+        If tableTimer IsNot Nothing Then RemoveHandler tableTimer.Tick, AddressOf TableTimer_Tick
         If B2STimer IsNot Nothing Then RemoveHandler B2STimer.Tick, AddressOf B2STimer_Tick
 #End If
 
@@ -503,23 +499,12 @@ Public Class formBackglass
         snifferGIStrings.Invalidate()
 
     End Sub
-
+#End If
 #End Region
 
 #Region "some timer events"
 
-    Private Sub StartupTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
-
-        startupTimer.Stop()
-
-        ' maybe show some 'startup on' images
-        ShowStartupImages()
-
-        ' start autostarted animations
-        B2SAnimation.AutoStart()
-
-    End Sub
-
+#If B2S = "DLL" Then
     Private Sub SnifferTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         If B2SStatistics.LogStatistics Then
@@ -527,28 +512,33 @@ Public Class formBackglass
         End If
 
     End Sub
-#Else
+#End If
+    Private Sub StartupTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
-    Private Sub Timer_Tick(ByVal sender As Object, ByVal e As EventArgs)
-
-        timer.Stop()
+        startupTimer.Stop()
 
         ' set focus to the VP player
         SetFocusToVPPlayer()
+
+        ' maybe show some 'startup on' images
+        ShowStartupImages()
 
         ' start autostarted animations
         B2SAnimation.AutoStart()
 
-        ' start B2S data timer
-        B2STimer.Start()
-
         ' set focus to the VP player
         SetFocusToVPPlayer()
 
+#If B2S = "EXE" Then
+        ' start B2S data timer
+        B2STimer.Start()
+
         ' start table check timer
         tableTimer.Start()
-
+#End If
     End Sub
+
+#If B2S = "EXE" Then
     Private Sub TableTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
 
         If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
@@ -563,9 +553,6 @@ Public Class formBackglass
 
         ' poll registry data
         PollingData()
-
-        ' show some 'startup on' images (one time)
-        ShowStartupImages()
 
     End Sub
 
@@ -1704,8 +1691,8 @@ Public Class formBackglass
                     Case B2SSettings.eImageFileType.GIF : imageformat = Imaging.ImageFormat.Gif : extension = ".gif"
                     Case B2SSettings.eImageFileType.BMP : imageformat = Imaging.ImageFormat.Bmp : extension = ".bmp"
                 End Select
-                Dim filename As String = IO.Path.Combine(B2SSettings.ScreenshotPath, IO.Path.GetFileNameWithoutExtension(B2SData.BackglassFileName) & extension)
-                B2SScreen.MakeScreenShot(filename, imageformat)
+                Dim screenshotFilename As String = IO.Path.Combine(B2SSettings.ScreenshotPath, IO.Path.GetFileNameWithoutExtension(B2SData.BackglassFileName) & extension)
+                B2SScreen.MakeScreenShot(screenshotFilename, imageformat)
                 My.Computer.Audio.Play(My.Resources.camera1, AudioPlayMode.Background)
             End If
 #If B2S = "EXE" Then
@@ -1869,12 +1856,12 @@ Public Class formBackglass
     Private Sub LoadB2SData()
 
         Dim filename As String = B2SData.TableFileName & ".directb2s"
-        Dim shortfilename As String = B2SData.ShortFileName(filename)
-        Dim hyperpinfilename As String = String.Empty
-        Dim shorthyperpinfilename As String = String.Empty
+        Dim shortFilename As String = B2SData.ShortFileName(filename) & ".directb2s"
+        Dim hyperpinFilename As String = String.Empty
+        Dim shorthyperpinFilename As String = String.Empty
 
         ' check whether the table name can be found
-        If Not String.IsNullOrEmpty(B2SSettings.GameName) And Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+        If Not String.IsNullOrEmpty(B2SSettings.GameName) And Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortFilename) Then
             'Westworld, check for gamename
             If IO.File.Exists(B2SSettings.GameName & ".directb2s") Then
                 filename = B2SSettings.GameName & ".directb2s"
@@ -1882,44 +1869,49 @@ Public Class formBackglass
         End If
 
         If Not B2SSettings.DisableFuzzyMatching Then
-            If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) Then
+            B2SScreen.debugLog.WriteLogEntry("FuzzyMatching")
+            If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortFilename) Then
                 If B2SSettings.LocateHyperpinXMLFile() Then
-                    hyperpinfilename = B2SSettings.HyperpinName & ".directb2s"
-                    shorthyperpinfilename = B2SData.ShortFileName(hyperpinfilename)
+                    hyperpinFilename = B2SSettings.HyperpinName & ".directb2s"
+                    shorthyperpinFilename = B2SData.ShortFileName(hyperpinFilename) & ".directb2s"
                 End If
                 ' check whether the hyperpin description can be found
-                If Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
+                If Not IO.File.Exists(hyperpinFilename) AndAlso Not IO.File.Exists(shorthyperpinFilename) Then
                     If filename.Length >= 8 Then
                         ' look for short name
-                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6) & "*.directb2s")
-                        If B2SSettings.MatchingFileNames Is Nothing OrElse Not IsArray(B2SSettings.MatchingFileNames) OrElse B2SSettings.MatchingFileNames.Length <= 0 Then
-                            B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), filename.Substring(0, 6).Replace(" ", "") & "*.directb2s")
-                        End If
+                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), shortFilename.Replace(".directb2s", "*.directb2s"))
+
                         If B2SSettings.MatchingFileNames IsNot Nothing Then
                             For i As Integer = 0 To B2SSettings.MatchingFileNames.Length - 1
                                 Dim fileinfo As IO.FileInfo = New IO.FileInfo(B2SSettings.MatchingFileNames(i))
                                 B2SSettings.MatchingFileNames(i) = fileinfo.Name
                             Next
+                            B2SScreen.debugLog.WriteLogEntry("FuzzyMatching Matching FileNames:" & String.Join(", ", B2SSettings.MatchingFileNames))
                         End If
-                        shortfilename = String.Empty
-                        For Each file As String In B2SSettings.MatchingFileNames
-                            If String.IsNullOrEmpty(shortfilename) Then
-                                shortfilename = file
+                        shortFilename = String.Empty
+                        For Each matchedFileName As String In B2SSettings.MatchingFileNames
+                            If String.IsNullOrEmpty(shortFilename) Then
+                                shortFilename = matchedFileName
                             End If
-                            If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) AndAlso file.Equals(B2SSettings.MatchingFileName, StringComparison.CurrentCultureIgnoreCase) Then
-                                shortfilename = file
+                            If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) AndAlso File.Equals(B2SSettings.MatchingFileName, StringComparison.CurrentCultureIgnoreCase) Then
+                                shortFilename = matchedFileName
                                 Exit For
                             End If
                         Next
+                        B2SScreen.debugLog.WriteLogEntry("FuzzyMatching Selected FileName:" & shortFilename)
+
                     End If
                 End If
+                B2SScreen.debugLog.WriteLogEntry("FuzzyMatching END")
+            Else
+                B2SScreen.debugLog.WriteLogEntry("FuzzyMatching END - Found matching filename")
             End If
         End If
 
-        If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortfilename) AndAlso Not IO.File.Exists(hyperpinfilename) AndAlso Not IO.File.Exists(shorthyperpinfilename) Then
+        If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortFilename) AndAlso Not IO.File.Exists(hyperpinFilename) AndAlso Not IO.File.Exists(shorthyperpinFilename) Then
             Dim text As String = "File '" & IO.Path.Combine(IO.Directory.GetCurrentDirectory(), filename)
-            If Not String.IsNullOrEmpty(hyperpinfilename) AndAlso Not filename.Equals(hyperpinfilename, StringComparison.CurrentCultureIgnoreCase) Then
-                text &= " and file '" & IO.Path.Combine(IO.Directory.GetCurrentDirectory(), hyperpinfilename) & "'"
+            If Not String.IsNullOrEmpty(hyperpinFilename) AndAlso Not filename.Equals(hyperpinFilename, StringComparison.CurrentCultureIgnoreCase) Then
+                text &= " and file '" & IO.Path.Combine(IO.Directory.GetCurrentDirectory(), hyperpinFilename) & "'"
             End If
             text &= " not found. Please rename or download the matching directb2s backglass file."
             Throw New Exception(text)
@@ -1928,12 +1920,12 @@ Public Class formBackglass
         Dim XML As Xml.XmlDocument = New Xml.XmlDocument
         If IO.File.Exists(filename) Then
             B2SData.BackglassFileName = filename
-        ElseIf IO.File.Exists(shortfilename) Then
-            B2SData.BackglassFileName = shortfilename
-        ElseIf IO.File.Exists(hyperpinfilename) Then
-            B2SData.BackglassFileName = hyperpinfilename
-        ElseIf IO.File.Exists(shorthyperpinfilename) Then
-            B2SData.BackglassFileName = shorthyperpinfilename
+        ElseIf IO.File.Exists(shortFilename) Then
+            B2SData.BackglassFileName = shortFilename
+        ElseIf IO.File.Exists(hyperpinFilename) Then
+            B2SData.BackglassFileName = hyperpinFilename
+        ElseIf IO.File.Exists(shorthyperpinFilename) Then
+            B2SData.BackglassFileName = shorthyperpinFilename
         End If
         ' maybe load XML file
         If Not String.IsNullOrEmpty(B2SData.BackglassFileName) Then
@@ -1947,7 +1939,7 @@ Public Class formBackglass
         ' try to get into the file and read some XML
         If XML Is Nothing OrElse XML.SelectSingleNode("DirectB2SData") Is Nothing Then
 
-            Throw New Exception("File '" & filename & "' is not a valid directb2s backglass file.")
+            Throw New Exception("File '" & B2SData.BackglassFileName & "' is not a valid directb2s backglass file.")
 
         Else
 

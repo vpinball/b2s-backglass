@@ -1,12 +1,7 @@
-﻿Imports System
-Imports System.Text
+﻿Imports System.Text
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
-Imports System.Linq.Expressions
 Imports System.Drawing
-Imports System.Reflection
-Imports System.Runtime.InteropServices.WindowsRuntime
-Imports System.ComponentModel
 Imports System.Threading
 Imports System.Windows.Forms
 
@@ -142,7 +137,6 @@ Public Class Server
             .IsLogOn = B2SSettings.B2SDebugLog
         }
 
-        errorlog.IsLogOn = B2SSettings.B2SDebugLog
         If B2SSettings.ArePluginsOn Then
             B2SSettings.PluginHost = New PluginHost(True)
         End If
@@ -278,8 +272,7 @@ Public Class Server
 
             End If
         Catch ex As Exception
-            Dim st As New StackTrace(ex, True)
-            errorlog.WriteLogEntry(DateTime.Now & "Line: " & st.GetFrame(0).GetMethod().Name & " : " & st.GetFrame(0).GetFileLineNumber().ToString & " : " & ex.Message)
+            errorlog.WriteLogEntry(DateTime.Now & ex.Message & vbNewLine & ex.StackTrace)
             Throw ex
         End Try
 
@@ -307,7 +300,7 @@ Public Class Server
         End Get
     End Property
 
-    Public ReadOnly Property B2SServerBuild() As Double
+    Public ReadOnly Property B2SBuildVersion() As Double
         Get
             Return CInt(B2SVersionInfo.B2S_VERSION_MAJOR) * 10000 +
                                 CInt(B2SVersionInfo.B2S_VERSION_MINOR) * 100 +
@@ -425,6 +418,17 @@ Public Class Server
             Return VPinMAME.Version
         End Get
     End Property
+
+    Public ReadOnly Property VPMBuildVersion() As String
+        Get
+            Try
+                Return VPinMAME.FullVersion
+            Catch ex As Exception
+                Return VPinMAME.Version
+            End Try
+        End Get
+    End Property
+
 
     Public Sub Run(Optional ByVal handle As Object = 0)
         'Make sure this is run on threadContext thread
@@ -666,77 +670,73 @@ Public Class Server
 
     Public ReadOnly Property ChangedLamps() As Object
         Get
+            isChangedLampsCalled = True
+            Dim chg As Object = VPinMAME.ChangedLamps()
             Try
-                isChangedLampsCalled = True
-                Dim chg As Object = VPinMAME.ChangedLamps()
                 If B2SData.GetLampsData() Then
                     CheckLamps(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
                     B2SSettings.PluginHost.DataReceive(Convert.ToChar("L"), chg)
                 End If
-                Return chg
             Catch ex As Exception
                 errorlog.WriteLogEntry(DateTime.Now & ": ChangedLamps ('" & ex.Message & "')")
-                Return Nothing
             End Try
+            Return chg
         End Get
     End Property
 
     Public ReadOnly Property ChangedSolenoids() As Object
         Get
+            isChangedSolenoidsCalled = True
+            Dim chg As Object = VPinMAME.ChangedSolenoids()
             Try
-                isChangedSolenoidsCalled = True
-                Dim chg As Object = VPinMAME.ChangedSolenoids()
                 If B2SData.GetSolenoidsData() Then
                     CheckSolenoids(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
                     B2SSettings.PluginHost.DataReceive(Convert.ToChar("S"), chg)
                 End If
-                Return chg
             Catch ex As Exception
                 errorlog.WriteLogEntry(DateTime.Now & ": ChangedSolenoids ('" & ex.Message & "')")
-                Return Nothing
             End Try
+            Return chg
         End Get
     End Property
 
     Public ReadOnly Property ChangedGIStrings() As Object
         Get
+            isChangedGIStringsCalled = True
+            Dim chg As Object = VPinMAME.ChangedGIStrings()
             Try
-                isChangedGIStringsCalled = True
-                Dim chg As Object = VPinMAME.ChangedGIStrings()
                 If B2SData.GetGIStringsData() Then
                     CheckGIStrings(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
                     B2SSettings.PluginHost.DataReceive(Convert.ToChar("G"), chg)
                 End If
-                Return chg
             Catch ex As Exception
                 errorlog.WriteLogEntry(DateTime.Now & ": ChangedGIStrings ('" & ex.Message & "')")
-                Return Nothing
             End Try
+            Return chg
         End Get
     End Property
 
     Public ReadOnly Property ChangedLEDs(ByVal mask2 As Object, ByVal mask1 As Object, Optional ByVal mask3 As Object = 0, Optional ByVal mask4 As Object = 0) As Object
         Get
+            isChangedLEDsCalled = True
+            Dim chg As Object = VPinMAME.ChangedLEDs(mask2, mask1, mask3, mask4) ' (&HFFFFFFFF, &HFFFFFFFF) 
             Try
-                isChangedLEDsCalled = True
-                Dim chg As Object = VPinMAME.ChangedLEDs(mask2, mask1, mask3, mask4) ' (&HFFFFFFFF, &HFFFFFFFF) 
                 If B2SData.GetLEDsData() Then
                     CheckLEDs(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
                     B2SSettings.PluginHost.DataReceive(Convert.ToChar("D"), chg)
                 End If
-                Return chg
             Catch ex As Exception
                 errorlog.WriteLogEntry(DateTime.Now & ": ChangedLEDs ('" & ex.Message & "')")
-                Return Nothing
             End Try
+            Return chg
         End Get
     End Property
 

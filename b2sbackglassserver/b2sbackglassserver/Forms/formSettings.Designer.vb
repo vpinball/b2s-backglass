@@ -167,7 +167,7 @@ Partial Class formSettings
         Me.btnEditScreenRes.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnEditScreenRes.Location = New System.Drawing.Point(91, 13)
         Me.btnEditScreenRes.Name = "btnEditScreenRes"
-        Me.btnEditScreenRes.Size = New System.Drawing.Size(99, 24)
+        Me.btnEditScreenRes.Size = New System.Drawing.Size(137, 24)
         Me.btnEditScreenRes.TabIndex = 39
         Me.btnEditScreenRes.Text = "Edit ScreenRes..."
         Me.btnEditScreenRes.UseVisualStyleBackColor = True
@@ -228,9 +228,9 @@ Partial Class formSettings
         Me.grpPlugins.Controls.Add(Me.chkShowStartupError)
         Me.grpPlugins.Controls.Add(Me.chkActivatePlugins)
         Me.grpPlugins.Controls.Add(Me.btnPluginSettings)
-        Me.grpPlugins.Location = New System.Drawing.Point(12, 535)
+        Me.grpPlugins.Location = New System.Drawing.Point(12, 550)
         Me.grpPlugins.Name = "grpPlugins"
-        Me.grpPlugins.Size = New System.Drawing.Size(515, 75)
+        Me.grpPlugins.Size = New System.Drawing.Size(515, 68)
         Me.grpPlugins.TabIndex = 37
         Me.grpPlugins.TabStop = False
         Me.grpPlugins.Text = "Plugins"
@@ -336,9 +336,9 @@ Partial Class formSettings
         '
         'btnHyperpin
         '
-        Me.btnHyperpin.Location = New System.Drawing.Point(370, 18)
+        Me.btnHyperpin.Location = New System.Drawing.Point(407, 17)
         Me.btnHyperpin.Name = "btnHyperpin"
-        Me.btnHyperpin.Size = New System.Drawing.Size(98, 24)
+        Me.btnHyperpin.Size = New System.Drawing.Size(105, 24)
         Me.btnHyperpin.TabIndex = 2
         Me.btnHyperpin.Text = "Locate VP.xml"
         Me.btnHyperpin.UseVisualStyleBackColor = True
@@ -346,7 +346,7 @@ Partial Class formSettings
         'lblFile
         '
         Me.lblFile.AutoSize = True
-        Me.lblFile.Location = New System.Drawing.Point(162, 24)
+        Me.lblFile.Location = New System.Drawing.Point(131, 21)
         Me.lblFile.Name = "lblFile"
         Me.lblFile.Size = New System.Drawing.Size(26, 13)
         Me.lblFile.TabIndex = 15
@@ -360,7 +360,7 @@ Partial Class formSettings
         Me.cmbMode.Items.AddRange(New Object() {"Authentic", "Fantasy"})
         Me.cmbMode.Location = New System.Drawing.Point(47, 20)
         Me.cmbMode.Name = "cmbMode"
-        Me.cmbMode.Size = New System.Drawing.Size(246, 21)
+        Me.cmbMode.Size = New System.Drawing.Size(73, 21)
         Me.cmbMode.TabIndex = 0
         '
         'lblMode
@@ -377,18 +377,17 @@ Partial Class formSettings
         '
         Me.cmbMatchingFileNames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbMatchingFileNames.FormattingEnabled = True
-        Me.cmbMatchingFileNames.Location = New System.Drawing.Point(207, 20)
+        Me.cmbMatchingFileNames.Location = New System.Drawing.Point(157, 18)
         Me.cmbMatchingFileNames.Name = "cmbMatchingFileNames"
-        Me.cmbMatchingFileNames.Size = New System.Drawing.Size(156, 21)
+        Me.cmbMatchingFileNames.Size = New System.Drawing.Size(244, 21)
         Me.cmbMatchingFileNames.Sorted = True
         Me.cmbMatchingFileNames.TabIndex = 1
-        Me.cmbMatchingFileNames.Visible = False
         '
         'btnCheck
         '
-        Me.btnCheck.Location = New System.Drawing.Point(370, 18)
+        Me.btnCheck.Location = New System.Drawing.Point(428, 18)
         Me.btnCheck.Name = "btnCheck"
-        Me.btnCheck.Size = New System.Drawing.Size(98, 24)
+        Me.btnCheck.Size = New System.Drawing.Size(83, 24)
         Me.btnCheck.TabIndex = 2
         Me.btnCheck.Text = "Check monitors"
         Me.btnCheck.UseVisualStyleBackColor = True
@@ -431,7 +430,7 @@ Partial Class formSettings
         Me.grpScreenshot.Controls.Add(Me.btnScreenshotPath)
         Me.grpScreenshot.Location = New System.Drawing.Point(12, 482)
         Me.grpScreenshot.Name = "grpScreenshot"
-        Me.grpScreenshot.Size = New System.Drawing.Size(515, 50)
+        Me.grpScreenshot.Size = New System.Drawing.Size(515, 62)
         Me.grpScreenshot.TabIndex = 6
         Me.grpScreenshot.TabStop = False
         Me.grpScreenshot.Text = "Screenshot"
@@ -439,7 +438,7 @@ Partial Class formSettings
         'lblFileType
         '
         Me.lblFileType.AutoSize = True
-        Me.lblFileType.Location = New System.Drawing.Point(268, 19)
+        Me.lblFileType.Location = New System.Drawing.Point(304, 28)
         Me.lblFileType.Name = "lblFileType"
         Me.lblFileType.Size = New System.Drawing.Size(78, 13)
         Me.lblFileType.TabIndex = 0
@@ -451,7 +450,7 @@ Partial Class formSettings
         Me.cmbScreenshotType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbScreenshotType.FormattingEnabled = True
         Me.cmbScreenshotType.Items.AddRange(New Object() {"PNG", "JPG", "GIF", "BMP"})
-        Me.cmbScreenshotType.Location = New System.Drawing.Point(357, 16)
+        Me.cmbScreenshotType.Location = New System.Drawing.Point(393, 25)
         Me.cmbScreenshotType.Name = "cmbScreenshotType"
         Me.cmbScreenshotType.Size = New System.Drawing.Size(111, 21)
         Me.cmbScreenshotType.TabIndex = 19
@@ -460,7 +459,7 @@ Partial Class formSettings
         '
         Me.btnScreenshotPath.Location = New System.Drawing.Point(8, 16)
         Me.btnScreenshotPath.Name = "btnScreenshotPath"
-        Me.btnScreenshotPath.Size = New System.Drawing.Size(226, 24)
+        Me.btnScreenshotPath.Size = New System.Drawing.Size(290, 40)
         Me.btnScreenshotPath.TabIndex = 18
         Me.btnScreenshotPath.Text = "Screenshot path"
         Me.btnScreenshotPath.UseVisualStyleBackColor = True
@@ -531,7 +530,7 @@ Partial Class formSettings
         'lblFormFront
         '
         Me.lblFormFront.AutoSize = True
-        Me.lblFormFront.Location = New System.Drawing.Point(281, 51)
+        Me.lblFormFront.Location = New System.Drawing.Point(278, 51)
         Me.lblFormFront.Name = "lblFormFront"
         Me.lblFormFront.Size = New System.Drawing.Size(62, 13)
         Me.lblFormFront.TabIndex = 41
@@ -631,7 +630,7 @@ Partial Class formSettings
         '
         'lblGlowing
         '
-        Me.lblGlowing.Location = New System.Drawing.Point(303, 53)
+        Me.lblGlowing.Location = New System.Drawing.Point(325, 53)
         Me.lblGlowing.Name = "lblGlowing"
         Me.lblGlowing.Size = New System.Drawing.Size(48, 13)
         Me.lblGlowing.TabIndex = 25
@@ -655,7 +654,7 @@ Partial Class formSettings
         Me.cmbGlowing.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbGlowing.FormattingEnabled = True
         Me.cmbGlowing.Items.AddRange(New Object() {"Off", "Low", "Medium", "High", "Default"})
-        Me.cmbGlowing.Location = New System.Drawing.Point(357, 50)
+        Me.cmbGlowing.Location = New System.Drawing.Point(379, 50)
         Me.cmbGlowing.Name = "cmbGlowing"
         Me.cmbGlowing.Size = New System.Drawing.Size(111, 21)
         Me.cmbGlowing.TabIndex = 15
@@ -665,7 +664,7 @@ Partial Class formSettings
         Me.radioDream7LED.Appearance = System.Windows.Forms.Appearance.Button
         Me.radioDream7LED.Location = New System.Drawing.Point(124, 20)
         Me.radioDream7LED.Name = "radioDream7LED"
-        Me.radioDream7LED.Size = New System.Drawing.Size(110, 24)
+        Me.radioDream7LED.Size = New System.Drawing.Size(132, 24)
         Me.radioDream7LED.TabIndex = 12
         Me.radioDream7LED.TabStop = True
         Me.radioDream7LED.Text = "Use 'Dream7' LEDs"
@@ -675,7 +674,7 @@ Partial Class formSettings
         'chkWireframe
         '
         Me.chkWireframe.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkWireframe.Location = New System.Drawing.Point(240, 20)
+        Me.chkWireframe.Location = New System.Drawing.Point(262, 20)
         Me.chkWireframe.Name = "chkWireframe"
         Me.chkWireframe.Size = New System.Drawing.Size(111, 24)
         Me.chkWireframe.TabIndex = 13
@@ -686,7 +685,7 @@ Partial Class formSettings
         'chkBulbs
         '
         Me.chkBulbs.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkBulbs.Location = New System.Drawing.Point(357, 20)
+        Me.chkBulbs.Location = New System.Drawing.Point(379, 20)
         Me.chkBulbs.Name = "chkBulbs"
         Me.chkBulbs.Size = New System.Drawing.Size(111, 24)
         Me.chkBulbs.TabIndex = 14

@@ -1,7 +1,5 @@
-Imports System
 Imports System.Windows.Forms
 Imports System.Drawing
-Imports Microsoft.Win32
 Imports System.IO
 Imports System.Reflection
 Imports System.Text.RegularExpressions

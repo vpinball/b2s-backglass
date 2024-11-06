@@ -118,8 +118,8 @@ Public Class formSettings
         ' maybe show matching file names combo box
         If B2SSettings.MatchingFileNames IsNot Nothing AndAlso B2SSettings.MatchingFileNames.Length >= 2 Then
             cmbMatchingFileNames.Items.Clear()
-            For Each filename As String In B2SSettings.MatchingFileNames
-                cmbMatchingFileNames.Items.Add(filename)
+            For Each matchedFilename As String In B2SSettings.MatchingFileNames
+                cmbMatchingFileNames.Items.Add(matchedFilename)
             Next
             If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) Then
                 cmbMatchingFileNames.Text = B2SSettings.MatchingFileName
@@ -530,6 +530,14 @@ Public Class formSettings
     End Sub
 
     Private Sub B2SLogo_Click(sender As Object, e As EventArgs) Handles B2SLogo.Click
-        B2SLogoToolTip.SetToolTip(B2SLogo, "Settings: " & B2SSettings.SettingFilePath & vbCrLf & "ScreenRes: " & B2SSettings.LoadedResFilePath & vbCrLf & "PluginPath: " & B2SSettings.PluginsFilePath)
+        Dim openForms As String = ""
+        For Each frm As Form In Application.OpenForms
+            openForms = openForms & " " & frm.Text & vbCrLf
+        Next
+
+        Dim ToolTip As String = "Settings: " & B2SSettings.SettingFilePath & vbCrLf & vbCrLf & "ScreenRes: " & B2SSettings.LoadedResFilePath & vbCrLf &
+                            vbCrLf & "PluginPath: " & B2SSettings.PluginsFilePath & vbCrLf & vbCrLf & "OpenForms: " & openForms
+        B2SLogoToolTip.SetToolTip(B2SLogo, ToolTip)
     End Sub
+
 End Class
