@@ -89,7 +89,6 @@ Public Class formBackglass
             End
         End If
 
-
         ' get the game name
         'B2SSettings.GameName = "bguns_l8"
         'B2SSettings.GameName = "closeenc"
@@ -2096,7 +2095,10 @@ Public Class formBackglass
                         If innerNode.Attributes("OffImage") IsNot Nothing Then
                             offimage = Base64ToImage(innerNode.Attributes("OffImage").InnerText)
                         End If
-                        image = CropImageToTransparency(image, offimage, loc, size)
+                        If picboxtype = B2SPictureBox.ePictureBoxType.StandardImage Then
+                            ' Events of overlapping pictures get merged #76, crop image transparency
+                            image = CropImageToTransparency(image, offimage, loc, size)
+                        End If
                         ' create new picturebox control
                         Dim picbox As B2SPictureBox = New B2SPictureBox()
                         Dim IsOnBackglass As Boolean = (parent = "Backglass")
