@@ -1203,9 +1203,8 @@ Public Class formBackglass
                     Dim currentvalue As Integer = CInt(gistringsData.Substring(gistringid, 1))
                     If gistrings(gistringid) <> currentvalue Then
                         If Not B2SData.UsedAnimationGIStringIDs.ContainsKey(gistringid) AndAlso Not B2SData.UsedRandomAnimationGIStringIDs.ContainsKey(gistringid) Then gistrings(gistringid) = currentvalue
-                        If B2SData.UsedRomGIStringIDs.ContainsKey(gistringid) Then
+                        If B2SData.UsedRomGIStringIDs.ContainsKey(gistringid) AndAlso B2SData.UsedRomGIStringIDs(gistringid) IsNot Nothing Then
                             For Each picbox As B2SPictureBox In B2SData.UsedRomGIStringIDs(gistringid)
-                                'If picbox IsNot Nothing Then
                                 If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
                                     Dim visible As Boolean = (currentvalue > 4)
                                     If picbox.RomInverted Then visible = Not visible
