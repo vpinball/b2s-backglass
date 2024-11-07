@@ -404,10 +404,10 @@ Public Class B2SAnimation
                             With DirectCast(currentForm, formBackglass)
                                 MainFormBackgroundImage = .BackgroundImage
                                 .BackgroundImage = .DarkImage
-                                .Refresh()
+                                .Invalidate()
                             End With
                         Else
-                            currentForm.Refresh()
+                            currentForm.Invalidate()
                         End If
                     End If
                 End If

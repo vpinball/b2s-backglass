@@ -34,8 +34,10 @@ Public Class Processes
         For Each proc As ProcInfo In windowlist
             If Not String.IsNullOrEmpty(proc.Name) Then
                 If proc.Name.StartsWith("Visual Pinball - ", StringComparison.CurrentCultureIgnoreCase) Then
+                    'Visual Pinball - [Tom and Jerry (Original 2019) v 1.33]
                     If String.IsNullOrEmpty(_tablename) Then
                         _tablename = proc.Name.Substring(17)
+                        '[Tom and Jerry (Original 2019) v 1.33]___
                         If _tablename.StartsWith("[") AndAlso Not _tablename.EndsWith("]") Then
                             Dim i As Integer = _tablename.Length - 1
                             Dim found As Boolean = False
@@ -48,10 +50,13 @@ Public Class Processes
                             Loop
                             If found Then
                                 _tablename = _tablename.Substring(0, i + 1)
+                                '[Tom and Jerry (Original 2019) v 1.33]
                             End If
                         End If
                         If _tablename.StartsWith("[") Then _tablename = _tablename.Substring(1)
+                        'Tom and Jerry (Original 2019) v 1.33]
                         If _tablename.EndsWith("]") Then _tablename = _tablename.Substring(0, _tablename.Length - 1)
+                        'Tom and Jerry (Original 2019) v 1.33
                         If _tablename.EndsWith("*") Then _tablename = _tablename.Substring(0, _tablename.Length - 1)
                         If _tablename.EndsWith(".vpt") Then _tablename = _tablename.Substring(0, _tablename.Length - 4)
                         If _tablename.EndsWith("*") Then _tablename = _tablename.Substring(0, _tablename.Length - 1)

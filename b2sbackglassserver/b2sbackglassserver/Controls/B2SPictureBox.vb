@@ -24,27 +24,17 @@ Public Class B2SPictureBox
 
 
     Protected Overrides Sub OnPaint(e As System.Windows.Forms.PaintEventArgs)
-        ' rectangle area for painting
-        Dim rect As Rectangle = New Rectangle(0, 0, Me.Width - 1, Me.Height - 1)
 
-        ' draw dashed frame
-        Dim pen As Pen = New Pen(Brushes.LightGray)
-        pen.DashPattern = New Single() {3.0F, 3.0F}
-        e.Graphics.DrawRectangle(pen, rect)
-        pen.Dispose()
-
-        ' draw text
-        'If Not String.IsNullOrEmpty(Me.Text) Then
-        '	TextRenderer.DrawText(e.Graphics, Me.Text, Me.Font, rect, Color.White, TextFormatFlags.WordBreak Or TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
-        'End If
+        'e.Graphics.DrawImage(BackgroundImage, e.ClipRectangle)
     End Sub
 
     Public Sub New()
+
         ' set some drawing styles
         Me.SetStyle(ControlStyles.SupportsTransparentBackColor, True)
         'Me.SetStyle(ControlStyles.ResizeRedraw Or ControlStyles.SupportsTransparentBackColor, True)
-        'Me.DoubleBuffered = True
-        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.DoubleBuffer, True)
+        Me.DoubleBuffered = True
+        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.OptimizedDoubleBuffer, True)
 
         ' backcolor needs to be transparent
         Me.BackColor = Color.Transparent

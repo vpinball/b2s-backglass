@@ -1,7 +1,5 @@
-Imports System
 Imports System.Windows.Forms
 Imports System.Drawing
-Imports Microsoft.Win32
 Imports System.IO
 Imports System.Reflection
 Imports System.Text.RegularExpressions
@@ -368,9 +366,9 @@ Public Class B2SScreen
             ((Me.DMDViewMode = eDMDViewMode.ShowDMD) OrElse
              (Me.DMDViewMode = eDMDViewMode.ShowDMDOnlyAtDefaultLocation AndAlso Me.DMDAtDefaultLocation) OrElse
              (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
-#If B2S = "DLL" Then
+
         On Error Resume Next
-#End If
+
         ' get the correct screen
         Me.BackglassScreen = ScreensOrdered(0)
         Dim s As Screen
@@ -423,7 +421,7 @@ Public Class B2SScreen
             Me.formbackground.Size = Me.BackgroundSize
             Me.formbackground.Text = "B2S Backglass Server"
             Me.formbackground.BackColor = Color.Black
-            If (IO.File.Exists(Me.BackgroundPath)) Then
+            If (File.Exists(Me.BackgroundPath)) Then
                 Me.formbackground.BackgroundImage = Image.FromFile(Me.BackgroundPath) ' ("C:\backglass.png")
             End If
             Me.formbackground.Show()
@@ -515,11 +513,6 @@ Public Class B2SScreen
             formBackglass.Text = "B2S Backglass Server"
             formBackglass.Show()
         End If
-#If B2S = "DLL" Then
-        ' bring backglass screen to the front
-        If B2SSettings.FormToFront Then formBackglass.TopMost = True
-        formBackglass.BringToFront()
-#End If
         ' maybe show DMD form
         If IsDMDToBeShown Then
             ' set DMD location relative to the backglass location
@@ -529,11 +522,7 @@ Public Class B2SScreen
             Me.formDMD.ControlBox = False
             Me.formDMD.MaximizeBox = False
             Me.formDMD.MinimizeBox = False
-#If B2S = "DLL" Then
-            Me.formDMD.Location = formBackglass.Location + Me.DMDLocation
-#Else
             Me.formDMD.Location = Me.BackglassScreen.Bounds.Location + DMDKeepBackglassLocation + Me.DMDLocation
-#End If
             Me.formDMD.Size = Me.DMDSize
             Me.formDMD.Text = "B2S DMD"
 

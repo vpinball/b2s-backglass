@@ -37,11 +37,9 @@ Public Class formSettings
             Return Name + If(SlowDown = 1, "", " (" & If(SlowDown = 0, "Off", SlowDown.ToString & "x") & ")")
         End Function
     End Class
-#If B2S = "DLL" Then
+
     Private Sub formSettings_Load(sender As System.Object, e As System.EventArgs) Handles Me.Load
-#Else
-    Private Sub formSettings_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
-#End If
+
         formSettingsMore = New formSettingsMore(Me, formBackglass)
 
         ' load data
@@ -120,8 +118,8 @@ Public Class formSettings
         ' maybe show matching file names combo box
         If B2SSettings.MatchingFileNames IsNot Nothing AndAlso B2SSettings.MatchingFileNames.Length >= 2 Then
             cmbMatchingFileNames.Items.Clear()
-            For Each filename As String In B2SSettings.MatchingFileNames
-                cmbMatchingFileNames.Items.Add(filename)
+            For Each matchedFilename As String In B2SSettings.MatchingFileNames
+                cmbMatchingFileNames.Items.Add(matchedFilename)
             Next
             If Not String.IsNullOrEmpty(B2SSettings.MatchingFileName) Then
                 cmbMatchingFileNames.Text = B2SSettings.MatchingFileName
@@ -157,11 +155,8 @@ Public Class formSettings
         TimerOpacity.Start()
 
     End Sub
-#If B2S = "DLL" Then
+
     Private Sub formSettings_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
-#Else
-    Private Sub formSettings_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyUp
-#End If
         If e.KeyCode = Keys.Escape OrElse e.KeyCode = Keys.S Then
             btnCloseSettings.PerformClick()
         End If
@@ -227,8 +222,16 @@ Public Class formSettings
         isSettingsScreenDirty = True
         B2SSettings.CurrentDualMode = cmbMode.SelectedIndex + 1
         If formBackglass IsNot Nothing Then
-            formBackglass.BackgroundImage = formBackglass.DarkImage
-            formBackglass.Refresh()
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(Sub()
+                                   formBackglass.BackgroundImage = formBackglass.DarkImage
+                                   formBackglass.Invalidate()
+                               End Sub
+                    )
+            Else
+                formBackglass.BackgroundImage = formBackglass.DarkImage
+                formBackglass.Invalidate()
+            End If
         End If
         B2SAnimation.RestartAnimations()
     End Sub
@@ -527,6 +530,15 @@ Public Class formSettings
     End Sub
 
     Private Sub B2SLogo_Click(sender As Object, e As EventArgs) Handles B2SLogo.Click
-        B2SLogoToolTip.SetToolTip(B2SLogo, "Settings: " & B2SSettings.SettingFilePath & vbCrLf & "ScreenRes: " & B2SSettings.LoadedResFilePath & vbCrLf & "PluginPath: " & B2SSettings.PluginsFilePath)
+        Dim openForms As String = ""
+        For Each frm As Form In Application.OpenForms
+            openForms = openForms & " " & frm.Text & vbCrLf
+        Next
+
+        Dim ToolTip As String = "Settings: " & B2SSettings.SettingFilePath & vbCrLf & vbCrLf & "ScreenRes: " & B2SSettings.LoadedResFilePath &
+                            vbCrLf & vbCrLf & "OpenForms: " & openForms
+        'vbCrLf & "PluginPath: " & B2SSettings.PluginsFilePath & 
+        B2SLogoToolTip.SetToolTip(B2SLogo, ToolTip)
     End Sub
+
 End Class

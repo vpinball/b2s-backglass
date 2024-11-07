@@ -106,7 +106,11 @@ Public Class B2SLEDBox
         Set(ByVal newvalue As Integer)
             If _Value <> newvalue OrElse refresh Then
                 _Value = newvalue
-                Me.Refresh()
+                If Me.InvokeRequired Then
+                    Me.BeginInvoke(Sub() Me.Invalidate())
+                Else
+                    Me.Invalidate()
+                End If
             End If
         End Set
     End Property

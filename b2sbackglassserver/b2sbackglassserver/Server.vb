@@ -1,16 +1,18 @@
-﻿Imports System
-Imports System.Text
+﻿Imports System.Text
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
-Imports System.Linq.Expressions
 Imports System.Drawing
-Imports System.Reflection
-Imports System.Runtime.InteropServices.WindowsRuntime
+Imports System.Threading
+Imports System.Windows.Forms
 
 <ProgId("B2S.Server"), ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)>
 Public Class Server
 
     Implements IDisposable
+
+    Private Shared thread As Thread
+    Private Shared threadContext As SynchronizationContext = Nothing
+    Public threadReady As Boolean = False
 
     Private Declare Function IsWindow Lib "user32.dll" (ByVal hWnd As IntPtr) As Boolean
     Private Declare Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hWnd As IntPtr, Msg As UInteger, wParam As Integer, lParam As Integer) As Integer
@@ -94,7 +96,29 @@ Public Class Server
 #Region "constructor and end timer"
 
     Public Sub New()
+        ' Create new STA thread for this dll to run in, if the thread is already running then don't start another
+        ' However if the thread is running, we need to stop the application from running, and then restart it by running StartThread again
+        If thread IsNot Nothing Then
+            ' stop the application from running
+            Application.Exit()
+        End If
 
+        thread = New Thread(AddressOf StartThread)
+        thread.SetApartmentState(ApartmentState.STA)
+        thread.Name = "B2SThread"
+        thread.Start()
+        ' Dont return until the thread is ready, by checking the threadReady variable
+        Do While Not threadReady
+            Thread.Sleep(100)
+        Loop
+    End Sub
+
+
+    Private Sub StartThread()
+        ' Create a syncronization context for the thread
+        SynchronizationContext.SetSynchronizationContext(New WindowsFormsSynchronizationContext())
+        ' Store the context for later use
+        threadContext = SynchronizationContext.Current
         ' maybe create the base registry key
         If Registry.CurrentUser.OpenSubKey("Software\B2S") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S")
         If Registry.CurrentUser.OpenSubKey("Software\B2S\VPinMAME") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S\VPinMAME")
@@ -105,7 +129,6 @@ Public Class Server
             regkey.DeleteValue("B2SB2SName", False)
         End Using
 
-
         ' maybe prepare plugins
         B2SSettings.Load(, True)
         ' prepare error log
@@ -114,7 +137,6 @@ Public Class Server
             .IsLogOn = B2SSettings.B2SDebugLog
         }
 
-        errorlog.IsLogOn = B2SSettings.B2SDebugLog
         If B2SSettings.ArePluginsOn Then
             B2SSettings.PluginHost = New PluginHost(True)
         End If
@@ -127,6 +149,10 @@ Public Class Server
         AddHandler timer.Tick, AddressOf Timer_Tick
         timer.Interval = 37
 
+        ' set the thread ready flag
+        threadReady = True
+
+        Application.Run()
     End Sub
 
     Private Sub Timer_Tick()
@@ -136,6 +162,7 @@ Public Class Server
             If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
 
                 Try
+                    timer.Stop()
                     Me.Stop()
                 Finally
                     Me.Dispose()
@@ -245,8 +272,7 @@ Public Class Server
 
             End If
         Catch ex As Exception
-            Dim st As New StackTrace(ex, True)
-            errorlog.WriteLogEntry(DateTime.Now & "Line: " & st.GetFrame(0).GetMethod().Name & " : " & st.GetFrame(0).GetFileLineNumber().ToString & " : " & ex.Message)
+            errorlog.WriteLogEntry(DateTime.Now & ex.Message & vbNewLine & ex.StackTrace)
             Throw ex
         End Try
 
@@ -274,7 +300,7 @@ Public Class Server
         End Get
     End Property
 
-    Public ReadOnly Property B2SServerBuild() As Double
+    Public ReadOnly Property B2SBuildVersion() As Double
         Get
             Return CInt(B2SVersionInfo.B2S_VERSION_MAJOR) * 10000 +
                                 CInt(B2SVersionInfo.B2S_VERSION_MINOR) * 100 +
@@ -393,7 +419,23 @@ Public Class Server
         End Get
     End Property
 
+    Public ReadOnly Property VPMBuildVersion() As String
+        Get
+            Try
+                Return VPinMAME.FullVersion
+            Catch ex As Exception
+                Return VPinMAME.Version
+            End Try
+        End Get
+    End Property
+
+
     Public Sub Run(Optional ByVal handle As Object = 0)
+        'Make sure this is run on threadContext thread
+        If SynchronizationContext.Current IsNot threadContext Then
+            threadContext.Send(New SendOrPostCallback(AddressOf Run), handle)
+            Return
+        End If
 
         ' startup
         tableHandle = CInt(handle)
@@ -428,6 +470,17 @@ Public Class Server
     End Sub
 
     Public Sub [Stop]()
+
+        Try
+            If SynchronizationContext.Current IsNot threadContext Then
+                threadContext.Send(New SendOrPostCallback(AddressOf [Stop]), Nothing)
+                Return
+            End If
+
+        Catch ex As Exception
+            'If Exception is InvalidAsynchronousStateException then the thread is already stopped, so we can ignore it and return
+            Return
+        End Try
 
         Try
             Try
@@ -615,97 +668,75 @@ Public Class Server
     Private statelogChangedGIStrings As Log = New Log("GIStringsState")
     Private statelogChangedLEDs As Log = New Log("LEDState")
 
-    'Private timelogChangedLamps As Log = New Log("Lamps")
-    'Private timelogChangedSolenoids As Log = New Log("Solenoids")
-
-    'Private statChangedLamps As Statistics = New Statistics(timelogChangedLamps)
-    'Private statChangedSolenoids As Statistics = New Statistics(timelogChangedSolenoids)
-
     Public ReadOnly Property ChangedLamps() As Object
         Get
+            isChangedLampsCalled = True
+            Dim chg As Object = VPinMAME.ChangedLamps()
             Try
-                isChangedLampsCalled = True
-                Dim chg As Object = VPinMAME.ChangedLamps()
                 If B2SData.GetLampsData() Then
-                    'If B2SData.IsBackglassRunning AndAlso
-                    '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomLamps OrElse B2SData.UseAnimationLamps OrElse B2SSettings.IsLampsStateLogOn OrElse B2SData.TestMode OrElse B2SStatistics.LogStatistics) AndAlso
-                    '    Not B2SSettings.AllOff AndAlso Not B2SSettings.LampsOff Then
                     CheckLamps(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
                     B2SSettings.PluginHost.DataReceive(Convert.ToChar("L"), chg)
                 End If
-                Return chg
             Catch ex As Exception
                 errorlog.WriteLogEntry(DateTime.Now & ": ChangedLamps ('" & ex.Message & "')")
-                Return Nothing
             End Try
+            Return chg
         End Get
     End Property
 
     Public ReadOnly Property ChangedSolenoids() As Object
         Get
+            isChangedSolenoidsCalled = True
+            Dim chg As Object = VPinMAME.ChangedSolenoids()
             Try
-                isChangedSolenoidsCalled = True
-                Dim chg As Object = VPinMAME.ChangedSolenoids()
                 If B2SData.GetSolenoidsData() Then
-                    'If B2SData.IsBackglassRunning AndAlso
-                    '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomSolenoids OrElse B2SData.UseAnimationSolenoids OrElse B2SSettings.IsSolenoidsStateLogOn OrElse B2SData.TestMode OrElse B2SStatistics.LogStatistics) AndAlso
-                    '    Not B2SSettings.AllOff AndAlso Not B2SSettings.SolenoidsOff Then
                     CheckSolenoids(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
                     B2SSettings.PluginHost.DataReceive(Convert.ToChar("S"), chg)
                 End If
-                Return chg
             Catch ex As Exception
                 errorlog.WriteLogEntry(DateTime.Now & ": ChangedSolenoids ('" & ex.Message & "')")
-                Return Nothing
             End Try
+            Return chg
         End Get
     End Property
 
     Public ReadOnly Property ChangedGIStrings() As Object
         Get
+            isChangedGIStringsCalled = True
+            Dim chg As Object = VPinMAME.ChangedGIStrings()
             Try
-                isChangedGIStringsCalled = True
-                Dim chg As Object = VPinMAME.ChangedGIStrings()
                 If B2SData.GetGIStringsData() Then
-                    'If B2SData.IsBackglassRunning AndAlso
-                    '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseRomGIStrings OrElse B2SData.UseAnimationGIStrings OrElse B2SSettings.IsGIStringsStateLogOn OrElse B2SData.TestMode OrElse B2SStatistics.LogStatistics) AndAlso
-                    '    Not B2SSettings.AllOff AndAlso Not B2SSettings.GIStringsOff Then
                     CheckGIStrings(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
                     B2SSettings.PluginHost.DataReceive(Convert.ToChar("G"), chg)
                 End If
-                Return chg
             Catch ex As Exception
                 errorlog.WriteLogEntry(DateTime.Now & ": ChangedGIStrings ('" & ex.Message & "')")
-                Return Nothing
             End Try
+            Return chg
         End Get
     End Property
 
     Public ReadOnly Property ChangedLEDs(ByVal mask2 As Object, ByVal mask1 As Object, Optional ByVal mask3 As Object = 0, Optional ByVal mask4 As Object = 0) As Object
         Get
+            isChangedLEDsCalled = True
+            Dim chg As Object = VPinMAME.ChangedLEDs(mask2, mask1, mask3, mask4) ' (&HFFFFFFFF, &HFFFFFFFF) 
             Try
-                isChangedLEDsCalled = True
-                Dim chg As Object = VPinMAME.ChangedLEDs(mask2, mask1, mask3, mask4) ' (&HFFFFFFFF, &HFFFFFFFF) 
                 If B2SData.GetLEDsData() Then
-                    'If B2SData.IsBackglassRunning AndAlso
-                    '    (B2SData.IsBackglassStartedAsEXE OrElse B2SData.UseLEDs OrElse B2SData.UseLEDDisplays OrElse B2SData.UseReels OrElse B2SSettings.IsLEDsStateLogOn) AndAlso
-                    '    Not B2SSettings.AllOff AndAlso Not B2SSettings.LEDsOff Then
                     CheckLEDs(DirectCast(chg, Object(,)))
                 End If
                 If B2SSettings.ArePluginsOn AndAlso B2SSettings.PluginHost.Plugins.Count > 0 Then
                     B2SSettings.PluginHost.DataReceive(Convert.ToChar("D"), chg)
                 End If
-                Return chg
             Catch ex As Exception
                 errorlog.WriteLogEntry(DateTime.Now & ": ChangedLEDs ('" & ex.Message & "')")
-                Return Nothing
             End Try
+            Return chg
         End Get
     End Property
 
@@ -958,13 +989,6 @@ Public Class Server
     Private Sub CheckSolenoids(ByVal solenoids As Object(,))
 
         statelogChangedSolenoids.IsLogOn = B2SSettings.IsSolenoidsStateLogOn
-
-        'If statelogChangedSolenoids.IsLogOn Then
-        '    Static stopwatch As Stopwatch = New Stopwatch()
-        '    If Not stopwatch.IsRunning Then stopwatch.Start()
-        '    statelogChangedSolenoids.WriteLogEntry(DateTime.Now & " (" & stopwatch.ElapsedMilliseconds & ")")
-        '    stopwatch.Restart()
-        'End If
 
         If solenoids IsNot Nothing AndAlso IsArray(solenoids) Then
 
@@ -2134,7 +2158,7 @@ Public Class Server
 
         Else
 
-            ' only do the lightning stuff if the group has a name
+            ' only do the lighting stuff if the group has a name
             If Not String.IsNullOrEmpty(groupname) AndAlso B2SData.IlluminationGroups.ContainsKey(groupname) Then
                 ' get all matching picture boxes
                 For Each picbox As B2SPictureBox In B2SData.IlluminationGroups(groupname)
@@ -2167,13 +2191,18 @@ Public Class Server
                     For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(id)
                         If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
                             If picbox.Left <> xpos OrElse picbox.Top <> ypos Then
-                                picbox.Left = xpos
-                                picbox.Top = ypos
-                                ' Using RectangleF as this is used in the DrawImage within OnPaint for picturBoxes.
-                                picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
-                                'Invalidating this object does not work, need to Invalidate the parent.
-                                If picbox.Parent IsNot Nothing Then
-                                    picbox.Parent.Invalidate()
+                                If (picbox.InvokeRequired) Then
+                                    picbox.BeginInvoke(Sub()
+                                                           picbox.Left = xpos
+                                                           picbox.Top = ypos
+                                                           picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                                                           If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
+                                                       End Sub)
+                                Else
+                                    picbox.Left = xpos
+                                    picbox.Top = ypos
+                                    picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                                    If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
                                 End If
                             End If
                         End If

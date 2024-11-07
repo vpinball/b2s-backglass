@@ -256,13 +256,8 @@ Public Class B2SSettings
     Public Shared Function GetSettingFilename() As String
         If IO.File.Exists(settingsFilename) Then
             Return settingsFilename
-#If B2S = "DLL" Then
-        ElseIf StartAsEXE And B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), settingsFilename)) Then
-            Return IO.Path.Combine(Application.StartupPath(), settingsFilename)
-#Else
         ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Application.StartupPath(), settingsFilename)) Then
             Return IO.Path.Combine(Application.StartupPath(), settingsFilename)
-#End If
         ElseIf B2STableSettingsExtendedPath And IO.File.Exists(IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), settingsFilename)) Then
             Return IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), settingsFilename)
         End If
@@ -272,6 +267,7 @@ Public Class B2SSettings
     Public Shared Sub LoadGlobalAndTableSettings(xmlNode As Xml.XmlNode)
         If xmlNode.SelectSingleNode("DisableBuiltInEMReelSound") IsNot Nothing Then DisableBuiltInEMReelSound = (xmlNode.SelectSingleNode("DisableBuiltInEMReelSound").InnerText = "1")
         If xmlNode.SelectSingleNode("HideGrill") IsNot Nothing Then HideGrill = CInt(xmlNode.SelectSingleNode("HideGrill").InnerText)
+        If xmlNode.SelectSingleNode("HideB2SBackglass") IsNot Nothing Then HideB2SBackglass = (xmlNode.SelectSingleNode("HideB2SBackglass").InnerText = "1")
         If xmlNode.SelectSingleNode("HideB2SDMD") IsNot Nothing Then HideB2SDMD = (xmlNode.SelectSingleNode("HideB2SDMD").InnerText = "1")
         If xmlNode.SelectSingleNode("HideDMD") IsNot Nothing Then HideDMD = CInt(xmlNode.SelectSingleNode("HideDMD").InnerText)
         If xmlNode.SelectSingleNode("LampsBlackTurns") IsNot Nothing Then LampsSkipFrames = CInt(xmlNode.SelectSingleNode("LampsBlackTurns").InnerText)

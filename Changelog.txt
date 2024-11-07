@@ -1,14 +1,18 @@
 2.5.0
-- Finally a merge of the source code of B2SBackglassServer & B2SBackglassServerEXE into one. Should not be noticed while running, but huge for development.
-- Added new method B2SSetPos(ImageId, xpos, ypos) to move the images on the backglass.
-- Added new method B2SServerBuild() returning float version number: 20500.0295
+- **Finally a merge of the source code** for B2SBackglassServer & B2SBackglassServerEXE into one. _Should not be noticed_ while running, but huge for development.
+- Added new method B2SSetPos(ImageId, xpos, ypos) to move the images on the backglass. Currently only as DLL!!!
+- Added new method B2SBuildVersion() returning float version number: 20500.0295
+- #122 Only crop "standard" images which does not rotate, while fixing "Events of overlapping pictures get merged #76" too many images was cropped.
+- #121 B2S 2.1.2 Throws System NullReferenceException, a crash on certain tables fixed.
+- #119 B2S Table Settings Saving But WIll Not Apply, the backglass hide flag was forgotten to be read.
+- #96 Improve Fuzzy Matching to not use the DOS short names: "Fuzzy Matching" now cuts the table name after the first ")" and then tries to find a backglass named something like that.
 
 2.1.2
 - Request to turn off backglass in b2s settings #80   Thanks @stevejones72!
   It is a setting per table, so the table you save with hidden backglass will have it's backglass not shown. 
   You can still get settings opened on the background or b2s-dmd using right click though.
   To edit the B2SBackglassSettings.xml file manually search for <HideB2SBackglass>1</HideB2SBackglass> and set to zero.
-- Backglasses using overlapping partly transparent pictures get it's events merged. This is now deactivated by default. And cannot be deactivated!
+- Backglasses using overlapping partly transparent pictures get it's events merged. This is now deactivated by default.
 
 2.1.1
 

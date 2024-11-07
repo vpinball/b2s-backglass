@@ -29,7 +29,6 @@ Partial Class formSettings
         Me.lowerPanel = New System.Windows.Forms.Panel()
         Me.btnCloseSettings = New System.Windows.Forms.Button()
         Me.btnSaveSettings = New System.Windows.Forms.Button()
-        Me.lblNonAvailableSettings = New System.Windows.Forms.Label()
         Me.btnEditScreenRes = New System.Windows.Forms.Button()
         Me.btnMore = New System.Windows.Forms.Button()
         Me.headerPanel = New System.Windows.Forms.Panel()
@@ -134,7 +133,6 @@ Partial Class formSettings
         '
         Me.lowerPanel.Controls.Add(Me.btnCloseSettings)
         Me.lowerPanel.Controls.Add(Me.btnSaveSettings)
-        Me.lowerPanel.Controls.Add(Me.lblNonAvailableSettings)
         Me.lowerPanel.Controls.Add(Me.btnEditScreenRes)
         Me.lowerPanel.Controls.Add(Me.btnMore)
         Me.lowerPanel.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -163,15 +161,6 @@ Partial Class formSettings
         Me.btnSaveSettings.TabIndex = 34
         Me.btnSaveSettings.Text = "Save settings"
         Me.btnSaveSettings.UseVisualStyleBackColor = True
-        '
-        'lblNonAvailableSettings
-        '
-        Me.lblNonAvailableSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblNonAvailableSettings.Location = New System.Drawing.Point(229, 16)
-        Me.lblNonAvailableSettings.Name = "lblNonAvailableSettings"
-        Me.lblNonAvailableSettings.Size = New System.Drawing.Size(295, 13)
-        Me.lblNonAvailableSettings.TabIndex = 40
-        Me.lblNonAvailableSettings.Text = "* all settings in Italic is only available when run in EXE mode!"
         '
         'btnEditScreenRes
         '
@@ -312,7 +301,6 @@ Partial Class formSettings
         'chkStartAsEXE
         '
         Me.chkStartAsEXE.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkStartAsEXE.Enabled = True
         Me.chkStartAsEXE.Location = New System.Drawing.Point(6, 20)
         Me.chkStartAsEXE.Name = "chkStartAsEXE"
         Me.chkStartAsEXE.Size = New System.Drawing.Size(151, 21)
@@ -324,7 +312,6 @@ Partial Class formSettings
         'cmbDefaultStartMode
         '
         Me.cmbDefaultStartMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbDefaultStartMode.Enabled = True
         Me.cmbDefaultStartMode.FormattingEnabled = True
         Me.cmbDefaultStartMode.Items.AddRange(New Object() {"Standard", "In EXE"})
         Me.cmbDefaultStartMode.Location = New System.Drawing.Point(242, 20)
@@ -893,7 +880,6 @@ Partial Class formSettings
     Friend WithEvents btnEditScreenRes As Windows.Forms.Button
     Friend WithEvents lblBackground As Windows.Forms.Label
     Friend WithEvents cmbBackground As Windows.Forms.ComboBox
-    Friend WithEvents lblNonAvailableSettings As Windows.Forms.Label
     Friend WithEvents B2SLogoToolTip As Windows.Forms.ToolTip
     Friend WithEvents lowerPanel As Windows.Forms.Panel
     Friend WithEvents headerPanel As Windows.Forms.Panel
