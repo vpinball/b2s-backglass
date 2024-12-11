@@ -712,6 +712,9 @@ Public Class formBackglass
             ' maybe show or hide some illus by groupname
             GetThruAllIlluGroups(regkey)
 
+            ' maybe position something
+            GetThruAllPositions(regkey)
+
         End Using
 
     End Sub
@@ -1571,6 +1574,62 @@ Public Class formBackglass
                                 picbox.Visible = (value <> 0)
                             End If
                         Next
+                    End If
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Sub GetThruAllPositions(ByVal regkey As RegistryKey)
+        Try
+
+            Dim ledPositions As String = regkey.GetValue("B2SPositions", String.Empty)
+            If Not String.IsNullOrEmpty(ledPositions) AndAlso ledPositions.Contains(",") Then
+                Dim id As Integer = 0
+                Dim xpos As Integer = 0
+                Dim ypos As Integer = 0
+
+                regkey.DeleteValue("B2SPositions", False)
+                ' get thru all positions
+                For Each ledPosition As String In ledPositions.Split(Chr(1))
+                    If Not String.IsNullOrEmpty(ledPosition) Then
+                        Dim items() As String = ledPosition.Split(","c)
+                        id = CInt(items(0))
+                        xpos = CInt(items(1))
+                        ypos = CInt(items(2))
+                        MySetPos(id, xpos, ypos)
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub MySetPos(ByVal id As Integer, ByVal xpos As Integer, ByVal ypos As Integer)
+
+        If B2SData.UsedRomLampIDs.ContainsKey(id) Then
+            Dim rescaleBackglass As SizeF
+            GetScaleFactor(rescaleBackglass)
+
+            For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(id)
+                If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
+                    If picbox.Left <> xpos OrElse picbox.Top <> ypos Then
+                        If (picbox.InvokeRequired) Then
+                            picbox.BeginInvoke(Sub()
+                                                   picbox.Left = xpos
+                                                   picbox.Top = ypos
+                                                   picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                                                   If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
+                                               End Sub)
+                        Else
+                            picbox.Left = xpos
+                            picbox.Top = ypos
+                            picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                            If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
+                        End If
                     End If
                 End If
             Next

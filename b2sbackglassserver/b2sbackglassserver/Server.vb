@@ -2182,34 +2182,35 @@ Public Class Server
         If B2SData.IsBackglassRunning Then
 
             If B2SData.IsBackglassStartedAsEXE Then
-
-            Else
-                If B2SData.UsedRomLampIDs.ContainsKey(id) Then
-                    Dim rescaleBackglass As SizeF
+                Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\B2S", True)
+                    Dim illugroups As String = regkey.GetValue("B2SPositions", String.Empty)
+                    regkey.SetValue("B2SPositions", illugroups & Chr(1) & id.ToString() & "," & xpos.ToString() & "," & ypos.ToString())
+                End Using
+            ElseIf B2SData.UsedRomLampIDs.ContainsKey(id) Then
+                Dim rescaleBackglass As SizeF
                     Me.formBackglass.GetScaleFactor(rescaleBackglass)
 
                     For Each picbox As B2SPictureBox In B2SData.UsedRomLampIDs(id)
                         If picbox IsNot Nothing AndAlso (Not B2SData.UseIlluminationLocks OrElse String.IsNullOrEmpty(picbox.GroupName) OrElse Not B2SData.IlluminationLocks.ContainsKey(picbox.GroupName)) Then
-                            If picbox.Left <> xpos OrElse picbox.Top <> ypos Then
-                                If (picbox.InvokeRequired) Then
-                                    picbox.BeginInvoke(Sub()
-                                                           picbox.Left = xpos
-                                                           picbox.Top = ypos
-                                                           picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
-                                                           If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
-                                                       End Sub)
-                                Else
-                                    picbox.Left = xpos
-                                    picbox.Top = ypos
-                                    picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
-                                    If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
-                                End If
+                        If picbox.Left <> xpos OrElse picbox.Top <> ypos Then
+                            If (picbox.InvokeRequired) Then
+                                picbox.BeginInvoke(Sub()
+                                                       picbox.Left = xpos
+                                                       picbox.Top = ypos
+                                                       picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                                                       If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
+                                                   End Sub)
+                            Else
+                                picbox.Left = xpos
+                                picbox.Top = ypos
+                                picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                                If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
                             End If
                         End If
+                    End If
                     Next
                 End If
             End If
-        End If
 
     End Sub
 
