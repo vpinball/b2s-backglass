@@ -1,0 +1,37 @@
+name: ✅ Feature request
+description: File a Feature request.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Thank you for taking the time to submit a feature request. In order to process it as quickly as possible, we need the following information.
+        ### However, before you open a feature request, please search for the behaviour in the existing issues and discuss it in the community forums at [vpuniverse](https://vpuniverse.com/forums/forum/88-b2s-new-releases) or [vpforums](https://www.vpforums.org/index.php?showforum=86).
+        ---
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of B2S Server are you using?
+      placeholder: 2.1.2
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Is your feature request related to a problem? Please describe.
+      description: A clear and concise description of the problem. You can paste screenshots 📸 into the fields.
+      placeholder: |
+        Steps to reproduce the your problem:
+        1. Go to ...
+        2. Click on ...
+        3. See screenshot
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like ✅
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
