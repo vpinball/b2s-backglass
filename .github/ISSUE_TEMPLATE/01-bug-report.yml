@@ -11,11 +11,19 @@ body:
   - type: input
     id: version
     attributes:
-      label: Version
-      description: What version of B2S Server are you using? Please confirm the same behaviour in the latest release!
+      label: What version of B2S Server are you using?
+      description: Please confirm the same behaviour in the latest release from https://github.com/vpinball/b2s-backglass/releases
       placeholder: 2.1.2
     validations:
       required: true
+  - type: input
+    id: vpxversion
+    attributes:
+      label: Can the bug depend on a certain VPX or VPM version?
+      description: What version of Visual Pinball and PinMAME are you using?
+      placeholder: VPX 10.8.0-2050-186f2fc  /  VPM 3.6.0-1209-7915412
+    validations:
+      required: false
   - type: textarea
     id: steps
     attributes:
@@ -25,14 +33,15 @@ body:
         Steps to reproduce the behavior:
         1. Go to ...
         2. Click on ...
-        3. See error screenshot
+        3. URL to discussions in the community forums at vpuniverse or vpforums
+        4. Add error screenshot
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
       label: Expected behavior and solution proposal ✅
-      description: A clear and concise description of what you expected to happen.
+      description: A clear and concise description of what you expect to happen. Do you have any idea how it can be solved?
     validations:
       required: false
   - type: textarea
@@ -41,3 +50,5 @@ body:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
+    validations:
+      required: false
