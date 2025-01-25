@@ -2018,11 +2018,6 @@ Public Class formBackglass
 
                 ' get top node
                 Dim topnode As Xml.XmlElement = XML.SelectSingleNode("DirectB2SData")
-                Dim mergeBulbs As Boolean = False
-
-                'If topnode.SelectSingleNode("MergeBulbs") IsNot Nothing Then
-                '    mergeBulbs = topnode.SelectSingleNode("MergeBulbs").Attributes("Value").InnerText <> "0"
-                'End If
 
                 ' clear all data
                 B2SData.ClearAll(True)
@@ -2545,8 +2540,7 @@ Public Class formBackglass
                         dream7index = renderedandreelindex
 
                     Next
-#If TARGET = "" Then
-#Else
+#If B2S = "EXE" Then
                     ' write player info into registry
                     For Each controls As KeyValuePair(Of Integer, B2SPlayer.ControlCollection) In B2SData.Players
                         Dim player As String = String.Empty
@@ -2756,13 +2750,13 @@ Public Class formBackglass
                     For Each romsize As KeyValuePair(Of String, Integer) In roms4Authentic
                             If romsize.Value > secondSize4Authentic Then
                                 secondSize4Authentic = romsize.Value
-                                secondkey4Authentic = romsize.Keysecondkey4Authentic = romsize.Key.Split("|")(0)
+                                secondkey4Authentic = romsize.Key.Split("|")(0)
                         End If
                             If romsize.Value > topSize4Authentic Then
                                 secondSize4Authentic = topSize4Authentic
                             secondkey4Authentic = topkey4Authentic
                                 topSize4Authentic = romsize.Value
-                                topkey4Authentic = romsize.Keysecondkey4Authentic = romsize.Key.Split("|")(0)
+                                topkey4Authentic = romsize.Key.Split("|")(0)
                         End If
                     Next
                     Dim top4Fantasy As Integer = 0
@@ -2773,7 +2767,7 @@ Public Class formBackglass
                         For Each romsize As KeyValuePair(Of String, Integer) In roms4Fantasy
                                 If romsize.Value > secondSize4Fantasy Then
                                     secondSize4Fantasy = romsize.Value
-                                    secondkey4Fantasy = romsize.Keysecondkey4Authentic = romsize.Key.Split("|")(0)
+                                    secondkey4Fantasy = romsize.Key.Split("|")(0)
                             End If
                             If romsize.Value > top4Fantasy Then
                                     secondSize4Fantasy = top4Fantasy
