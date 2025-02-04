@@ -1,5 +1,6 @@
 Imports System
 Imports System.Drawing
+Imports System.Text.RegularExpressions
 
 Public Class B2SData
 
@@ -655,11 +656,122 @@ Public Class B2SData
     Public Shared Function ShortFileName(ByVal longFileName As String) As String
         ' Cut filename after the first parenthesis
         ' Return short file name
-        If longFileName Like "*)*" Then
-            Return longFileName.Substring(0, longFileName.IndexOf(")") - 1)
+        If longFileName Like "* *" Then
+            Return longFileName.Substring(0, longFileName.IndexOf(" ") - 1)
         End If
         Return longFileName
 
     End Function
 
+    Public Class FuzzyFileName
+
+        ' Optimized function to calculate the Levenshtein distance between two strings
+        Public Shared Function LevenshteinDistance(ByVal s As String, ByVal t As String) As Integer
+            Dim n As Integer = s.Length
+            Dim m As Integer = t.Length
+
+            ' If one of the strings is empty, return the length of the other string
+            If n = 0 Then Return m
+            If m = 0 Then Return n
+
+            ' Ensure n <= m to use less space
+            If n > m Then
+                Dim temp As String = s
+                s = t
+                t = temp
+                n = s.Length
+                m = t.Length
+            End If
+
+            ' Create two work vectors of integer distances
+            Dim previousRow(n) As Integer
+            Dim currentRow(n) As Integer
+
+            ' Initialize the previous row
+            For i As Integer = 0 To n
+                previousRow(i) = i
+            Next
+
+            ' Compute the distance
+            For j As Integer = 1 To m
+                currentRow(0) = j
+                For i As Integer = 1 To n
+                    Dim cost As Integer = If(s(i - 1) = t(j - 1), 0, 1)
+                    currentRow(i) = Math.Min(Math.Min(currentRow(i - 1) + 1, previousRow(i) + 1), previousRow(i - 1) + cost)
+                Next
+                ' Swap the current and previous rows
+                Dim tempRow() As Integer = previousRow
+                previousRow = currentRow
+                currentRow = tempRow
+            Next
+
+            Return previousRow(n)
+        End Function
+
+        ' Function to calculate the percentage match between two strings
+        Public Shared Function PercentageMatch(ByVal s As String, ByVal t As String) As Double
+            Dim maxLength As Integer = Math.Max(s.Length, t.Length)
+            If maxLength = 0 Then
+                Return 100.0
+            End If
+
+            Dim distance As Integer = LevenshteinDistance(s, t)
+            Return (1.0 - CDbl(distance) / maxLength) * 100.0
+        End Function
+
+        ' Function to normalize a string
+        Public Shared Function NormalizeString(ByVal input As String) As String
+            ' Convert to lowercase, remove special characters, and trim whitespace
+            Dim normalized As String = input.ToLower()
+            normalized = Regex.Replace(normalized, "[^\w\s]", "")
+            normalized = normalized.Trim()
+            Return normalized
+        End Function
+
+        ' Function to tokenize a string
+        Public Shared Function TokenizeString(ByVal input As String) As List(Of String)
+            ' Split the string into words
+            Dim tokens As List(Of String) = New List(Of String)(input.Split(New Char() {" "c}, StringSplitOptions.RemoveEmptyEntries))
+            Return tokens
+        End Function
+
+        ' Function to calculate the Jaccard similarity between two sets of tokens
+        Public Shared Function JaccardSimilarity(ByVal tokens1 As List(Of String), ByVal tokens2 As List(Of String)) As Double
+            Dim intersection As Integer = tokens1.Intersect(tokens2).Count()
+            Dim union As Integer = tokens1.Union(tokens2).Count()
+            Return CDbl(intersection) / union
+        End Function
+
+        ' Function to find the best match among candidates
+        Public Shared Function FindBestMatch(ByVal target As String, ByVal candidates As List(Of String)) As String
+            Dim bestMatch As String = String.Empty
+            Dim highestMatchScore As Double = 0.0
+
+            ' Normalize and tokenize the target string
+            Dim normalizedTarget As String = NormalizeString(target)
+            Dim targetTokens As List(Of String) = TokenizeString(normalizedTarget)
+
+            For Each candidate As String In candidates
+                ' Normalize and tokenize the candidate string
+                Dim normalizedCandidate As String = NormalizeString(candidate)
+                Dim candidateTokens As List(Of String) = TokenizeString(normalizedCandidate)
+
+                ' Calculate the Jaccard similarity
+                Dim jaccardScore As Double = JaccardSimilarity(targetTokens, candidateTokens)
+
+                ' Calculate the Levenshtein distance percentage match
+                Dim levenshteinScore As Double = PercentageMatch(normalizedTarget, normalizedCandidate)
+
+                ' Combine the scores (you can adjust the weights as needed)
+                Dim combinedScore As Double = (jaccardScore + levenshteinScore) / 2
+
+                If combinedScore > highestMatchScore Then
+                    highestMatchScore = combinedScore
+                    bestMatch = candidate
+                End If
+            Next
+
+            Return bestMatch
+        End Function
+    End Class
 End Class

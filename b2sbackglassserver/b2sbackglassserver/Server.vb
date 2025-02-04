@@ -1,11 +1,7 @@
-﻿Imports System
-Imports System.Text
+﻿Imports System.Text
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
-Imports System.Linq.Expressions
 Imports System.Drawing
-Imports System.Reflection
-Imports System.Runtime.InteropServices.WindowsRuntime
 
 <ProgId("B2S.Server"), ComClass(Server.ClassID, Server.InterfaceID, Server.EventsID)>
 Public Class Server
@@ -2152,7 +2148,7 @@ Public Class Server
                         If picbox.Left <> xpos OrElse picbox.Top <> ypos Then
                             picbox.Left = xpos
                             picbox.Top = ypos
-                                picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
+                            picbox.RectangleF = New RectangleF(CInt(picbox.Left / rescaleBackglass.Width), CInt(picbox.Top / rescaleBackglass.Height), picbox.RectangleF.Width, picbox.RectangleF.Height)
                             If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
                         End If
                     End If
