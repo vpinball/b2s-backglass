@@ -388,13 +388,9 @@ Public Class Server
         End Get
     End Property
 
-    Public ReadOnly Property VPMBuildVersion() As String
+    Public ReadOnly Property PMBuildVersion() As Double
         Get
-            Try
-                Return VPinMAME.FullVersion
-            Catch ex As Exception
-                Return VPinMAME.Version
-            End Try
+            Return VPinMAME.PMBuildVersion
         End Get
     End Property
 
