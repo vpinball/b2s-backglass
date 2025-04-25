@@ -498,7 +498,7 @@ Public Class formSettings
         Dim B2S_Identifier As String = IO.Path.Combine(Application.StartupPath, "B2S_ScreenResIdentifier.exe")
 #End If
         If IO.File.Exists(B2S_Identifier) Then
-            pi.Arguments = """" & B2SData.TableFileName & ".res" & """"
+            pi.Arguments = """" & B2SData.TableFileName & B2SSettings.B2SResFileEnding & """"
             pi.FileName = B2S_Identifier
 
             p.StartInfo = pi

@@ -3,7 +3,15 @@ Imports System.IO
 Imports System.Security.Principal
 
 Public Class formBackglassServerRegApp
+    Public Shared Function SafeReadRegistry(ByVal keyname As String, ByVal valuename As String, ByVal defaultvalue As String) As String
+        '    Public Property GlobalFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
 
+        Try
+            Return CStr(Registry.CurrentUser.OpenSubKey(keyname).GetValue(valuename, defaultvalue))
+        Catch ex As Exception
+            Return defaultvalue
+        End Try
+    End Function
 
     Private Sub Form1_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
         If Not IsAdmin() Then
@@ -117,7 +125,7 @@ Public Class formBackglassServerRegApp
 
         If CommandSilent Or (dialogResult = DialogResult.Yes) Or (dialogResult = DialogResult.No) Then
             Dim rkReg As RegistryKey = Registry.ClassesRoot
-
+            Dim B2SResFileEnding As String = SafeReadRegistry("Software\B2S", "B2SResFileEndingOverride", ".res")
 
             ' Clean old registry for the ScreenRes path and only if Yes is choosen it is regenerated.
 
@@ -129,7 +137,7 @@ Public Class formBackglassServerRegApp
                 rkReg.DeleteSubKeyTree("b2sserver.directb2s\shell", False)
             End If
 
-            rkReg.DeleteSubKeyTree(".res", False) ' Do not delete this one?
+            rkReg.DeleteSubKeyTree(B2SResFileEnding, False) ' Do not delete this one?
             rkReg.DeleteSubKeyTree("b2sserver.res", False)
 
             Using sysFileKey As RegistryKey = rkReg.OpenSubKey("SystemFileAssociations", True)
@@ -151,7 +159,7 @@ Public Class formBackglassServerRegApp
                         End Using
 
                         ' Add res file context menu for double click and right click -> Edit ScreenRes file
-                        rkReg.CreateSubKey(".res").SetValue("", "b2sserver.res")
+                        rkReg.CreateSubKey(B2SResFileEnding).SetValue("", "b2sserver.res")
                         ' Add New -> B2S Server ScreenRes file (new).res  Context menu
                         rkReg.CreateSubKey(".res\b2sserver.res\ShellNew").SetValue("Command", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2S_ScreenResIdentifier.exe") & """ ""%1""")
                         Using resReg As RegistryKey = rkReg.CreateSubKey("b2sserver.res")
@@ -160,7 +168,7 @@ Public Class formBackglassServerRegApp
                         End Using
 
                         If Directory.Exists("ScreenResTemplates") Then
-                            Dim sFiles() As String = Directory.GetFiles("ScreenResTemplates", "*.res")
+                            Dim sFiles() As String = Directory.GetFiles("ScreenResTemplates", "*" + B2SResFileEnding)
                             'And then add it in a Label in the way you want
                             If sFiles.Length > 0 Then
                                 Using b2stoolstoplevel As RegistryKey = sysFileKey.CreateSubKey(".directb2s\shell\B2SServer")

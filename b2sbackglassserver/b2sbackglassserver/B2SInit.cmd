@@ -1,8 +1,10 @@
 @echo off
 echo %0 %* > "%~dp0B2SWindowPunch.log"
 setlocal EnableDelayedExpansion
+set B2SResFileEndingOverride=.res
+for /f "tokens=3" %%a in ('reg query "HKCU\Software\B2S"  /V B2SResFileEndingOverride  ^|findstr /ri "REG_SZ"') do set B2SResFileEndingOverride=%%a
 
-set "resfile=%cd%\%~1.res"
+set "resfile=%cd%\%~1%B2SResFileEndingOverride%"
 set "GameName=%~2"
 
 REM If started from explorer, quit

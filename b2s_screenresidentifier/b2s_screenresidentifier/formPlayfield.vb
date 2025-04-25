@@ -3,14 +3,26 @@ Imports System.Drawing
 Imports System.Windows.Forms
 Imports System.IO
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
+Imports Microsoft.Win32
 
 Public Class formPlayfield
 
     Private formBackglass As formBackglass = Nothing
     Private formBackground As formBackground = Nothing
     Private formDMD As formDMD = Nothing
+    Public Shared Function SafeReadRegistry(ByVal keyname As String, ByVal valuename As String, ByVal defaultvalue As String) As String
+        '    Public Property GlobalFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
+
+        Try
+            Return CStr(Registry.CurrentUser.OpenSubKey(keyname).GetValue(valuename, defaultvalue))
+        Catch ex As Exception
+            Return defaultvalue
+        End Try
+    End Function
 
     Private Sub formPlayfield_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+        Dim B2SResFileEnding As String = SafeReadRegistry("Software\B2S", "B2SResFileEndingOverride", ".res")
+
         formDMD = New formDMD
         formDMD.formBackglass = formBackglass
 
@@ -25,8 +37,8 @@ Public Class formPlayfield
             ' If started from B2SBackglassServer either directly (PureEXE=true) or as backglass through VPX (false) or from explorer PureEXE = Nothing
             If My.Application.CommandLineArgs.Count > 1 Then PureEXE = My.Application.CommandLineArgs.ElementAt(1).Equals("-pureexe=true")
             ' In case a Table or backglass file is thrown on the executable
-            If Not Path.GetExtension(FileName).ToLower().Equals(".res") And Not Path.GetExtension(FileName).ToLower().Equals(".txt") And Not FileName.ToLower().Equals(GlobalFileName.ToLower()) Then
-                FileName = Path.ChangeExtension(FileName, ".res")
+            If Not Path.GetExtension(FileName).ToLower().Equals(B2SResFileEnding) And Not Path.GetExtension(FileName).ToLower().Equals(".txt") And Not FileName.ToLower().Equals(GlobalFileName.ToLower()) Then
+                FileName = Path.ChangeExtension(FileName, B2SResFileEnding)
             End If
 
             If File.Exists(FileName) Then

@@ -40,6 +40,7 @@ Public Class B2SSettings
 
     Private Const settingsFilename As String = "B2STableSettings.xml"
     Public Shared Property B2SScreenResFileName As String = SafeReadRegistry("Software\B2S", "B2SScreenResFileNameOverride", "ScreenRes.txt")
+    Public Shared Property B2SResFileEnding As String = SafeReadRegistry("Software\B2S", "B2SResFileEndingOverride", ".res")
     Public Shared Property B2STableSettingsExtendedPath() As Boolean = SafeReadRegistry("Software\B2S", "B2STableSettingsExtendedPath", "0") = "1"
     Public Shared Property B2SWindowPunchActive() As Boolean = SafeReadRegistry("Software\B2S", "B2SWindowPunchActive", "0") = "1"
     Public Shared Property B2SDebugLog() As Boolean = SafeReadRegistry("Software\B2S", "B2SDebugLog", "0") = "1"
