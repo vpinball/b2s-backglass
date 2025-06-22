@@ -150,19 +150,42 @@ Public Class B2SScreen
 
             line(i) = 0
             line(i + 1) = 0
-            Me.PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
-            Me.BackglassSize = New Size(CInt(line(2)), CInt(line(3)))
+
             Me.BackglassMonitor = line(4)
-            Me.BackglassLocation = New Point(CInt(line(5)), CInt(line(6)))
-            Me.DMDSize = New Size(CInt(line(7)), CInt(line(8)))
-            Me.DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
+            EvalateBackglassScreen()
+
+            Me.PlayfieldSize = New Size(CInt(CalcValue(line(0), ScreensOrdered(0).Bounds.Width)), CInt(CalcValue(line(1), ScreensOrdered(0).Bounds.Height)))
+            If (line(0).Contains("%") Or line(1).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile PlayfieldSize: " &
+                                                                                                  line(0) & "," & line(1) & "->" & Me.PlayfieldSize.Width & "," & Me.PlayfieldSize.Height)
+
+            Me.BackglassSize = New Size(CInt(CalcValue(line(2), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(3), Me.BackglassScreen.Bounds.Height)))
+            If (line(2).Contains("%") Or line(3).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile BackglassSize: " &
+                                                                                                  line(2) & "," & line(3) & "->" & Me.BackglassSize.Width & "," & Me.BackglassSize.Height)
+
+            Me.BackglassLocation = New Point(CInt(CalcValue(line(5), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(6), Me.BackglassScreen.Bounds.Height)))
+            If (line(5).Contains("%") Or line(6).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile BackglassLocation: " &
+                                                                                                  line(5) & "," & line(6) & "->" & Me.BackglassLocation.X & "," & Me.BackglassLocation.Y)
+
+            Me.DMDSize = New Size(CInt(CalcValue(line(7), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(8), Me.BackglassScreen.Bounds.Height)))
+            If (line(7).Contains("%") Or line(8).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile DMDSize: " &
+                                                                                                  line(7) & "," & line(8) & "->" & Me.DMDSize.Width & "," & Me.DMDSize.Height)
+
+            Me.DMDLocation = New Size(CInt(CalcValue(line(9), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(10), Me.BackglassScreen.Bounds.Height)))
+            If (line(9).Contains("%") Or line(10).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile DMDLocation: " &
+                                                                                                  line(9) & "," & line(10) & "->" & Me.DMDLocation.X & "," & Me.DMDLocation.Y)
+
             Me.DMDFlipY = (Trim(line(11)) = "1")
 
             If (i > 15) Then
-                Me.BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
-                Me.BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
+                Me.BackgroundLocation = New Point(CInt(CalcValue(line(12), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(13), Me.BackglassScreen.Bounds.Height)))
+                If (line(12).Contains("%") Or line(13).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile BackgroundLocation: " &
+                                                                                                  line(12) & "," & line(13) & "->" & Me.BackgroundLocation.X & "," & Me.BackgroundLocation.Y)
+                Me.BackgroundSize = New Size(CInt(CalcValue(line(14), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(15), Me.BackglassScreen.Bounds.Height)))
+                If (line(14).Contains("%") Or line(15).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile BackgroundSize: " &
+                                                                                                  line(14) & "," & line(15) & "->" & Me.BackgroundSize.Width & "," & Me.BackgroundSize.Height)
                 Me.BackgroundPath = line(16)
                 If Me.BackgroundPath.Contains("{") Then
+                    debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile BackgroundPath contains template:" & Me.BackgroundPath)
                     ' We will try to replace the placeholders with the real values
                     Me.BackgroundPath = GetBackgroundPath(Me.BackgroundPath, B2SData.TableFileName, B2SSettings.GameName)
                     debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile GetBackgroundPath called and returned " & Me.BackgroundPath)
@@ -187,6 +210,32 @@ Public Class B2SScreen
 #End If
         End If
     End Sub
+    Private Function CalcValue(StringValue As String, totalValue As Integer) As Integer
+        ' Calculates an integer value from a string, which may be a percentage (e.g., "50%") or an absolute value.
+        ' If the string ends with '%', it returns the percentage of totalValue.
+        ' If the string is a number, it returns the integer value.
+        ' Returns 0 if the string is invalid or cannot be parsed.
+
+        If StringValue Is Nothing Then Return 0
+
+        StringValue = StringValue.Trim()
+        If StringValue.EndsWith("%") Then
+            Dim percentStr As String = StringValue.Substring(0, StringValue.Length - 1)
+            Dim percentValue As Double
+            If Double.TryParse(percentStr, percentValue) Then
+                Return CInt(totalValue * percentValue / 100.0)
+            Else
+                Return 0
+            End If
+        Else
+            Dim intValue As Integer
+            If Integer.TryParse(StringValue, intValue) Then
+                Return intValue
+            Else
+                Return 0
+            End If
+        End If
+    End Function
     Private Function GetBackgroundPath(BackgroundPath As String, ByVal TableFileName As String, ByVal GameName As String) As String
         Dim pattern As String = "^(?'name'[\w \-\!']+)(\((?'manufactor'[A-Za-z ]+)? (?'year'[\d{4}]+)\))?(?'extra'.*)?$"
         Dim regex As New Regex(pattern)
@@ -349,24 +398,7 @@ Public Class B2SScreen
 
     End Sub
 
-    Private Sub Show()
-        'Dim searchPathLog As Log = New Log("BackglassShow")
-        'searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
-
-        'searchPathLog.WriteLogEntry("Start Show")
-
-        'On Error Resume Next
-        If (Not Me.BackgroundSize.IsEmpty) And ((B2SSettings.StartBackground.HasValue And B2SSettings.StartBackground) Or
-                                                (Not B2SSettings.StartBackground.HasValue And B2SSettings.GlobalStartBackground.HasValue And B2SSettings.GlobalStartBackground)) Then
-            StartBackground = True
-        End If
-
-        ' first of all get the info whether the DMD is to be shown or not
-        IsDMDToBeShown = (Me.formDMD IsNot Nothing AndAlso Not Point.Empty.Equals(Me.DMDLocation) AndAlso
-            ((Me.DMDViewMode = eDMDViewMode.ShowDMD) OrElse
-             (Me.DMDViewMode = eDMDViewMode.ShowDMDOnlyAtDefaultLocation AndAlso Me.DMDAtDefaultLocation) OrElse
-             (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
-
+    Private Sub EvalateBackglassScreen()
         On Error Resume Next
 
         ' get the correct screen
@@ -398,6 +430,27 @@ Public Class B2SScreen
         Next
         On Error GoTo 0
 
+    End Sub
+
+    Private Sub Show()
+        'Dim searchPathLog As Log = New Log("BackglassShow")
+        'searchPathLog.IsLogOn = B2SSettings.IsBackglassSearchLogOn
+
+        'searchPathLog.WriteLogEntry("Start Show")
+
+        'On Error Resume Next
+        If (Not Me.BackgroundSize.IsEmpty) And ((B2SSettings.StartBackground.HasValue And B2SSettings.StartBackground) Or
+                                                (Not B2SSettings.StartBackground.HasValue And B2SSettings.GlobalStartBackground.HasValue And B2SSettings.GlobalStartBackground)) Then
+            StartBackground = True
+        End If
+
+        ' first of all get the info whether the DMD is to be shown or not
+        IsDMDToBeShown = (Me.formDMD IsNot Nothing AndAlso Not Point.Empty.Equals(Me.DMDLocation) AndAlso
+            ((Me.DMDViewMode = eDMDViewMode.ShowDMD) OrElse
+             (Me.DMDViewMode = eDMDViewMode.ShowDMDOnlyAtDefaultLocation AndAlso Me.DMDAtDefaultLocation) OrElse
+             (Me.DMDViewMode = eDMDViewMode.DoNotShowDMDAtDefaultLocation AndAlso Not Me.DMDAtDefaultLocation)))
+
+        'EvalateBackglassScreen()
 
         ' Westworld show background form, only if background is set and enabled in setting
         Dim DMDKeepBackglassLocation = Me.BackglassLocation
