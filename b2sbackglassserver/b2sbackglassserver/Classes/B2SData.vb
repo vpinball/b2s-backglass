@@ -1,5 +1,6 @@
 Imports System
 Imports System.Drawing
+Imports System.IO
 Imports System.Text.RegularExpressions
 
 Public Class B2SData
@@ -655,10 +656,14 @@ Public Class B2SData
 
     Public Shared Function ShortFileName(ByVal longFileName As String) As String
         ' Cut filename after the first parenthesis
-        ' Return short file name
-        If longFileName Like "* *" Then
-            Return longFileName.Substring(0, longFileName.IndexOf(" ") - 1)
+
+        Dim dir As String = Path.GetDirectoryName(longFileName)
+        Dim fileNameOnly As String = Path.GetFileNameWithoutExtension(longFileName)
+
+        If fileNameOnly.Contains(")") Then
+            Return Path.Combine(dir, longFileName.Substring(0, longFileName.IndexOf(")") + 1))
         End If
+
         Return longFileName
 
     End Function
