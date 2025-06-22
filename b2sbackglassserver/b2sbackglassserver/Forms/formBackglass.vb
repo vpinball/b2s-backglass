@@ -1907,10 +1907,15 @@ Public Class formBackglass
 #Region "load B2S data and more B2S stuff"
 
     Private Sub LoadB2SData()
+
         Dim filename As String = B2SData.TableFileName & ".directb2s"
+        B2SScreen.debugLog.WriteLogEntry("FuzzyMatching filename " & filename)
         Dim shortFilename As String = B2SData.ShortFileName(filename) & ".directb2s"
-        Dim hyperpinFilename As String = String.Empty
-        Dim shorthyperpinFilename As String = String.Empty
+        B2SScreen.debugLog.WriteLogEntry("FuzzyMatching shortFilename " & shortFilename)
+        Dim hyperpinFilename As String = filename
+        Dim shorthyperpinFilename As String = filename
+
+        B2SSettings.MatchingFileNames = Array.Empty(Of String)()
 
         ' check whether the table name can be found
         If Not String.IsNullOrEmpty(B2SSettings.GameName) And Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortFilename) Then
@@ -1929,17 +1934,18 @@ Public Class formBackglass
                 End If
                 ' check whether the hyperpin description can be found
                 If Not IO.File.Exists(hyperpinFilename) AndAlso Not IO.File.Exists(shorthyperpinFilename) Then
-                    If filename.Length >= 8 Then
+                    If filename.Length >= 10 Then
                         ' look for short name
-                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(IO.Directory.GetCurrentDirectory(), "*.directb2s")
+                        B2SScreen.debugLog.WriteLogEntry("FuzzyMatching Search for FileName:" & Directory.GetCurrentDirectory() & "\" & Path.GetFileNameWithoutExtension(shortFilename) & "*.directb2s")
+                        B2SSettings.MatchingFileNames = IO.Directory.GetFiles(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(shortFilename) & "*.directb2s") _
+                            .Select(Function(f) IO.Path.GetFileName(f)).ToArray()
                         Dim candidateFilenames As New List(Of String)(B2SSettings.MatchingFileNames)
                         Dim bestMatch As String = B2SData.FuzzyFileName.FindBestMatch(filename, candidateFilenames)
 
                         If Not String.IsNullOrEmpty(bestMatch) Then
                             shortFilename = bestMatch
+                            B2SScreen.debugLog.WriteLogEntry("FuzzyMatching Selected FileName:" & shortFilename)
                         End If
-
-                        B2SScreen.debugLog.WriteLogEntry("FuzzyMatching Selected FileName:" & shortFilename)
                     End If
                 End If
                 B2SScreen.debugLog.WriteLogEntry("FuzzyMatching END")
