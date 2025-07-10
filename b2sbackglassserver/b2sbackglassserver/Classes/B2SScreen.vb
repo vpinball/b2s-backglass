@@ -6,7 +6,7 @@ Imports System.Text.RegularExpressions
 
 Public Class B2SScreen
 
-    Public Property ScreensOrdered() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
+    Public Property ScreensOrdered() As Screen() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
     Public Property VersionTwoFile() As Boolean = False
 
     Public Shared formBackglass As formBackglass = Nothing
@@ -39,7 +39,7 @@ Public Class B2SScreen
     Public Property BackgroundLocation() As Point = New Point(0, 0)
     Public Property BackgroundPath() As String = String.Empty
 
-    Public Property BackglassCutOff() As Rectangle = Nothing
+    Public Property BackglassCutOff() As Rectangle = Rectangle.Empty
 
     Public Property IsDMDToBeShown() As Boolean = False
     Public Property StartBackground() As Boolean = False
@@ -149,7 +149,7 @@ Public Class B2SScreen
             debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile A version #2 file " & Me.BackgroundPath)
 
             line(i) = 0
-            line(i + 1) = 0
+            If i < 49 Then line(i + 1) = 0
 
             Me.BackglassMonitor = line(4)
             EvalateBackglassScreen()
@@ -170,7 +170,7 @@ Public Class B2SScreen
             If (line(7).Contains("%") Or line(8).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile DMDSize: " &
                                                                                                   line(7) & "," & line(8) & "->" & Me.DMDSize.Width & "," & Me.DMDSize.Height)
 
-            Me.DMDLocation = New Size(CInt(CalcValue(line(9), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(10), Me.BackglassScreen.Bounds.Height)))
+            Me.DMDLocation = New Point(CInt(CalcValue(line(9), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(10), Me.BackglassScreen.Bounds.Height)))
             If (line(9).Contains("%") Or line(10).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile DMDLocation: " &
                                                                                                   line(9) & "," & line(10) & "->" & Me.DMDLocation.X & "," & Me.DMDLocation.Y)
 
@@ -638,16 +638,16 @@ Public Class B2SScreen
                     If DMDFlipY AndAlso Not DMDAtDefaultLocation Then
                         y = formDMD.Height / _rescaleDMDY - y - ledarea.Value.Rect.Height / _rescaleDMDY
                     End If
-                    ledarea.Value.Rect = Rectangle.Round(New Rectangle(ledarea.Value.Rect.X / _rescaleDMDX, y, ledarea.Value.Rect.Width / _rescaleDMDX, ledarea.Value.Rect.Height / _rescaleDMDY))
+                    ledarea.Value.Rect = Rectangle.Round(New RectangleF(ledarea.Value.Rect.X / _rescaleDMDX, y, ledarea.Value.Rect.Width / _rescaleDMDX, ledarea.Value.Rect.Height / _rescaleDMDY))
                 End If
             Else
-                ledarea.Value.Rect = Rectangle.Round(New Rectangle(ledarea.Value.Rect.X / _rescaleX, ledarea.Value.Rect.Y / _rescaleY, ledarea.Value.Rect.Width / _rescaleX, ledarea.Value.Rect.Height / _rescaleY))
+                ledarea.Value.Rect = Rectangle.Round(New RectangleF(ledarea.Value.Rect.X / _rescaleX, ledarea.Value.Rect.Y / _rescaleY, ledarea.Value.Rect.Width / _rescaleX, ledarea.Value.Rect.Height / _rescaleY))
             End If
         Next
 
         ' and now recalc the backglass cut off rectangle
         If BackglassCutOff <> Nothing Then
-            BackglassCutOff = New Rectangle(BackglassCutOff.X / _rescaleX, BackglassCutOff.Y / _rescaleY, BackglassCutOff.Width / _rescaleX, BackglassCutOff.Height / _rescaleY)
+            BackglassCutOff = Rectangle.Round(New RectangleF(BackglassCutOff.X / _rescaleX, BackglassCutOff.Y / _rescaleY, BackglassCutOff.Width / _rescaleX, BackglassCutOff.Height / _rescaleY))
         End If
 
     End Sub
