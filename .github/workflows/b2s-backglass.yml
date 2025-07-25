@@ -25,6 +25,16 @@ jobs:
         with:
           repository: DirectOutput/B2SServerPluginInterface
           path: B2SServerPluginInterface
+# Since the file is in the DirectOutput repository, we try to patch it here
+      - name: Patch B2SServerPluginInterface.csproj to use .NET Framework 4.8
+        shell: pwsh
+        run: |
+          $csproj = "B2SServerPluginInterface/B2SServerPluginInterface/B2SServerPluginInterface.csproj"
+          (Get-Content $csproj) -replace '<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>', '<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>' | Set-Content $csproj
+          $docProj = "B2SServerPluginInterface/Documentation/Documentation.csproj"
+          (Get-Content $docProj) -replace '<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>', '<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>' | Set-Content $docProj
+          (Get-Content $docProj) -replace '<TargetFrameworkProfile>Client</TargetFrameworkProfile>', '' | Set-Content $docProj
+
       - id: version
         name: Update AssemblyInformationalVersion
         run: |
