@@ -83,7 +83,7 @@ jobs:
       - name: Build Server
         run: |
           msbuild b2s_screenresidentifier/B2S_ScreenResIdentifier.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
-          msbuild b2sbackglassserver/B2SBackglassServerEXE.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
+          msbuild b2sbackglassserver/B2SBackglassServer.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
           msbuild b2sbackglassserverregisterapp/B2SBackglassServerRegisterApp.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
           msbuild B2SWindowPunch/B2SWindowPunch.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
         shell: cmd
