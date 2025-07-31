@@ -1,4 +1,5 @@
-﻿Imports System.Collections.Generic
+﻿#Disable Warning BC42016, BC42017, BC42018, BC42019, BC42032, BC42021
+Imports System.Collections.Generic
 Imports System.IO
 Imports System.Reflection
 Imports System.ComponentModel.Composition

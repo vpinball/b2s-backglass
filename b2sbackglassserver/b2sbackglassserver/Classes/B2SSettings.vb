@@ -1,4 +1,5 @@
-﻿Imports System
+﻿#Disable Warning BC42016, BC42017, BC42018, BC42019, BC42032
+Imports System
 Imports System.IO
 Imports System.Reflection
 Imports System.Windows.Forms

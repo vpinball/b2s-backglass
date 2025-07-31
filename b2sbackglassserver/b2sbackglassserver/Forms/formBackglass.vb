@@ -1,4 +1,5 @@
-﻿Imports System.Drawing
+﻿#Disable Warning BC42016, BC42017, BC42018, BC42019, BC42032
+Imports System.Drawing
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Windows.Forms
@@ -1898,7 +1899,7 @@ Public Class formBackglass
 
     Public Sub GetScaleFactor(ByRef scale As SizeF)
 
-        scale = B2SScreen.rescaleBackglass
+        scale = B2SScreen.BackglassRescaleFactor
 
     End Sub
 #End Region

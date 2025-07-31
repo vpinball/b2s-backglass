@@ -1,4 +1,5 @@
-﻿Imports System.Windows.Forms
+﻿#Disable Warning BC42016, BC42017, BC42018, BC42019, BC42032, BC42021
+Imports System.Windows.Forms
 Imports System.Drawing
 
 Public Class PluginWindow
