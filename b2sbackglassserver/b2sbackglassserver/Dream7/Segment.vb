@@ -1,4 +1,5 @@
-﻿Imports System.Drawing.Drawing2D
+﻿#Disable Warning BC42016, BC42017, BC42018, BC42019, BC42032
+Imports System.Drawing.Drawing2D
 Imports System.Drawing
 Imports System.ComponentModel
 

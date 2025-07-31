@@ -1,4 +1,5 @@
-﻿Imports System.Text
+﻿#Disable Warning BC42016, BC42017, BC42018, BC42019, BC42032
+Imports System.Text
 Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
 Imports System.Drawing
@@ -2148,9 +2149,9 @@ Public Class Server
                             If picbox.Parent IsNot Nothing Then picbox.Parent.Invalidate()
                         End If
                     End If
-                    Next
-                End If
+                Next
             End If
+        End If
 
     End Sub
 
@@ -2337,7 +2338,6 @@ Public Class Server
                     For i As Integer = startdigit + digits - 1 To startdigit Step -1
                         MyB2SSetScore(i, scoreAsString.Substring(i - startdigit, 1), True, useLEDs, useLEDDisplays, useReels, reeltype, ledtype)
                     Next
-
                 ElseIf useLEDs Then
 
                     ' check the passed digit
@@ -3037,3 +3037,4 @@ Public Class Server
 
 
 End Class
+

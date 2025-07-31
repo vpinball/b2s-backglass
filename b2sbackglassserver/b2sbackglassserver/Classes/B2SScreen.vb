@@ -1,11 +1,11 @@
-Imports System.Windows.Forms
+#Disable Warning BC42016, BC42017, BC42018, BC42019, BC42032
+
 Imports System.Drawing
 Imports System.IO
 Imports System.Reflection
 Imports System.Text.RegularExpressions
 
 Public Class B2SScreen
-
     Public Property ScreensOrdered() As Screen() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
     Public Property VersionTwoFile() As Boolean = False
 
