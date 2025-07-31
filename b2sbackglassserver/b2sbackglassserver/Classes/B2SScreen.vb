@@ -3,7 +3,10 @@
 Imports System.Drawing
 Imports System.IO
 Imports System.Reflection
+Imports System.Runtime.InteropServices
 Imports System.Text.RegularExpressions
+Imports System.Threading
+Imports System.Windows.Forms
 
 Public Class B2SScreen
     Public Property ScreensOrdered() As Screen() = Screen.AllScreens.OrderBy(Function(sc) sc.Bounds.Location.X).ToArray()
@@ -44,7 +47,8 @@ Public Class B2SScreen
     Public Property IsDMDToBeShown() As Boolean = False
     Public Property StartBackground() As Boolean = False
 
-    Public Property rescaleBackglass As SizeF = New SizeF(1, 1)
+    Public Property BackglassRescaleFactor As SizeF = New SizeF(1, 1)
+    Public Property ScreenDpiFactor As SizeF = New SizeF(1, 1)
 
 #Region "constructor and startup"
 
@@ -230,7 +234,7 @@ Public Class B2SScreen
         Else
             Dim intValue As Integer
             If Integer.TryParse(StringValue, intValue) Then
-                Return intValue
+                Return intValue '/ ScreenDpiFactor.Height
             Else
                 Return 0
             End If
@@ -406,6 +410,8 @@ Public Class B2SScreen
         Dim s As Screen
         Dim currentScreen = 0
 
+        Const S_OK As Integer = &H0
+
         'searchPathLog.WriteLogEntry("BackglassMonitor " & BackglassMonitor)
         For Each s In ScreensOrdered
             currentScreen += 1
@@ -419,7 +425,6 @@ Public Class B2SScreen
             ElseIf Left(BackglassMonitor, 1) = "=" Then
                 If currentScreen = CInt(Mid(BackglassMonitor, 2)) Then
                     Me.BackglassScreen = s
-                    'searchPathLog.WriteLogEntry("Found: =" & currentScreen)
                     Exit For
                 End If
             ElseIf s.DeviceName = "\\.\DISPLAY" + BackglassMonitor Then
@@ -428,6 +433,13 @@ Public Class B2SScreen
                 Exit For
             End If
         Next
+        Dim dpiX As UInt32
+        Dim dpiY As UInt32
+        Dim result As Integer = GetDpiForMonitor(GetMonitorHandle(Me.BackglassScreen), 0, dpiX, dpiY)
+        If result = S_OK Then
+            ScreenDpiFactor = New SizeF(dpiX / 96.0, dpiY / 96.0)
+        End If
+        debugLog.WriteLogEntry("DpiFactor =" & ScreenDpiFactor.Width)
         On Error GoTo 0
 
     End Sub
@@ -502,9 +514,9 @@ Public Class B2SScreen
         ' calculate backglass rescale factors
 
         If formBackglass.BackgroundImage IsNot Nothing Then
-            rescaleBackglass = New SizeF(CSng(formBackglass.BackgroundImage.Width / Me.BackglassSize.Width), CSng(formBackglass.BackgroundImage.Height / Me.BackglassSize.Height))
+            BackglassRescaleFactor = New SizeF(CSng(formBackglass.BackgroundImage.Width / Me.BackglassSize.Width), CSng(formBackglass.BackgroundImage.Height / Me.BackglassSize.Height))
         Else
-            rescaleBackglass = New SizeF(CSng(formBackglass.Width / Me.BackglassSize.Width), CSng(formBackglass.Height / Me.BackglassSize.Height))
+            BackglassRescaleFactor = New SizeF(CSng(formBackglass.Width / Me.BackglassSize.Width), CSng(formBackglass.Height / Me.BackglassSize.Height))
         End If
 
         ' maybe rescale the location and the size because this is the default and therefore it has to be done
@@ -513,9 +525,9 @@ Public Class B2SScreen
         If IsDMDToBeShown Then
             If Me.DMDAtDefaultLocation Then
                 Me.DMDSize = Me.formDMD.Size
-                If rescaleBackglass.Width <> 1 OrElse rescaleBackglass.Height <> 1 Then
-                    Me.DMDLocation = New Point(Int(Me.DMDLocation.X / rescaleBackglass.Width), Int(Me.DMDLocation.Y / rescaleBackglass.Height))
-                    Me.DMDSize = New Size(Int(Me.DMDSize.Width / rescaleBackglass.Width), Int(Me.DMDSize.Height / rescaleBackglass.Height))
+                If BackglassRescaleFactor.Width <> 1 OrElse BackglassRescaleFactor.Height <> 1 Then
+                    Me.DMDLocation = New Point(Int(Me.DMDLocation.X / BackglassRescaleFactor.Width), Int(Me.DMDLocation.Y / BackglassRescaleFactor.Height))
+                    Me.DMDSize = New Size(Int(Me.DMDSize.Width / BackglassRescaleFactor.Width), Int(Me.DMDSize.Height / BackglassRescaleFactor.Height))
                 End If
             End If
 
@@ -529,7 +541,7 @@ Public Class B2SScreen
         End If
 
         ' move and scale all picked objects
-        ScaleAllControls(rescaleBackglass.Width, rescaleBackglass.Height, rescaleDMDX, rescaleDMDY)
+        ScaleAllControls(BackglassRescaleFactor.Width, BackglassRescaleFactor.Height, rescaleDMDX, rescaleDMDY)
 
         ' show the backglass form
         formBackglass.StartPosition = FormStartPosition.Manual
@@ -775,6 +787,18 @@ Public Class B2SScreen
     End Function
 
 #End Region
+    <DllImport("Shcore.dll")>
+    Private Shared Function GetDpiForMonitor(hmonitor As IntPtr, dpiType As Integer, ByRef dpiX As UInteger, ByRef dpiY As UInteger) As Integer
+    End Function
 
+    <DllImport("User32.dll")>
+    Private Shared Function MonitorFromPoint(pt As Point, dwFlags As UInteger) As IntPtr
+    End Function
 
+    Private Const MONITOR_DEFAULTTONEAREST As UInteger = 2
+
+    Public Shared Function GetMonitorHandle(screen As Screen) As IntPtr
+        ' Verwenden Sie die linke obere Ecke des Bildschirms
+        Return MonitorFromPoint(screen.Bounds.Location, MONITOR_DEFAULTTONEAREST)
+    End Function
 End Class
