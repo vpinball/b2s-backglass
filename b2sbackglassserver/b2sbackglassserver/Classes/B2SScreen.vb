@@ -1,6 +1,7 @@
 #Disable Warning BC42016, BC42017, BC42018, BC42019, BC42032
 
 Imports System.Drawing
+Imports System.Globalization
 Imports System.IO
 Imports System.Reflection
 Imports System.Runtime.InteropServices
@@ -161,7 +162,7 @@ Public Class B2SScreen
             Me.PlayfieldSize = New Size(CInt(CalcValue(line(0), ScreensOrdered(0).Bounds.Width)), CInt(CalcValue(line(1), ScreensOrdered(0).Bounds.Height)))
             If (line(0).Contains("%") Or line(1).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile PlayfieldSize: " &
                                                                                                   line(0) & "," & line(1) & "->" & Me.PlayfieldSize.Width & "," & Me.PlayfieldSize.Height)
-
+            debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Backglass Screen Size: " & ScreenDpiFactor.Width & "," & ScreenDpiFactor.Height & "->" & Me.BackglassScreen.Bounds.Width & "," & Me.BackglassScreen.Bounds.Height)
             Me.BackglassSize = New Size(CInt(CalcValue(line(2), Me.BackglassScreen.Bounds.Width)), CInt(CalcValue(line(3), Me.BackglassScreen.Bounds.Height)))
             If (line(2).Contains("%") Or line(3).Contains("%")) Then debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile BackglassSize: " &
                                                                                                   line(2) & "," & line(3) & "->" & Me.BackglassSize.Width & "," & Me.BackglassSize.Height)
@@ -226,14 +227,14 @@ Public Class B2SScreen
         If StringValue.EndsWith("%") Then
             Dim percentStr As String = StringValue.Substring(0, StringValue.Length - 1)
             Dim percentValue As Double
-            If Double.TryParse(percentStr, percentValue) Then
+            If Double.TryParse(percentStr, NumberStyles.Any, CultureInfo.InvariantCulture, percentValue) Then
                 Return CInt(totalValue * percentValue / 100.0)
             Else
                 Return 0
             End If
         Else
             Dim intValue As Integer
-            If Integer.TryParse(StringValue, intValue) Then
+            If Integer.TryParse(StringValue, NumberStyles.Any, CultureInfo.InvariantCulture, intValue) Then
                 Return intValue '/ ScreenDpiFactor.Height
             Else
                 Return 0
