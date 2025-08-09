@@ -1,4 +1,4 @@
-2.5.0
+2.5.0 Only was early test builds, no release!
 - #111 Remodel GUI work and split between threads 
 
 2.1.4
@@ -20,7 +20,7 @@
 - Added new method B2SBuildVersion() returning float version number: 20500.0295
 - #122 Only crop "standard" images which does not rotate, while fixing "Events of overlapping pictures get merged #76" too many images was cropped.
 - #121 B2S 2.1.2 Throws System NullReferenceException, a crash on certain tables fixed.
-- #119 B2S Table Settings Saving But WIll Not Apply, the backglass hide flag was forgotten to be read.
+- #119 B2S Table Settings Saving But Will Not Apply, the backglass hide flag was forgotten to be read.
 - #96 Improve Fuzzy Matching to not use the DOS short names: "Fuzzy Matching" now cuts the table name after the first ")" and then tries to find a backglass named something like that.
 
 2.1.2
@@ -48,7 +48,7 @@
 2.1.0
 
 - There was an issue with certain rollover lights all turning on at the same time. 
-  Thanks to jejevpuniverse, Hauntfreaks and Cliffy we solved solved this problem.
+  Thanks to jejevpuniverse, Hauntfreaks and Cliffy we solved this problem.
 - Small problem with B2SWindowPunch fixed (B2SInit.bat had problems)
 - b2s_screenresidentifier, b2sbackglassserverexe & B2SWindowPunch is now high DPI aware. It means it should be compatible with 
   scaling factors other than 100%. The settings forms may not be the most beautiful, but it works!

@@ -22,6 +22,15 @@ To activate it, add the following line in the Popper Launch script
 
 CALL C:\vPinball\B2SServer\B2STools\B2SRandom.cmd "[GAMEFULLNAME]"
 
+or you can activate it in VPinballX.starter, see https://vpuniverse.com/forums/topic/10374-vpinballxstarter-a-little-gem-of-a-tool/
+
 If you start a table "table.vpx" in the folder "D:\vPinball\VisualPinball\Tables\" it will try to find
 D:\vPinball\VisualPinball\Tables\table-#.directb2s where # is a random number.
 If it is found, the file D:\vPinball\VisualPinball\Tables\table-#.directb2s is copied over D:\vPinball\VisualPinball\Tables\table.directb2s
+
+- DmdDeviceIniScale.cmd
+
+When you change your Backglass screen or you change the screen scaling the DmdDevice.ini still use the coordinates from 
+your earlier setup. DmdDeviceIniScale.cmd can recalculate the coordinates (position and size) of the DMD settings.
+You can "drop" a DmdDevice.ini file on the DmdDeviceIniScale.cmd, it asks for some parameters and it will make a copy of
+the file and then modify the original to your new settings.
