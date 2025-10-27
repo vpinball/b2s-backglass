@@ -370,10 +370,10 @@ Public Class B2SSettings
                     If nodeTable IsNot Nothing Then
                         _IsGameNameFound = True
                         LoadGlobalAndTableSettings(nodeTable)
-                        If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CInt(nodeTable.SelectSingleNode("DualMode").InnerText)
-                        If nodeTable.SelectSingleNode("MatchingFileName") IsNot Nothing Then MatchingFileName = nodeTable.SelectSingleNode("MatchingFileName").InnerText
+                            If nodeTable.SelectSingleNode("DualMode") IsNot Nothing Then CurrentDualMode = CType(CInt(nodeTable.SelectSingleNode("DualMode").InnerText), eDualMode)
+                            If nodeTable.SelectSingleNode("MatchingFileName") IsNot Nothing Then MatchingFileName = nodeTable.SelectSingleNode("MatchingFileName").InnerText
 
-                        Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
+                            Dim nodeAnimations As Xml.XmlElement = nodeTable.SelectSingleNode("Animations")
                         If nodeAnimations IsNot Nothing Then
                             For Each nodeAnimation As Xml.XmlElement In nodeAnimations.ChildNodes
                                 If nodeAnimation.Name.Equals("Animation") Then
@@ -433,6 +433,7 @@ Public Class B2SSettings
             If Not String.IsNullOrEmpty(GameName) OrElse Not String.IsNullOrEmpty(B2SName) Then
                 Dim nodeTable As Xml.XmlElement = AddHeader(XML, nodeHeader, If(Not String.IsNullOrEmpty(GameName), GameName, B2SName))
                 nodeTable.RemoveAll()
+                If B2SData.DualBackglass Then AddNode(XML, nodeTable, "DualMode", CInt(CurrentDualMode).ToString())
                 AddNode(XML, nodeTable, "HideGrill", CInt(HideGrill).ToString())
                 AddNode(XML, nodeTable, "HideB2SDMD", If(HideB2SDMD, "1", "0"))
                 AddNode(XML, nodeTable, "HideB2SBackglass", If(HideB2SBackglass, "1", "0"))
