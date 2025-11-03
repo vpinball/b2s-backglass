@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("BetterLed")> 
-<Assembly: AssemblyCopyright("Copyright (c) 2012-2024")> 
+<Assembly: AssemblyCopyright("Copyright (c) 2012-2025")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
@@ -31,6 +31,6 @@ Imports System.Runtime.InteropServices
 ' übernehmen, indem Sie "*" eingeben:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
-<Assembly: AssemblyInformationalVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("6.0.0")> 
+<Assembly: AssemblyFileVersion("6.0.0")> 
+<Assembly: AssemblyInformationalVersion("6.0.0")> 

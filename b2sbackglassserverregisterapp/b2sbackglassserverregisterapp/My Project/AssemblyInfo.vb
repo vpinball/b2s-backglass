@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Register the B2S COM interface")> 
 <Assembly: AssemblyCompany("Visual Pinball")> 
 <Assembly: AssemblyProduct("B2S Backglass Server Register")> 
-<Assembly: AssemblyCopyright("Copyright (c) 2012-2024")> 
+<Assembly: AssemblyCopyright("Copyright (c) 2012-2025")> 
 <Assembly: AssemblyTrademark("A Herweh & B2S Team production")> 
 
 <Assembly: ComVisible(False)>
@@ -31,6 +31,6 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.5.0")> 
-<Assembly: AssemblyFileVersion("2.5.0")> 
-<Assembly: AssemblyInformationalVersion("2.5.0")> 
+<Assembly: AssemblyVersion("6.0.0")> 
+<Assembly: AssemblyFileVersion("6.0.0")> 
+<Assembly: AssemblyInformationalVersion("6.0.0")> 
