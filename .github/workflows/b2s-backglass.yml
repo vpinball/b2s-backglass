@@ -63,7 +63,7 @@ jobs:
           perl -i -pe"s/AssemblyFileVersion\(\".*\"\)/AssemblyFileVersion\(\"${VERSION_SHORT}\"\)/g" "${ASSEMBLY_INFO}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${VERSION_LONG}\"\)/g" "${ASSEMBLY_INFO}"
           : # B2S_SetUp
-          ASSEMBLY_INFO="B2S_SetUp/Properties/AssemblyInfo.vb"
+          ASSEMBLY_INFO="B2S_SetUp/Properties/AssemblyInfo.cs"
           perl -i -pe"s/AssemblyVersion\(\".*\"\)/AssemblyVersion\(\"${VERSION_SHORT}\"\)/g" "${ASSEMBLY_INFO}"
           perl -i -pe"s/AssemblyFileVersion\(\".*\"\)/AssemblyFileVersion\(\"${VERSION_SHORT}\"\)/g" "${ASSEMBLY_INFO}"
           perl -i -pe"s/AssemblyInformationalVersion\(\".*\"\)/AssemblyInformationalVersion\(\"${VERSION_LONG}\"\)/g" "${ASSEMBLY_INFO}"
