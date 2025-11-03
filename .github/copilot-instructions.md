@@ -80,14 +80,14 @@ msbuild [solution].sln /t:Clean /p:Configuration=Debug /p:UICulture=en-US
 
 ### Validation Steps
 - All builds complete without errors (warnings are acceptable)
-- Generated executables appear in respective `bin/Debug` or `bin/x86/Debug` directories
+- Generated executables appear in the respective `bin/Debug` or `bin/Release` directories (Any CPU output)
 - B2SServerPluginInterface.dll must exist in `b2sbackglassserver/b2sbackglassserver/Plugin/` before building main server
 - No unit tests exist in this repository
 
 ## Project Architecture
 
 ### Main Components
-1. **b2sbackglassserver/** - Core COM server (DLL) and standalone executable (EXE)
+1. **b2sbackglassserver/** - Core COM server (DLL) and standalone executable (EXE) (the DLL calls the EXE depending on the configuration)
    - `B2SBackglassServer.vbproj` - COM server library
    - `B2SBackglassServerEXE.vbproj` - Standalone executable
    - Key files: `Server.vb`, `Classes/B2SVersionInfo.vb`
@@ -123,6 +123,7 @@ msbuild [solution].sln /t:Clean /p:Configuration=Debug /p:UICulture=en-US
 - Builds all configurations (Debug/Release) using Any CPU platform
 - Automatically updates version numbers from VB version constants
 - Creates release artifacts with all executables and documentation
+- Installs the .NET 4.0 developer pack and restores `Microsoft.NETFramework.ReferenceAssemblies.net40` via NuGet so the plugin can compile
 - **Prerelease workflow**: `.github/workflows/prerelease.yml` for tagged releases
 
 ### Development Notes
@@ -145,6 +146,7 @@ msbuild [solution].sln /t:Clean /p:Configuration=Debug /p:UICulture=en-US
 
 ### Common Issues and Workarounds
 - **Missing B2SServerPluginInterface.dll**: Always build this dependency first from the external repository
+- **B2SServerPluginInterface target**: The upstream project still targets .NET Framework 4.0; install the .NET 4.0 Developer Pack before building it locally
 - **Build configuration**: All projects now use "Any CPU" platform consistently
 - **Build order**: Some projects may have undocumented dependencies - build in the order listed above
 - **German build messages**: On German Windows systems, MSBuild may still show German messages even with `/p:UICulture=en-US`. The builds work correctly - focus on "Fehler" (errors) and "Warnung" (warnings) counts at the end
