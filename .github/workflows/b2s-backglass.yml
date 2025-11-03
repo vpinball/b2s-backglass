@@ -25,16 +25,17 @@ jobs:
         with:
           repository: DirectOutput/B2SServerPluginInterface
           path: B2SServerPluginInterface
-# Since the file is in the DirectOutput repository, we try to patch it here
-      - name: Patch B2SServerPluginInterface.csproj to use .NET Framework 4.8
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+      - name: Restore .NET 4 reference assemblies
         shell: pwsh
         run: |
-          $csproj = "B2SServerPluginInterface/B2SServerPluginInterface/B2SServerPluginInterface.csproj"
-          (Get-Content $csproj) -replace '<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>', '<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>' | Set-Content $csproj
-          $docProj = "B2SServerPluginInterface/Documentation/Documentation.csproj"
-          (Get-Content $docProj) -replace '<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>', '<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>' | Set-Content $docProj
-          (Get-Content $docProj) -replace '<TargetFrameworkProfile>Client</TargetFrameworkProfile>', '' | Set-Content $docProj
-
+          & "$env:ChocolateyInstall\bin\nuget.exe" install Microsoft.NETFramework.ReferenceAssemblies.net40 -Version 1.0.3 -OutputDirectory packages
+          $packageRoot = Join-Path $PWD 'packages/Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3'
+          $nupkg = Join-Path $packageRoot 'Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3.nupkg'
+          if (Test-Path $nupkg) {
+            Expand-Archive -LiteralPath $nupkg -DestinationPath $packageRoot -Force
+          }
       - id: version
         name: Update AssemblyInformationalVersion
         run: |
@@ -87,9 +88,10 @@ jobs:
           echo "tag=${VERSION_LONG}" >> $GITHUB_OUTPUT
       - uses: microsoft/setup-msbuild@v2
       - name: Build B2SServerPluginInterface
+        shell: pwsh
         run: |
-          msbuild B2SServerPluginInterface/B2SServerPluginInterface.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
-        shell: cmd
+          $frameworkPath = Resolve-Path packages/Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3/build/.NETFramework/v4.0
+          msbuild B2SServerPluginInterface/B2SServerPluginInterface.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:FrameworkPathOverride="$frameworkPath"
       - run: |
           cp B2SServerPluginInterface/B2SServerPluginInterface/bin/${{ matrix.config }}/B2SServerPluginInterface.dll b2sbackglassserver/b2sbackglassserver/Plugin
           if [[ "${{ matrix.config }}" == "Debug" ]]; then
