@@ -1,6 +1,7 @@
 name: b2s-backglass
 on:
   push:
+  workflow_dispatch:
 
 defaults:
   run:
