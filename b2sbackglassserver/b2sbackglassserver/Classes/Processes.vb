@@ -116,7 +116,9 @@ Public Class Processes
     End Property
 
     Private Function EnumWinProc(ByVal hwnd As IntPtr, ByVal lParam As Int32) As Boolean
-        If GetParent(hwnd) = IntPtr.Zero AndAlso GetWindowLong(hwnd, GWL_HWNDPARENT) = 0 Then
+        ' This did't work... Fix B2S not detecting VPX window
+        'If GetParent(hwnd) = IntPtr.Zero AndAlso GetWindowLong(hwnd, GWL_HWNDPARENT) = 0 Then 
+        If IsWindowVisible(hwnd) AndAlso GetParent(hwnd) = IntPtr.Zero AndAlso GetWindowLong(hwnd, GWL_HWNDPARENT) = 0 Then
             Dim str As String = String.Empty.PadLeft(GetWindowTextLength(hwnd) + 1)
             GetWindowText(hwnd, str, str.Length)
             If Not String.IsNullOrEmpty(str.Substring(0, str.Length - 1)) Then windowlist.Add(New ProcInfo(str.Substring(0, str.Length - 1), hwnd))
@@ -129,4 +131,3 @@ Public Class Processes
     End Sub
 
 End Class
-
