@@ -1,5 +1,13 @@
-2.5.0 Only was early test builds, no release!
+2.5.0 Only early test builds, no release!
 - #111 Remodel GUI work and split between threads 
+
+2.1.5
+- DMD snippets set to "initial ON" wasn't turned on #154
+- B2S Server now include a B2S_Setup supporting comment lines and other features #146
+- Allow entering % values on the ScreenRes.txt files: Allow decimal point on the percent values #142
+- Add DmdDeviceIniScale.cmd to recalculate positions in DmdDevice.ini after a screen scaling change #65
+- Make B2S_ScreenResIdentifier and B2SBackglassServerEXE DPI aware #65
+- "Fix B2S not detecting VPX window" from vbousquet reverted, crashes VPX
 
 2.1.4
 - Merge the B2SBackglassServer and B2SBackglassServer.exe files into a single solution file in Visual Studio.
