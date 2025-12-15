@@ -3097,6 +3097,12 @@ Public Class formBackglass
                     picbox.Value.Visible = True
                 End If
             Next
+            ' maybe show some 'startup on' DMD snippits
+            For Each picbox As KeyValuePair(Of String, B2SPictureBox) In B2SData.DMDIlluminations
+                If picbox.Value.InitialState = 1 AndAlso picbox.Value.IsImageSnippit Then
+                    picbox.Value.Visible = True
+                End If
+            Next
         End If
     End Sub
     Private Sub ShowStartupImages()
