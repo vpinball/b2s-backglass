@@ -5,6 +5,9 @@
 - DMD snippets set to "initial ON" wasn't turned on #154
 - B2S Server now include a B2S_Setup supporting comment lines and other features #146
 - Allow entering % values on the ScreenRes.txt files: Allow decimal point on the percent values #142
+  * B2SBackglassServer can read and interpret percent values
+  * B2S_SetUp editor preserves percent values when editing
+  * B2S_ScreenResIdentifier can read percent values and convert to pixel positions
 - Add DmdDeviceIniScale.cmd to recalculate positions in DmdDevice.ini after a screen scaling change #65
 - Make B2S_ScreenResIdentifier and B2SBackglassServerEXE DPI aware #65
 - "Fix B2S not detecting VPX window" from vbousquet reverted, crashes VPX

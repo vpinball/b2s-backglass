@@ -8,6 +8,27 @@ See the [Changelog.txt](Changelog.txt) for recent changes.
 
 Full documentation including instruction videos is available in the [Wiki](https://github.com/vpinball/b2s-backglass/wiki) here in the Repo.
 
+### Percent-Based Screen Resolution Values
+
+The `ScreenRes.txt` configuration file now supports percent-based values for more flexible screen sizing. This allows configurations to adapt to different screen resolutions automatically.
+For this to work the line #4 has to point to the backglass screen using "=#" where "#" is the screen number from left to right.
+
+**Example:**
+```
+# Playfield Screen resolution width/height
+100%
+100%
+# Backglass width/height
+50%
+75%
+```
+
+- **Playfield values** use the leftmost (primary) screen as reference
+- **Backglass, DMD, and Background values** use the selected backglass screen as reference
+- Percent values can include decimals (e.g., `33.5%`) for precise sizing
+- Absolute pixel values (e.g., `1920`) are still fully supported
+- Both formats can be mixed in the same file
+
 ## B2S.Tools
 
 See the [B2STools.txt](B2STools/B2STools.txt) for a description of the different tool scripts.

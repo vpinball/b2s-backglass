@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Globalization;
 
 namespace B2S_SetUp
 {
@@ -27,6 +28,27 @@ namespace B2S_SetUp
             { 15, "# Background width/height (*)" },
             { 16, @"# path to the background image (C:\path\Frame) or black if none selected" }
         };
+
+        /// <summary>
+        /// Validates if a string is a valid screen resolution value (integer or percent).
+        /// </summary>
+        private static bool IsValidValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return false;
+
+            value = value.Trim();
+            
+            // Check for percent value
+            if (value.EndsWith("%"))
+            {
+                string percentStr = value.Substring(0, value.Length - 1);
+                return double.TryParse(percentStr, NumberStyles.Any, CultureInfo.InvariantCulture, out _);
+            }
+            
+            // Check for absolute integer value
+            return int.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out _);
+        }
 
         private static readonly string[] DefaultHeaderComments = new[]
         {

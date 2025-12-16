@@ -77,6 +77,51 @@ Module Module1
         End Set
     End Property
 
+    ''' <summary>
+    ''' Calculates an integer value from a string, which may be a percentage (e.g., "50%") or an absolute value.
+    ''' </summary>
+    Public Function CalcValue(StringValue As String, totalValue As Integer) As Integer
+        If StringValue Is Nothing Then Return 0
+
+        StringValue = StringValue.Trim()
+        If StringValue.EndsWith("%") Then
+            Dim percentStr As String = StringValue.Substring(0, StringValue.Length - 1)
+            Dim percentValue As Double
+            If Double.TryParse(percentStr, Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture, percentValue) Then
+                Return CInt(totalValue * percentValue / 100.0)
+            Else
+                Return 0
+            End If
+        Else
+            Dim intValue As Integer
+            If Integer.TryParse(StringValue, Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture, intValue) Then
+                Return intValue
+            Else
+                Return 0
+            End If
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Checks if a string is a valid value (integer or percent).
+    ''' </summary>
+    Public Function IsValidValue(value As String) As Boolean
+        If String.IsNullOrWhiteSpace(value) Then Return False
+
+        value = value.Trim()
+
+        ' Check for percent value
+        If value.EndsWith("%") Then
+            Dim percentStr As String = value.Substring(0, value.Length - 1)
+            Dim percentValue As Double
+            Return Double.TryParse(percentStr, Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture, percentValue)
+        End If
+
+        ' Check for absolute integer value
+        Dim intValue As Integer
+        Return Integer.TryParse(value, Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture, intValue)
+    End Function
+
     Public Sub GetSettings(ResFileName)
         If IO.File.Exists(ResFileName) Then
             FileFound = True
@@ -104,25 +149,44 @@ Module Module1
 
             line(i) = 0
             line(i + 1) = 0
-            PlayfieldSize = New Size(CInt(line(0)), CInt(line(1)))
-            BackglassSize = New Size(CInt(line(2)), CInt(line(3)))
+            
+            ' Get the primary (leftmost) screen for playfield calculations
+            Dim primaryScreen As Screen = ScreensOrdered(0)
+            
+            ' Calculate playfield size (uses leftmost screen as reference for percent values)
+            PlayfieldSize = New Size(CalcValue(line(0), primaryScreen.Bounds.Width), CalcValue(line(1), primaryScreen.Bounds.Height))
+            
+            ' First get the backglass monitor info to determine which screen to use
             BackglassMonitor = line(4)
-
             BackglassMonitorType = ""
-
             If BackglassMonitor.StartsWith("@") Or BackglassMonitor.StartsWith("=") Then
                 BackglassMonitorType = Mid(BackglassMonitor, 1, 1)
                 BackglassMonitor = BackglassMonitor.Substring(1)
             End If
-
-            BackglassLocation = New Point(CInt(line(5)), CInt(line(6)))
-            DMDSize = New Size(CInt(line(7)), CInt(line(8)))
-            DMDLocation = New Point(CInt(line(9)), CInt(line(10)))
+            
+            ' Find the backglass screen
+            Dim backglassScreen As Screen = primaryScreen
+            Dim currentScreen = 0
+            For Each scr As Screen In ScreensOrdered
+                currentScreen += 1
+                If (BackglassMonitorType = "" AndAlso scr.DeviceName = "\\.\DISPLAY" + BackglassMonitor) Or
+                   (BackglassMonitorType = "@" AndAlso scr.Bounds.Location.X = CInt(BackglassMonitor)) Or
+                   (BackglassMonitorType = "=" AndAlso currentScreen = CInt(BackglassMonitor)) Then
+                    backglassScreen = scr
+                    Exit For
+                End If
+            Next
+            
+            ' Calculate backglass values (uses selected backglass screen as reference for percent values)
+            BackglassSize = New Size(CalcValue(line(2), backglassScreen.Bounds.Width), CalcValue(line(3), backglassScreen.Bounds.Height))
+            BackglassLocation = New Point(CalcValue(line(5), backglassScreen.Bounds.Width), CalcValue(line(6), backglassScreen.Bounds.Height))
+            DMDSize = New Size(CalcValue(line(7), backglassScreen.Bounds.Width), CalcValue(line(8), backglassScreen.Bounds.Height))
+            DMDLocation = New Point(CalcValue(line(9), backglassScreen.Bounds.Width), CalcValue(line(10), backglassScreen.Bounds.Height))
             DMDFlipY = (Trim(line(11)) = "1")
 
             If (i > 15) Then
-                BackgroundLocation = New Point(CInt(line(12)), CInt(line(13)))
-                BackgroundSize = New Size(CInt(line(14)), CInt(line(15)))
+                BackgroundLocation = New Point(CalcValue(line(12), backglassScreen.Bounds.Width), CalcValue(line(13), backglassScreen.Bounds.Height))
+                BackgroundSize = New Size(CalcValue(line(14), backglassScreen.Bounds.Width), CalcValue(line(15), backglassScreen.Bounds.Height))
                 BackgroundPath = line(16)
             Else
                 BackgroundLocation = New Point(0, 0)
