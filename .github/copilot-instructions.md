@@ -11,7 +11,7 @@ This repository contains the B2S (Backglass 2nd Screen) Server system for displa
 - **Target Framework**: .NET Framework 4.8 
 - **Platform**: Windows x86/AnyCPU
 - **Build System**: MSBuild
-- **Current Version**: 2.1.4 (see `b2sbackglassserver/b2sbackglassserver/Classes/B2SVersionInfo.vb`)
+- **Current Version**: see `b2sbackglassserver/b2sbackglassserver/Classes/B2SVersionInfo.vb`
 
 ## Build Instructions
 
