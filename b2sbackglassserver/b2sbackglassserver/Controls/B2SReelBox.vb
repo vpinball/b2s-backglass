@@ -1,6 +1,7 @@
 Imports System
 Imports System.Windows.Forms
 Imports System.Drawing
+Imports System.Drawing.Drawing2D
 
 Public Class B2SReelBox
 
@@ -51,6 +52,8 @@ Public Class B2SReelBox
     Protected Overrides Sub OnPaint(ByVal e As System.Windows.Forms.PaintEventArgs)
 
         If Not String.IsNullOrEmpty(reelindex) Then
+            e.Graphics.CompositingMode = CompositingMode.SourceOver
+
             Dim images As Generic.Dictionary(Of String, Image) = If(_Illuminated, B2SData.ReelIlluImages, B2SData.ReelImages)
             Dim intimages As Generic.Dictionary(Of String, Image) = If(_Illuminated, B2SData.ReelIntermediateIlluImages, B2SData.ReelIntermediateImages)
             Dim name As String = String.Empty
@@ -86,12 +89,11 @@ Public Class B2SReelBox
     Public Sub New()
 
         ' set some styles
-        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.DoubleBuffer, True)
-        'Me.SetStyle(ControlStyles.SupportsTransparentBackColor, True)
+        Me.SetStyle(ControlStyles.AllPaintingInWmPaint Or ControlStyles.UserPaint Or ControlStyles.DoubleBuffer Or ControlStyles.SupportsTransparentBackColor, True)
         Me.DoubleBuffered = True
 
-        ' back color
-        'Me.BackColor = Color.Transparent
+        ' let transparent reel art render over the backglass
+        Me.BackColor = Color.Transparent
 
         ' show control
         'Me.Visible = True
