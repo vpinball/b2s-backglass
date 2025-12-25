@@ -1,5 +1,6 @@
 ﻿Imports Microsoft.Win32
 Imports System.IO
+Imports System.Runtime.InteropServices
 Imports System.Security.Principal
 
 Public Class formBackglassServerRegApp
@@ -240,6 +241,9 @@ Public Class formBackglassServerRegApp
             process.StartInfo.FileName = IO.Path.Combine(regasmpath, "regasm.exe")
             process.StartInfo.Arguments = dllpath + " /codebase"
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal
+            Dim installPath As String = IO.Path.GetDirectoryName(Application.ExecutablePath())
+            UnblockDeploymentFiles(installPath)
+            UnblockFile(IO.Path.Combine(installPath, dllpath))
             process.Start()
 
             ' wait until the process passes back an exit code
@@ -253,6 +257,33 @@ Public Class formBackglassServerRegApp
             MessageBox.Show("Oops, the regasm.exe could not be found. Have you started this app as 'Administrator'?", My.Application.Info.AssemblyName, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
 
+    End Sub
+
+    <DllImport("kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+    Private Shared Function DeleteFile(lpFileName As String) As <MarshalAs(UnmanagedType.Bool)> Boolean
+    End Function
+
+    Private Sub UnblockFile(filePath As String)
+        Try
+            If File.Exists(filePath) Then
+                DeleteFile(filePath & ":Zone.Identifier")
+            End If
+        Catch
+            ' ignore failures
+        End Try
+    End Sub
+
+    Private Sub UnblockDeploymentFiles(rootPath As String)
+        Try
+            If Directory.Exists(rootPath) Then
+                For Each pattern As String In {"*.dll", "*.exe"}
+                    For Each file As String In Directory.GetFiles(rootPath, pattern, SearchOption.TopDirectoryOnly)
+                        UnblockFile(file)
+                    Next
+                Next
+            End If
+        Catch
+        End Try
     End Sub
 
 End Class
