@@ -17,6 +17,11 @@ namespace B2SWindowPunch
     
     internal class Program
     {
+        private const int DWMWA_EXTENDED_FRAME_BOUNDS = 9;
+
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmGetWindowAttribute(IntPtr hwnd, int dwAttribute, out RECT pvAttribute, int cbAttribute);
+
         /// <summary>Contains functionality to get all the open windows.</summary>
         public static class OpenWindowGetter
         {
@@ -102,7 +107,7 @@ namespace B2SWindowPunch
         {
             const int RGN_DIFF = 4;
 
-            Dictionary <HWND, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
+            Dictionary<HWND, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
 
             if (options.destination.Length > 0 && options.cutter.Length > 0)
             {
@@ -130,12 +135,14 @@ namespace B2SWindowPunch
                     {
                         Screen destScreen = Screen.FromHandle(destHandle);
                         Size destScreenSize = TrueResolution(destScreen.DeviceName);
-                        Single destFactor = (float) destScreenSize.Height / destScreen.Bounds.Height;
+                        Single destFactor = (float)destScreenSize.Height / destScreen.Bounds.Height;
 
-                        Console.WriteLine($"Destination: {destTitle} on '{destScreen.DeviceName}' ({destFactor * 100 } %)");
-                        GetWindowRect(destHandle, out RECT destRect);
+                        Console.WriteLine($"Destination: {destTitle} on '{destScreen.DeviceName}' ({destFactor * 100} %)");
+                        RECT destRect = GetWindowRectWithShadow(destHandle);
+                        int destWidth = destRect.Right - destRect.Left;
+                        int destHeight = destRect.Bottom - destRect.Top;
 
-                        IntPtr destRegion = CreateRectRgn(0, 0, UseFactor(destRect.Right, destFactor), UseFactor(destRect.Bottom, destFactor));
+                        IntPtr destRegion = CreateRectRgn(0, 0, destWidth, destHeight);
 
                         foreach (KeyValuePair<IntPtr, string> cutwindow in windows)
                         {
@@ -145,13 +152,21 @@ namespace B2SWindowPunch
                             if (cutHandle != destHandle && rxCutter.IsMatch(cutTitle))
                             {
                                 Screen cutScreen = Screen.FromHandle(cutHandle);
-                                // Make sure both are on the same screen
                                 if (destScreen.DeviceName == cutScreen.DeviceName)
                                 {
                                     Console.WriteLine($"   cutout: {cutTitle}");
 
-                                    GetWindowRect(cutHandle, out RECT cutRect);
-                                    HRGN cutRegion = CreateRectRgn(UseFactor(cutRect.Left - destRect.Left, destFactor), UseFactor(cutRect.Top - destRect.Top, destFactor), UseFactor(cutRect.Right - destRect.Left, destFactor), UseFactor(cutRect.Bottom - destRect.Top, destFactor) );
+                                    RECT cutRect = GetWindowRectWithShadow(cutHandle);
+                                    int relativeLeft = cutRect.Left - destRect.Left;
+                                    int relativeTop = cutRect.Top - destRect.Top;
+                                    int relativeRight = cutRect.Right - destRect.Left;
+                                    int relativeBottom = cutRect.Bottom - destRect.Top;
+
+                                    HRGN cutRegion = CreateRectRgn(
+                                        relativeLeft,
+                                        relativeTop,
+                                        relativeRight,
+                                        relativeBottom);
                                     CombineRgn(destRegion, destRegion, cutRegion, RGN_DIFF);
                                     DeleteObject(cutRegion);
                                 }
@@ -168,12 +183,26 @@ namespace B2SWindowPunch
             {
                 IntPtr windowhandle = window.Key;
                 string windowtitle = window.Value;
-                GetWindowRect(windowhandle, out RECT PWR);
+                RECT PWR = GetWindowRectWithShadow(windowhandle);
                 Console.WriteLine($"{windowtitle}: ({PWR.Left},{PWR.Top})-({PWR.Right},{PWR.Bottom})");
             }
 
             return 0;
         }
+
+        private static RECT GetWindowRectWithShadow(IntPtr handle)
+        {
+            RECT rect;
+            int result = DwmGetWindowAttribute(handle, DWMWA_EXTENDED_FRAME_BOUNDS, out rect, Marshal.SizeOf(typeof(RECT)));
+            if (result == 0)
+            {
+                return rect;
+            }
+
+            GetWindowRect(handle, out rect);
+            return rect;
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
