@@ -1,6 +1,11 @@
 2.5.0 Only early test builds, no release!
 - #111 Remodel GUI work and split between threads 
 
+2.1.6
+- B2SWindowPunch punched to big, now fixed.
+- B2SWindowPunch can punch rounded edges. Third parameter control radius.
+- B2SInit timeout can be controlled through res file (cuttertimeout)
+
 2.1.5
 - DMD snippets set to "initial ON" wasn't turned on #154
 - B2S Server now include a B2S_Setup supporting comment lines and other features #146

@@ -77,6 +77,7 @@ namespace B2SWindowPunch
         {
             public string destination { get; set; }
             public string cutter { get; set; }
+            public int cutterRadius { get; set; }
 
         }
 
@@ -85,23 +86,33 @@ namespace B2SWindowPunch
             string[] cargs = Environment.GetCommandLineArgs();
             Options inputOptions = new Options();
 
-            if (cargs.Length != 3)
+            if (cargs.Length < 3 || cargs.Length > 4)
             {
                 PrintUsage();
                 return 1;
             }
             inputOptions.destination = cargs[1].ToString();
             inputOptions.cutter = cargs[2].ToString();
+            if (cargs.Length == 4)
+            {
+                int parsedRadius;
+                if (!int.TryParse(cargs[3], out parsedRadius))
+                {
+                    PrintUsage();
+                    return 1;
+                }
+                inputOptions.cutterRadius = parsedRadius;
+            }
             return RunAndReturnExitCode(inputOptions);
         }
         private static void PrintUsage()
         {
             Console.WriteLine("B2SWindowPunch");
             Console.WriteLine("© 2023-2024 Richard Ludwig (Jarr3) and the B2S Team\n");
-            Console.WriteLine("Usage: B2SWindowPunch \"Destination regex\" \"Cutter Regex\" \n");
-            Console.WriteLine("Destination and Cutter window string has to be valid regular expressions.\n");
-            Console.WriteLine("E.g. \n Cut holes in the \"B2S Backglass Server\" form using \"Virtual DMD\" and all \"PUPSCREEN\" forms as two regular expressions:");
-            Console.WriteLine("B2SWindowPunch.exe \"^B2S Backglass Server$\" \"^Virtual DMD$|^PUPSCREEN[0-9]+$\"");
+            Console.WriteLine("Usage: B2SWindowPunch \"Destination regex\" \"Cutter Regex\" [cutterRadius]\n");
+            Console.WriteLine("Destination and Cutter window string has to be valid regular expressions. cutterRadius is optional and enables rounded cutouts when > 0.\n");
+            Console.WriteLine("E.g. \n Cut holes in the \"B2S Backglass Server\" form using \"Virtual DMD\" and all \"PUPSCREEN\" forms as two regular expressions with 12px radius:");
+            Console.WriteLine("B2SWindowPunch.exe \"^B2S Backglass Server$\" \"^Virtual DMD$|^PUPSCREEN[0-9]+$\" 12");
         }
         private static int RunAndReturnExitCode(Options options)
         {
@@ -162,11 +173,19 @@ namespace B2SWindowPunch
                                     int relativeRight = cutRect.Right - destRect.Left;
                                     int relativeBottom = cutRect.Bottom - destRect.Top;
 
-                                    HRGN cutRegion = CreateRectRgn(
-                                        relativeLeft,
-                                        relativeTop,
-                                        relativeRight,
-                                        relativeBottom);
+                                    HRGN cutRegion = options.cutterRadius > 0
+                                        ? CreateRoundRectRgn(
+                                            relativeLeft,
+                                            relativeTop,
+                                            relativeRight,
+                                            relativeBottom,
+                                            options.cutterRadius * 2,
+                                            options.cutterRadius * 2)
+                                        : CreateRectRgn(
+                                            relativeLeft,
+                                            relativeTop,
+                                            relativeRight,
+                                            relativeBottom);
                                     CombineRgn(destRegion, destRegion, cutRegion, RGN_DIFF);
                                     DeleteObject(cutRegion);
                                 }
@@ -258,6 +277,8 @@ namespace B2SWindowPunch
 
         [DllImport("gdi32.dll")]
         private static extern IntPtr CreateRectRgn(int x1, int y1, int x2, int y2);
+        [DllImport("gdi32.dll")]
+        private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
         [DllImport("user32.dll")]
         private static extern int SetWindowRgn(HWND hWnd, HRGN hRgn, bool bRedraw);
         [DllImport("gdi32.dll")]
