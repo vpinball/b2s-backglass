@@ -23,13 +23,12 @@ Public Class formPlayfield
     Private Sub formPlayfield_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
         Dim B2SResFileEnding As String = SafeReadRegistry("Software\B2S", "B2SResFileEndingOverride", ".res")
 
-        formDMD = New formDMD
-        formDMD.formBackglass = formBackglass
-
         formBackglass = New formBackglass
         formBackground = New formBackground
 
         formBackglass.formBackground = formBackground
+        formDMD = New formDMD
+        formDMD.formBackglass = formBackglass
         lblCopyright.Text = "Version " & Application.ProductVersion & " " & My.Application.Info.Copyright.ToString & " by Herweh && B2S Team"
         ' get all saved data
         If My.Application.CommandLineArgs.Count > 0 Then

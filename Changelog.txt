@@ -5,6 +5,7 @@
 - B2SWindowPunch punched to big, now fixed.
 - B2SWindowPunch can punch rounded edges. Third parameter control radius.
 - B2SInit timeout can be controlled through res file (cuttertimeout)
+- B2SScreenResIdentifier crash when changing checkboxes #132
 
 2.1.5
 - DMD snippets set to "initial ON" wasn't turned on #154
