@@ -1911,7 +1911,8 @@ Public Class formBackglass
 
         Dim filename As String = B2SData.TableFileName & ".directb2s"
         B2SScreen.debugLog.WriteLogEntry("FuzzyMatching filename " & filename)
-        Dim shortFilename As String = B2SData.ShortFileName(filename) & ".directb2s"
+        'only use shortFilename if fuzzy matching, otherwise use full filename
+        Dim shortFilename As String = filename ' B2SData.ShortFileName(filename) & ".directb2s"
         B2SScreen.debugLog.WriteLogEntry("FuzzyMatching shortFilename " & shortFilename)
         Dim hyperpinFilename As String = filename
         Dim shorthyperpinFilename As String = filename
@@ -1928,6 +1929,7 @@ Public Class formBackglass
 
         If Not B2SSettings.DisableFuzzyMatching Then
             B2SScreen.debugLog.WriteLogEntry("FuzzyMatching")
+            shortFilename = B2SData.ShortFileName(filename) & ".directb2s"
             If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortFilename) Then
                 If B2SSettings.LocateHyperpinXMLFile() Then
                     hyperpinFilename = B2SSettings.HyperpinName & ".directb2s"
