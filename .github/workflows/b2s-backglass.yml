@@ -9,16 +9,14 @@ defaults:
 
 jobs:
   build-server:
-    name: Build B2SServer-${{ matrix.config }}-win-${{ matrix.platform }}
+    name: Build B2SServer-${{ matrix.config }}-win
     runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
         include:
-          - platform: "Any CPU"
-            config: Debug
-          - platform: "Any CPU"
-            config: Release
+          - config: Debug
+          - config: Release
     steps:
       - uses: actions/checkout@v4
 # This empty uses is here on purpose
@@ -100,9 +98,9 @@ jobs:
           fi
       - name: Build Server
         run: |
-          msbuild b2s_screenresidentifier/B2S_ScreenResIdentifier.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
-          msbuild B2S_SetUp/B2S_SetUp.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
-          msbuild b2sbackglassserver/B2SBackglassServer.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
+          msbuild b2s_screenresidentifier/B2S_ScreenResIdentifier.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
+          msbuild B2S_SetUp/B2S_SetUp.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
+          msbuild b2sbackglassserver/B2SBackglassServer.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
           msbuild b2sbackglassserverregisterapp/B2SBackglassServerRegisterApp.sln /t:Rebuild /p:Configuration=${{ matrix.config }} /p:Platform=x86
           msbuild B2SWindowPunch/B2SWindowPunch.sln /t:Rebuild /p:Configuration=${{ matrix.config }}
         shell: cmd
@@ -113,7 +111,7 @@ jobs:
           cp b2s_screenresidentifier/b2s_screenresidentifier/bin/${{ matrix.config }}/B2S_ScreenResIdentifier.exe.config tmp
           cp B2S_SetUp/bin/${{ matrix.config }}/B2S_SetUp.exe tmp
           cp B2S_SetUp/bin/${{ matrix.config }}/B2S_SetUp.exe.config tmp
-          cp b2sbackglassserverregisterapp/b2sbackglassserverregisterapp/bin/${{ matrix.config }}/B2SBackglassServerRegisterApp.exe tmp
+          cp b2sbackglassserverregisterapp/b2sbackglassserverregisterapp/bin/x86/${{ matrix.config }}/B2SBackglassServerRegisterApp.exe tmp
           cp B2SServerPluginInterface/B2SServerPluginInterface/bin/${{ matrix.config }}/B2SServerPluginInterface.dll tmp
           cp b2sbackglassserver/b2sbackglassserver/bin/${{ matrix.config }}/B2SBackglassServer.dll tmp
           cp b2sbackglassserver/b2sbackglassserver/bin/${{ matrix.config }}/B2SBackglassServerEXE.exe tmp
@@ -122,7 +120,7 @@ jobs:
           cp B2SWindowPunch/B2SWindowPunch/bin/${{ matrix.config }}/B2SWindowPunch.exe tmp
           if [[ "${{ matrix.config }}" == "Debug" ]]; then
              cp b2s_screenresidentifier/b2s_screenresidentifier/bin/${{ matrix.config }}/B2S_ScreenResIdentifier.pdb tmp
-             cp b2sbackglassserverregisterapp/b2sbackglassserverregisterapp/bin/${{ matrix.config }}/B2SBackglassServerRegisterApp.pdb tmp
+             cp b2sbackglassserverregisterapp/b2sbackglassserverregisterapp/bin/x86/${{ matrix.config }}/B2SBackglassServerRegisterApp.pdb tmp
              cp B2SServerPluginInterface/B2SServerPluginInterface/bin/${{ matrix.config }}/B2SServerPluginInterface.pdb tmp
              cp b2sbackglassserver/b2sbackglassserver/bin/${{ matrix.config }}/B2SBackglassServer.pdb tmp
              cp b2sbackglassserver/b2sbackglassserver/bin/${{ matrix.config }}/B2SBackglassServerEXE.pdb tmp
@@ -138,6 +136,12 @@ jobs:
           cp -r ScreenResTemplates tmp
           cp -r B2STools tmp
           cp b2sbackglassserverregisterapp/ScreenResTemplates.cmd tmp
+      - name: Dump workspace tree on failure
+        if: ${{ failure() }}
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          cmd /d /c "tree /F /A"
       - uses: actions/upload-artifact@v4
         with:
          name: B2SServer-${{ steps.version.outputs.tag }}-${{ matrix.config }}-win
