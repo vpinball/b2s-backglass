@@ -15,7 +15,7 @@ Imports System.Runtime.InteropServices
 #End If
 <Assembly: AssemblyDescription("Display directb2s Backglass files for Visual Pinball")>
 <Assembly: AssemblyCompany("Visual Pinball")>
-<Assembly: AssemblyCopyright("Copyright (c) 2012-2025")>
+<Assembly: AssemblyCopyright("Copyright (c) 2012-2026")>
 <Assembly: AssemblyTrademark("A Herweh & B2S Team production")>
 <Assembly: ComVisible(True)>
 

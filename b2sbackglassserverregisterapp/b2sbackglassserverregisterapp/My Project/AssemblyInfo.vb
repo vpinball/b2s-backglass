@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Register the B2S COM interface")> 
 <Assembly: AssemblyCompany("Visual Pinball")> 
 <Assembly: AssemblyProduct("B2S Backglass Server Register")> 
-<Assembly: AssemblyCopyright("Copyright (c) 2012-2025")> 
+<Assembly: AssemblyCopyright("Copyright (c) 2012-2026")> 
 <Assembly: AssemblyTrademark("A Herweh & B2S Team production")> 
 
 <Assembly: ComVisible(False)>
