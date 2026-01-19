@@ -111,11 +111,7 @@ Public Class formBackglassServerRegApp
                 End If
                 ' do the register operation
                 ShellAndWait(regasmpath, "B2SBackglassServer.DLL")
-                If File.Exists("B2SBackglassServer64.DLL") Then
-                    ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer64.DLL")
-                Else
-                    ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer.DLL")
-                End If
+                ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer.DLL")
             End If
             If Not CommandSilent Then CheckB2SServer(True) 'Make sure no window is opened on silent option
         End If
@@ -172,16 +168,26 @@ Public Class formBackglassServerRegApp
                             Dim sFiles() As String = Directory.GetFiles("ScreenResTemplates", "*" + B2SResFileEnding)
                             'And then add it in a Label in the way you want
                             If sFiles.Length > 0 Then
-                                Using b2stoolstoplevel As RegistryKey = sysFileKey.CreateSubKey(".directb2s\shell\B2SServer")
+                                Using b2stoolstoplevel As RegistryKey = sysFileKey.CreateSubKey(".directb2s\shell\B2SServer"),
+                                    vpxtoolstoplevel As RegistryKey = sysFileKey.CreateSubKey(".vpx\shell\B2SServer")
+                                    
                                     b2stoolstoplevel.SetValue("MUIVerb", "B2S Server copy Screenres template")
                                     b2stoolstoplevel.SetValue("subcommands", "")
                                     b2stoolstoplevel.SetValue("Icon", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """")
+
+                                    vpxtoolstoplevel.SetValue("MUIVerb", "B2S Server copy Screenres template")
+                                    vpxtoolstoplevel.SetValue("subcommands", "")
+                                    vpxtoolstoplevel.SetValue("Icon", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """")
+
                                     For Each resFileName As String In sFiles
                                         '           "D:\vPinball\VisualPinball\B2SServer\ScreenResTemplates.cmd" "ScreenResTemplates\Full Screen.res" "%L"
                                         Dim shellText As String = """" + IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "ScreenResTemplates.cmd") + """ """ + resFileName + """ ""%L"""
                                         b2stoolstoplevel.CreateSubKey("shell\" + Path.GetFileNameWithoutExtension(resFileName) + "\command").SetValue("", shellText)
+
+                                        vpxtoolstoplevel.CreateSubKey("shell\" + Path.GetFileNameWithoutExtension(resFileName) + "\command").SetValue("", shellText)
                                     Next
                                 End Using
+
                             End If
                         End If
                     End If
@@ -214,9 +220,12 @@ Public Class formBackglassServerRegApp
         Dim err As Boolean = False
         Dim errmessage As String = String.Empty
         Try
-            Dim obj As Object = CreateObject("B2S.Server")
-            'obj.Stop()
-            obj = Nothing
+            Dim serverType As Type = Type.GetTypeFromProgID("B2S.Server", throwOnError:=False)
+            If serverType Is Nothing Then
+                err = True
+                ret = False
+                errmessage = "ProgID not registered"
+            End If
         Catch ex As Exception
             errmessage = ex.Message
             err = True
@@ -276,7 +285,7 @@ Public Class formBackglassServerRegApp
     Private Sub UnblockDeploymentFiles(rootPath As String)
         Try
             If Directory.Exists(rootPath) Then
-                For Each pattern As String In {"*.dll", "*.exe"}
+                For Each pattern As String In {"*.dll", "*.exe", "*.cmd"}
                     For Each file As String In Directory.GetFiles(rootPath, pattern, SearchOption.TopDirectoryOnly)
                         UnblockFile(file)
                     Next
