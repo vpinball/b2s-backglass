@@ -110,12 +110,12 @@ Public Class B2SScreen
         debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Start Search ScreenRes")
 
         Try
-            Dim loadFileNames() As String = {IO.Path.Combine(B2SData.TableFileName & B2SSettings.B2SResFileEnding),    ' .\TableName.res
+            Dim loadFileNames() As String = {IO.Path.WithoutExtension(B2SData.BackglassFileName) & B2SSettings.B2SResFileEnding,   ' .\BackglassName.res
+                                             B2SData.TableFileName & B2SSettings.B2SResFileEnding,                      ' .\TableName.res
                                              IO.Path.Combine(B2SData.TableFileName, B2SSettings.B2SScreenResFileName),   ' .\TableName\ScreenRes.txt
                                              B2SSettings.B2SScreenResFileName,                                           ' .\ScreenRes.txt
                                              IO.Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), B2SSettings.B2SScreenResFileName)' B2SFolder\ScreenRes.txt
                                             }
-            ' TODO                                              IO.Path.Combine(Application.StartupPath(), B2SSettings.B2SScreenResFileName)' B2SFolder\ScreenRes.txt
             For Each testFileName As String In loadFileNames
 
                 debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Test " & testFileName)
