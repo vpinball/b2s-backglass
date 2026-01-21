@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Visual Pinball")]
 [assembly: AssemblyProduct("B2S_SetUp")]
-[assembly: AssemblyCopyright("Copyright (c) 2025")]
+[assembly: AssemblyCopyright("Copyright (c) 2026")]
 [assembly: AssemblyTrademark("A Herweh & B2S Team production")]
 [assembly: AssemblyCulture("")]
 

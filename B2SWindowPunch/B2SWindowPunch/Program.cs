@@ -163,6 +163,7 @@ namespace B2SWindowPunch
                             if (cutHandle != destHandle && rxCutter.IsMatch(cutTitle))
                             {
                                 Screen cutScreen = Screen.FromHandle(cutHandle);
+                                // Make sure both are on the same screen
                                 if (destScreen.DeviceName == cutScreen.DeviceName)
                                 {
                                     Console.WriteLine($"   cutout: {cutTitle}");

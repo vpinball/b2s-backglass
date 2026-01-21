@@ -110,7 +110,7 @@ Public Class B2SScreen
         debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Start Search ScreenRes")
 
         Try
-            Dim loadFileNames() As String = {IO.Path.ChangeExtension(B2SData.BackglassFileName, B2SSettings.B2SResFileEnding),   ' .\BackglassName.res
+            Dim loadFileNames() As String = {'IO.Path.ChangeExtension(B2SData.BackglassFileName, B2SSettings.B2SResFileEnding),   ' .\BackglassName.res
                                              B2SData.TableFileName & B2SSettings.B2SResFileEnding,                      ' .\TableName.res
                                              IO.Path.Combine(B2SData.TableFileName, B2SSettings.B2SScreenResFileName),   ' .\TableName\ScreenRes.txt
                                              B2SSettings.B2SScreenResFileName,                                           ' .\ScreenRes.txt
@@ -803,4 +803,3 @@ Public Class B2SScreen
         Return MonitorFromPoint(screen.Bounds.Location, MONITOR_DEFAULTTONEAREST)
     End Function
 End Class
-
