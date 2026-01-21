@@ -118,8 +118,6 @@ Public Class formBackglass
 #Else
         Me.TopMost = True
 #End If
-        B2SScreen = New B2SScreen()
-
         ' load settings
         B2SSettings.Load()
         ' get B2S xml and start
@@ -136,6 +134,7 @@ Public Class formBackglass
 #End If
         End Try
         ' initialize screen settings
+        B2SScreen = New B2SScreen()
         InitB2SScreen()
 
         ' resize images
