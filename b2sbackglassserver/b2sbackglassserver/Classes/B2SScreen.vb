@@ -105,7 +105,7 @@ Public Class B2SScreen
 
 #Region "get backglass settings and show backglass"
 
-    Private Sub ReadB2SSettingsFromFile()
+    Public Sub ReadB2SSettingsFromFile()
         Dim loadFileName As String = String.Empty
         debugLog.WriteLogEntry("B2SScreen.ReadB2SSettingsFromFile Start Search ScreenRes")
 

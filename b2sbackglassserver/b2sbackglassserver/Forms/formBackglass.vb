@@ -118,11 +118,14 @@ Public Class formBackglass
 #Else
         Me.TopMost = True
 #End If
+
+        B2SScreen = New B2SScreen()
         ' load settings
         B2SSettings.Load()
         ' get B2S xml and start
         Try
             LoadB2SData()
+            B2SScreen.ReadB2SSettingsFromFile()
         Catch ex As Exception
             If B2SSettings.ShowStartupError Then
                 MessageBox.Show(ex.Message, My.Resources.AppTitle, Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Error)
@@ -134,7 +137,7 @@ Public Class formBackglass
 #End If
         End Try
         ' initialize screen settings
-        B2SScreen = New B2SScreen()
+
         InitB2SScreen()
 
         ' resize images
@@ -1909,10 +1912,7 @@ Public Class formBackglass
     Private Sub LoadB2SData()
 
         Dim filename As String = B2SData.TableFileName & ".directb2s"
-        B2SScreen.debugLog.WriteLogEntry("FuzzyMatching filename " & filename)
-        'only use shortFilename if fuzzy matching, otherwise use full filename
-        Dim shortFilename As String = filename ' B2SData.ShortFileName(filename) & ".directb2s"
-        B2SScreen.debugLog.WriteLogEntry("FuzzyMatching shortFilename " & shortFilename)
+        Dim shortFilename As String = B2SData.ShortFileName(filename) & ".directb2s"
         Dim hyperpinFilename As String = filename
         Dim shorthyperpinFilename As String = filename
 
@@ -1928,7 +1928,6 @@ Public Class formBackglass
 
         If Not B2SSettings.DisableFuzzyMatching Then
             B2SScreen.debugLog.WriteLogEntry("FuzzyMatching")
-            shortFilename = B2SData.ShortFileName(filename) & ".directb2s"
             If Not IO.File.Exists(filename) AndAlso Not IO.File.Exists(shortFilename) Then
                 If B2SSettings.LocateHyperpinXMLFile() Then
                     hyperpinFilename = B2SSettings.HyperpinName & ".directb2s"
@@ -1968,13 +1967,16 @@ Public Class formBackglass
         Dim XML As Xml.XmlDocument = New Xml.XmlDocument
         If IO.File.Exists(filename) Then
             B2SData.BackglassFileName = filename
-        ElseIf IO.File.Exists(shortFilename) Then
-            B2SData.BackglassFileName = shortFilename
-        ElseIf IO.File.Exists(hyperpinFilename) Then
-            B2SData.BackglassFileName = hyperpinFilename
-        ElseIf IO.File.Exists(shorthyperpinFilename) Then
-            B2SData.BackglassFileName = shorthyperpinFilename
+        ElseIf Not B2SSettings.DisableFuzzyMatching Then
+            If IO.File.Exists(shortFilename) Then
+                B2SData.BackglassFileName = shortFilename
+            ElseIf IO.File.Exists(hyperpinFilename) Then
+                B2SData.BackglassFileName = hyperpinFilename
+            ElseIf IO.File.Exists(shorthyperpinFilename) Then
+                B2SData.BackglassFileName = shorthyperpinFilename
+            End If
         End If
+
         ' maybe load XML file
         If Not String.IsNullOrEmpty(B2SData.BackglassFileName) Then
             Try
