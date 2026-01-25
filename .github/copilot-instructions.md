@@ -44,22 +44,22 @@ Build these solutions in order. Each takes 1-5 seconds to complete:
 
 1. **B2S Screen Resolution Identifier**:
    ```cmd
-   msbuild b2s_screenresidentifier/B2S_ScreenResIdentifier.sln /t:Rebuild /p:Configuration=Debug /p:Platform="Any CPU" /p:UICulture=en-US
+   msbuild b2s_screenresidentifier/B2S_ScreenResIdentifier.sln /t:Rebuild /p:Configuration=Debug /p:UICulture=en-US
    ```
 
 2. **B2S SetUp Tool**:
    ```cmd
-   msbuild B2S_SetUp/B2S_SetUp.sln /t:Rebuild /p:Configuration=Debug /p:Platform="Any CPU" /p:UICulture=en-US
+   msbuild B2S_SetUp/B2S_SetUp.sln /t:Rebuild /p:Configuration=Debug /p:UICulture=en-US
    ```
 
 3. **Main B2S Backglass Server** (requires B2SServerPluginInterface.dll):
    ```cmd
-   msbuild b2sbackglassserver/B2SBackglassServer.sln /t:Rebuild /p:Configuration=Debug /p:Platform="Any CPU" /p:UICulture=en-US
+   msbuild b2sbackglassserver/B2SBackglassServer.sln /t:Rebuild /p:Configuration=Debug /p:UICulture=en-US
    ```
 
 4. **B2S Register Application**:
    ```cmd
-   msbuild b2sbackglassserverregisterapp/B2SBackglassServerRegisterApp.sln /t:Rebuild /p:Configuration=Debug /p:Platform="Any CPU" /p:UICulture=en-US
+   msbuild b2sbackglassserverregisterapp/B2SBackglassServerRegisterApp.sln /t:Rebuild /p:Configuration=Debug /p:Platform=x86 /p:UICulture=en-US
    ```
 
 5. **B2S Window Punch**:
@@ -91,22 +91,27 @@ msbuild [solution].sln /t:Clean /p:Configuration=Debug /p:UICulture=en-US
    - `B2SBackglassServer.vbproj` - COM server library
    - `B2SBackglassServerEXE.vbproj` - Standalone executable
    - Key files: `Server.vb`, `Classes/B2SVersionInfo.vb`
+   - Currently B2SBackglassServer has two ways of working:
+   1. Non-exe (pure DLL):  VPinballX <-> In-proc COM B2SBackglassServer.dll
+      This has a problem that any work in B2SBackglassServer.dll, slows down VPinballX
+   2. Run as EXE: VPpinballX <-> In-proc COM B2SBackglassServer.dll <-> ( communication through registry) B2SBackglassServer.exe
+      The same B2SBackglassServer.dll works differently by just throwing in "work" in the registry and wait for next command.
 
 2. **b2s_screenresidentifier/** - Screen resolution management tool
    - VB.NET Windows Forms application
    - Manages display settings and configurations
 
 3. **B2S_SetUp/** - Setup utility (C# project)
-   - Configuration and installation helper
+   - Legacy configuration and installation helper
 
 4. **b2sbackglassserverregisterapp/** - COM registration utility
-   - Registers B2S server in Windows registry
+   - Registers B2S COM server in Windows registry and does the icon magic.
 
 5. **B2SWindowPunch/** - Window management utility (C#)
    - Creates transparent regions in overlapping windows
 
 6. **B2STools/** - Command line tools and scripts
-   - `B2SInit.cmd` - Initialization script
+   - `B2SInit.cmd` - Initialization script to call B2SWindowPunch among others
    - Various `.cmd` files for configuration
 
 7. **leds/** - LED display implementations
@@ -120,10 +125,10 @@ msbuild [solution].sln /t:Clean /p:Configuration=Debug /p:UICulture=en-US
 
 ### CI/CD Pipeline
 - **GitHub Actions**: `.github/workflows/b2s-backglass.yml`
-- Builds all configurations (Debug/Release) using Any CPU platform
+- Builds all configurations (Debug/Release) using "Any CPU" platform
 - Automatically updates version numbers from VB version constants
 - Creates release artifacts with all executables and documentation
-- Installs the .NET 4.0 developer pack and restores `Microsoft.NETFramework.ReferenceAssemblies.net40` via NuGet so the plugin can compile
+- Installs the .NET 4.0 developer pack and restores `Microsoft.NETFramework.ReferenceAssemblies.net40` via NuGet so the B2SServerPluginInterface.dll plugin can compile
 - **Prerelease workflow**: `.github/workflows/prerelease.yml` for tagged releases
 
 ### Development Notes
@@ -131,7 +136,7 @@ msbuild [solution].sln /t:Clean /p:Configuration=Debug /p:UICulture=en-US
 - **COM Interop**: Heavy use of Windows COM for Visual Pinball integration
 - **Plugin System**: Uses Microsoft MEF (Managed Extensibility Framework)
 - **Registry Communication**: Server-to-backglass communication via Windows Registry
-- **Threading**: GUI work split between threads (noted in Changelog 2.5.0) (Only in a separate branch, not in main branch)
+- **Threading**: GUI work split between threads (noted in Changelog 2.5.0) (Only in a separate test branch, not in main branch)
 
 ### Key Dependencies
 - **External**: B2SServerPluginInterface (from DirectOutput organization)
@@ -149,7 +154,6 @@ msbuild [solution].sln /t:Clean /p:Configuration=Debug /p:UICulture=en-US
 - **B2SServerPluginInterface target**: The upstream project still targets .NET Framework 4.0; install the .NET 4.0 Developer Pack before building it locally
 - **Build configuration**: All projects now use "Any CPU" platform consistently
 - **Build order**: Some projects may have undocumented dependencies - build in the order listed above
-- **German build messages**: On German Windows systems, MSBuild may still show German messages even with `/p:UICulture=en-US`. The builds work correctly - focus on "Fehler" (errors) and "Warnung" (warnings) counts at the end
 - **LED projects**: Some LED projects target .NET Framework 4.0 which may not be installed - these are optional components
 
 ### File Organization
@@ -174,3 +178,4 @@ Repository Root Files: Changelog.txt, README.md, LICENSE, CONTRIBUTING.md, etc.
 3. You need to understand specific implementation details not documented here
 
 **Always remember** to build B2SServerPluginInterface.dll before attempting to build the main B2SBackglassServer solution, or you will encounter compilation errors about missing IDirectPlugin types.
+
