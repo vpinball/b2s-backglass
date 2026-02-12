@@ -2765,14 +2765,11 @@ Public Class Server
     Private Sub Startup()
 
         ' get thru all processes
-        Dim processes As Processes = New Processes()
-        If Not String.IsNullOrEmpty(processes.TableName) AndAlso Not B2SData.TestMode Then
+        Dim processes As New Processes(String.IsNullOrEmpty(B2SData.TableFileName))
+        If String.IsNullOrEmpty(B2SData.TableFileName) AndAlso Not String.IsNullOrEmpty(processes.TableName) AndAlso Not B2SData.TestMode Then
             B2SData.TableFileName = processes.TableName
         End If
         B2SData.IsHyperpinRunning = processes.IsHyperpinRunning
-        If processes.TableCount > 1 Then
-            ' maybe do here something anytime
-        End If
 
         ' start end timer
         timer.Start()

@@ -30,11 +30,11 @@ Public Class Processes
         End Sub
     End Class
 
-    Public Sub New()
+    Public Sub New( Optional ByVal findTableName As Boolean = False)
         RefreshWindowList()
         For Each proc As ProcInfo In windowlist
             If Not String.IsNullOrEmpty(proc.Name) Then
-                If proc.Name.StartsWith("Visual Pinball - ", StringComparison.CurrentCultureIgnoreCase) Then
+                If findTableName AndAlso proc.Name.StartsWith("Visual Pinball - ", StringComparison.CurrentCultureIgnoreCase) Then
                     'Visual Pinball - [Tom and Jerry (Original 2019) v 1.33]
                     If String.IsNullOrEmpty(_tablename) Then
                         _tablename = proc.Name.Substring(17)
