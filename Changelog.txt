@@ -10,6 +10,9 @@
 - Corrected Fuzzy matching #157, Thanks bthlonewolf
 - Add back right click context menu on VPX #127
 - ScreenRes files should searched first for the backglass and then VPX file name #163
+- Stop searching window title for tablename when VPX feeds this through COM. This is a error prone way of getting the name of the table. #167
+  From VPX 10.8.0-2079 (vpinball #5057) and VPX 10.8.1-4620 this is now solved in VPX script Controller.vbs
+  The B2S Server is now compatible with VPX 10.8.1 BGFX!
 
 2.1.5
 - DMD snippets set to "initial ON" wasn't turned on #154
