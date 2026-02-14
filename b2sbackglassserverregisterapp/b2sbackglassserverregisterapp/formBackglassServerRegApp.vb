@@ -30,6 +30,7 @@ Public Class formBackglassServerRegApp
         Dim version As String = String.Empty
         Dim dialogResult As DialogResult
         Dim clsID As String = String.Empty
+        Dim alreadyInstalledfilepath As String = String.Empty
 
         If Not CommandSilent Then
             If CheckB2SServer(False) Then
@@ -58,14 +59,15 @@ Public Class formBackglassServerRegApp
                     End Using
                 Catch
                 End Try
-                Dim filepath As String = New Uri(dllURI).LocalPath
-                dialogResult = MessageBox.Show($"The 'B2S Server'{dllVersion} is already registered here:" & vbCrLf & vbCrLf & filepath & vbCrLf & vbCrLf & "Do you want to (try to) re-register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+
+                alreadyInstalledfilepath = New Uri(dllURI).LocalPath
+                dialogResult = MessageBox.Show($"The 'B2S Server'{dllVersion} is already registered here:" & vbCrLf & vbCrLf & alreadyInstalledfilepath & vbCrLf & vbCrLf & "Do you want to (try to) re-register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
             Else
                 dialogResult = MessageBox.Show("The 'B2S Server' is not registered yet." & vbCrLf & vbCrLf & "Do you want to register it?", My.Application.Info.AssemblyName, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
             End If
         End If
 
-        ' get .NET framework base directoy
+        ' get .NET framework base directory
         If CommandSilent Or dialogResult = DialogResult.Yes Then
             Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NetFramework", False)
                 If regkey IsNot Nothing Then
@@ -109,9 +111,45 @@ Public Class formBackglassServerRegApp
                         regRoot.OpenSubKey("WOW6432Node\CLSID", True).DeleteSubKeyTree(clsID, False)
                     End Using
                 End If
+
+                ' Clean up ALL old B2S.* ProgIDs from legacy VB.NET DLL (these were accidentally COM-visible)
+                ' The new C# B2S.ComServer.dll only exposes B2S.Server, so these are no longer needed
+                CleanupLegacyB2SEntries(CommandSilent)
+
+                ' Default to the COM server which is already installed in the earlier check, but if both are present ask the user which one to register
+                Dim dllToRegister As String = If(String.IsNullOrEmpty(alreadyInstalledfilepath) Or alreadyInstalledfilepath.EndsWith("B2SBackglassServer.DLL", StringComparison.OrdinalIgnoreCase), "B2SBackglassServer.DLL", "B2S.ComServer.dll")
+                If Not CommandSilent Then
+                    ' Ask which DLL to register
+                    Dim hasComServer As Boolean = File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "B2S.ComServer.dll"))
+                    Dim hasLegacyServer As Boolean = File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "B2SBackglassServer.DLL"))
+                    If hasComServer AndAlso hasLegacyServer Then
+                        Dim dllChoice As DialogResult = MessageBox.Show(
+                            "Which COM server do you want to register?" & vbCrLf & vbCrLf &
+                            "YES = VB B2SBackglassServer.dll" & vbCrLf &
+                            "NO  = C# B2S.ComServer.dll" & vbCrLf & vbCrLf &
+                            "Both DLLs were found in the installation directory.",
+                            "Select COM Server to Register",
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question)
+
+                        If dllChoice = DialogResult.Yes Then
+                            dllToRegister = "B2SBackglassServer.DLL"
+                        ElseIf dllChoice = DialogResult.No Then
+                            dllToRegister = "B2S.ComServer.dll"
+                        Else
+                            ' Cancel - don't register anything
+                            GoTo SkipRegistration
+                        End If
+                    ElseIf Not hasComServer AndAlso Not hasLegacyServer Then
+                        MessageBox.Show("Neither B2S.ComServer.dll nor B2SBackglassServer.dll found in the installation directory!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        GoTo SkipRegistration
+                    End If
+                End If
+
                 ' do the register operation
-                ShellAndWait(regasmpath, "B2SBackglassServer.DLL")
-                ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), "B2SBackglassServer.DLL")
+                ShellAndWait(regasmpath, dllToRegister)
+                ShellAndWait(regasmpath.Replace("\Framework\", "\Framework64\"), dllToRegister)
+SkipRegistration:
             End If
             If Not CommandSilent Then CheckB2SServer(True) 'Make sure no window is opened on silent option
         End If
@@ -170,7 +208,7 @@ Public Class formBackglassServerRegApp
                             If sFiles.Length > 0 Then
                                 Using b2stoolstoplevel As RegistryKey = sysFileKey.CreateSubKey(".directb2s\shell\B2SServer"),
                                     vpxtoolstoplevel As RegistryKey = sysFileKey.CreateSubKey(".vpx\shell\B2SServer")
-                                    
+
                                     b2stoolstoplevel.SetValue("MUIVerb", "B2S Server copy Screenres template")
                                     b2stoolstoplevel.SetValue("subcommands", "")
                                     b2stoolstoplevel.SetValue("Icon", """" & IO.Path.Combine(Path.GetDirectoryName(Application.ExecutablePath()), "B2SBackglassServerEXE.exe") & """")
@@ -194,11 +232,12 @@ Public Class formBackglassServerRegApp
 
                 Catch ex As UnauthorizedAccessException
                     MessageBox.Show("UnauthorizedAccessException", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Stop
                 End Try
             End Using
 
         End If
-
+        If Not CommandSilent Then MessageBox.Show("Everything is fine, the 'B2S backglass server' is registered.", My.Application.Info.AssemblyName, MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         End
 
@@ -231,10 +270,8 @@ Public Class formBackglassServerRegApp
             err = True
             ret = False
         End Try
-        If Not err Then
-            If showmessages Then MessageBox.Show("Everything is fine, the 'B2S backglass server' is registered.", My.Application.Info.AssemblyName, MessageBoxButtons.OK, MessageBoxIcon.Information)
-        ElseIf showmessages Then
-            MessageBox.Show("Oops, the 'B2S backglass server' is NOT registered. Have you started this app as 'Administrator'?" & vbCrLf & vbCrLf & "(" & errmessage & ")", My.Application.Info.AssemblyName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        If err And showmessages Then
+            MessageBox.Show("Oops, the 'B2S Server' is NOT registered. Have you started this app as 'Administrator'?" & vbCrLf & vbCrLf & "(" & errmessage & ")", My.Application.Info.AssemblyName, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
 
         Return ret
@@ -292,6 +329,186 @@ Public Class formBackglassServerRegApp
                 Next
             End If
         Catch
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' Dynamically finds and cleans up all B2S.* ProgIDs and orphaned CLSIDs in HKEY_CLASSES_ROOT.
+    ''' This catches all legacy entries from old VB.NET DLL versions that were accidentally COM-visible.
+    ''' The new version only exposes B2S.Server, so these orphaned entries cause conflicts.
+    ''' Also scans CLSID registry directly to catch orphaned entries without ProgID references.
+    ''' </summary>
+    Private Sub CleanupLegacyB2SEntries(CommandSilent As Boolean)
+        Try
+            ' First, find all B2S.* entries dynamically across registry views
+            Dim viewsToCheck As New List(Of RegistryView) From {RegistryView.Registry32}
+            If Environment.Is64BitOperatingSystem Then
+                viewsToCheck.Add(RegistryView.Registry64)
+            End If
+
+            Dim viewProgIds As New Dictionary(Of RegistryView, List(Of String))()
+            Dim viewClsids As New Dictionary(Of RegistryView, HashSet(Of String))()
+
+            For Each view As RegistryView In viewsToCheck
+                Dim foundEntries As New List(Of String)
+                Dim foundClsids As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
+
+                Using regRoot As RegistryKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, view)
+                    ' Enumerate all subkeys looking for B2S.* ProgIDs (but not B2S.Server)
+                    For Each subKeyName As String In regRoot.GetSubKeyNames()
+                        If subKeyName.StartsWith("B2S.", StringComparison.OrdinalIgnoreCase) AndAlso
+                           Not subKeyName.Equals("B2S.Server", StringComparison.OrdinalIgnoreCase) Then
+                            foundEntries.Add(subKeyName)
+
+                            ' Try to get the CLSID for this ProgID
+                            Try
+                                Using progIdKey As RegistryKey = regRoot.OpenSubKey(subKeyName & "\CLSID", False)
+                                    If progIdKey IsNot Nothing Then
+                                        Dim clsidValue As String = CStr(progIdKey.GetValue(""))
+                                        If Not String.IsNullOrEmpty(clsidValue) Then
+                                            foundClsids.Add(clsidValue)
+                                        End If
+                                    End If
+                                End Using
+                            Catch
+                            End Try
+                        End If
+                    Next
+
+                    ' Also scan CLSID registry directly to find orphaned CLSIDs pointing to B2S assemblies
+                    ' This catches legacy entries that may not have ProgID wrappers
+                    ' .NET assemblies are referenced via "Class" and "Assembly" values in InprocServer32
+                    Try
+                        Using clsidBaseKey As RegistryKey = regRoot.OpenSubKey("CLSID", False)
+                            If clsidBaseKey IsNot Nothing Then
+                                For Each clsidGuid As String In clsidBaseKey.GetSubKeyNames()
+                                    if (foundClsids.Contains(clsidGuid)) Then
+                                        ' Already found via ProgID reference, skip
+                                        Continue For
+                                    End If
+                                    Try
+                                        Using inProcKey As RegistryKey = clsidBaseKey.OpenSubKey(clsidGuid & "\InprocServer32", False)
+                                            If inProcKey IsNot Nothing Then
+                                                ' Check multiple registry values for B2S references
+                                                Dim dllPath As String = CStr(If(inProcKey.GetValue(""), ""))
+                                                Dim codeBase As String = CStr(If(inProcKey.GetValue("CodeBase"), ""))
+                                                Dim classValue As String = CStr(If(inProcKey.GetValue("Class"), ""))
+                                                Dim assemblyValue As String = CStr(If(inProcKey.GetValue("Assembly"), ""))
+
+                                                ' Check if this CLSID points to a B2S Server (check all possible locations where B2S is referenced)
+                                                Dim isB2SEntry As Boolean = False
+                                                If (Not String.IsNullOrEmpty(dllPath) AndAlso dllPath.Contains("B2SBackglassServer.dll") ) Then
+                                                    isB2SEntry = True
+                                                ElseIf (Not String.IsNullOrEmpty(codeBase) AndAlso codeBase.Contains("B2SBackglassServer.dll") ) Then
+                                                    isB2SEntry = True
+                                                ElseIf (Not String.IsNullOrEmpty(classValue) AndAlso classValue.StartsWith("B2S.", StringComparison.OrdinalIgnoreCase)) Then
+                                                    ' .NET class like "B2S.formMode"
+                                                    isB2SEntry = True
+                                                ElseIf (Not String.IsNullOrEmpty(assemblyValue) AndAlso assemblyValue.StartsWith("B2SBackglassServer", StringComparison.OrdinalIgnoreCase)) Then
+                                                    ' Assembly like "B2SBackglassServer, Version=2.0.4.0, ..."
+                                                    isB2SEntry = True
+                                                End If
+
+                                                If isB2SEntry Then
+                                                    foundClsids.Add(clsidGuid)
+                                                End If
+                                            End If
+                                        End Using
+                                    Catch
+                                    End Try
+                                Next
+                            End If
+                        End Using
+                    Catch
+                    End Try
+                End Using
+
+                If foundEntries.Count > 0 OrElse foundClsids.Count > 0 Then
+                    viewProgIds(view) = foundEntries
+                    viewClsids(view) = foundClsids
+                End If
+            Next
+
+            Dim totalProgIds As Integer = 0
+            Dim totalClsids As Integer = 0
+            For Each progIds As List(Of String) In viewProgIds.Values
+                totalProgIds += progIds.Count
+            Next
+            For Each clsids As HashSet(Of String) In viewClsids.Values
+                totalClsids += clsids.Count
+            Next
+
+            ' If nothing found, we're done
+            If totalProgIds = 0 AndAlso totalClsids = 0 Then
+                Return
+            End If
+
+            ' Ask user for confirmation
+            Dim confirmResult As DialogResult
+            If CommandSilent Then
+                confirmResult = DialogResult.Yes
+            Else
+                confirmResult = MessageBox.Show(
+                    $"Found {totalProgIds} legacy B2S.* ProgID entries and {totalClsids} associated CLSIDs." & vbCrLf & vbCrLf &
+                    "These are leftover entries from old B2SBackglassServer.dll versions." & vbCrLf &
+                    "The new version only uses 'B2S.Server'." & vbCrLf & vbCrLf &
+                    "Do you want to remove these legacy entries?" & vbCrLf & vbCrLf &
+                    "YES = Remove all legacy entries (recommended)" & vbCrLf &
+                    "NO = Keep legacy entries",
+                    "Clean Up Legacy Registry Entries",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question)
+            End If
+            
+            If confirmResult <> DialogResult.Yes Then
+                Return
+            End If
+            
+            ' Now delete all found entries
+            Dim deletedProgIds As Integer = 0
+            Dim deletedClsids As Integer = 0
+
+            For Each view As RegistryView In viewProgIds.Keys
+                Using regRoot As RegistryKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, view)
+                    ' Delete ProgID entries
+                    For Each progId As String In viewProgIds(view)
+                        Try
+                            regRoot.DeleteSubKeyTree(progId, False)
+                            deletedProgIds += 1
+                        Catch
+                        End Try
+                    Next
+
+                    ' Delete CLSID entries
+                    Using clsidKey As RegistryKey = regRoot.OpenSubKey("CLSID", True)
+                        If clsidKey IsNot Nothing Then
+                            For Each clsid As String In viewClsids(view)
+                                Try
+                                    clsidKey.DeleteSubKeyTree(clsid, False)
+                                    deletedClsids += 1
+                                Catch
+                                End Try
+                            Next
+                        End If
+                    End Using
+                End Using
+            Next
+            
+            MessageBox.Show(
+                $"Cleanup completed:" & vbCrLf &
+                $"  Removed {deletedProgIds} of {totalProgIds} ProgID entries" & vbCrLf &
+                $"  Removed {deletedClsids} of {totalClsids} CLSID entries",
+                "Registry Cleanup Complete",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+                
+        Catch ex As Exception
+            MessageBox.Show(
+                "Error during registry cleanup: " & ex.Message & vbCrLf & vbCrLf &
+                "Make sure you are running as Administrator.",
+                "Registry Cleanup Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning)
         End Try
     End Sub
 
