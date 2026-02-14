@@ -7,6 +7,8 @@
 - B2SInit timeout can be controlled through res file (cuttertimeout)
 - B2SScreenResIdentifier crash when changing checkboxes #132
 - B2SBackglassServerRegisterApp unblock files while registering #64
+- B2SBackglassServerRegisterApp clean up unused registry keys #169
+- B2SServer should not produce unused registry keys #169
 - Corrected Fuzzy matching #157, Thanks bthlonewolf
 - Add back right click context menu on VPX #127
 - ScreenRes files should searched first for the backglass and then VPX file name #163
