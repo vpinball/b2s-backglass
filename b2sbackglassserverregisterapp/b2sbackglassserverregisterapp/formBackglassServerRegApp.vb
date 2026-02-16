@@ -356,8 +356,7 @@ SkipRegistration:
                 Using regRoot As RegistryKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, view)
                     ' Enumerate all subkeys looking for B2S.* ProgIDs (but not B2S.Server)
                     For Each subKeyName As String In regRoot.GetSubKeyNames()
-                        If subKeyName.StartsWith("B2S.", StringComparison.OrdinalIgnoreCase) AndAlso
-                           Not subKeyName.Equals("B2S.Server", StringComparison.OrdinalIgnoreCase) Then
+                        If subKeyName.StartsWith("B2S.", StringComparison.OrdinalIgnoreCase) Then
                             foundEntries.Add(subKeyName)
 
                             ' Try to get the CLSID for this ProgID
@@ -439,7 +438,7 @@ SkipRegistration:
             Next
 
             ' If nothing found, we're done
-            If totalProgIds = 0 AndAlso totalClsids = 0 Then
+            If totalProgIds < 2 AndAlso totalClsids < 2 Then
                 Return
             End If
 
