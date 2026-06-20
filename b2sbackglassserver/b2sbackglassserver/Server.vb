@@ -34,6 +34,12 @@ Public Class Server
     Private isChangedGIStringsCalled As Boolean = False
     Private isChangedLEDsCalled As Boolean = False
 
+    ' Generation token claimed in New(); compared against
+    ' B2SData.ActiveGeneration in Stop() so an orphan instance (one whose
+    ' table session has been superseded by a newer Server) cannot tear down
+    ' the shared VPinMAME controller the newer session is using.
+    Private myGeneration As Integer = 0
+
     Public Shared errorlog As Log = Nothing
     'Public debugLog As Log = New Log("B2SDebugLog")
 
@@ -52,6 +58,22 @@ Public Class Server
     ' IDisposable
     Protected Overridable Sub Dispose(disposing As Boolean)
         If Not Me.disposedValue Then
+
+            ' Always release the polling timer, regardless of disposing or
+            ' frontend mode. The timer holds a delegate to this Server
+            ' instance (via Timer_Tick), so leaving it running would keep
+            ' the instance alive after VPX has released its COM reference,
+            ' producing a "zombie" that can later tear down the shared
+            ' VPinMAME controller a newer game session is using.
+            Try
+                If timer IsNot Nothing Then
+                    timer.Stop()
+                    RemoveHandler timer.Tick, AddressOf Timer_Tick
+                    timer.Dispose()
+                    timer = Nothing
+                End If
+            Catch
+            End Try
 
             If disposing Then
                 ' TODO: dispose managed state (managed objects).
@@ -91,6 +113,18 @@ Public Class Server
 #Region "constructor and end timer"
 
     Public Sub New()
+
+        ' Claim a fresh generation token. Used by Stop() to refuse to tear
+        ' down the shared VPinMAME controller when an older (now-orphaned)
+        ' Server instance's timer fires after a newer game has started.
+        myGeneration = B2SData.NextGeneration()
+
+        ' Force a fresh VPinMAME controller for this new Server instance.
+        ' The static _vpinmame may still hold an RCW pointing at a
+        ' controller whose RPC/STA host went away when the previous game
+        ' ended; reusing that RCW would surface as COMException 0x800706BA
+        ' on the first ChangedLamps/Solenoids/GIStrings call in this game.
+        B2SData.DiscardController()
 
         ' Reset the wrapped-controller ProgID to the VPinMAME default for each
         ' fresh table. ControllerProgID is process-wide (Shared), so without
@@ -140,7 +174,13 @@ Public Class Server
             If tableHandle <> 0 AndAlso Not IsWindow(tableHandle) Then
 
                 Try
-                    timer.Stop()
+                    ' Detach the tick handler before stopping/disposing so a
+                    ' tick already queued on the message pump cannot re-enter
+                    ' this method on a half-torn-down instance.
+                    If timer IsNot Nothing Then
+                        timer.Stop()
+                        RemoveHandler timer.Tick, AddressOf Timer_Tick
+                    End If
                     Me.Stop()
                 Finally
                     Me.Dispose()
@@ -252,7 +292,10 @@ Public Class Server
         Catch ex As Exception
             Dim st As New StackTrace(ex, True)
             errorlog.WriteLogEntry(DateTime.Now & "Line: " & st.GetFrame(0).GetMethod().Name & " : " & st.GetFrame(0).GetFileLineNumber().ToString & " : " & ex.Message)
-            Throw ex
+            ' Use bare Throw (not "Throw ex") so the original stack trace —
+            ' including the real COM call site inside ChangedLamps/Solenoids/
+            ' GIStrings/LEDs — is preserved for diagnostics.
+            Throw
         End Try
 
     End Sub
@@ -458,13 +501,22 @@ Public Class Server
 
         Try
             Try
-                timer.Stop()
+                If timer IsNot Nothing Then timer.Stop()
                 HideBackglassForm()
             Catch
             End Try
 
             Try
-                B2SData.Stop()
+                ' Only tear down the process-wide VPinMAME controller if this
+                ' Server instance is still the active owner. An "orphan"
+                ' instance (e.g. a previous game's zombie whose timer is
+                ' firing one last time) must NOT stop the controller a newer
+                ' game session is currently using — that is the root cause of
+                ' the RPC_S_SERVER_UNAVAILABLE crash on a second game launch
+                ' in the same VPX process.
+                If myGeneration = B2SData.ActiveGeneration Then
+                    B2SData.Stop()
+                End If
             Catch
             Finally
                 KillBackglassForm()

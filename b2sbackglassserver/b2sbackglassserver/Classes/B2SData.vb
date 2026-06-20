@@ -63,6 +63,55 @@ Public Class B2SData
         IsStopped = True
     End Sub
 
+    ' Force the next access to the VPinMAME property to create a fresh
+    ' controller, regardless of whether the previous one was cleanly stopped.
+    '
+    ' Background: the VPinMAME getter has a soft-restart optimization that
+    ' keeps _vpinmame alive across Stop()/restart for an in-table reset
+    ' (restoring stoppedGameName). That optimization is only safe within a
+    ' single Server (= single VPX table session) lifetime. Across Server
+    ' instances — e.g. stopping a game and launching another one in the same
+    ' VPX process — the cached RCW often references a controller whose
+    ' RPC/STA host has already gone away, even though _vpinmame itself isn't
+    ' Nothing. The next late-bound call on it then throws
+    ' COMException 0x800706BA (RPC_S_SERVER_UNAVAILABLE).
+    '
+    ' Server.New() calls this so a brand-new Server always starts with a
+    ' guaranteed-fresh controller. Stop() is attempted best-effort because
+    ' the old RCW may already be dead; we don't want that to prevent the
+    ' release. IsStopped is cleared (not set) so the getter does NOT try to
+    ' restore stoppedGameName — VPX will assign the new game's name itself.
+    Public Shared Sub DiscardController()
+        Dim previous As Object = _vpinmame
+        _vpinmame = Nothing
+        IsStopped = False
+        stoppedGameName = String.Empty
+        If previous IsNot Nothing Then
+            Try
+                previous.Stop()
+            Catch
+            End Try
+        End If
+    End Sub
+
+    ' Generation counter used by Server instances to detect "orphan" instances
+    ' whose owning VPX table session has been superseded. Each new Server.New()
+    ' calls NextGeneration() to claim ownership of the process-wide _vpinmame
+    ' controller; an instance whose myGeneration no longer matches
+    ' ActiveGeneration must NOT call B2SData.Stop(), otherwise it would tear
+    ' down the controller the newer session is using (cause of RPC_S_SERVER_
+    ' UNAVAILABLE on a second game launch in the same VPX process).
+    Private Shared _activeGeneration As Integer = 0
+    Public Shared ReadOnly Property ActiveGeneration() As Integer
+        Get
+            Return _activeGeneration
+        End Get
+    End Property
+    Public Shared Function NextGeneration() As Integer
+        _activeGeneration += 1
+        Return _activeGeneration
+    End Function
+
 
     Private Shared IsLampsInfoDirty As Boolean = True
     Private Shared IsSolenoidsInfoDirty As Boolean = True
