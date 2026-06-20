@@ -92,6 +92,15 @@ Public Class Server
 
     Public Sub New()
 
+        ' Reset the wrapped-controller ProgID to the VPinMAME default for each
+        ' fresh table. ControllerProgID is process-wide (Shared), so without
+        ' this a table that selected an alternative controller could leave it
+        ' set for the next table launched in the same VPX process. This runs
+        ' per CreateObject("B2S.Server") (i.e. per table), but NOT on the
+        ' in-session soft restart (which reuses the same Server instance), so a
+        ' table's own override survives a controller stop/restart.
+        B2SData.ControllerProgID = "VPinMAME.Controller"
+
         ' maybe create the base registry key
         If Registry.CurrentUser.OpenSubKey("Software\B2S") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S")
         If Registry.CurrentUser.OpenSubKey("Software\B2S\VPinMAME") Is Nothing Then Registry.CurrentUser.CreateSubKey("Software\B2S\VPinMAME")
@@ -284,6 +293,21 @@ Public Class Server
         Get
             Return System.Reflection.Assembly.GetExecutingAssembly().Location
         End Get
+    End Property
+
+    ' COM ProgID of the controller B2S wraps for the pull path
+    ' (ChangedLamps/Solenoids/GIStrings). Defaults to "VPinMAME.Controller";
+    ' a table may set it BEFORE GameName/Run to drive an alternative
+    ' controller that implements the same COM interface, e.g.:
+    '   B2SController.ControllerProgID = "VPROC.Controller"
+    ' Existing tables that never set it are unaffected.
+    Public Property ControllerProgID() As String
+        Get
+            Return B2SData.ControllerProgID
+        End Get
+        Set(ByVal value As String)
+            B2SData.ControllerProgID = value
+        End Set
     End Property
 
     Public Property GameName() As String
