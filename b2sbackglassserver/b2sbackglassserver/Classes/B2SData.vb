@@ -22,10 +22,26 @@ Public Class B2SData
 #If B2S = "DLL" Then
     Private Shared _vpinmame As Object = Nothing
     Public Shared VPMHasTimeFence As Boolean = False
+    ' COM ProgID of the controller B2S wraps. Defaults to VPinMAME so existing
+    ' tables are unaffected; a table may override it (e.g. "VPROC.Controller")
+    ' via Server.ControllerProgID to drive an alternative controller that
+    ' implements the same VPinMAME COM interface (GameName, Run,
+    ' ChangedLamps/Solenoids/GIStrings, ...).
+    Private Shared _controllerProgID As String = "VPinMAME.Controller"
+    Public Shared Property ControllerProgID() As String
+        Get
+            Return _controllerProgID
+        End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                _controllerProgID = value
+            End If
+        End Set
+    End Property
     Public Shared ReadOnly Property VPinMAME() As Object
         Get
             If _vpinmame Is Nothing OrElse IsStopped Then
-                _vpinmame = CreateObject("VPinMAME.Controller")
+                _vpinmame = CreateObject(_controllerProgID)
                 VPMHasTimeFence = _vpinmame.GetType.GetProperty("TimeFence") IsNot Nothing
                 If IsStopped Then
                     _vpinmame.GameName = stoppedGameName
