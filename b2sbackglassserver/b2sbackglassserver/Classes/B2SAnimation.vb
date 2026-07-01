@@ -989,7 +989,7 @@ Public Class B2SAnimation
 
     Public Shared Sub SetSwitch(ByVal switchid As Integer)
 
-        B2SData.VPinMAME.Switch(switchid) = True
+        B2SData.VPinController.Switch(switchid) = True
 
         If Not switches.ContainsKey(switchid) Then
             switches.Add(switchid, True)
@@ -1010,7 +1010,7 @@ Public Class B2SAnimation
         SwitchTimer.Stop()
 
         For Each switch As KeyValuePair(Of Integer, Boolean) In switches
-            B2SData.VPinMAME.Switch(switch.Key) = False
+            B2SData.VPinController.Switch(switch.Key) = False
         Next
         switches.Clear()
 

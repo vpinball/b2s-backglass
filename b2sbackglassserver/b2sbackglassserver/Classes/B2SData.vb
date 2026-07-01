@@ -20,8 +20,8 @@ Public Class B2SData
         Fantasy = 2
     End Enum
 #If B2S = "DLL" Then
-    Private Shared _vpinmame As Object = Nothing
-    Public Shared VPMHasTimeFence As Boolean = False
+    Private Shared _vpinController As Object = Nothing
+    Public Shared ControllerHasTimeFence As Boolean = False
     ' COM ProgID of the controller B2S wraps. Defaults to VPinMAME so existing
     ' tables are unaffected; a table may override it (e.g. "VPROC.Controller")
     ' via Server.ControllerProgID to drive an alternative controller that
@@ -38,41 +38,41 @@ Public Class B2SData
             End If
         End Set
     End Property
-    Public Shared ReadOnly Property VPinMAME() As Object
+    Public Shared ReadOnly Property VPinController() As Object
         Get
-            If _vpinmame Is Nothing OrElse IsStopped Then
-                _vpinmame = CreateObject(_controllerProgID)
-                VPMHasTimeFence = _vpinmame.GetType.GetProperty("TimeFence") IsNot Nothing
+            If _vpinController Is Nothing OrElse IsStopped Then
+                _vpinController = CreateObject(_controllerProgID)
+                ControllerHasTimeFence = _vpinController.GetType.GetProperty("TimeFence") IsNot Nothing
                 If IsStopped Then
-                    _vpinmame.GameName = stoppedGameName
+                    _vpinController.GameName = stoppedGameName
                     IsStopped = False
                 End If
             End If
-            Return _vpinmame
+            Return _vpinController
         End Get
     End Property
 
     Private Shared IsStopped As Boolean = False
     Private Shared stoppedGameName As String = String.Empty
     Public Shared Sub [Stop]()
-        If _vpinmame IsNot Nothing Then
-            stoppedGameName = _vpinmame.GameName
-            _vpinmame.Stop()
-            _vpinmame = Nothing
+        If _vpinController IsNot Nothing Then
+            stoppedGameName = _vpinController.GameName
+            _vpinController.Stop()
+            _vpinController = Nothing
         End If
         IsStopped = True
     End Sub
 
-    ' Force the next access to the VPinMAME property to create a fresh
+    ' Force the next access to the VPinController property to create a fresh
     ' controller, regardless of whether the previous one was cleanly stopped.
     '
-    ' Background: the VPinMAME getter has a soft-restart optimization that
-    ' keeps _vpinmame alive across Stop()/restart for an in-table reset
+    ' Background: the VPinController getter has a soft-restart optimization that
+    ' keeps _vpinController alive across Stop()/restart for an in-table reset
     ' (restoring stoppedGameName). That optimization is only safe within a
     ' single Server (= single VPX table session) lifetime. Across Server
     ' instances — e.g. stopping a game and launching another one in the same
     ' VPX process — the cached RCW often references a controller whose
-    ' RPC/STA host has already gone away, even though _vpinmame itself isn't
+    ' RPC/STA host has already gone away, even though _vpinController itself isn't
     ' Nothing. The next late-bound call on it then throws
     ' COMException 0x800706BA (RPC_S_SERVER_UNAVAILABLE).
     '
@@ -82,8 +82,8 @@ Public Class B2SData
     ' release. IsStopped is cleared (not set) so the getter does NOT try to
     ' restore stoppedGameName — VPX will assign the new game's name itself.
     Public Shared Sub DiscardController()
-        Dim previous As Object = _vpinmame
-        _vpinmame = Nothing
+        Dim previous As Object = _vpinController
+        _vpinController = Nothing
         IsStopped = False
         stoppedGameName = String.Empty
         If previous IsNot Nothing Then
@@ -96,7 +96,7 @@ Public Class B2SData
 
     ' Generation counter used by Server instances to detect "orphan" instances
     ' whose owning VPX table session has been superseded. Each new Server.New()
-    ' calls NextGeneration() to claim ownership of the process-wide _vpinmame
+    ' calls NextGeneration() to claim ownership of the process-wide _vpinController
     ' controller; an instance whose myGeneration no longer matches
     ' ActiveGeneration must NOT call B2SData.Stop(), otherwise it would tear
     ' down the controller the newer session is using (cause of RPC_S_SERVER_
