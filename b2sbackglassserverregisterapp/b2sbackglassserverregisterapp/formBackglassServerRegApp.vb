@@ -32,6 +32,19 @@ Public Class formBackglassServerRegApp
         Dim clsID As String = String.Empty
         Dim alreadyInstalledfilepath As String = String.Empty
 
+        ' Resolve CLSID regardless of UI mode so silent registration can perform full cleanup too.
+        Try
+            Using regRoot As RegistryKey = Registry.ClassesRoot
+                Using openKey As RegistryKey = regRoot.OpenSubKey("B2S.Server\CLSID", False)
+                    If openKey IsNot Nothing Then
+                        clsID = CStr(openKey.GetValue("", String.Empty))
+                    End If
+                End Using
+            End Using
+        Catch
+            clsID = String.Empty
+        End Try
+
         If Not CommandSilent Then
             If CheckB2SServer(False) Then
                 Dim dllURI As String = "file://Unknown"
@@ -100,6 +113,7 @@ Public Class formBackglassServerRegApp
             Else
                 ' cleanup earlier B2S.Server entries
                 If clsID IsNot String.Empty Then
+                    CleanupInprocServer32VersionSubkeys(clsID)
                     Using regRoot As RegistryKey = Registry.ClassesRoot
                         'Computer\HKEY_CLASSES_ROOT\B2S.Server
                         regRoot.DeleteSubKeyTree("B2S.Server", False)
@@ -285,7 +299,7 @@ SkipRegistration:
             ' do the register operation
             Dim process As New System.Diagnostics.Process()
             process.StartInfo.FileName = IO.Path.Combine(regasmpath, "regasm.exe")
-            process.StartInfo.Arguments = dllpath + " /codebase"
+            process.StartInfo.Arguments = dllpath + " /tlb /codebase"
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal
             Dim installPath As String = IO.Path.GetDirectoryName(Application.ExecutablePath())
             UnblockDeploymentFiles(installPath)
@@ -330,6 +344,39 @@ SkipRegistration:
             End If
         Catch
         End Try
+    End Sub
+
+    Private Sub CleanupInprocServer32VersionSubkeys(ByVal clsid As String)
+        If String.IsNullOrWhiteSpace(clsid) Then
+            Return
+        End If
+
+        Dim viewsToCheck As New List(Of RegistryView) From {RegistryView.Registry32}
+        If Environment.Is64BitOperatingSystem Then
+            viewsToCheck.Add(RegistryView.Registry64)
+        End If
+
+        For Each view As RegistryView In viewsToCheck
+            Try
+                Using classesRoot As RegistryKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, view)
+                    Using inprocKey As RegistryKey = classesRoot.OpenSubKey($"CLSID\{clsid}\InprocServer32", True)
+                        If inprocKey Is Nothing Then
+                            Continue For
+                        End If
+
+                        For Each subKeyName As String In inprocKey.GetSubKeyNames()
+                            ' Remove stale assembly-version subkeys (e.g. 2.1.6.393) that can win COM resolution.
+                            Dim parsedVersion As Version = Nothing
+                            If Version.TryParse(subKeyName, parsedVersion) Then
+                                inprocKey.DeleteSubKeyTree(subKeyName, False)
+                            End If
+                        Next
+                    End Using
+                End Using
+            Catch
+                ' Keep registration flow resilient and continue with other views.
+            End Try
+        Next
     End Sub
 
     ''' <summary>

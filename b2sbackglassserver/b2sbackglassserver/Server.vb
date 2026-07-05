@@ -371,6 +371,19 @@ Public Class Server
             B2SSettings.B2SName = String.Empty
         End Set
     End Property
+    Public Property OriginalGameName() As String
+        Get
+            Return VPinController.OriginalGameName
+        End Get
+        Set(ByVal value As String)
+            VPinController.OriginalGameName = value
+        End Set
+    End Property
+
+    Public Sub RegisterAlias(ByVal aliasName As String, ByVal romName As String)
+        VPinController.RegisterAlias(aliasName, romName)
+    End Sub
+
     Public ReadOnly Property ROMName() As String
         Get
             Return VPinController.ROMName
@@ -479,7 +492,9 @@ Public Class Server
 
         ' maybe initialize plugin stuff
         If B2SSettings.ArePluginsOn Then
-            B2SSettings.PluginHost.PluginInit(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), String.Format("{0}.vpt", B2SData.TableFileName)), If(Not String.IsNullOrEmpty(B2SName), B2SName, GameName))
+            Dim resolvedRomName As String = ROMName
+            Dim romName As String = If(Not String.IsNullOrEmpty(B2SName), B2SName, If(Not String.IsNullOrEmpty(resolvedRomName), resolvedRomName, GameName))
+            B2SSettings.PluginHost.PluginInit(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), String.Format("{0}.vpt", B2SData.TableFileName)), romName)
         End If
 
         ' show the main form
