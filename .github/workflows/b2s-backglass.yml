@@ -18,14 +18,20 @@ jobs:
           - config: Debug
           - config: Release
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 # This empty uses is here on purpose
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: DirectOutput/B2SServerPluginInterface
           path: B2SServerPluginInterface
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+      - name: Ensure NuGet is available
+        shell: pwsh
+        run: |
+          $nuget = Get-Command nuget.exe -ErrorAction SilentlyContinue
+          if (-not $nuget) {
+            throw "nuget.exe was not found on the runner PATH."
+          }
+          Write-Host "Using NuGet: $($nuget.Source)"
       - name: Restore .NET 4 reference assemblies
         shell: pwsh
         run: |
@@ -85,7 +91,19 @@ jobs:
           echo -e "\n[assembly: AssemblyInformationalVersion(\"${TAG}-${SHA7}\")]" >> "${ASSEMBLY_INFO}"
           : # Keep the VERSION_LONG for later
           echo "tag=${VERSION_LONG}" >> $GITHUB_OUTPUT
-      - uses: microsoft/setup-msbuild@v2
+      - name: Add MSBuild to PATH
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          if (-not (Test-Path $vswhere)) {
+            throw "vswhere.exe not found at $vswhere"
+          }
+          $msbuild = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
+          if (-not $msbuild) {
+            throw "MSBuild.exe not found via vswhere"
+          }
+          Add-Content -Path $env:GITHUB_PATH -Value (Split-Path -Parent $msbuild)
+          Write-Host "Using MSBuild: $msbuild"
       - name: Build B2SServerPluginInterface
         shell: pwsh
         run: |
