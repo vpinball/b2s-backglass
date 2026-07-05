@@ -492,9 +492,7 @@ Public Class Server
 
         ' maybe initialize plugin stuff
         If B2SSettings.ArePluginsOn Then
-            Dim resolvedRomName As String = ROMName
-            Dim romName As String = If(Not String.IsNullOrEmpty(B2SName), B2SName, If(Not String.IsNullOrEmpty(resolvedRomName), resolvedRomName, GameName))
-            B2SSettings.PluginHost.PluginInit(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), String.Format("{0}.vpt", B2SData.TableFileName)), romName)
+            B2SSettings.PluginHost.PluginInit(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), String.Format("{0}.vpt", B2SData.TableFileName)), If(Not String.IsNullOrEmpty(B2SName), B2SName, GameName))
         End If
 
         ' show the main form
